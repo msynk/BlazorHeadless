@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="HeadlessUI.Blazor/HeadlessUI.Blazor.csproj" />
+  <Project Path="HeadlessUI.Blazor.Samples/HeadlessUI.Blazor.Samples.csproj" />
+</Solution>

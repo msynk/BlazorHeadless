@@ -1,0 +1,263 @@
+/* ============================================================
+   Sample app styles — demonstrating how to style headless components.
+   The HeadlessUI.Blazor library ships ZERO CSS.
+   Everything here is consumer-authored.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+:root {
+    --color-bg: #fafafa;
+    --color-surface: #ffffff;
+    --color-text: #18181b;
+    --color-muted: #71717a;
+    --color-border: #e4e4e7;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-danger: #dc2626;
+    --radius: 0.5rem;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Page layout ---- */
+
+.demo-page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+}
+
+.demo-header {
+    margin-bottom: 3rem;
+}
+
+.demo-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.demo-header p {
+    color: var(--color-muted);
+    margin-top: 0.5rem;
+    font-size: 1.05rem;
+}
+
+.demo-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.demo-section h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.demo-section > p {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.demo-section > p code {
+    background: #f4f4f5;
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+}
+
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.demo-output {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+}
+
+.demo-attributes {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+
+.demo-attributes code {
+    background: #f4f4f5;
+    padding: 0.1em 0.35em;
+    border-radius: 0.2rem;
+    font-size: 0.9em;
+}
+
+.demo-code {
+    margin-top: 1rem;
+    background: #18181b;
+    color: #a1a1aa;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    overflow-x: auto;
+}
+
+/* ============================================================
+   Button styles — purely consumer-defined
+   ============================================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    line-height: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 150ms ease, border-color 150ms ease, opacity 150ms ease;
+    text-decoration: none;
+    user-select: none;
+}
+
+.btn:hover {
+    background: #f4f4f5;
+    border-color: #d4d4d8;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn:active {
+    background: #e4e4e7;
+}
+
+/* Data-attribute styling hooks from HeadlessUI.Blazor */
+.btn[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn[data-loading] {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* ---- Variants (all consumer-defined) ---- */
+
+.btn-primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
+
+.btn-link {
+    background: transparent;
+    border-color: transparent;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.btn-link:hover {
+    color: var(--color-primary-hover);
+    background: #eff6ff;
+}
+
+.btn-toggle {
+    min-width: 4rem;
+    justify-content: center;
+    background: var(--color-surface);
+}
+
+.btn-toggle.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* ---- Data-attribute-only styling demo ---- */
+
+.btn-data {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    line-height: 1.25rem;
+    border: none;
+    border-radius: var(--radius);
+    background: #18181b;
+    color: white;
+    cursor: pointer;
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.btn-data:hover {
+    opacity: 0.9;
+}
+
+.btn-data:active {
+    transform: scale(0.98);
+}
+
+.btn-data[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-data[data-loading] {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* ---- Spinner ---- */
+
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

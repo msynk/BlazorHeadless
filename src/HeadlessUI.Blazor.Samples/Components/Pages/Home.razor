@@ -1,0 +1,175 @@
+@page "/"
+@rendermode InteractiveServer
+
+<PageTitle>HeadlessUI.Blazor — Button Demo</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>HeadlessUI.Blazor</h1>
+        <p>A headless component library for Blazor — zero styles, full accessibility, complete control.</p>
+    </header>
+
+    <section class="demo-section">
+        <h2>Basic Button</h2>
+        <p>Renders a native <code>&lt;button&gt;</code> with no styling. All visuals come from you.</p>
+
+        <div class="demo-row">
+            <HButton OnClick="HandleBasicClick" class="btn">
+                Click me
+            </HButton>
+            <span class="demo-output">Clicked @basicClickCount times</span>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Disabled State</h2>
+        <p>Sets the native <code>disabled</code> attribute and emits <code>data-disabled</code> for CSS hooks.</p>
+
+        <div class="demo-row">
+            <HButton Disabled="true" OnClick="HandleBasicClick" class="btn">
+                Can't click me
+            </HButton>
+        </div>
+
+        <div class="demo-attributes">
+            Rendered attributes: <code>disabled</code>, <code>data-disabled</code>, <code>aria-disabled</code>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Loading State with Context</h2>
+        <p>
+            Uses <code>RenderFragment&lt;ButtonContext&gt;</code> — the Blazor equivalent of
+            React render-props — so you can conditionally render a spinner driven by the button's own state.
+        </p>
+
+        <div class="demo-row">
+            <HButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
+                @if (btn.Loading)
+                {
+                    <span class="spinner"></span>
+                    <span>Saving…</span>
+                }
+                else
+                {
+                    <span>Save Changes</span>
+                }
+            </HButton>
+        </div>
+
+        <div class="demo-attributes">
+            When loading: <code>disabled</code>, <code>data-loading</code>, <code>aria-busy="true"</code>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Polymorphic Rendering</h2>
+        <p>
+            Set <code>As="a"</code> to render as an anchor tag while retaining all button semantics.
+            Non-native elements automatically receive <code>role="button"</code>,
+            <code>tabindex="0"</code>, and Enter/Space keyboard handling.
+        </p>
+
+        <div class="demo-row">
+            <HButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
+                I'm actually an &lt;a&gt; tag
+            </HButton>
+
+            <HButton As="span" OnClick="HandleBasicClick" class="btn">
+                I'm a &lt;span&gt; with role="button"
+            </HButton>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Toggle Button</h2>
+        <p>
+            Combine <code>HButton</code> with your own state to build a toggle.
+            Pass <code>aria-pressed</code> via standard HTML attributes — they merge seamlessly.
+        </p>
+
+        <div class="demo-row">
+            <HButton OnClick="TogglePressed"
+                     class="@ToggleClass"
+                     aria-pressed="@isPressed.ToString().ToLowerInvariant()">
+                @(isPressed ? "ON" : "OFF")
+            </HButton>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Submit Button</h2>
+        <p>
+            Set <code>Type="submit"</code> for form submission. Works with Blazor's
+            <code>EditForm</code> or plain HTML forms.
+        </p>
+
+        <div class="demo-row">
+            <HButton Type="submit" OnClick="HandleSubmit" class="btn btn-primary">
+                Submit Form
+            </HButton>
+            @if (submitted)
+            {
+                <span class="demo-output">Form submitted!</span>
+            }
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Styled via Data Attributes</h2>
+        <p>
+            The headless approach: style entirely via CSS attribute selectors.
+            No component API for colors, sizes, or variants — that's your domain.
+        </p>
+
+        <div class="demo-row">
+            <HButton OnClick="HandleBasicClick" class="btn-data">
+                Styled via [data-*]
+            </HButton>
+
+            <HButton Disabled="true" class="btn-data">
+                Disabled via [data-disabled]
+            </HButton>
+
+            <HButton Loading="true" class="btn-data">
+                Loading via [data-loading]
+            </HButton>
+        </div>
+
+        <pre class="demo-code"><code>/* Your CSS — the library ships none */
+.btn-data              { background: #18181b; color: white; }
+.btn-data[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+.btn-data[data-loading]  { opacity: 0.7; cursor: wait; }</code></pre>
+    </section>
+</div>
+
+@code {
+    private int basicClickCount;
+    private bool isLoading;
+    private bool isPressed;
+    private bool submitted;
+
+    private string ToggleClass => isPressed ? "btn btn-toggle active" : "btn btn-toggle";
+
+    private void HandleBasicClick()
+    {
+        basicClickCount++;
+    }
+
+    private async Task HandleLoadingClick()
+    {
+        isLoading = true;
+        await Task.Delay(2000);
+        isLoading = false;
+    }
+
+    private void TogglePressed()
+    {
+        isPressed = !isPressed;
+    }
+
+    private void HandleSubmit()
+    {
+        submitted = true;
+    }
+}
