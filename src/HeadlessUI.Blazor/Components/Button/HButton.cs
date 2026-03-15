@@ -85,7 +85,7 @@ public class HButton : HeadlessComponentBase
         builder.OpenElement(0, Tag);
 
         builder.AddAttribute(10, "id", ComponentId);
-        builder.AddMultipleAttributes(20, BuildAttributes());
+        builder.AddMultipleAttributes(20, GetFinalAttributes());
 
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClickAsync));
@@ -105,9 +105,9 @@ public class HButton : HeadlessComponentBase
         builder.CloseElement();
     }
 
-    private Dictionary<string, object> BuildAttributes()
+    protected override Dictionary<string, object> BuildComponentAttributes()
     {
-        var attrs = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        var attrs = base.BuildComponentAttributes();
 
         if (IsNativeButton)
         {
@@ -126,10 +126,10 @@ public class HButton : HeadlessComponentBase
         if (Loading)
             attrs["aria-busy"] = "true";
 
-        AttributeUtilities.SetDataAttribute(attrs, "disabled", Disabled);
-        AttributeUtilities.SetDataAttribute(attrs, "loading", Loading);
+        SetDataFlag(attrs, "disabled", Disabled);
+        SetDataFlag(attrs, "loading", Loading);
 
-        return MergeAttributes(attrs);
+        return attrs;
     }
 
     private async Task HandleClickAsync(MouseEventArgs args)

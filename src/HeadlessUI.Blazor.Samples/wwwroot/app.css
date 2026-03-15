@@ -261,3 +261,119 @@ body {
         transform: rotate(360deg);
     }
 }
+
+/* ============================================================
+   Accordion styles — purely consumer-defined
+   ============================================================ */
+
+/* ---- Section divider between component demos ---- */
+
+.demo-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2.5rem 0 1.5rem;
+}
+
+.demo-component-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+}
+
+/* ---- Accordion root ---- */
+
+.accordion {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* ---- Accordion item ---- */
+
+.accordion-item {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.accordion-item:last-child {
+    border-bottom: none;
+}
+
+/* ---- Accordion trigger ---- */
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font);
+    color: var(--color-text);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: background 150ms ease;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover {
+    background: #f4f4f5;
+}
+
+.accordion-trigger:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+/* Data-attribute hooks — open / closed state */
+.accordion-trigger[data-state="open"] {
+    background: #f4f4f5;
+}
+
+.accordion-trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ---- Chevron indicator ---- */
+
+.accordion-chevron {
+    display: inline-block;
+    font-size: 1.1rem;
+    transition: transform 200ms ease;
+    color: var(--color-muted);
+    flex-shrink: 0;
+}
+
+.accordion-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* ---- Accordion content panel ---- */
+
+.accordion-content {
+    /* hidden attribute handles display:none when closed.
+       Override this block when you want CSS-driven height animations:
+       remove the hidden attribute approach and use data-state transitions. */
+}
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--color-border);
+}
+
+.accordion-body code {
+    background: #f4f4f5;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+    color: var(--color-text);
+}
+
