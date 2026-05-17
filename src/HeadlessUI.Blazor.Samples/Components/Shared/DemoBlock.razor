@@ -1,0 +1,51 @@
+@*
+    Reusable wrapper that renders a section heading, an optional description, the
+    live demo (LiveContent), the matching Razor source (Code), and the CSS that
+    styles the demo (Css). Each component demo page composes one or more DemoBlocks.
+*@
+
+<section class="demo-section">
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <h2>@Title</h2>
+    }
+    @if (Description is not null)
+    {
+        <p>@Description</p>
+    }
+
+    @if (LiveContent is not null)
+    {
+        <div class="demo-row">
+            @LiveContent
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Code))
+    {
+        <div class="demo-codeblock">
+            <div class="demo-codeblock-label">Razor</div>
+            <pre class="demo-code"><code>@Code.Trim('\r', '\n')</code></pre>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Css))
+    {
+        <div class="demo-codeblock">
+            <div class="demo-codeblock-label">CSS</div>
+            <pre class="demo-code"><code>@Css.Trim('\r', '\n')</code></pre>
+        </div>
+    }
+</section>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? Description { get; set; }
+    [Parameter] public RenderFragment? LiveContent { get; set; }
+
+    /// <summary>The Razor markup used by the demo.</summary>
+    [Parameter] public string? Code { get; set; }
+
+    /// <summary>The CSS that styles the demo. Optional.</summary>
+    [Parameter] public string? Css { get; set; }
+}

@@ -1,0 +1,311 @@
+@page "/switch"
+@rendermode InteractiveServer
+
+<PageTitle>Switch — HeadlessUI.Blazor</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Switch</h1>
+        <p>An accessible on/off toggle with full keyboard support and zero visual opinion.</p>
+    </header>
+
+    <DemoBlock Title="Basic Switch (Uncontrolled)"
+               Code="@_basicCode"
+               Css="@_switchCss">
+        <Description>
+            Renders a native <code>&lt;button&gt;</code> with <code>role="switch"</code> and
+            <code>aria-checked</code>. Click or press Space/Enter to toggle.
+            <code>DefaultChecked</code> seeds the initial state.
+        </Description>
+        <LiveContent>
+            <HSwitch DefaultChecked="false" class="switch" Context="s">
+                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            </HSwitch>
+
+            <HSwitch DefaultChecked="true" class="switch" Context="s">
+                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            </HSwitch>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Controlled"
+               Code="@_controlledCode"
+               Css="@_controlledCss">
+        <Description>
+            Drive the state externally with <code>Checked</code> + <code>OnCheckedChange</code>.
+            Clicking either control updates the same state.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <HSwitch Checked="@notificationsOn"
+                         OnCheckedChange="v => notificationsOn = v"
+                         class="switch" Context="s">
+                    <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                </HSwitch>
+
+                <span class="demo-output">
+                    Notifications: <strong>@(notificationsOn ? "on" : "off")</strong>
+                </span>
+
+                <HButton OnClick="() => notificationsOn = !notificationsOn" class="btn">
+                    Toggle from outside
+                </HButton>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> to block interaction. The button receives
+            the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.
+        </Description>
+        <LiveContent>
+            <HSwitch DefaultChecked="false" Disabled="true" class="switch" Context="s">
+                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            </HSwitch>
+
+            <HSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
+                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            </HSwitch>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="With label"
+               Code="@_labelCode"
+               Css="@_labelCss">
+        <Description>
+            Wrap the switch in a <code>&lt;label&gt;</code> to make the label clickable.
+            Clicking the label text toggles the switch — standard HTML behaviour.
+        </Description>
+        <LiveContent>
+            <label class="switch-label">
+                <HSwitch DefaultChecked="true" class="switch" Context="s">
+                    <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                </HSwitch>
+                <span>Email me about updates</span>
+            </label>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="As a non-native element"
+               Code="@_polymorphicCode"
+               Css="@_polymorphicCss">
+        <Description>
+            Set <code>As="div"</code> to render as a div. The component automatically adds
+            <code>role="switch"</code>, <code>tabindex="0"</code>, and Space/Enter keyboard
+            handling so the switch remains fully accessible.
+        </Description>
+        <LiveContent>
+            <HSwitch As="div" DefaultChecked="false" class="switch" Context="s">
+                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            </HSwitch>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Form Submission"
+               Code="@_formCode"
+               Css="@_formCss">
+        <Description>
+            Set <code>Name</code> to render an adjacent <code>&lt;input type="hidden"&gt;</code>
+            so the switch participates in plain form posts. The hidden input is only present
+            when the switch is checked, mirroring native checkbox behaviour.
+        </Description>
+        <LiveContent>
+            <form @onsubmit="HandleFormSubmit"
+                  @onsubmit:preventDefault="true"
+                  style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                <label class="switch-label">
+                    <HSwitch Name="newsletter" Value="yes"
+                             DefaultChecked="false"
+                             class="switch" Context="s">
+                        <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                    </HSwitch>
+                    <span>Subscribe to newsletter</span>
+                </label>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+                @if (lastSubmittedValue is not null)
+                {
+                    <span class="demo-output">Posted value: <code>@lastSubmittedValue</code></span>
+                }
+            </form>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private bool notificationsOn = true;
+    private string? lastSubmittedValue;
+
+    private void HandleFormSubmit()
+    {
+        // In a real app the browser would post the hidden input; here we read it
+        // back from the model to demonstrate which value would be submitted.
+        // For demo purposes we'll just show whatever is currently in the form.
+        lastSubmittedValue = "(submitted — check the network tab in a real form)";
+    }
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _basicCode = """
+<HSwitch DefaultChecked="false" class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</HSwitch>
+""";
+
+    private const string _controlledCode = """
+<HSwitch Checked="@notificationsOn"
+         OnCheckedChange="v => notificationsOn = v"
+         class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</HSwitch>
+
+@code {
+    private bool notificationsOn = true;
+}
+""";
+
+    private const string _disabledCode = """
+<HSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</HSwitch>
+""";
+
+    private const string _labelCode = """
+<label class="switch-label">
+    <HSwitch DefaultChecked="true" class="switch" Context="s">
+        <span class="switch-thumb"
+              data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+    </HSwitch>
+    <span>Email me about updates</span>
+</label>
+""";
+
+    private const string _polymorphicCode = """
+<HSwitch As="div" DefaultChecked="false" class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</HSwitch>
+""";
+
+    private const string _formCode = """
+<form method="post">
+    <label class="switch-label">
+        <HSwitch Name="newsletter" Value="yes"
+                 DefaultChecked="false"
+                 class="switch" Context="s">
+            <span class="switch-thumb"
+                  data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+        </HSwitch>
+        <span>Subscribe to newsletter</span>
+    </label>
+
+    <button type="submit">Submit</button>
+</form>
+
+@* When checked, posts:  newsletter=yes *@
+""";
+
+    private const string _switchCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by HSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
+""";
+
+    private const string _labelCss = """
+/* Wrapper that aligns the switch with its text label */
+.switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+""";
+
+    // The "Controlled", "Disabled", "Polymorphic", and "Form Submission" demos all
+    // reuse the styles shown in the basic demo above. The snippets below highlight
+    // only the demo-specific selectors so it's clear which hooks drive each scenario.
+
+    private const string _controlledCss = """
+/* Reuses the .switch / .switch-thumb styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Checked value you bind to. */
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when Disabled="true" */
+.switch[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* The disabled state still respects the checked appearance, so the thumb
+   stays in the "on" position on a disabled-checked switch. */
+""";
+
+    private const string _polymorphicCss = """
+/* Reuses the .switch / .switch-thumb styles from the Basic demo.
+   When rendered with As="div" (or any non-native element) HSwitch automatically
+   adds tabindex="0" and a Space/Enter keydown handler — the focus ring still
+   needs your :focus-visible rule to appear. */
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+""";
+
+    private const string _formCss = """
+/* Reuses the .switch / .switch-label styles from the earlier demos.
+   No additional CSS is needed — when Name is set HSwitch renders an
+   <input type="hidden"> sibling that is always invisible by default. */
+""";
+}

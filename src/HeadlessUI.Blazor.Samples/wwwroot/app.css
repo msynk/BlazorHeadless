@@ -285,6 +285,7 @@ body {
 /* ---- Accordion root ---- */
 
 .accordion {
+    width: 100%;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     overflow: hidden;
@@ -377,3 +378,272 @@ body {
     color: var(--color-text);
 }
 
+
+/* ============================================================
+   Page layout — sidebar + content
+   ============================================================ */
+
+.page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    flex: 0 0 16rem;
+    border-right: 1px solid var(--color-border);
+    background: var(--color-surface);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.demo-page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+}
+
+/* ---- Sidebar nav ---- */
+
+.nav-menu {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+}
+
+.nav-brand {
+    padding: 0 0.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1rem;
+}
+
+.nav-brand a {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.nav-section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.375rem;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.nav-link:hover {
+    background: #f4f4f5;
+}
+
+.nav-link.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* ---- Component list on the home page ---- */
+
+.component-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.component-list li {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+}
+
+.component-list a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.component-list a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   Disclosure styles — purely consumer-defined
+   ============================================================ */
+
+.disclosure {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font);
+    color: var(--color-text);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: background 150ms ease;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover {
+    background: #f4f4f5;
+}
+
+.disclosure-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.disclosure-button[data-state="open"] {
+    background: #f4f4f5;
+}
+
+.disclosure-button[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disclosure-chevron {
+    display: inline-block;
+    font-size: 1.05rem;
+    color: var(--color-muted);
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+}
+
+.disclosure-chevron.open {
+    transform: rotate(180deg);
+}
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+/* ============================================================
+   Code-block labelling (Razor / CSS) inside DemoBlock
+   ============================================================ */
+
+.demo-codeblock {
+    margin-top: 1rem;
+}
+
+.demo-codeblock-label {
+    display: inline-block;
+    background: #27272a;
+    color: #d4d4d8;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.demo-codeblock-label + .demo-code {
+    margin-top: 0;
+    border-top-left-radius: 0;
+}
+
+/* ============================================================
+   Switch styles — purely consumer-defined
+   ============================================================ */
+
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: var(--color-border);
+    cursor: pointer;
+    transition: background 150ms ease;
+    flex-shrink: 0;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-primary);
+}
+
+/* Hooks emitted by HSwitch */
+.switch[data-state="checked"] {
+    background: var(--color-primary);
+}
+
+.switch[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
+
+/* ---- Label wrapper ---- */
+
+.switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}

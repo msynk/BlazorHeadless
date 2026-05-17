@@ -416,3 +416,9 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# kiro
+.kiro
+
+#cursor
+.cursor
