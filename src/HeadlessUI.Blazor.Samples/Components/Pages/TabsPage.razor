@@ -1,0 +1,400 @@
+@page "/tabs"
+@rendermode InteractiveServer
+
+<PageTitle>Tabs — HeadlessUI.Blazor</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Tabs</h1>
+        <p>An accessible tab group with roving tabindex, full keyboard navigation, and zero visual opinion.</p>
+    </header>
+
+    <DemoBlock Title="Basic Tabs"
+               Code="@_basicCode"
+               Css="@_tabsCss">
+        <Description>
+            Click a tab or use Left / Right arrow keys, Home, and End to navigate. Disabled tabs are skipped automatically.
+            ARIA roles, <code>aria-selected</code>, <code>aria-controls</code>, and <code>aria-labelledby</code> are wired automatically.
+        </Description>
+        <LiveContent>
+            <HTabGroup class="tabs">
+                <HTabList class="tab-list">
+                    <HTab class="tab">Account</HTab>
+                    <HTab class="tab">Profile</HTab>
+                    <HTab class="tab">Notifications</HTab>
+                </HTabList>
+                <HTabPanels class="tab-panels">
+                    <HTabPanel class="tab-panel">
+                        <h3>Account</h3>
+                        <p>Manage your account settings and preferences.</p>
+                    </HTabPanel>
+                    <HTabPanel class="tab-panel">
+                        <h3>Profile</h3>
+                        <p>Update your public profile information.</p>
+                    </HTabPanel>
+                    <HTabPanel class="tab-panel">
+                        <h3>Notifications</h3>
+                        <p>Choose what alerts you'd like to receive.</p>
+                    </HTabPanel>
+                </HTabPanels>
+            </HTabGroup>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Vertical Orientation"
+               Code="@_verticalCode"
+               Css="@_verticalCss">
+        <Description>
+            Set <code>Vertical="true"</code> to render tabs in a column.
+            Arrow-key navigation switches to Up / Down, and the root and tablist
+            both emit <code>data-orientation="vertical"</code> for CSS layout hooks.
+        </Description>
+        <LiveContent>
+            <HTabGroup Vertical="true" class="tabs tabs-vertical">
+                <HTabList class="tab-list">
+                    <HTab class="tab">General</HTab>
+                    <HTab class="tab">Security</HTab>
+                    <HTab class="tab">Integrations</HTab>
+                </HTabList>
+                <HTabPanels class="tab-panels">
+                    <HTabPanel class="tab-panel">
+                        <h3>General</h3>
+                        <p>Application-wide settings.</p>
+                    </HTabPanel>
+                    <HTabPanel class="tab-panel">
+                        <h3>Security</h3>
+                        <p>Two-factor auth, sessions, and audit log.</p>
+                    </HTabPanel>
+                    <HTabPanel class="tab-panel">
+                        <h3>Integrations</h3>
+                        <p>Connect third-party services.</p>
+                    </HTabPanel>
+                </HTabPanels>
+            </HTabGroup>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Manual Activation"
+               Code="@_manualCode">
+        <Description>
+            With <code>Manual="true"</code> arrow keys only move keyboard focus; press
+            Space or Enter to activate the focused tab. Useful when activating a tab is
+            expensive (loads data, navigates, etc.) — try it: focus a tab, then arrow
+            without selecting.
+        </Description>
+        <LiveContent>
+            <HTabGroup Manual="true" class="tabs">
+                <HTabList class="tab-list">
+                    <HTab class="tab">Inbox</HTab>
+                    <HTab class="tab">Sent</HTab>
+                    <HTab class="tab">Drafts</HTab>
+                    <HTab class="tab">Archive</HTab>
+                </HTabList>
+                <HTabPanels class="tab-panels">
+                    <HTabPanel class="tab-panel"><p>Inbox content</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Sent content</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Drafts content</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Archive content</p></HTabPanel>
+                </HTabPanels>
+            </HTabGroup>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled Tab"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> on individual tabs. Arrow-key navigation
+            skips disabled tabs, and the disabled tab still receives <code>data-disabled</code>
+            for CSS hooks.
+        </Description>
+        <LiveContent>
+            <HTabGroup class="tabs">
+                <HTabList class="tab-list">
+                    <HTab class="tab">Free</HTab>
+                    <HTab class="tab">Pro</HTab>
+                    <HTab class="tab" Disabled="true">Enterprise (coming soon)</HTab>
+                </HTabList>
+                <HTabPanels class="tab-panels">
+                    <HTabPanel class="tab-panel"><p>Free plan features.</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Pro plan features.</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Enterprise plan features.</p></HTabPanel>
+                </HTabPanels>
+            </HTabGroup>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Render Context (state-driven content)"
+               Code="@_renderContextCode"
+               Css="@_renderContextCss">
+        <Description>
+            <code>HTab</code> exposes a <code>TabRenderContext</code> via
+            <code>Context="t"</code> so you can render badges, icons, or active
+            indicators driven by the tab's own state.
+        </Description>
+        <LiveContent>
+            <HTabGroup class="tabs">
+                <HTabList class="tab-list">
+                    <HTab class="tab" Context="t">
+                        <span>Messages</span>
+                        <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+                    </HTab>
+                    <HTab class="tab" Context="t">
+                        <span>Mentions</span>
+                        <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+                    </HTab>
+                    <HTab class="tab" Context="t">
+                        <span>All</span>
+                    </HTab>
+                </HTabList>
+                <HTabPanels class="tab-panels">
+                    <HTabPanel class="tab-panel"><p>Direct messages</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Mentions of you</p></HTabPanel>
+                    <HTabPanel class="tab-panel"><p>Everything together</p></HTabPanel>
+                </HTabPanels>
+            </HTabGroup>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Controlled"
+               Code="@_controlledCode"
+               Css="@_controlledCss">
+        <Description>
+            Drive selection externally with <code>SelectedIndex</code> and
+            <code>OnSelectedIndexChange</code>. The buttons below select tabs programmatically.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; flex-direction:column; gap:1rem; width:100%">
+                <div class="demo-row">
+                    @for (var i = 0; i < 3; i++)
+                    {
+                        var captured = i;
+                        <HButton OnClick="() => selectedIndex = captured"
+                                 class="@(selectedIndex == captured ? "btn btn-primary" : "btn")">
+                            Select tab @(captured + 1)
+                        </HButton>
+                    }
+                    <span class="demo-output">SelectedIndex: <strong>@selectedIndex</strong></span>
+                </div>
+
+                <HTabGroup SelectedIndex="@selectedIndex"
+                           OnSelectedIndexChange="i => selectedIndex = i"
+                           class="tabs">
+                    <HTabList class="tab-list">
+                        <HTab class="tab">Tab 1</HTab>
+                        <HTab class="tab">Tab 2</HTab>
+                        <HTab class="tab">Tab 3</HTab>
+                    </HTabList>
+                    <HTabPanels class="tab-panels">
+                        <HTabPanel class="tab-panel"><p>First panel</p></HTabPanel>
+                        <HTabPanel class="tab-panel"><p>Second panel</p></HTabPanel>
+                        <HTabPanel class="tab-panel"><p>Third panel</p></HTabPanel>
+                    </HTabPanels>
+                </HTabGroup>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private int selectedIndex;
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _basicCode = """
+<HTabGroup class="tabs">
+    <HTabList class="tab-list">
+        <HTab class="tab">Account</HTab>
+        <HTab class="tab">Profile</HTab>
+        <HTab class="tab">Notifications</HTab>
+    </HTabList>
+    <HTabPanels class="tab-panels">
+        <HTabPanel class="tab-panel">…</HTabPanel>
+        <HTabPanel class="tab-panel">…</HTabPanel>
+        <HTabPanel class="tab-panel">…</HTabPanel>
+    </HTabPanels>
+</HTabGroup>
+""";
+
+    private const string _verticalCode = """
+<HTabGroup Vertical="true" class="tabs tabs-vertical">
+    <HTabList class="tab-list">
+        <HTab class="tab">General</HTab>
+        <HTab class="tab">Security</HTab>
+        <HTab class="tab">Integrations</HTab>
+    </HTabList>
+    <HTabPanels class="tab-panels">
+        <HTabPanel class="tab-panel">…</HTabPanel>
+        <HTabPanel class="tab-panel">…</HTabPanel>
+        <HTabPanel class="tab-panel">…</HTabPanel>
+    </HTabPanels>
+</HTabGroup>
+""";
+
+    private const string _manualCode = """
+<HTabGroup Manual="true" class="tabs">
+    <HTabList class="tab-list">
+        <HTab class="tab">Inbox</HTab>
+        <HTab class="tab">Sent</HTab>
+        <HTab class="tab">Drafts</HTab>
+    </HTabList>
+    @* …panels… *@
+</HTabGroup>
+
+@*  Manual="true": arrow keys move focus only.
+    Press Space or Enter to activate the focused tab.  *@
+""";
+
+    private const string _disabledCode = """
+<HTabGroup class="tabs">
+    <HTabList class="tab-list">
+        <HTab class="tab">Free</HTab>
+        <HTab class="tab">Pro</HTab>
+        <HTab class="tab" Disabled="true">Enterprise (coming soon)</HTab>
+    </HTabList>
+    @* …panels… *@
+</HTabGroup>
+""";
+
+    private const string _renderContextCode = """
+<HTabGroup class="tabs">
+    <HTabList class="tab-list">
+        <HTab class="tab" Context="t">
+            <span>Messages</span>
+            <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+        </HTab>
+        <HTab class="tab" Context="t">
+            <span>Mentions</span>
+            <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+        </HTab>
+        <HTab class="tab" Context="t">
+            <span>All</span>
+        </HTab>
+    </HTabList>
+    @* …panels… *@
+</HTabGroup>
+""";
+
+    private const string _controlledCode = """
+<HTabGroup SelectedIndex="@selectedIndex"
+           OnSelectedIndexChange="i => selectedIndex = i"
+           class="tabs">
+    <HTabList class="tab-list">
+        <HTab class="tab">Tab 1</HTab>
+        <HTab class="tab">Tab 2</HTab>
+        <HTab class="tab">Tab 3</HTab>
+    </HTabList>
+    @* …panels… *@
+</HTabGroup>
+
+@code {
+    private int selectedIndex;
+}
+""";
+
+    private const string _tabsCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tab-list {
+    display: flex;
+    border-bottom: 1px solid #e4e4e7;
+    gap: 0.25rem;
+}
+
+.tab {
+    all: unset;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #71717a;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
+    box-sizing: border-box;
+}
+
+.tab:hover                  { color: #18181b; }
+.tab:focus-visible          { outline: 2px solid #2563eb; outline-offset: -2px; border-radius: 0.25rem; }
+
+/* Hooks emitted by HTab */
+.tab[data-state="active"]   { color: #2563eb; border-bottom-color: #2563eb; }
+.tab[data-disabled]         { opacity: 0.4; cursor: not-allowed; }
+
+.tab-panel {
+    padding: 0.5rem 0;
+    color: #18181b;
+}
+""";
+
+    private const string _verticalCss = """
+/* Reuses .tabs / .tab / .tab-panels styles from the Basic demo.
+   When Vertical="true" the root and tablist receive data-orientation="vertical",
+   which we use to flip the layout. */
+.tabs[data-orientation="vertical"] {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.tabs[data-orientation="vertical"] .tab-list {
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid #e4e4e7;
+    min-width: 12rem;
+}
+
+.tabs[data-orientation="vertical"] .tab {
+    border-bottom: none;
+    border-right: 2px solid transparent;
+    text-align: start;
+}
+
+.tabs[data-orientation="vertical"] .tab[data-state="active"] {
+    border-right-color: #2563eb;
+    border-bottom-color: transparent;
+}
+
+.tabs[data-orientation="vertical"] .tab-panels { flex: 1 1 auto; }
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when a tab is disabled */
+.tab[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation skips disabled tabs automatically — no JS needed. */
+""";
+
+    private const string _renderContextCss = """
+/* The Tab render-prop context exposes IsSelected so you can style children
+   based on the parent tab's state. */
+.badge {
+    margin-left: 0.5rem;
+    padding: 0.05rem 0.4rem;
+    background: #e4e4e7;
+    color: #52525b;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background: #2563eb;
+    color: #fff;
+}
+""";
+
+    private const string _controlledCss = """
+/* Reuses the .tabs / .tab styles from the Basic demo.
+   Controlled mode adds no new CSS hooks — data-state simply reflects whatever
+   SelectedIndex value you bind to. */
+""";
+}
