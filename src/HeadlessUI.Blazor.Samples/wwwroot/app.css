@@ -1337,3 +1337,127 @@ body {
     font-size: 0.75rem;
     color: var(--color-muted);
 }
+
+/* ============================================================
+   Menu styles — purely consumer-defined
+   ============================================================ */
+
+.menu {
+    position: relative;
+    display: inline-block;
+}
+
+/* ---- Menu button ---- */
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: var(--color-primary); }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron {
+    transition: transform 200ms ease;
+    color: var(--color-muted);
+}
+
+.menu-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* ---- Items panel ----
+   Sits above the click-outside overlay (z-index: 30 inline). */
+
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-items-wide {
+    min-width: 16rem;
+}
+
+/* ---- Menu item ---- */
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--color-text);
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by HMenuItem */
+.menu-item[data-active] {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.menu-item[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ---- Rich item layout ---- */
+
+.menu-item-icon     { font-size: 1rem; flex-shrink: 0; }
+.menu-item-shortcut { margin-left: auto; font-size: 0.75rem; color: var(--color-muted); }
+
+.menu-item-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    line-height: 1.25;
+}
+
+.menu-item-body strong { font-size: 0.875rem; }
+.menu-item-body span   { font-size: 0.75rem; color: var(--color-muted); }
+
+.menu-item[data-active] .menu-item-body span { color: #93c5fd; }
+
+/* ---- Section labels and dividers ---- */
+
+.menu-section-label {
+    padding: 0.35rem 0.65rem 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    list-style: none;
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 0.25rem 0;
+    list-style: none;
+}
