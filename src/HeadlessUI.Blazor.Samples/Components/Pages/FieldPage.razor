@@ -1,0 +1,303 @@
+@page "/field"
+@rendermode InteractiveServer
+
+<PageTitle>Field / Input — HeadlessUI.Blazor</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Field / Input</h1>
+        <p>Form primitives with auto-wired ARIA labels, descriptions, and validation state.</p>
+    </header>
+
+    <DemoBlock Title="Basic Field"
+               Code="@_basicCode"
+               Css="@_fieldCss">
+        <Description>
+            Wrap a label, input, and description in an <code>HField</code>. The label's
+            <code>for</code>, the input's <code>id</code>, and the description's
+            <code>aria-describedby</code> are all wired automatically — no manual id management.
+        </Description>
+        <LiveContent>
+            <HField class="field">
+                <HLabel class="field-label">Email</HLabel>
+                <HInput type="email" placeholder="you@example.com" class="field-input" />
+                <HDescription class="field-description">We'll never share your email.</HDescription>
+            </HField>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Textarea"
+               Code="@_textareaCode"
+               Css="@_textareaCss">
+        <Description>
+            <code>HTextarea</code> works identically to <code>HInput</code> — same ARIA
+            wiring, same data attributes. Standard HTML attributes like <code>rows</code>
+            pass through.
+        </Description>
+        <LiveContent>
+            <HField class="field">
+                <HLabel class="field-label">Bio</HLabel>
+                <HTextarea rows="3" placeholder="Tell us about yourself…" class="field-input field-textarea" />
+                <HDescription class="field-description">Max 280 characters.</HDescription>
+            </HField>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Select"
+               Code="@_selectCode"
+               Css="@_selectCss">
+        <Description>
+            <code>HSelect</code> renders a native <code>&lt;select&gt;</code> with the same
+            auto-wired ARIA. Place <code>&lt;option&gt;</code> elements inside.
+        </Description>
+        <LiveContent>
+            <HField class="field">
+                <HLabel class="field-label">Country</HLabel>
+                <HSelect class="field-input field-select">
+                    <option value="">Choose…</option>
+                    <option value="us">United States</option>
+                    <option value="gb">United Kingdom</option>
+                    <option value="fr">France</option>
+                    <option value="de">Germany</option>
+                </HSelect>
+                <HDescription class="field-description">Where you're based.</HDescription>
+            </HField>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled Field"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> on the <code>HField</code> to disable all
+            children at once. The field, label, and input all receive <code>data-disabled</code>
+            for CSS hooks.
+        </Description>
+        <LiveContent>
+            <HField Disabled="true" class="field">
+                <HLabel class="field-label">Username</HLabel>
+                <HInput type="text" value="alice" class="field-input" />
+                <HDescription class="field-description">Cannot be changed.</HDescription>
+            </HField>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Invalid Field"
+               Code="@_invalidCode"
+               Css="@_invalidCss">
+        <Description>
+            Set <code>Invalid="true"</code> on the <code>HField</code> to mark the input
+            as invalid. The input receives <code>aria-invalid="true"</code> and
+            <code>data-invalid</code> for CSS hooks. Use the description to show an error message.
+        </Description>
+        <LiveContent>
+            <HField Invalid="true" class="field">
+                <HLabel class="field-label">Password</HLabel>
+                <HInput type="password" value="123" class="field-input" />
+                <HDescription class="field-description field-error">
+                    Password must be at least 8 characters.
+                </HDescription>
+            </HField>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Multiple Fields (form layout)"
+               Code="@_formCode"
+               Css="@_formCss">
+        <Description>
+            Compose multiple <code>HField</code> components into a form. Each field
+            manages its own id namespace — no collisions.
+        </Description>
+        <LiveContent>
+            <form class="field-form" @onsubmit:preventDefault>
+                <HField class="field">
+                    <HLabel class="field-label">First name</HLabel>
+                    <HInput type="text" placeholder="Alice" class="field-input" />
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Last name</HLabel>
+                    <HInput type="text" placeholder="Anderson" class="field-input" />
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Email</HLabel>
+                    <HInput type="email" placeholder="alice@example.com" class="field-input" />
+                    <HDescription class="field-description">Your work email.</HDescription>
+                </HField>
+
+                <HButton Type="submit" class="btn btn-primary">Submit</HButton>
+            </form>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    // ── Source snippets ───────────────────────────────────────────────────────
+
+    private const string _basicCode = """
+<HField class="field">
+    <HLabel class="field-label">Email</HLabel>
+    <HInput type="email" placeholder="you@example.com" class="field-input" />
+    <HDescription class="field-description">We'll never share your email.</HDescription>
+</HField>
+
+@* Rendered HTML:
+   <label for="h-xxxx-input" id="h-xxxx-label">Email</label>
+   <input id="h-xxxx-input" aria-describedby="h-xxxx-description" … />
+   <p id="h-xxxx-description">We'll never share your email.</p>
+*@
+""";
+
+    private const string _textareaCode = """
+<HField class="field">
+    <HLabel class="field-label">Bio</HLabel>
+    <HTextarea rows="3" placeholder="Tell us about yourself…" class="field-input" />
+    <HDescription class="field-description">Max 280 characters.</HDescription>
+</HField>
+""";
+
+    private const string _selectCode = """
+<HField class="field">
+    <HLabel class="field-label">Country</HLabel>
+    <HSelect class="field-input field-select">
+        <option value="">Choose…</option>
+        <option value="us">United States</option>
+        <option value="gb">United Kingdom</option>
+    </HSelect>
+    <HDescription class="field-description">Where you're based.</HDescription>
+</HField>
+""";
+
+    private const string _disabledCode = """
+<HField Disabled="true" class="field">
+    <HLabel class="field-label">Username</HLabel>
+    <HInput type="text" value="alice" class="field-input" />
+    <HDescription class="field-description">Cannot be changed.</HDescription>
+</HField>
+
+@* All children receive data-disabled for CSS hooks. *@
+""";
+
+    private const string _invalidCode = """
+<HField Invalid="true" class="field">
+    <HLabel class="field-label">Password</HLabel>
+    <HInput type="password" value="123" class="field-input" />
+    <HDescription class="field-description field-error">
+        Password must be at least 8 characters.
+    </HDescription>
+</HField>
+
+@* The input receives aria-invalid="true" and data-invalid. *@
+""";
+
+    private const string _formCode = """
+<form class="field-form">
+    <HField class="field">
+        <HLabel class="field-label">First name</HLabel>
+        <HInput type="text" placeholder="Alice" class="field-input" />
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Last name</HLabel>
+        <HInput type="text" placeholder="Anderson" class="field-input" />
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Email</HLabel>
+        <HInput type="email" placeholder="alice@example.com" class="field-input" />
+        <HDescription class="field-description">Your work email.</HDescription>
+    </HField>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+""";
+
+    private const string _fieldCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by HInput / HTextarea / HSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }
+""";
+
+    private const string _textareaCss = """
+/* Reuses the .field / .field-input styles from the Basic demo.
+   The textarea just needs a resize rule. */
+.field-textarea { resize: vertical; min-height: 4rem; }
+""";
+
+    private const string _selectCss = """
+/* Reuses the .field / .field-input styles from the Basic demo.
+   The select needs a small appearance override. */
+.field-select { appearance: none; padding-right: 2rem; }
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when Disabled="true" on the field */
+.field[data-disabled]       { opacity: 0.6; }
+.field-input[data-disabled] { cursor: not-allowed; background: #fafafa; }
+""";
+
+    private const string _invalidCss = """
+/* Hooks emitted when Invalid="true" on the field */
+.field-input[data-invalid] {
+    border-color: #dc2626;
+}
+
+.field-input[data-invalid]:focus-visible {
+    outline-color: #dc2626;
+}
+
+.field-error { color: #dc2626; }
+""";
+
+    private const string _formCss = """
+/* Simple vertical form layout */
+.field-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 24rem;
+}
+""";
+}
