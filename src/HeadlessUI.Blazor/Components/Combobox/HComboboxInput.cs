@@ -70,6 +70,7 @@ public class HComboboxInput<TValue> : HeadlessComponentBase
         builder.AddElementReferenceCapture(40, e =>
         {
             _elementRef = e;
+            ComboboxContext?.SetInputRef(e);
             Ref?.Invoke(e);
         });
 

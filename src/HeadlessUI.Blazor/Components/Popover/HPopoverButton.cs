@@ -40,8 +40,11 @@ public class HPopoverButton : HeadlessComponentBase
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
 
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
+        builder.AddElementReferenceCapture(40, e =>
+        {
+            PopoverContext?.RegisterButton(e);
+            Ref?.Invoke(e);
+        });
 
         if (ChildContent is not null)
             builder.AddContent(50, ChildContent(RenderContext));

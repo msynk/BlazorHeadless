@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace HeadlessUI.Blazor;
 
@@ -13,9 +14,16 @@ namespace HeadlessUI.Blazor;
 /// matching the behaviour of the other show/hide primitives in this library.
 /// Consumers can drive open/close transitions via the <c>data-state</c> hook.
 /// </para>
+///
+/// <para>
+/// When <see cref="Anchor"/> is set, the panel is automatically positioned
+/// relative to the <see cref="HListboxButton{TValue}"/> using the anchor positioning system.
+/// </para>
 /// </summary>
-public class HListboxOptions<TValue> : HeadlessComponentBase
+public class HListboxOptions<TValue> : HeadlessComponentBase, IAsyncDisposable
 {
+    [Inject] private HeadlessUIInterop Interop { get; set; } = default!;
+
     [CascadingParameter]
     private ListboxContext<TValue> ListboxContext { get; set; } = default!;
 
@@ -23,7 +31,17 @@ public class HListboxOptions<TValue> : HeadlessComponentBase
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Configures automatic positioning of the dropdown relative to the
+    /// <see cref="HListboxButton{TValue}"/>. When set, the panel is positioned using
+    /// fixed positioning and auto-updates on scroll/resize.
+    /// </summary>
+    [Parameter]
+    public AnchorOptions? Anchor { get; set; }
+
     private ElementReference _elementRef;
+    private int _anchorHandle;
+    private bool _wasOpen;
 
     protected override string DefaultTag => "ul";
 
@@ -72,10 +90,41 @@ public class HListboxOptions<TValue> : HeadlessComponentBase
         return attrs;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Anchor is null) return;
+
+        if (IsOpen && !_wasOpen)
+        {
+            var buttonId = ListboxContext.ButtonId;
+            var panelId = ListboxContext.OptionsId;
+            _anchorHandle = await Interop.AnchorStartByIdAsync(buttonId, panelId, Anchor);
+            _wasOpen = true;
+        }
+        else if (!IsOpen && _wasOpen)
+        {
+            await Interop.AnchorStopAsync(_anchorHandle);
+            _anchorHandle = 0;
+            _wasOpen = false;
+        }
+    }
+
     private Task HandleKeyDown(KeyboardEventArgs args)
     {
         // Forward to the listbox root, which handles keyboard nav holistically.
         return ListboxContext?.HandleOptionKeyDownAsync(ListboxContext.ActiveIndex, args)
             ?? Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_anchorHandle > 0)
+        {
+            try
+            {
+                await Interop.AnchorStopAsync(_anchorHandle);
+            }
+            catch (JSDisconnectedException) { /* circuit gone */ }
+        }
     }
 }

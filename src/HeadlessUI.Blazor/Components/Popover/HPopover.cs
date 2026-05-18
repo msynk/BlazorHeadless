@@ -60,6 +60,7 @@ public class HPopover : HeadlessComponentBase, IDisposable
     private bool _isOpen;
     private bool _wasOpen;
     private ElementReference _panelRef;
+    private ElementReference _buttonRef;
     private bool _hasPanelRef;
     private IJSObjectReference? _previousFocus;
 
@@ -138,20 +139,27 @@ public class HPopover : HeadlessComponentBase, IDisposable
 
     // ── Context ───────────────────────────────────────────────────────────────
 
-    private PopoverContext CreateContext() => new(
-        isOpen: IsOpen,
-        baseId: ComponentId,
-        openAsync: OpenAsync,
-        closeAsync: CloseAsync,
-        toggleAsync: ToggleAsync,
-        registerPanel: RegisterPanelRef,
-        registerButton: _ => { /* button ref not needed at root level */ });
+    private PopoverContext CreateContext()
+    {
+        var ctx = new PopoverContext(
+            isOpen: IsOpen,
+            baseId: ComponentId,
+            openAsync: OpenAsync,
+            closeAsync: CloseAsync,
+            toggleAsync: ToggleAsync,
+            registerPanel: RegisterPanelRef,
+            registerButton: RegisterButtonRef);
+        ctx.SetButtonRef(_buttonRef);
+        return ctx;
+    }
 
     private void RegisterPanelRef(ElementReference panel)
     {
         _panelRef = panel;
         _hasPanelRef = true;
     }
+
+    private void RegisterButtonRef(ElementReference button) => _buttonRef = button;
 
     // ── Open / Close / Toggle ─────────────────────────────────────────────────
 

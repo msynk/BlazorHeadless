@@ -150,6 +150,62 @@
         </LiveContent>
     </DemoBlock>
 
+    <DemoBlock Title="Anchor Positioning"
+               Code="@_anchorCode"
+               Css="@_anchorCss">
+        <Description>
+            Set <code>Anchor</code> on <code>HMenuItems</code> to automatically position the
+            dropdown relative to the button. The panel uses <code>position: fixed</code> and
+            auto-updates on scroll/resize. It flips to the opposite side if there's not enough
+            space, and shifts to stay within the viewport. CSS custom properties
+            <code>--button-width</code>, <code>--anchor-gap</code> are exposed on the panel.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Bottom Start
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                                class="menu-items-anchored">
+                        <HMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Bottom End
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom end", Gap = 4 })"
+                                class="menu-items-anchored">
+                        <HMenuItem OnClick='@(() => Log("Cut"))'   class="menu-item" Label="Cut">Cut</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Copy"))'  class="menu-item" Label="Copy">Copy</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Paste"))' class="menu-item" Label="Paste">Paste</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Match Width
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+                                class="menu-items-anchored menu-items-match-width">
+                        <HMenuItem OnClick='@(() => Log("Option A"))' class="menu-item" Label="Option A">Option A</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Option B"))' class="menu-item" Label="Option B">Option B</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Option C"))' class="menu-item" Label="Option C">Option C</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+            </div>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
     <DemoBlock Title="Polymorphic items"
                Code="@_polymorphicCode"
                Css="@_polymorphicCss">
@@ -241,6 +297,66 @@
     <HMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</HMenuItem>
     <HMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</HMenuItem>
 </HMenuItems>
+""";
+
+    private const string _anchorCode = """
+@* Anchor positions the dropdown relative to the button automatically.
+   It flips to the opposite side if there's not enough space. *@
+
+<HMenu class="menu">
+    <HMenuButton class="menu-button">Options ▾</HMenuButton>
+    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                class="menu-items-anchored">
+        <HMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</HMenuItem>
+        <HMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+        <HMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</HMenuItem>
+    </HMenuItems>
+</HMenu>
+
+@* Use --button-width to match the dropdown width to the trigger: *@
+<HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+            class="menu-items-anchored menu-items-match-width">
+    …
+</HMenuItems>
+""";
+
+    private const string _anchorCss = """
+/* When using Anchor, the panel is position:fixed by the JS engine.
+   No need for position:relative on the parent or position:absolute on the panel.
+   Use a high z-index to ensure the panel renders above all other page content. */
+.menu-items-anchored {
+    z-index: 9999;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Use the --button-width CSS variable to match the trigger width */
+.menu-items-match-width {
+    min-width: unset;
+    width: var(--button-width);
+}
+
+/* Items inside the anchored panel */
+.menu-items-anchored .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+.menu-items-anchored .menu-item[data-active] { background: #eff6ff; color: #1d4ed8; }
+.menu-items-anchored .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 """;
 
     private const string _menuCss = """

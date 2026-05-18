@@ -34,6 +34,7 @@ public class HMenu : HeadlessComponentBase
 
     private bool _isOpen;
     private int _activeIndex = -1;
+    private ElementReference _buttonRef;
 
     private string _typeaheadBuffer = string.Empty;
     private DateTime _typeaheadResetAt = DateTime.MinValue;
@@ -95,19 +96,32 @@ public class HMenu : HeadlessComponentBase
 
     // ── Context ───────────────────────────────────────────────────────────────
 
-    private MenuContext CreateContext() => new(
-        isOpen: _isOpen,
-        disabled: Disabled,
-        activeIndex: _activeIndex,
-        baseId: ComponentId,
-        registerItem: RegisterItem,
-        unregisterItem: UnregisterItem,
-        setActiveIndex: SetActiveIndex,
-        activateItemAsync: ActivateItemAsync,
-        handleButtonKeyDownAsync: HandleButtonKeyDownAsync,
-        handleMenuKeyDownAsync: HandleMenuKeyDownAsync,
-        toggleAsync: ToggleAsync,
-        closeAsync: CloseAsync);
+    private MenuContext CreateContext()
+    {
+        var ctx = new MenuContext(
+            isOpen: _isOpen,
+            disabled: Disabled,
+            activeIndex: _activeIndex,
+            baseId: ComponentId,
+            registerItem: RegisterItem,
+            unregisterItem: UnregisterItem,
+            setActiveIndex: SetActiveIndex,
+            activateItemAsync: ActivateItemAsync,
+            handleButtonKeyDownAsync: HandleButtonKeyDownAsync,
+            handleMenuKeyDownAsync: HandleMenuKeyDownAsync,
+            toggleAsync: ToggleAsync,
+            closeAsync: CloseAsync,
+            registerButton: RegisterButton);
+        ctx.SetButtonRef(_buttonRef);
+        return ctx;
+    }
+
+    // ── Button registration ───────────────────────────────────────────────────
+
+    private void RegisterButton(ElementReference button) => _buttonRef = button;
+
+    /// <summary>Gets the button element reference for anchor positioning.</summary>
+    internal ElementReference ButtonRef => _buttonRef;
 
     // ── Item registration ─────────────────────────────────────────────────────
 

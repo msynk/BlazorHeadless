@@ -119,6 +119,12 @@ public sealed class ComboboxContext<TValue>
     internal Task ToggleAsync() => _toggleAsync();
     internal Task OpenAsync() => _openAsync();
     internal Task CloseAsync() => _closeAsync();
+
+    /// <summary>Gets the input element reference for anchor positioning.</summary>
+    internal ElementReference InputRef { get; private set; }
+
+    /// <summary>Sets the input element reference.</summary>
+    internal void SetInputRef(ElementReference inputRef) => InputRef = inputRef;
 }
 
 /// <summary>

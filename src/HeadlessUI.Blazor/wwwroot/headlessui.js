@@ -4,6 +4,288 @@
 // module on first use (via IJSRuntime.InvokeAsync<IJSObjectReference>("import"))
 // and keeps a single reference for the lifetime of the application.
 
+// ─── Anchor: floating panel positioning ─────────────────────────────────────
+//
+// A self-contained positioning engine inspired by Floating UI's computePosition.
+// Positions a floating element relative to a reference element with automatic
+// flip/shift to stay within the viewport.
+
+const anchorHandles = new Map();
+let anchorHandleSeq = 0;
+
+/**
+ * Parses a placement string like "bottom start" into { side, alignment }.
+ * side: "top" | "right" | "bottom" | "left"
+ * alignment: "center" | "start" | "end"
+ */
+function parsePlacement(to) {
+    const parts = (to || 'bottom').trim().split(/\s+/);
+    const side = parts[0] || 'bottom';
+    const alignment = parts[1] || 'center';
+    return { side, alignment };
+}
+
+/**
+ * Returns the opposite side for flip calculations.
+ */
+function oppositeSide(side) {
+    switch (side) {
+        case 'top': return 'bottom';
+        case 'bottom': return 'top';
+        case 'left': return 'right';
+        case 'right': return 'left';
+        default: return 'bottom';
+    }
+}
+
+/**
+ * Computes the position of the floating element relative to the reference.
+ */
+function computePosition(reference, floating, options) {
+    const { side, alignment } = parsePlacement(options.to);
+    const gap = options.gap || 0;
+    const offset = options.offset || 0;
+    const padding = options.padding || 8;
+
+    const refRect = reference.getBoundingClientRect();
+    const floatRect = floating.getBoundingClientRect();
+    const viewport = {
+        width: window.innerWidth || document.documentElement.clientWidth,
+        height: window.innerHeight || document.documentElement.clientHeight,
+    };
+
+    let x = 0, y = 0;
+    let finalSide = side;
+
+    // Calculate position based on side
+    switch (side) {
+        case 'bottom':
+            y = refRect.bottom + gap;
+            x = computeAlignmentX(refRect, floatRect, alignment, offset);
+            // Flip to top if not enough space below
+            if (y + floatRect.height > viewport.height - padding &&
+                refRect.top - gap - floatRect.height >= padding) {
+                y = refRect.top - gap - floatRect.height;
+                finalSide = 'top';
+            }
+            break;
+        case 'top':
+            y = refRect.top - gap - floatRect.height;
+            x = computeAlignmentX(refRect, floatRect, alignment, offset);
+            // Flip to bottom if not enough space above
+            if (y < padding &&
+                refRect.bottom + gap + floatRect.height <= viewport.height - padding) {
+                y = refRect.bottom + gap;
+                finalSide = 'bottom';
+            }
+            break;
+        case 'left':
+            x = refRect.left - gap - floatRect.width;
+            y = computeAlignmentY(refRect, floatRect, alignment, offset);
+            // Flip to right if not enough space on left
+            if (x < padding &&
+                refRect.right + gap + floatRect.width <= viewport.width - padding) {
+                x = refRect.right + gap;
+                finalSide = 'right';
+            }
+            break;
+        case 'right':
+            x = refRect.right + gap;
+            y = computeAlignmentY(refRect, floatRect, alignment, offset);
+            // Flip to left if not enough space on right
+            if (x + floatRect.width > viewport.width - padding &&
+                refRect.left - gap - floatRect.width >= padding) {
+                x = refRect.left - gap - floatRect.width;
+                finalSide = 'left';
+            }
+            break;
+    }
+
+    // Shift: clamp to viewport bounds
+    if (finalSide === 'top' || finalSide === 'bottom') {
+        x = Math.max(padding, Math.min(x, viewport.width - floatRect.width - padding));
+    } else {
+        y = Math.max(padding, Math.min(y, viewport.height - floatRect.height - padding));
+    }
+
+    return { x, y, side: finalSide, alignment };
+}
+
+function computeAlignmentX(refRect, floatRect, alignment, offset) {
+    switch (alignment) {
+        case 'start': return refRect.left + offset;
+        case 'end': return refRect.right - floatRect.width - offset;
+        default: return refRect.left + (refRect.width - floatRect.width) / 2 + offset;
+    }
+}
+
+function computeAlignmentY(refRect, floatRect, alignment, offset) {
+    switch (alignment) {
+        case 'start': return refRect.top + offset;
+        case 'end': return refRect.bottom - floatRect.height - offset;
+        default: return refRect.top + (refRect.height - floatRect.height) / 2 + offset;
+    }
+}
+
+/**
+ * Applies computed position to the floating element.
+ */
+function applyPosition(floating, reference, options) {
+    // Set CSS custom properties BEFORE measuring so that CSS rules like
+    // `width: var(--button-width)` take effect during measurement.
+    const refRect = reference.getBoundingClientRect();
+    floating.style.setProperty('--button-width', refRect.width + 'px');
+    floating.style.setProperty('--anchor-gap', (options.gap || 0) + 'px');
+    floating.style.setProperty('--anchor-offset', (options.offset || 0) + 'px');
+    floating.style.setProperty('--anchor-padding', (options.padding || 8) + 'px');
+
+    // Force a reflow so CSS rules using the custom properties (e.g. width: var(--button-width))
+    // are applied before we measure the floating element's dimensions.
+    floating.offsetHeight; // eslint-disable-line no-unused-expressions
+
+    const pos = computePosition(reference, floating, options);
+
+    // Apply positioning styles
+    floating.style.position = 'fixed';
+    floating.style.top = '0';
+    floating.style.left = '0';
+    floating.style.transform = `translate(${Math.round(pos.x)}px, ${Math.round(pos.y)}px)`;
+    floating.style.willChange = 'transform';
+
+    // Set data attributes for the resolved placement
+    floating.setAttribute('data-anchor', pos.side + (pos.alignment !== 'center' ? ' ' + pos.alignment : ''));
+}
+
+export const anchor = {
+    /**
+     * Starts positioning the floating element relative to the reference element.
+     * Sets up auto-update via scroll/resize listeners and ResizeObserver.
+     * Returns a handle id that must be passed to anchor.stop(...) to clean up.
+     *
+     * reference: can be an Element or an element ID string
+     * floating: can be an Element or an element ID string
+     * options: { to, gap, offset, padding }
+     */
+    start(reference, floating, options) {
+        // Resolve elements if IDs were passed
+        if (typeof reference === 'string') reference = document.getElementById(reference);
+        if (typeof floating === 'string') floating = document.getElementById(floating);
+        if (!reference || !floating) return -1;
+        options = options || {};
+
+        const id = ++anchorHandleSeq;
+
+        // Remove hidden if still present (Blazor should have already removed it
+        // when IsOpen=true, but ensure it's gone for measurement).
+        if (floating.hasAttribute('hidden')) {
+            floating.removeAttribute('hidden');
+        }
+
+        // Auto-update: reposition on scroll, resize, and DOM changes
+        const update = () => {
+            if (anchorHandles.has(id)) {
+                applyPosition(floating, reference, options);
+            }
+        };
+
+        // Try initial positioning immediately. If the floating element has no
+        // dimensions yet (browser hasn't laid it out), retry on next frame.
+        applyPosition(floating, reference, options);
+        const floatRect = floating.getBoundingClientRect();
+        if (floatRect.width === 0 || floatRect.height === 0) {
+            requestAnimationFrame(() => {
+                if (anchorHandles.has(id)) {
+                    applyPosition(floating, reference, options);
+                }
+            });
+        }
+
+        // Listen to scroll on all ancestor scroll containers
+        const scrollParents = getScrollParents(reference);
+        for (const parent of scrollParents) {
+            parent.addEventListener('scroll', update, { passive: true });
+        }
+        window.addEventListener('resize', update, { passive: true });
+
+        // ResizeObserver for reference and floating element size changes
+        let resizeObserver = null;
+        if (typeof ResizeObserver !== 'undefined') {
+            resizeObserver = new ResizeObserver(update);
+            resizeObserver.observe(reference);
+            resizeObserver.observe(floating);
+        }
+
+        anchorHandles.set(id, { reference, floating, options, update, scrollParents, resizeObserver });
+        return id;
+    },
+
+    /**
+     * Stops auto-updating and cleans up listeners for the given handle.
+     */
+    stop(handle) {
+        const state = anchorHandles.get(handle);
+        if (!state) return;
+        anchorHandles.delete(handle);
+
+        for (const parent of state.scrollParents) {
+            parent.removeEventListener('scroll', state.update);
+        }
+        window.removeEventListener('resize', state.update);
+
+        if (state.resizeObserver) {
+            state.resizeObserver.disconnect();
+        }
+
+        // Reset inline styles applied by the positioning engine
+        const el = state.floating;
+        if (el) {
+            el.style.position = '';
+            el.style.top = '';
+            el.style.left = '';
+            el.style.transform = '';
+            el.style.willChange = '';
+            el.style.visibility = '';
+            el.style.display = '';
+            el.style.removeProperty('--anchor-gap');
+            el.style.removeProperty('--anchor-offset');
+            el.style.removeProperty('--anchor-padding');
+            el.style.removeProperty('--button-width');
+            el.removeAttribute('data-anchor');
+            // Re-hide the element so it doesn't flash unstyled content.
+            // Blazor will also set hidden on next render, but we do it
+            // immediately to prevent a visible frame.
+            el.setAttribute('hidden', '');
+        }
+    },
+
+    /**
+     * Forces an immediate reposition for the given handle.
+     */
+    update(handle) {
+        const state = anchorHandles.get(handle);
+        if (!state) return;
+        applyPosition(state.floating, state.reference, state.options);
+    }
+};
+
+/**
+ * Collects all scrollable ancestor elements of the given element.
+ */
+function getScrollParents(element) {
+    const parents = [];
+    let current = element.parentElement;
+    while (current) {
+        const style = getComputedStyle(current);
+        const overflow = style.overflow + style.overflowX + style.overflowY;
+        if (/auto|scroll|overlay/.test(overflow)) {
+            parents.push(current);
+        }
+        current = current.parentElement;
+    }
+    parents.push(window);
+    return parents;
+}
+
 // ─── Focusable helpers ───────────────────────────────────────────────────────
 
 const FOCUSABLE_SELECTOR = [

@@ -57,6 +57,12 @@ public sealed class PopoverContext
 
     internal void RegisterPanel(ElementReference panel) => _registerPanel(panel);
     internal void RegisterButton(ElementReference button) => _registerButton(button);
+
+    /// <summary>Gets the button element reference for anchor positioning.</summary>
+    internal ElementReference ButtonRef { get; private set; }
+
+    /// <summary>Sets the button element reference.</summary>
+    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
 }
 
 /// <summary>

@@ -49,6 +49,7 @@ public class HListboxButton<TValue> : HeadlessComponentBase
         builder.AddElementReferenceCapture(40, e =>
         {
             _elementRef = e;
+            ListboxContext?.RegisterButton(e);
             Ref?.Invoke(e);
         });
 

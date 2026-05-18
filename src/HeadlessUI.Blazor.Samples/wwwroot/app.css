@@ -1074,6 +1074,29 @@ body {
     letter-spacing: 0.05em;
 }
 
+/* ---- Anchored listbox ---- */
+
+.listbox-anchored { display: inline-block; min-width: 14rem; }
+
+.listbox-options-anchored {
+    z-index: 9999;
+    min-width: 14rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+    width: var(--button-width);
+}
+
+.listbox-options-anchored[hidden] {
+    display: none;
+}
+
 /* ============================================================
    Dialog styles — purely consumer-defined
    ============================================================ */
@@ -1338,6 +1361,28 @@ body {
     color: var(--color-muted);
 }
 
+/* ---- Anchored combobox ---- */
+
+.combobox-anchored { display: inline-block; min-width: 18rem; }
+
+.combobox-options-anchored {
+    z-index: 9999;
+    min-width: 18rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+.combobox-options-anchored[hidden] {
+    display: none;
+}
+
 /* ============================================================
    Menu styles — purely consumer-defined
    ============================================================ */
@@ -1398,6 +1443,31 @@ body {
 
 .menu-items-wide {
     min-width: 16rem;
+}
+
+/* ---- Anchored items panel ----
+   When using the Anchor prop, position:fixed is applied by JS.
+   No position:absolute or top/left needed here. */
+
+.menu-items-anchored {
+    z-index: 9999;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-items-match-width {
+    min-width: unset;
+    width: var(--button-width);
+}
+
+.menu-items-anchored[hidden] {
+    display: none;
 }
 
 /* ---- Menu item ---- */
@@ -1520,10 +1590,34 @@ body {
     gap: 0.6rem;
 }
 
+/* The hidden attribute is overridden by display:flex above, so we need
+   an explicit rule to hide the panel when closed. */
+.popover-panel[hidden] {
+    display: none;
+}
+
 .popover-panel-wide {
     min-width: 22rem;
     padding: 0;
     overflow: hidden;
+}
+
+/* ---- Anchored popover ---- */
+
+.popover-anchored { display: inline-block; }
+
+.popover-panel-anchored {
+    z-index: 9999;
+    min-width: 16rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.popover-panel-anchored[hidden] {
+    display: none;
 }
 
 .popover-title {

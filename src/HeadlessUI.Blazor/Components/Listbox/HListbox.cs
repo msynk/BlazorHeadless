@@ -40,6 +40,7 @@ public class HListbox<TValue> : HeadlessComponentBase
     private TValue? _singleValue;
     private List<TValue> _multiValues = new();
     private int _activeIndex = -1;
+    private ElementReference _buttonRef;
 
     private string _typeaheadBuffer = string.Empty;
     private DateTime _typeaheadResetAt = DateTime.MinValue;
@@ -210,22 +211,31 @@ public class HListbox<TValue> : HeadlessComponentBase
 
     // ── Context assembly ─────────────────────────────────────────────────────
 
-    private ListboxContext<TValue> CreateContext() => new(
-        isOpen: _isOpen,
-        disabled: Disabled,
-        multiple: Multiple,
-        singleValue: CurrentSingleValue,
-        multiValues: CurrentMultiValues,
-        activeIndex: _activeIndex,
-        baseId: ComponentId,
-        registerOption: RegisterOption,
-        unregisterOption: UnregisterOption,
-        selectAsync: SelectAsync,
-        setActiveIndex: SetActiveIndex,
-        handleOptionKeyDownAsync: HandleOptionKeyDownAsync,
-        handleButtonKeyDownAsync: HandleButtonKeyDownAsync,
-        toggleAsync: ToggleAsync,
-        closeAsync: CloseAsync);
+    private ListboxContext<TValue> CreateContext()
+    {
+        var ctx = new ListboxContext<TValue>(
+            isOpen: _isOpen,
+            disabled: Disabled,
+            multiple: Multiple,
+            singleValue: CurrentSingleValue,
+            multiValues: CurrentMultiValues,
+            activeIndex: _activeIndex,
+            baseId: ComponentId,
+            registerOption: RegisterOption,
+            unregisterOption: UnregisterOption,
+            selectAsync: SelectAsync,
+            setActiveIndex: SetActiveIndex,
+            handleOptionKeyDownAsync: HandleOptionKeyDownAsync,
+            handleButtonKeyDownAsync: HandleButtonKeyDownAsync,
+            toggleAsync: ToggleAsync,
+            closeAsync: CloseAsync,
+            registerButton: RegisterButton);
+        ctx.SetButtonRef(_buttonRef);
+        return ctx;
+    }
+
+    /// <summary>Registers the button element reference for anchor positioning.</summary>
+    internal void RegisterButton(ElementReference button) => _buttonRef = button;
 
     // ── Option registration ──────────────────────────────────────────────────
 

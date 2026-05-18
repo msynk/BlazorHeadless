@@ -21,6 +21,7 @@ public sealed class ListboxContext<TValue>
     private readonly Func<KeyboardEventArgs, Task> _handleButtonKeyDownAsync;
     private readonly Func<Task> _toggleAsync;
     private readonly Func<Task> _closeAsync;
+    private readonly Action<ElementReference> _registerButton;
 
     internal ListboxContext(
         bool isOpen,
@@ -37,7 +38,8 @@ public sealed class ListboxContext<TValue>
         Func<int, KeyboardEventArgs, Task> handleOptionKeyDownAsync,
         Func<KeyboardEventArgs, Task> handleButtonKeyDownAsync,
         Func<Task> toggleAsync,
-        Func<Task> closeAsync)
+        Func<Task> closeAsync,
+        Action<ElementReference> registerButton)
     {
         IsOpen = isOpen;
         Disabled = disabled;
@@ -54,6 +56,7 @@ public sealed class ListboxContext<TValue>
         _handleButtonKeyDownAsync = handleButtonKeyDownAsync;
         _toggleAsync = toggleAsync;
         _closeAsync = closeAsync;
+        _registerButton = registerButton;
     }
 
     /// <summary>Whether the options panel is currently open.</summary>
@@ -102,6 +105,13 @@ public sealed class ListboxContext<TValue>
     internal Task HandleButtonKeyDownAsync(KeyboardEventArgs args) => _handleButtonKeyDownAsync(args);
     internal Task ToggleAsync() => _toggleAsync();
     internal Task CloseAsync() => _closeAsync();
+    internal void RegisterButton(ElementReference button) => _registerButton(button);
+
+    /// <summary>Gets the button element reference for anchor positioning.</summary>
+    internal ElementReference ButtonRef { get; private set; }
+
+    /// <summary>Sets the button element reference.</summary>
+    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
 }
 
 /// <summary>

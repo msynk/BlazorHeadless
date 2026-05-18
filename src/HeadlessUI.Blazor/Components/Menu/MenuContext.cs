@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace HeadlessUI.Blazor;
@@ -18,6 +19,7 @@ public sealed class MenuContext
     private readonly Func<KeyboardEventArgs, Task> _handleMenuKeyDownAsync;
     private readonly Func<Task> _toggleAsync;
     private readonly Func<Task> _closeAsync;
+    private readonly Action<ElementReference> _registerButton;
 
     internal MenuContext(
         bool isOpen,
@@ -31,7 +33,8 @@ public sealed class MenuContext
         Func<KeyboardEventArgs, Task> handleButtonKeyDownAsync,
         Func<KeyboardEventArgs, Task> handleMenuKeyDownAsync,
         Func<Task> toggleAsync,
-        Func<Task> closeAsync)
+        Func<Task> closeAsync,
+        Action<ElementReference> registerButton)
     {
         IsOpen = isOpen;
         Disabled = disabled;
@@ -45,6 +48,7 @@ public sealed class MenuContext
         _handleMenuKeyDownAsync = handleMenuKeyDownAsync;
         _toggleAsync = toggleAsync;
         _closeAsync = closeAsync;
+        _registerButton = registerButton;
     }
 
     /// <summary>Whether the menu is currently open.</summary>
@@ -76,6 +80,13 @@ public sealed class MenuContext
     internal Task HandleMenuKeyDownAsync(KeyboardEventArgs args) => _handleMenuKeyDownAsync(args);
     internal Task ToggleAsync() => _toggleAsync();
     internal Task CloseAsync() => _closeAsync();
+    internal void RegisterButton(ElementReference button) => _registerButton(button);
+
+    /// <summary>Gets the button element reference for anchor positioning.</summary>
+    internal ElementReference ButtonRef { get; private set; }
+
+    /// <summary>Sets the button element reference (called during context creation).</summary>
+    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
 }
 
 /// <summary>Render-fragment context exposed by <see cref="HMenuButton"/>.</summary>

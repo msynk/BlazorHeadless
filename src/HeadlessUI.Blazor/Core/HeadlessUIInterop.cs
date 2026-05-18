@@ -76,6 +76,63 @@ public sealed class HeadlessUIInterop : IAsyncDisposable
         await module.InvokeVoidAsync("popover.restoreFocus", element);
     }
 
+    // ── Anchor / Positioning ─────────────────────────────────────────────────
+
+    /// <summary>
+    /// Starts positioning the <paramref name="floating"/> element relative to the
+    /// <paramref name="reference"/> element. Sets up auto-update listeners for
+    /// scroll, resize, and element size changes.
+    /// Returns a handle that must be passed to <see cref="AnchorStopAsync"/> to clean up.
+    /// </summary>
+    /// <param name="reference">The trigger/button element to anchor against.</param>
+    /// <param name="floating">The floating panel element to position.</param>
+    /// <param name="options">Positioning options (placement, gap, offset, padding).</param>
+    public async Task<int> AnchorStartAsync(
+        ElementReference reference,
+        ElementReference floating,
+        AnchorOptions options)
+    {
+        var module = await _module.Value;
+        return await module.InvokeAsync<int>("anchor.start", reference, floating, options.ToJsOptions());
+    }
+
+    /// <summary>
+    /// Starts positioning using element IDs instead of ElementReferences.
+    /// More reliable when element refs may not be captured yet.
+    /// </summary>
+    public async Task<int> AnchorStartByIdAsync(
+        string referenceId,
+        string floatingId,
+        AnchorOptions options)
+    {
+        var module = await _module.Value;
+        return await module.InvokeAsync<int>("anchor.start", referenceId, floatingId, options.ToJsOptions());
+    }
+
+    /// <summary>
+    /// Stops auto-updating and cleans up listeners for the given anchor handle.
+    /// </summary>
+    public async ValueTask AnchorStopAsync(int handle)
+    {
+        if (handle <= 0) return;
+        try
+        {
+            var module = await _module.Value;
+            await module.InvokeVoidAsync("anchor.stop", handle);
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+    }
+
+    /// <summary>
+    /// Forces an immediate reposition for the given anchor handle.
+    /// </summary>
+    public async ValueTask AnchorUpdateAsync(int handle)
+    {
+        if (handle <= 0) return;
+        var module = await _module.Value;
+        await module.InvokeVoidAsync("anchor.update", handle);
+    }
+
     // ── Transition ───────────────────────────────────────────────────────────
 
     /// <summary>

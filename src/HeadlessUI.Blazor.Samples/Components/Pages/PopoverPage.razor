@@ -129,6 +129,62 @@
         </LiveContent>
     </DemoBlock>
 
+    <DemoBlock Title="Anchor Positioning"
+               Code="@_anchorCode"
+               Css="@_anchorCss">
+        <Description>
+            Set <code>Anchor</code> on <code>HPopoverPanel</code> to automatically position
+            the panel relative to the button. The panel uses <code>position: fixed</code>,
+            flips when there's not enough space, and auto-updates on scroll/resize.
+            No <code>position: relative</code> on the parent or <code>position: absolute</code>
+            on the panel needed.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+                <HPopover class="popover-anchored">
+                    <HPopoverButton class="popover-button" Context="b">
+                        Bottom Start
+                        <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HPopoverButton>
+                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "bottom start", Gap = 8 })"
+                                   class="popover-panel-anchored" Context="p">
+                        <p class="popover-body">
+                            This panel is anchored to <strong>bottom start</strong> with an 8px gap.
+                            It will flip to the top if there's not enough space below.
+                        </p>
+                    </HPopoverPanel>
+                </HPopover>
+
+                <HPopover class="popover-anchored">
+                    <HPopoverButton class="popover-button" Context="b">
+                        Top End
+                        <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HPopoverButton>
+                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "top end", Gap = 8 })"
+                                   class="popover-panel-anchored" Context="p">
+                        <p class="popover-body">
+                            This panel is anchored to <strong>top end</strong>. It flips to the
+                            bottom if there's not enough space above.
+                        </p>
+                    </HPopoverPanel>
+                </HPopover>
+
+                <HPopover class="popover-anchored">
+                    <HPopoverButton class="popover-button" Context="b">
+                        Right
+                        <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HPopoverButton>
+                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "right", Gap = 8 })"
+                                   class="popover-panel-anchored" Context="p">
+                        <p class="popover-body">
+                            This panel is anchored to the <strong>right</strong> side.
+                        </p>
+                    </HPopoverPanel>
+                </HPopover>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+
     <DemoBlock Title="Rich panel content"
                Code="@_richCode"
                Css="@_richCss">
@@ -255,6 +311,42 @@
         <a href="#" class="popover-footer-link">View all →</a>
     </HPopoverPanel>
 </HPopover>
+""";
+
+    private const string _anchorCode = """
+@* Anchor positions the panel relative to the button automatically.
+   Supports all sides: top, right, bottom, left — with start/end alignment. *@
+
+<HPopover class="popover-anchored">
+    <HPopoverButton class="popover-button" Context="b">
+        Bottom Start ▾
+    </HPopoverButton>
+    <HPopoverPanel Anchor="@(new AnchorOptions { To = "bottom start", Gap = 8 })"
+                   class="popover-panel-anchored" Context="p">
+        <p>This panel is anchored with auto-flip and shift.</p>
+    </HPopoverPanel>
+</HPopover>
+
+@* Available placements: top, top start, top end,
+   bottom, bottom start, bottom end,
+   left, left start, left end,
+   right, right start, right end *@
+""";
+
+    private const string _anchorCss = """
+/* When using Anchor, the panel is position:fixed by the JS engine.
+   No position:relative on parent needed. */
+.popover-anchored { display: inline-block; }
+
+.popover-panel-anchored {
+    z-index: 31;
+    min-width: 16rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
 """;
 
     private const string _popoverCss = """

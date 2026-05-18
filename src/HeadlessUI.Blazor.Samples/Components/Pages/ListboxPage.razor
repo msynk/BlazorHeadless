@@ -126,6 +126,66 @@
         </LiveContent>
     </DemoBlock>
 
+    <DemoBlock Title="Anchor Positioning"
+               Code="@_anchorCode"
+               Css="@_anchorCss">
+        <Description>
+            Set <code>Anchor</code> on <code>HListboxOptions</code> to automatically position
+            the dropdown relative to the button using <code>position: fixed</code>. The panel
+            flips to the opposite side when there's not enough space, shifts to stay within
+            the viewport, and auto-updates on scroll/resize. The CSS variable
+            <code>--button-width</code> is exposed so you can match the dropdown width to the trigger.
+            No <code>position: relative</code> on the parent is needed.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
+                <div>
+                    <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Bottom Start (width matched)</p>
+                    <HListbox TValue="string" Value="@anchorPerson"
+                              OnValueChange="v => anchorPerson = v"
+                              class="listbox-anchored">
+                        <HListboxButton TValue="string" class="listbox-button" Context="b">
+                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </HListboxButton>
+                        <HListboxOptions TValue="string"
+                                         Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                                         class="listbox-options-anchored">
+                            @foreach (var name in people)
+                            {
+                                <HListboxOption TValue="string" Value="@name" class="listbox-option">@name</HListboxOption>
+                            }
+                        </HListboxOptions>
+                    </HListbox>
+                </div>
+
+                <div>
+                    <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Top Start (flips down if no space)</p>
+                    <HListbox TValue="string" Value="@anchorPerson2"
+                              OnValueChange="v => anchorPerson2 = v"
+                              class="listbox-anchored">
+                        <HListboxButton TValue="string" class="listbox-button" Context="b">
+                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </HListboxButton>
+                        <HListboxOptions TValue="string"
+                                         Anchor="@(new AnchorOptions { To = "top start", Gap = 4 })"
+                                         class="listbox-options-anchored">
+                            @foreach (var name in people)
+                            {
+                                <HListboxOption TValue="string" Value="@name" class="listbox-option">@name</HListboxOption>
+                            }
+                        </HListboxOptions>
+                    </HListbox>
+                </div>
+            </div>
+
+            <span class="demo-output" style="margin-top:0.75rem;">
+                Selected: <strong>@(anchorPerson ?? anchorPerson2 ?? "(none)")</strong>
+            </span>
+        </LiveContent>
+    </DemoBlock>
+
     <DemoBlock Title="Form Submission"
                Code="@_formCode"
                Css="@_formCss">
@@ -162,6 +222,8 @@
 
 @code {
     private string? favPerson;
+    private string? anchorPerson;
+    private string? anchorPerson2;
     private IReadOnlyCollection<string> favColors = Array.Empty<string>();
     private string? country = "fr";
     private string? lastSubmitted;
@@ -392,5 +454,62 @@
 /* Reuses the .listbox styles from earlier demos.
    When Name is set, HListbox renders <input type="hidden"> sibling(s) — one for
    single-select, or one per value for multi-select. */
+""";
+
+    private const string _anchorCode = """
+@* Anchor positions the dropdown relative to the button automatically.
+   No position:relative on parent or position:absolute on panel needed.
+   The panel uses position:fixed and auto-updates on scroll/resize. *@
+
+<HListbox TValue="string" Value="@person"
+          OnValueChange="v => person = v"
+          class="listbox-anchored">
+    <HListboxButton TValue="string" class="listbox-button" Context="b">
+        <span>@(b.Value ?? "Select a person…")</span>
+        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </HListboxButton>
+    <HListboxOptions TValue="string"
+                     Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                     class="listbox-options-anchored">
+        @foreach (var name in people)
+        {
+            <HListboxOption TValue="string" Value="@name" class="listbox-option">
+                @name
+            </HListboxOption>
+        }
+    </HListboxOptions>
+</HListbox>
+
+@* Available placements: top, top start, top end,
+   bottom, bottom start, bottom end,
+   left, left start, left end,
+   right, right start, right end
+
+   The panel auto-flips to the opposite side if there's not enough space.
+   Use --button-width CSS variable to match the trigger width. *@
+""";
+
+    private const string _anchorCss = """
+/* When using Anchor, the panel is position:fixed by the JS engine.
+   No position:relative on parent needed. */
+.listbox-anchored { display: inline-block; min-width: 14rem; }
+
+.listbox-options-anchored {
+    z-index: 9999;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+    /* Match the button width using the exposed CSS variable */
+    width: var(--button-width);
+}
+
+/* Explicit hidden override — required when the panel has display set */
+.listbox-options-anchored[hidden] { display: none; }
 """;
 }

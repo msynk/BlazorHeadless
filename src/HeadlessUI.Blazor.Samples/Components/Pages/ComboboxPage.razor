@@ -160,6 +160,98 @@
             </span>
         </LiveContent>
     </DemoBlock>
+    <DemoBlock Title="Anchor Positioning"
+               Code="@_anchorCode"
+               Css="@_anchorCss">
+        <Description>
+            Set <code>Anchor</code> on <code>HComboboxOptions</code> to automatically position
+            the dropdown relative to the input using <code>position: fixed</code>. The panel
+            flips to the opposite side when there's not enough space, shifts to stay within
+            the viewport, and auto-updates on scroll/resize. No <code>position: relative</code>
+            on the parent is needed.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
+                <div>
+                    <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Bottom Start</p>
+                    <HCombobox TValue="string"
+                               Value="@anchorFruit"
+                               OnValueChange="v => anchorFruit = v"
+                               OnQueryChange="HandleAnchorFruitQuery"
+                               DisplayValue="v => v ?? string.Empty"
+                               class="combobox-anchored">
+                        <div class="combobox-input-wrapper">
+                            <HComboboxInput TValue="string"
+                                            Placeholder="Pick a fruit…"
+                                            class="combobox-input" />
+                            <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            </HComboboxButton>
+                        </div>
+                        <HComboboxOptions TValue="string"
+                                          Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                                          class="combobox-options-anchored">
+                            @if (anchorFilteredFruits.Count == 0)
+                            {
+                                <li class="combobox-empty">No matches.</li>
+                            }
+                            else
+                            {
+                                @foreach (var fruit in anchorFilteredFruits)
+                                {
+                                    <HComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
+                                        <span>@fruit</span>
+                                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                    </HComboboxOption>
+                                }
+                            }
+                        </HComboboxOptions>
+                    </HCombobox>
+                </div>
+
+                <div>
+                    <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Top Start (flips down if no space)</p>
+                    <HCombobox TValue="string"
+                               Value="@anchorFruit2"
+                               OnValueChange="v => anchorFruit2 = v"
+                               OnQueryChange="HandleAnchorFruitQuery2"
+                               DisplayValue="v => v ?? string.Empty"
+                               class="combobox-anchored">
+                        <div class="combobox-input-wrapper">
+                            <HComboboxInput TValue="string"
+                                            Placeholder="Pick a fruit…"
+                                            class="combobox-input" />
+                            <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            </HComboboxButton>
+                        </div>
+                        <HComboboxOptions TValue="string"
+                                          Anchor="@(new AnchorOptions { To = "top start", Gap = 4 })"
+                                          class="combobox-options-anchored">
+                            @if (anchorFilteredFruits2.Count == 0)
+                            {
+                                <li class="combobox-empty">No matches.</li>
+                            }
+                            else
+                            {
+                                @foreach (var fruit in anchorFilteredFruits2)
+                                {
+                                    <HComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
+                                        <span>@fruit</span>
+                                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                    </HComboboxOption>
+                                }
+                            }
+                        </HComboboxOptions>
+                    </HCombobox>
+                </div>
+            </div>
+
+            <span class="demo-output" style="margin-top:0.75rem;">
+                Selected: <strong>@(anchorFruit ?? anchorFruit2 ?? "(none)")</strong>
+            </span>
+        </LiveContent>
+    </DemoBlock>
 </div>
 
 @code {
@@ -179,6 +271,31 @@
     {
         fruitQuery = query;
         filteredFruits = string.IsNullOrWhiteSpace(query)
+            ? allFruits.ToList()
+            : allFruits
+                .Where(f => f.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    // ── Anchor positioning demo ─────────────────────────────────────────────
+
+    private string? anchorFruit;
+    private string? anchorFruit2;
+    private List<string> anchorFilteredFruits = new();
+    private List<string> anchorFilteredFruits2 = new();
+
+    private void HandleAnchorFruitQuery(string query)
+    {
+        anchorFilteredFruits = string.IsNullOrWhiteSpace(query)
+            ? allFruits.ToList()
+            : allFruits
+                .Where(f => f.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    private void HandleAnchorFruitQuery2(string query)
+    {
+        anchorFilteredFruits2 = string.IsNullOrWhiteSpace(query)
             ? allFruits.ToList()
             : allFruits
                 .Where(f => f.Contains(query, StringComparison.OrdinalIgnoreCase))
@@ -252,6 +369,8 @@
         filteredFruits = allFruits.ToList();
         filteredTags   = allTags.ToList();
         filteredPeople = allPeople.ToList();
+        anchorFilteredFruits = allFruits.ToList();
+        anchorFilteredFruits2 = allFruits.ToList();
     }
 
     // ── Source snippets shown alongside each live demo ─────────────────────────
@@ -504,5 +623,63 @@ public sealed record Person(string Name, string Email);
 
 .person-info strong { font-size: 0.85rem; color: #18181b; }
 .person-info span   { font-size: 0.75rem; color: #71717a; }
+""";
+
+    private const string _anchorCode = """
+@* Anchor positions the dropdown relative to the input automatically.
+   No position:relative on parent or position:absolute on panel needed.
+   The panel uses position:fixed and auto-updates on scroll/resize. *@
+
+<HCombobox TValue="string"
+           Value="@selectedFruit"
+           OnValueChange="v => selectedFruit = v"
+           OnQueryChange="HandleFruitQuery"
+           DisplayValue="v => v ?? string.Empty"
+           class="combobox-anchored">
+    <div class="combobox-input-wrapper">
+        <HComboboxInput TValue="string" Placeholder="Pick a fruit…" class="combobox-input" />
+        <HComboboxButton TValue="string" class="combobox-button">▾</HComboboxButton>
+    </div>
+    <HComboboxOptions TValue="string"
+                      Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                      class="combobox-options-anchored">
+        @foreach (var fruit in filteredFruits)
+        {
+            <HComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+                @fruit
+            </HComboboxOption>
+        }
+    </HComboboxOptions>
+</HCombobox>
+
+@* Available placements: top, top start, top end,
+   bottom, bottom start, bottom end,
+   left, left start, left end,
+   right, right start, right end
+
+   The panel auto-flips to the opposite side if there's not enough space. *@
+""";
+
+    private const string _anchorCss = """
+/* When using Anchor, the panel is position:fixed by the JS engine.
+   No position:relative on parent needed. */
+.combobox-anchored { display: inline-block; min-width: 18rem; }
+
+.combobox-options-anchored {
+    z-index: 9999;
+    min-width: 18rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+/* Explicit hidden override — required when the panel has display set */
+.combobox-options-anchored[hidden] { display: none; }
 """;
 }

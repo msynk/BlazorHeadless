@@ -43,8 +43,11 @@ public class HMenuButton : HeadlessComponentBase
         builder.AddAttribute(31, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
 
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
+        builder.AddElementReferenceCapture(40, e =>
+        {
+            MenuContext?.RegisterButton(e);
+            Ref?.Invoke(e);
+        });
 
         if (ChildContent is not null)
             builder.AddContent(50, ChildContent(RenderContext));
