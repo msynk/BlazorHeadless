@@ -55,6 +55,59 @@ public sealed class HeadlessUIInterop : IAsyncDisposable
         await module.InvokeVoidAsync("dialog.unlock", handle);
     }
 
+    // ── Popover ──────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Moves focus to the first focusable element inside <paramref name="panel"/>.
+    /// Returns a reference to the element that had focus before the call, so the
+    /// caller can restore it when the popover closes.
+    /// </summary>
+    public async Task<IJSObjectReference?> PopoverFocusPanelAsync(ElementReference panel)
+    {
+        var module = await _module.Value;
+        return await module.InvokeAsync<IJSObjectReference?>("popover.focusPanel", panel);
+    }
+
+    /// <summary>Restores focus to the element captured by <see cref="PopoverFocusPanelAsync"/>.</summary>
+    public async ValueTask PopoverRestoreFocusAsync(IJSObjectReference? element)
+    {
+        if (element is null) return;
+        var module = await _module.Value;
+        await module.InvokeVoidAsync("popover.restoreFocus", element);
+    }
+
+    // ── Transition ───────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Runs the CSS enter transition on <paramref name="element"/>.
+    /// Applies the class sequence: enter+enterFrom → (next frame) enterTo → (after transition) entered.
+    /// </summary>
+    public async ValueTask TransitionEnterAsync(
+        ElementReference element,
+        string? enter,
+        string? enterFrom,
+        string? enterTo,
+        string? entered)
+    {
+        var module = await _module.Value;
+        await module.InvokeVoidAsync("transition.enter", element, new { enter, enterFrom, enterTo, entered });
+    }
+
+    /// <summary>
+    /// Runs the CSS leave transition on <paramref name="element"/>.
+    /// Applies the class sequence: leave+leaveFrom → (next frame) leaveTo → (after transition) done.
+    /// </summary>
+    public async ValueTask TransitionLeaveAsync(
+        ElementReference element,
+        string? leave,
+        string? leaveFrom,
+        string? leaveTo,
+        string? entered)
+    {
+        var module = await _module.Value;
+        await module.InvokeVoidAsync("transition.leave", element, new { leave, leaveFrom, leaveTo, entered });
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (_module.IsValueCreated)

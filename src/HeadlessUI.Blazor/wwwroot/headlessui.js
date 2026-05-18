@@ -149,3 +149,151 @@ export const dialog = {
         }
     }
 };
+
+// ─── Popover: focus management (no trap, no scroll lock) ────────────────────
+
+export const popover = {
+    /**
+     * Moves focus to the first focusable element inside the panel, or the panel
+     * itself if none exist. Returns the element that was focused before the call
+     * so the caller can restore it on close.
+     */
+    focusPanel(panel) {
+        if (!panel) return null;
+        const previous = document.activeElement;
+        const first = focusableInside(panel)[0] || panel;
+        if (first) first.focus({ preventScroll: true });
+        return previous;
+    },
+
+    /**
+     * Restores focus to the element returned by focusPanel (or any element).
+     */
+    restoreFocus(element) {
+        if (element && typeof element.focus === 'function')
+            element.focus({ preventScroll: true });
+    }
+};
+
+// ─── Transition: CSS class-based enter/leave animations ─────────────────────
+
+const transitionState = new WeakMap();
+
+function nextFrame() {
+    return new Promise(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+}
+
+function afterTransition(el) {
+    return new Promise(resolve => {
+        // Compute the longest transition/animation duration on the element.
+        const styles = getComputedStyle(el);
+        const durations = (styles.transitionDuration || '0s').split(',');
+        const delays = (styles.transitionDelay || '0s').split(',');
+        const animDurations = (styles.animationDuration || '0s').split(',');
+        const animDelays = (styles.animationDelay || '0s').split(',');
+
+        function parseMs(s) { return parseFloat(s) * (s.includes('ms') ? 1 : 1000); }
+
+        let maxMs = 0;
+        for (let i = 0; i < Math.max(durations.length, animDurations.length); i++) {
+            const td = parseMs(durations[i % durations.length] || '0s');
+            const tDelay = parseMs(delays[i % delays.length] || '0s');
+            const ad = parseMs(animDurations[i % animDurations.length] || '0s');
+            const aDelay = parseMs(animDelays[i % animDelays.length] || '0s');
+            maxMs = Math.max(maxMs, td + tDelay, ad + aDelay);
+        }
+
+        if (maxMs <= 0) { resolve(); return; }
+
+        // Use a timeout as a fallback in case transitionend doesn't fire.
+        const timer = setTimeout(resolve, maxMs + 50);
+        const handler = (e) => {
+            if (e.target !== el) return;
+            clearTimeout(timer);
+            el.removeEventListener('transitionend', handler);
+            el.removeEventListener('animationend', handler);
+            resolve();
+        };
+        el.addEventListener('transitionend', handler);
+        el.addEventListener('animationend', handler);
+    });
+}
+
+function addClasses(el, str) {
+    if (!str) return;
+    for (const c of str.trim().split(/\s+/)) if (c) el.classList.add(c);
+}
+
+function removeClasses(el, str) {
+    if (!str) return;
+    for (const c of str.trim().split(/\s+/)) if (c) el.classList.remove(c);
+}
+
+export const transition = {
+    /**
+     * Runs the enter transition on the element.
+     * classes: { enter, enterFrom, enterTo, entered }
+     */
+    async enter(el, classes) {
+        if (!el) return;
+        // Cancel any in-progress leave.
+        this.cancel(el);
+
+        const { enter, enterFrom, enterTo, entered } = classes || {};
+
+        addClasses(el, enter);
+        addClasses(el, enterFrom);
+
+        await nextFrame();
+
+        removeClasses(el, enterFrom);
+        addClasses(el, enterTo);
+
+        await afterTransition(el);
+
+        removeClasses(el, enter);
+        removeClasses(el, enterTo);
+        addClasses(el, entered);
+
+        transitionState.set(el, 'entered');
+    },
+
+    /**
+     * Runs the leave transition on the element.
+     * classes: { leave, leaveFrom, leaveTo, entered }
+     * Returns after the transition completes (caller should then hide/unmount).
+     */
+    async leave(el, classes) {
+        if (!el) return;
+        this.cancel(el);
+
+        const { leave, leaveFrom, leaveTo, entered } = classes || {};
+
+        removeClasses(el, entered);
+        addClasses(el, leave);
+        addClasses(el, leaveFrom);
+
+        await nextFrame();
+
+        removeClasses(el, leaveFrom);
+        addClasses(el, leaveTo);
+
+        await afterTransition(el);
+
+        removeClasses(el, leave);
+        removeClasses(el, leaveTo);
+
+        transitionState.set(el, 'left');
+    },
+
+    /**
+     * Cancels any in-progress transition by removing all transition classes.
+     */
+    cancel(el) {
+        if (!el) return;
+        // We can't know which classes were applied, so we just clear the state.
+        transitionState.delete(el);
+    }
+};

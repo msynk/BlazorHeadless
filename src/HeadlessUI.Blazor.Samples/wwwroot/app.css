@@ -1461,3 +1461,254 @@ body {
     margin: 0.25rem 0;
     list-style: none;
 }
+
+/* ============================================================
+   Popover styles — purely consumer-defined
+   ============================================================ */
+
+.popover {
+    position: relative;
+    display: inline-block;
+}
+
+/* ---- Popover button ---- */
+
+.popover-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.popover-button:hover               { border-color: #a1a1af; }
+.popover-button:focus-visible       { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.popover-button[data-state="open"]  { border-color: var(--color-primary); }
+
+.popover-chevron {
+    transition: transform 200ms ease;
+    color: var(--color-muted);
+}
+
+.popover-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* ---- Popover panel ----
+   Sits above the click-outside overlay (z-index: 30 inline). */
+
+.popover-panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 31;
+    min-width: 16rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.popover-panel-wide {
+    min-width: 22rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+.popover-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.popover-body {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+.popover-link {
+    font-size: 0.875rem;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.popover-link:hover {
+    text-decoration: underline;
+}
+
+.popover-close-btn {
+    all: unset;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ---- Group layout ---- */
+
+.popover-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* ---- Nav list inside a popover ---- */
+
+.popover-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.popover-nav-link {
+    display: block;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.35rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: background 120ms ease;
+}
+
+.popover-nav-link:hover {
+    background: #f4f4f5;
+    color: var(--color-primary);
+}
+
+/* ---- Badge ---- */
+
+.popover-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.45rem;
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ---- Notification panel ---- */
+
+.popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.notification-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.6rem 1rem;
+    transition: background 120ms ease;
+}
+
+.notification-item:hover {
+    background: #f4f4f5;
+}
+
+.notification-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--color-primary);
+    border-radius: 999px;
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+}
+
+.notification-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.notification-item strong { font-size: 0.85rem; color: var(--color-text); }
+.notification-item span   { font-size: 0.75rem; color: var(--color-muted); }
+
+.popover-footer-link {
+    display: block;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.popover-footer-link:hover {
+    background: #f4f4f5;
+}
+
+/* ============================================================
+   Transition demo styles — utility classes for the demos
+   ============================================================ */
+
+.transition-demo-box {
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 20rem;
+}
+
+.transition-demo-box p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+/* ---- Utility classes used by the transition demos ---- */
+
+.transition-opacity { transition-property: opacity; }
+.transition-all     { transition-property: all; }
+.duration-200       { transition-duration: 200ms; }
+.duration-300       { transition-duration: 300ms; }
+.duration-500       { transition-duration: 500ms; }
+.ease-out           { transition-timing-function: ease-out; }
+.ease-in            { transition-timing-function: ease-in; }
+
+.opacity-0   { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.scale-95    { transform: scale(0.95); }
+.scale-100   { transform: scale(1); }
+.translate-y-4 { transform: translateY(1rem); }
+.translate-y-0 { transform: translateY(0); }
+
+/* ---- Slide-down transition ---- */
+
+.slide-box          { overflow: hidden; }
+.slide-enter        { transition: max-height 300ms ease-out, opacity 300ms ease-out; }
+.slide-enter-from   { max-height: 0; opacity: 0; }
+.slide-enter-to     { max-height: 10rem; opacity: 1; }
+.slide-leave        { transition: max-height 200ms ease-in, opacity 200ms ease-in; }
+.slide-leave-from   { max-height: 10rem; opacity: 1; }
+.slide-leave-to     { max-height: 0; opacity: 0; }
