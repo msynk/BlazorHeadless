@@ -776,3 +776,185 @@ body {
     background: var(--color-primary);
     color: #fff;
 }
+
+/* ============================================================
+   Checkbox styles — purely consumer-defined
+   ============================================================ */
+
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: var(--color-surface);
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover {
+    border-color: #a1a1af;
+}
+
+.checkbox:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Hooks emitted by HCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.checkbox[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---- Glyphs rendered inside the box ---- */
+
+.checkbox-tick {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.checkbox-dash {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 0;
+}
+
+/* ---- Label wrapper ---- */
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   Radio Group styles — purely consumer-defined
+   ============================================================ */
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover {
+    border-color: #a1a1af;
+}
+
+.radio:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Hooks emitted by HRadio */
+.radio[data-state="checked"] {
+    border-color: var(--color-primary);
+}
+
+.radio[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: var(--color-primary);
+    border-radius: 999px;
+}
+
+/* ---- Card-style group (used by the demo) ---- */
+
+.plan-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+}
+
+.plan-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 120ms ease, background 120ms ease;
+    box-sizing: border-box;
+}
+
+.plan-card:has(.radio[data-state="checked"]) {
+    border-color: var(--color-primary);
+    background: #eff6ff;
+}
+
+.plan-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.plan-info strong {
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+.plan-info span {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
