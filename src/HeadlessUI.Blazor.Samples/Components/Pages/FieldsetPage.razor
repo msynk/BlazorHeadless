@@ -1,0 +1,312 @@
+@page "/fieldset"
+@rendermode InteractiveServer
+
+<PageTitle>Fieldset — HeadlessUI.Blazor</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Fieldset</h1>
+        <p>
+            Group a set of form controls together with a fully accessible but
+            much easier-to-style version of the native <code>fieldset</code> and
+            <code>legend</code> elements.
+        </p>
+    </header>
+
+    <DemoBlock Title="Basic example"
+               Code="@_basicCode"
+               Css="@_basicCss">
+        <Description>
+            Use <code>HFieldset</code> and <code>HLegend</code> to group a set of
+            form controls together with a title. The fieldset uses the native
+            <code>&lt;fieldset&gt;</code> element while the legend renders as a
+            <code>&lt;div&gt;</code> (since native <code>&lt;legend&gt;</code> is
+            notoriously hard to style).
+        </Description>
+        <LiveContent>
+            <HFieldset class="fieldset">
+                <header class="fieldset-header">
+                    <HLegend class="fieldset-legend">Shipping details</HLegend>
+                    <p class="fieldset-hint">Where should we deliver your order?</p>
+                </header>
+
+                <HField class="field">
+                    <HLabel class="field-label">Street address</HLabel>
+                    <HInput name="address" placeholder="123 Main St" class="field-input" />
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Country</HLabel>
+                    <HSelect name="country" class="field-input field-select">
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                        <option>United States</option>
+                    </HSelect>
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Delivery notes</HLabel>
+                    <HTextarea name="notes" rows="3"
+                               placeholder="Leave at front door…"
+                               class="field-input field-textarea" />
+                </HField>
+            </HFieldset>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabling a fieldset"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> on the <code>HFieldset</code> to
+            disable every form control inside. The fieldset, legend, and all
+            nested fields receive <code>data-disabled</code> for CSS hooks, and
+            the native <code>disabled</code> attribute on the fieldset prevents
+            interaction.
+        </Description>
+        <LiveContent>
+            <HFieldset Disabled="true" class="fieldset">
+                <header class="fieldset-header">
+                    <HLegend class="fieldset-legend">Account (locked)</HLegend>
+                    <p class="fieldset-hint">Verify your email to edit these fields.</p>
+                </header>
+
+                <HField class="field">
+                    <HLabel class="field-label">Username</HLabel>
+                    <HInput type="text" value="alice" class="field-input" />
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Email</HLabel>
+                    <HInput type="email" value="alice@example.com" class="field-input" />
+                </HField>
+            </HFieldset>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Toggling at runtime"
+               Code="@_toggleCode"
+               Css="@_toggleCss">
+        <Description>
+            Bind <code>Disabled</code> to a state value to enable or disable the
+            entire group dynamically. Every nested input reflects the change
+            through both the native <code>disabled</code> attribute and
+            <code>data-disabled</code>.
+        </Description>
+        <LiveContent>
+            <div class="fieldset-toolbar">
+                <span class="fieldset-status" data-active="@(!_disabled)">
+                    <span class="fieldset-status-dot"></span>
+                    @(_disabled ? "Read-only" : "Editing")
+                </span>
+                <HButton class="btn" OnClick="@(() => _disabled = !_disabled)">
+                    @(_disabled ? "Enable" : "Disable")
+                </HButton>
+            </div>
+
+            <HFieldset Disabled="_disabled" class="fieldset">
+                <header class="fieldset-header">
+                    <HLegend class="fieldset-legend">Profile</HLegend>
+                    <p class="fieldset-hint">Shown publicly on your profile page.</p>
+                </header>
+
+                <HField class="field">
+                    <HLabel class="field-label">Display name</HLabel>
+                    <HInput type="text" placeholder="Alice Anderson" class="field-input" />
+                </HField>
+
+                <HField class="field">
+                    <HLabel class="field-label">Bio</HLabel>
+                    <HTextarea rows="2" placeholder="Tell us about yourself…"
+                               class="field-input field-textarea" />
+                </HField>
+            </HFieldset>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private bool _disabled;
+
+    // ── Source snippets ───────────────────────────────────────────────────────
+
+    private const string _basicCode = """
+<HFieldset class="fieldset">
+    <header class="fieldset-header">
+        <HLegend class="fieldset-legend">Shipping details</HLegend>
+        <p class="fieldset-hint">Where should we deliver your order?</p>
+    </header>
+
+    <HField class="field">
+        <HLabel class="field-label">Street address</HLabel>
+        <HInput name="address" class="field-input" />
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Country</HLabel>
+        <HSelect name="country" class="field-input field-select">
+            <option>Canada</option>
+            <option>Mexico</option>
+            <option>United States</option>
+        </HSelect>
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Delivery notes</HLabel>
+        <HTextarea name="notes" rows="3" class="field-input field-textarea" />
+    </HField>
+</HFieldset>
+
+@* Rendered HTML:
+   <fieldset id="h-xxxx" aria-labelledby="h-xxxx-legend">
+       <header class="fieldset-header">
+           <div id="h-xxxx-legend" role="legend">Shipping details</div>
+           …
+       </header>
+       …
+   </fieldset>
+*@
+""";
+
+    private const string _disabledCode = """
+<HFieldset Disabled="true" class="fieldset">
+    <header class="fieldset-header">
+        <HLegend class="fieldset-legend">Account (locked)</HLegend>
+        <p class="fieldset-hint">Verify your email to edit these fields.</p>
+    </header>
+
+    <HField class="field">
+        <HLabel class="field-label">Username</HLabel>
+        <HInput type="text" value="alice" class="field-input" />
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Email</HLabel>
+        <HInput type="email" value="alice@example.com" class="field-input" />
+    </HField>
+</HFieldset>
+
+@* The native <fieldset disabled> attribute disables every nested control,
+   and data-disabled cascades to the legend and each HField for styling. *@
+""";
+
+    private const string _toggleCode = """
+@code {
+    private bool _disabled;
+}
+
+<div class="fieldset-toolbar">
+    <span class="fieldset-status" data-active="@(!_disabled)">
+        <span class="fieldset-status-dot"></span>
+        @(_disabled ? "Read-only" : "Editing")
+    </span>
+    <HButton OnClick="@(() => _disabled = !_disabled)" class="btn">
+        @(_disabled ? "Enable" : "Disable")
+    </HButton>
+</div>
+
+<HFieldset Disabled="_disabled" class="fieldset">
+    <header class="fieldset-header">
+        <HLegend class="fieldset-legend">Profile</HLegend>
+        <p class="fieldset-hint">Shown publicly on your profile page.</p>
+    </header>
+
+    <HField class="field">
+        <HLabel class="field-label">Display name</HLabel>
+        <HInput type="text" class="field-input" />
+    </HField>
+
+    <HField class="field">
+        <HLabel class="field-label">Bio</HLabel>
+        <HTextarea rows="2" class="field-input field-textarea" />
+    </HField>
+</HFieldset>
+""";
+
+    // ── Styles (these are appended to wwwroot/app.css; here they're shown for documentation) ──
+
+    private const string _basicCss = """
+.fieldset {
+    /* Reset native <fieldset> defaults and re-style as a card */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 0;
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    max-width: 28rem;
+}
+
+.fieldset-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #f4f4f5;
+}
+
+.fieldset-legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.fieldset-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+}
+
+/* Reuses the .field / .field-input rules that ship with the Field demo. */
+""";
+
+    private const string _disabledCss = """
+/* Hooks cascaded from HFieldset Disabled="true" */
+.fieldset[data-disabled] {
+    background: #fafafa;
+    box-shadow: none;
+}
+
+.fieldset[data-disabled] .field-input,
+.fieldset[data-disabled] .field-input:disabled {
+    background: #f4f4f5;
+    color: var(--color-muted);
+    cursor: not-allowed;
+}
+
+.fieldset-legend[data-disabled] {
+    color: var(--color-muted);
+}
+""";
+
+    private const string _toggleCss = """
+.fieldset-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 28rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.fieldset-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-muted);
+}
+
+.fieldset-status[data-active="true"]                    { color: #15803d; }
+.fieldset-status-dot                                    { width: .5rem; height: .5rem; border-radius: 999px; background: #a1a1af; }
+.fieldset-status[data-active="true"] .fieldset-status-dot { background: #22c55e; }
+""";
+}

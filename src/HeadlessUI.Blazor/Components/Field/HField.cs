@@ -24,6 +24,9 @@ namespace HeadlessUI.Blazor;
 /// </summary>
 public class HField : HeadlessComponentBase
 {
+    [CascadingParameter]
+    private FieldsetContext? FieldsetContext { get; set; }
+
     /// <summary>Disables all form controls inside this field.</summary>
     [Parameter]
     public bool Disabled { get; set; }
@@ -38,10 +41,15 @@ public class HField : HeadlessComponentBase
 
     protected override string DefaultTag => "div";
 
+    /// <summary>
+    /// Resolved disabled state: true if explicitly disabled or inherited from a parent <see cref="HFieldset"/>.
+    /// </summary>
+    private bool IsDisabled => Disabled || (FieldsetContext?.Disabled ?? false);
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenComponent<CascadingValue<FieldContext>>(0);
-        builder.AddComponentParameter(1, "Value", new FieldContext(ComponentId, Disabled, Invalid));
+        builder.AddComponentParameter(1, "Value", new FieldContext(ComponentId, IsDisabled, Invalid));
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
@@ -60,7 +68,7 @@ public class HField : HeadlessComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataFlag(attrs, "disabled", Disabled);
+        SetDataFlag(attrs, "disabled", IsDisabled);
         SetDataFlag(attrs, "invalid", Invalid);
         return attrs;
     }
