@@ -1,0 +1,482 @@
+@page "/menu"
+@rendermode InteractiveServer
+
+<PageTitle>Menu — BlazorHeadless</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Menu</h1>
+        <p>An accessible dropdown menu with keyboard navigation, typeahead, and zero visual opinion.</p>
+    </header>
+
+    <DemoBlock Title="Basic Menu"
+               Code="@_basicCode"
+               Css="@_menuCss">
+        <Description>
+            Click the button or press Space / Enter / arrow keys to open. Use Up / Down to
+            navigate, Home / End to jump, Enter / Space to activate, Escape to close.
+            Type a letter to jump to the first matching item. ARIA wiring
+            (<code>aria-haspopup="menu"</code>, <code>aria-expanded</code>,
+            <code>aria-activedescendant</code>) is handled automatically.
+        </Description>
+        <LiveContent>
+            <HMenu class="menu">
+                <HMenuButton class="menu-button" Context="b">
+                    Options
+                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                </HMenuButton>
+                <HMenuItems class="menu-items">
+                    <HMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Delete"))'    class="menu-item" Label="Delete">Delete</HMenuItem>
+                </HMenuItems>
+            </HMenu>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled Items"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> on individual items. Disabled items receive
+            <code>data-disabled</code> for CSS, are skipped by arrow-key nav, and are
+            ignored by typeahead.
+        </Description>
+        <LiveContent>
+            <HMenu class="menu">
+                <HMenuButton class="menu-button" Context="b">
+                    Account
+                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                </HMenuButton>
+                <HMenuItems class="menu-items">
+                    <HMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Settings"))' class="menu-item" Label="Settings">Settings</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Billing"))'  class="menu-item" Label="Billing"
+                               Disabled="true">Billing (unavailable)</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Sign out"))' class="menu-item" Label="Sign out">Sign out</HMenuItem>
+                </HMenuItems>
+            </HMenu>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Rich item content"
+               Code="@_richCode"
+               Css="@_richCss">
+        <Description>
+            Items can contain any markup. Use the <code>data-active</code> hook to drive
+            the highlighted style and provide a <code>Label</code> string so typeahead
+            still works when the content is rich.
+        </Description>
+        <LiveContent>
+            <HMenu class="menu">
+                <HMenuButton class="menu-button" Context="b">
+                    File
+                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                </HMenuButton>
+                <HMenuItems class="menu-items menu-items-wide">
+                    <HMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
+                        <span class="menu-item-icon">📄</span>
+                        <span class="menu-item-body">
+                            <strong>New file</strong>
+                            <span>Create a blank document</span>
+                        </span>
+                        <span class="menu-item-shortcut">⌘N</span>
+                    </HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
+                        <span class="menu-item-icon">📂</span>
+                        <span class="menu-item-body">
+                            <strong>Open…</strong>
+                            <span>Browse for a file</span>
+                        </span>
+                        <span class="menu-item-shortcut">⌘O</span>
+                    </HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
+                        <span class="menu-item-icon">💾</span>
+                        <span class="menu-item-body">
+                            <strong>Save</strong>
+                            <span>Save the current document</span>
+                        </span>
+                        <span class="menu-item-shortcut">⌘S</span>
+                    </HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
+                               Disabled="true" Context="i">
+                        <span class="menu-item-icon">📤</span>
+                        <span class="menu-item-body">
+                            <strong>Export</strong>
+                            <span>Not available in this plan</span>
+                        </span>
+                    </HMenuItem>
+                </HMenuItems>
+            </HMenu>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Sections and dividers"
+               Code="@_sectionsCode"
+               Css="@_sectionsCss">
+        <Description>
+            Group related items with a plain <code>&lt;li&gt;</code> divider or a
+            section heading. These are regular HTML elements — the menu component
+            doesn't need to know about them.
+        </Description>
+        <LiveContent>
+            <HMenu class="menu">
+                <HMenuButton class="menu-button" Context="b">
+                    More
+                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                </HMenuButton>
+                <HMenuItems class="menu-items">
+                    <li class="menu-section-label" role="presentation">View</li>
+                    <HMenuItem OnClick='@(() => Log("Zoom in"))'     class="menu-item" Label="Zoom in">Zoom in</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Zoom out"))'    class="menu-item" Label="Zoom out">Zoom out</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Full screen"))' class="menu-item" Label="Full screen">Full screen</HMenuItem>
+
+                    <li class="menu-divider" role="separator"></li>
+
+                    <li class="menu-section-label" role="presentation">Help</li>
+                    <HMenuItem OnClick='@(() => Log("Documentation"))'    class="menu-item" Label="Documentation">Documentation</HMenuItem>
+                    <HMenuItem OnClick='@(() => Log("Keyboard shortcuts"))' class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</HMenuItem>
+                </HMenuItems>
+            </HMenu>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Anchor Positioning"
+               Code="@_anchorCode"
+               Css="@_anchorCss">
+        <Description>
+            Set <code>Anchor</code> on <code>HMenuItems</code> to automatically position the
+            dropdown relative to the button. The panel uses <code>position: fixed</code> and
+            auto-updates on scroll/resize. It flips to the opposite side if there's not enough
+            space, and shifts to stay within the viewport. CSS custom properties
+            <code>--button-width</code>, <code>--anchor-gap</code> are exposed on the panel.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Bottom Start
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                                class="menu-items-anchored">
+                        <HMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Bottom End
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom end", Gap = 4 })"
+                                class="menu-items-anchored">
+                        <HMenuItem OnClick='@(() => Log("Cut"))'   class="menu-item" Label="Cut">Cut</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Copy"))'  class="menu-item" Label="Copy">Copy</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Paste"))' class="menu-item" Label="Paste">Paste</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+
+                <HMenu class="menu">
+                    <HMenuButton class="menu-button" Context="b">
+                        Match Width
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </HMenuButton>
+                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+                                class="menu-items-anchored menu-items-match-width">
+                        <HMenuItem OnClick='@(() => Log("Option A"))' class="menu-item" Label="Option A">Option A</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Option B"))' class="menu-item" Label="Option B">Option B</HMenuItem>
+                        <HMenuItem OnClick='@(() => Log("Option C"))' class="menu-item" Label="Option C">Option C</HMenuItem>
+                    </HMenuItems>
+                </HMenu>
+            </div>
+
+            <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Polymorphic items"
+               Code="@_polymorphicCode"
+               Css="@_polymorphicCss">
+        <Description>
+            Set <code>As="a"</code> on an item to render it as an anchor tag — useful for
+            navigation links inside a menu. The item still participates in keyboard nav
+            and receives all the ARIA attributes.
+        </Description>
+        <LiveContent>
+            <HMenu class="menu">
+                <HMenuButton class="menu-button" Context="b">
+                    Navigate
+                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                </HMenuButton>
+                <HMenuItems class="menu-items">
+                    <HMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</HMenuItem>
+                    <HMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</HMenuItem>
+                    <HMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</HMenuItem>
+                    <HMenuItem As="a" href="/accordion"  class="menu-item" Label="Accordion">Accordion</HMenuItem>
+                </HMenuItems>
+            </HMenu>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) => lastAction = action;
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _basicCode = """
+<HMenu class="menu">
+    <HMenuButton class="menu-button" Context="b">
+        Options
+        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </HMenuButton>
+    <HMenuItems class="menu-items">
+        <HMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</HMenuItem>
+        <HMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+        <HMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</HMenuItem>
+        <HMenuItem OnClick="Delete"    class="menu-item" Label="Delete">Delete</HMenuItem>
+    </HMenuItems>
+</HMenu>
+""";
+
+    private const string _disabledCode = """
+<HMenuItems class="menu-items">
+    <HMenuItem OnClick="Profile"  class="menu-item" Label="Profile">Profile</HMenuItem>
+    <HMenuItem OnClick="Settings" class="menu-item" Label="Settings">Settings</HMenuItem>
+    <HMenuItem OnClick="Billing"  class="menu-item" Label="Billing"
+               Disabled="true">Billing (unavailable)</HMenuItem>
+    <HMenuItem OnClick="SignOut"  class="menu-item" Label="Sign out">Sign out</HMenuItem>
+</HMenuItems>
+""";
+
+    private const string _richCode = """
+<HMenuItem OnClick="NewFile" class="menu-item" Label="New file" Context="i">
+    <span class="menu-item-icon">📄</span>
+    <span class="menu-item-body">
+        <strong>New file</strong>
+        <span>Create a blank document</span>
+    </span>
+    <span class="menu-item-shortcut">⌘N</span>
+</HMenuItem>
+
+@* Provide Label="New file" so typeahead matches the visible text,
+   not the icon or shortcut. *@
+""";
+
+    private const string _sectionsCode = """
+<HMenuItems class="menu-items">
+    <li class="menu-section-label" role="presentation">View</li>
+    <HMenuItem OnClick="ZoomIn"  class="menu-item" Label="Zoom in">Zoom in</HMenuItem>
+    <HMenuItem OnClick="ZoomOut" class="menu-item" Label="Zoom out">Zoom out</HMenuItem>
+
+    <li class="menu-divider" role="separator"></li>
+
+    <li class="menu-section-label" role="presentation">Help</li>
+    <HMenuItem OnClick="Docs"      class="menu-item" Label="Documentation">Documentation</HMenuItem>
+    <HMenuItem OnClick="Shortcuts" class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</HMenuItem>
+</HMenuItems>
+""";
+
+    private const string _polymorphicCode = """
+<HMenuItems class="menu-items">
+    <HMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</HMenuItem>
+    <HMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</HMenuItem>
+    <HMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</HMenuItem>
+</HMenuItems>
+""";
+
+    private const string _anchorCode = """
+@* Anchor positions the dropdown relative to the button automatically.
+   It flips to the opposite side if there's not enough space. *@
+
+<HMenu class="menu">
+    <HMenuButton class="menu-button">Options ▾</HMenuButton>
+    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                class="menu-items-anchored">
+        <HMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</HMenuItem>
+        <HMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
+        <HMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</HMenuItem>
+    </HMenuItems>
+</HMenu>
+
+@* Use --button-width to match the dropdown width to the trigger: *@
+<HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+            class="menu-items-anchored menu-items-match-width">
+    …
+</HMenuItems>
+""";
+
+    private const string _anchorCss = """
+/* When using Anchor, the panel is position:fixed by the JS engine.
+   No need for position:relative on the parent or position:absolute on the panel.
+   Use a high z-index to ensure the panel renders above all other page content. */
+.menu-items-anchored {
+    z-index: 9999;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Use the --button-width CSS variable to match the trigger width */
+.menu-items-match-width {
+    min-width: unset;
+    width: var(--button-width);
+}
+
+/* Items inside the anchored panel */
+.menu-items-anchored .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+.menu-items-anchored .menu-item[data-active] { background: #eff6ff; color: #1d4ed8; }
+.menu-items-anchored .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+""";
+
+    private const string _menuCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by HMenuItem */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when Disabled="true" on an item */
+.menu-item[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation and typeahead skip disabled items automatically. */
+""";
+
+    private const string _richCss = """
+/* Rich item layout: icon + body (title + description) + shortcut */
+.menu-items-wide { min-width: 16rem; }
+
+.menu-item-icon     { font-size: 1rem; flex-shrink: 0; }
+.menu-item-shortcut { margin-left: auto; font-size: 0.75rem; color: #71717a; }
+
+.menu-item-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    line-height: 1.25;
+}
+
+.menu-item-body strong { font-size: 0.875rem; }
+.menu-item-body span   { font-size: 0.75rem; color: #71717a; }
+
+/* Active state overrides the muted description colour */
+.menu-item[data-active] .menu-item-body span { color: #93c5fd; }
+""";
+
+    private const string _sectionsCss = """
+/* Section label — not an interactive item, just a visual grouping header */
+.menu-section-label {
+    padding: 0.35rem 0.65rem 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #71717a;
+    list-style: none;
+}
+
+/* Divider between sections */
+.menu-divider {
+    height: 1px;
+    background: #e4e4e7;
+    margin: 0.25rem 0;
+    list-style: none;
+}
+""";
+
+    private const string _polymorphicCss = """
+/* When As="a" the item renders as an anchor. The same .menu-item styles apply
+   because the data-active / data-disabled hooks are emitted regardless of tag. */
+.menu-item[data-active] {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+""";
+}

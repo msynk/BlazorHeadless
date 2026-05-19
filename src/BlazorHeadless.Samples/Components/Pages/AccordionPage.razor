@@ -1,0 +1,304 @@
+@page "/accordion"
+@rendermode InteractiveServer
+
+<PageTitle>Accordion — BlazorHeadless</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Accordion</h1>
+        <p>A vertically stacked set of collapsible sections, single or multiple open at a time.</p>
+    </header>
+
+    <DemoBlock Title="Basic Accordion (Single)"
+               Code="@_basicCode"
+               Css="@_accordionCss">
+        <Description>
+            Only one item can be open at a time. <code>DefaultValue</code> seeds the initial open item.
+            Each trigger gets <code>aria-expanded</code> and <code>aria-controls</code> automatically.
+        </Description>
+        <LiveContent>
+            <HAccordion DefaultValue="item-1" class="accordion">
+                <HAccordionItem Value="item-1" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        What is BlazorHeadless?
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">
+                            BlazorHeadless is a headless component library for Blazor.
+                            Behaviour and accessibility are built in; styling is entirely up to you.
+                        </div>
+                    </HAccordionContent>
+                </HAccordionItem>
+
+                <HAccordionItem Value="item-2" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        Why headless?
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">
+                            You own the look and feel entirely. ARIA and keyboard support never have to be
+                            re-implemented.
+                        </div>
+                    </HAccordionContent>
+                </HAccordionItem>
+
+                <HAccordionItem Value="item-3" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        How do I style it?
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">
+                            Use <code>data-state="open"|"closed"</code> on any element, or just apply
+                            classes. The library emits no styles of its own.
+                        </div>
+                    </HAccordionContent>
+                </HAccordionItem>
+            </HAccordion>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Multiple Open Items"
+               Code="@_multipleCode"
+               Css="@_multipleCss">
+        <Description>
+            Set <code>Type="AccordionType.Multiple"</code> to allow any number of panels open
+            simultaneously.
+        </Description>
+        <LiveContent>
+            <HAccordion Type="AccordionType.Multiple" class="accordion">
+                <HAccordionItem Value="faq-1" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        Can I open multiple panels?
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">
+                            Yes — every panel is independent. Try opening both!
+                        </div>
+                    </HAccordionContent>
+                </HAccordionItem>
+
+                <HAccordionItem Value="faq-2" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        Does this one close when I open another?
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">
+                            No — both can be open at once.
+                        </div>
+                    </HAccordionContent>
+                </HAccordionItem>
+            </HAccordion>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled Item"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Individual items can be disabled via <code>Disabled="true"</code>. The whole accordion can
+            also be disabled at the root.
+        </Description>
+        <LiveContent>
+            <HAccordion class="accordion">
+                <HAccordionItem Value="d-1" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        I am enabled
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">This item works normally.</div>
+                    </HAccordionContent>
+                </HAccordionItem>
+
+                <HAccordionItem Value="d-2" Disabled="true" class="accordion-item">
+                    <HAccordionTrigger class="accordion-trigger" Context="t">
+                        I am disabled
+                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    </HAccordionTrigger>
+                    <HAccordionContent class="accordion-content">
+                        <div class="accordion-body">You should not be able to open this.</div>
+                    </HAccordionContent>
+                </HAccordionItem>
+            </HAccordion>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Controlled Accordion"
+               Code="@_controlledCode"
+               Css="@_controlledCss">
+        <Description>
+            Drive the open state externally with <code>Value</code> + <code>OnValueChange</code>. The
+            button below toggles "Panel 2" programmatically.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; flex-direction:column; gap:1rem; width:100%">
+                <div class="demo-row">
+                    <HButton OnClick="ToggleControlledItem" class="btn">
+                        Toggle "Panel 2"
+                    </HButton>
+                    <span class="demo-output">Open: @(controlledValue ?? "none")</span>
+                </div>
+
+                <HAccordion Value="@controlledValue"
+                            OnValueChange="v => controlledValue = v"
+                            class="accordion">
+                    <HAccordionItem Value="ctrl-1" class="accordion-item">
+                        <HAccordionTrigger class="accordion-trigger" Context="t">
+                            Panel 1
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </HAccordionTrigger>
+                        <HAccordionContent class="accordion-content">
+                            <div class="accordion-body">Controlled by external state.</div>
+                        </HAccordionContent>
+                    </HAccordionItem>
+
+                    <HAccordionItem Value="ctrl-2" class="accordion-item">
+                        <HAccordionTrigger class="accordion-trigger" Context="t">
+                            Panel 2
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </HAccordionTrigger>
+                        <HAccordionContent class="accordion-content">
+                            <div class="accordion-body">This panel is toggled by the button above.</div>
+                        </HAccordionContent>
+                    </HAccordionItem>
+                </HAccordion>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private string? controlledValue;
+
+    private void ToggleControlledItem()
+    {
+        controlledValue = controlledValue == "ctrl-2" ? null : "ctrl-2";
+    }
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _basicCode = """
+<HAccordion DefaultValue="item-1" class="accordion">
+    <HAccordionItem Value="item-1" class="accordion-item">
+        <HAccordionTrigger class="accordion-trigger" Context="t">
+            What is BlazorHeadless?
+            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        </HAccordionTrigger>
+        <HAccordionContent class="accordion-content">
+            <div class="accordion-body">…</div>
+        </HAccordionContent>
+    </HAccordionItem>
+    @* …more items… *@
+</HAccordion>
+""";
+
+    private const string _multipleCode = """
+<HAccordion Type="AccordionType.Multiple" class="accordion">
+    <HAccordionItem Value="faq-1" class="accordion-item">
+        <HAccordionTrigger class="accordion-trigger">…</HAccordionTrigger>
+        <HAccordionContent class="accordion-content">…</HAccordionContent>
+    </HAccordionItem>
+    @* multiple items can be open *@
+</HAccordion>
+""";
+
+    private const string _disabledCode = """
+<HAccordion class="accordion">
+    <HAccordionItem Value="d-1" class="accordion-item">…</HAccordionItem>
+    <HAccordionItem Value="d-2" Disabled="true" class="accordion-item">
+        <HAccordionTrigger>I am disabled</HAccordionTrigger>
+        <HAccordionContent>You can't open me.</HAccordionContent>
+    </HAccordionItem>
+</HAccordion>
+""";
+
+    private const string _controlledCode = """
+<HAccordion Value="@controlledValue"
+            OnValueChange="v => controlledValue = v"
+            class="accordion">
+    <HAccordionItem Value="ctrl-1">…</HAccordionItem>
+    <HAccordionItem Value="ctrl-2">…</HAccordionItem>
+</HAccordion>
+
+@code {
+    private string? controlledValue;
+}
+""";
+
+    private const string _accordionCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.accordion {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-item            { border-bottom: 1px solid #e4e4e7; }
+.accordion-item:last-child { border-bottom: none; }
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover               { background: #f4f4f5; }
+.accordion-trigger:focus-visible       { outline: 2px solid #2563eb; outline-offset: -2px; }
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+.accordion-trigger[data-disabled]      { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Rotating chevron driven by AccordionTriggerContext.IsOpen */
+.accordion-chevron      { transition: transform 200ms ease; color: #71717a; }
+.accordion-chevron.open { transform: rotate(180deg); }
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}
+""";
+
+    // The "Multiple", "Disabled Item", and "Controlled" demos all reuse the
+    // styles shown in the basic demo above. The snippets below highlight only
+    // the demo-specific selectors so consumers know which hooks drive each scenario.
+
+    private const string _multipleCss = """
+/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
+   With Type="AccordionType.Multiple" any combination of items can be open;
+   the same data-state="open|closed" hook drives every panel independently. */
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when an item is disabled (or the entire accordion is) */
+.accordion-trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* HAccordionItem itself also receives data-disabled — useful for striping
+   the row, dimming icons, etc. */
+.accordion-item[data-disabled] {
+    background: #fafafa;
+}
+""";
+
+    private const string _controlledCss = """
+/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — the data-state attribute
+   reflects whatever Value/Values you bind to. */
+""";
+}

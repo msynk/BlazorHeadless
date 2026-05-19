@@ -1,0 +1,355 @@
+@page "/checkbox"
+@rendermode InteractiveServer
+
+<PageTitle>Checkbox — BlazorHeadless</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Checkbox</h1>
+        <p>An accessible tri-state checkbox primitive with full keyboard support and zero visual opinion.</p>
+    </header>
+
+    <DemoBlock Title="Basic Checkbox (Uncontrolled)"
+               Code="@_basicCode"
+               Css="@_checkboxCss">
+        <Description>
+            Renders a native <code>&lt;button&gt;</code> with <code>role="checkbox"</code> and
+            <code>aria-checked</code>. Click or press Space to toggle.
+            <code>DefaultChecked</code> seeds the initial state.
+        </Description>
+        <LiveContent>
+            <HCheckbox class="checkbox" Context="c">
+                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            </HCheckbox>
+
+            <HCheckbox DefaultChecked="true" class="checkbox" Context="c">
+                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            </HCheckbox>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Controlled"
+               Code="@_controlledCode"
+               Css="@_controlledCss">
+        <Description>
+            Drive state externally with <code>Checked</code> + <code>OnCheckedChange</code>.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <HCheckbox Checked="@acceptedTerms"
+                           OnCheckedChange="v => acceptedTerms = v"
+                           class="checkbox" Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </HCheckbox>
+
+                <span class="demo-output">
+                    Terms accepted: <strong>@(acceptedTerms ? "yes" : "no")</strong>
+                </span>
+
+                <HButton OnClick="() => acceptedTerms = !acceptedTerms" class="btn">
+                    Toggle from outside
+                </HButton>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Disabled"
+               Code="@_disabledCode"
+               Css="@_disabledCss">
+        <Description>
+            Set <code>Disabled="true"</code> to block interaction. Receives the native
+            <code>disabled</code> attribute and a <code>data-disabled</code> hook.
+        </Description>
+        <LiveContent>
+            <HCheckbox Disabled="true" class="checkbox" Context="c">
+                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            </HCheckbox>
+
+            <HCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
+                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            </HCheckbox>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Indeterminate (Select All pattern)"
+               Code="@_indeterminateCode"
+               Css="@_indeterminateCss">
+        <Description>
+            Setting <code>Indeterminate="true"</code> emits <code>aria-checked="mixed"</code>
+            and <code>data-state="indeterminate"</code>. The classic use-case is a "select all"
+            checkbox that reflects partial child selection. Clicking an indeterminate checkbox
+            advances it to checked.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                <label class="checkbox-label">
+                    <HCheckbox Checked="@SelectAllChecked"
+                               Indeterminate="@SelectAllIndeterminate"
+                               OnCheckedChange="HandleSelectAll"
+                               class="checkbox" Context="c">
+                        @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
+                        else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+                    </HCheckbox>
+                    <strong>Select all</strong>
+                </label>
+
+                <div style="display:flex; flex-direction:column; gap:0.4rem; margin-left:1.6rem;">
+                    @for (var i = 0; i < items.Length; i++)
+                    {
+                        var captured = i;
+                        <label class="checkbox-label">
+                            <HCheckbox Checked="@items[captured]"
+                                       OnCheckedChange="v => HandleItemChange(captured, v)"
+                                       class="checkbox" Context="c">
+                                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                            </HCheckbox>
+                            <span>@($"Item {captured + 1}")</span>
+                        </label>
+                    }
+                </div>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="With label"
+               Code="@_labelCode"
+               Css="@_labelCss">
+        <Description>
+            Wrap the checkbox in a <code>&lt;label&gt;</code> so clicking the text toggles the
+            checkbox — standard HTML behaviour.
+        </Description>
+        <LiveContent>
+            <label class="checkbox-label">
+                <HCheckbox class="checkbox" Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </HCheckbox>
+                <span>Send me product updates</span>
+            </label>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Form Submission"
+               Code="@_formCode"
+               Css="@_formCss">
+        <Description>
+            Set <code>Name</code> to render an adjacent <code>&lt;input type="hidden"&gt;</code>
+            so the checkbox state participates in plain form posts. The hidden input is only
+            present when the checkbox is checked or indeterminate, mirroring native checkbox behaviour.
+        </Description>
+        <LiveContent>
+            <form @onsubmit="HandleFormSubmit"
+                  @onsubmit:preventDefault="true"
+                  style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start;">
+                <label class="checkbox-label">
+                    <HCheckbox Name="agree" Value="yes"
+                               class="checkbox" Context="c">
+                        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                    </HCheckbox>
+                    <span>I agree to the terms</span>
+                </label>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+                @if (lastSubmitted is not null)
+                {
+                    <span class="demo-output">@lastSubmitted</span>
+                }
+            </form>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private bool acceptedTerms;
+    private bool[] items = new[] { false, false, false };
+    private string? lastSubmitted;
+
+    private bool SelectAllChecked => items.All(x => x);
+    private bool SelectAllIndeterminate => items.Any(x => x) && !SelectAllChecked;
+
+    private void HandleSelectAll(bool checkAll)
+    {
+        for (var i = 0; i < items.Length; i++)
+            items[i] = checkAll;
+    }
+
+    private void HandleItemChange(int index, bool value)
+    {
+        items[index] = value;
+    }
+
+    private void HandleFormSubmit()
+    {
+        // In a real app the browser would post the hidden input.
+        lastSubmitted = "(submitted — when checked, the form posts agree=yes)";
+    }
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _basicCode = """
+<HCheckbox class="checkbox" Context="c">
+    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+
+<HCheckbox DefaultChecked="true" class="checkbox" Context="c">
+    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+""";
+
+    private const string _controlledCode = """
+<HCheckbox Checked="@acceptedTerms"
+           OnCheckedChange="v => acceptedTerms = v"
+           class="checkbox" Context="c">
+    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+
+@code {
+    private bool acceptedTerms;
+}
+""";
+
+    private const string _disabledCode = """
+<HCheckbox Disabled="true" class="checkbox" Context="c">
+    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+
+<HCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
+    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+""";
+
+    private const string _indeterminateCode = """
+<HCheckbox Checked="@SelectAllChecked"
+           Indeterminate="@SelectAllIndeterminate"
+           OnCheckedChange="HandleSelectAll"
+           class="checkbox" Context="c">
+    @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
+    else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+</HCheckbox>
+
+@* …per-item checkboxes update items[i]… *@
+
+@code {
+    private bool[] items = new[] { false, false, false };
+
+    private bool SelectAllChecked       => items.All(x => x);
+    private bool SelectAllIndeterminate => items.Any(x => x) && !SelectAllChecked;
+
+    private void HandleSelectAll(bool checkAll)
+    {
+        for (var i = 0; i < items.Length; i++) items[i] = checkAll;
+    }
+}
+""";
+
+    private const string _labelCode = """
+<label class="checkbox-label">
+    <HCheckbox class="checkbox" Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </HCheckbox>
+    <span>Send me product updates</span>
+</label>
+""";
+
+    private const string _formCode = """
+<form method="post">
+    <label class="checkbox-label">
+        <HCheckbox Name="agree" Value="yes"
+                   class="checkbox" Context="c">
+            @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+        </HCheckbox>
+        <span>I agree to the terms</span>
+    </label>
+
+    <button type="submit">Submit</button>
+</form>
+
+@* When checked, posts:  agree=yes *@
+""";
+
+    private const string _checkboxCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by HCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+""";
+
+    private const string _controlledCss = """
+/* Reuses the .checkbox styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Checked value you bind to. */
+""";
+
+    private const string _disabledCss = """
+/* Hooks emitted when Disabled="true" */
+.checkbox[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+""";
+
+    private const string _indeterminateCss = """
+/* Hooks emitted when Indeterminate="true" */
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* The dash glyph rendered inside the box for the mixed state */
+.checkbox-dash {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 0;
+}
+""";
+
+    private const string _labelCss = """
+/* Wrapper that aligns the checkbox with its text label */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+""";
+
+    private const string _formCss = """
+/* Reuses the .checkbox / .checkbox-label styles from earlier demos.
+   No additional CSS is needed — when Name is set HCheckbox renders an
+   <input type="hidden"> sibling that is invisible by default. */
+""";
+}

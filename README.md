@@ -1,4 +1,4 @@
-# HeadlessUI.Blazor
+# BlazorHeadless
 
 A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Style it your way with CSS, Tailwind, or any design system.
 
@@ -24,7 +24,7 @@ Inspired by [Headless UI](https://headlessui.com/), [Radix UI](https://www.radix
 
 ```csharp
 // Program.cs
-builder.Services.AddHeadlessUI();
+builder.Services.AddBlazorHeadless();
 ```
 
 This registers the JS interop service used by Dialog, Popover, Transition, and anchor positioning.
