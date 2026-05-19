@@ -1,7 +1,7 @@
 @*
-    Reusable wrapper that renders a section heading, an optional description, the
-    live demo (LiveContent), the matching Razor source (Code), and the CSS that
-    styles the demo (Css). Each component demo page composes one or more DemoBlocks.
+    Reusable wrapper that renders a section heading, an optional description, and
+    a tabbed view with Preview / Razor / CSS panels. Uses the library's own HTabGroup
+    so the demo app dogfoods the headless tab component.
 *@
 
 <section class="demo-section">
@@ -14,28 +14,44 @@
         <p>@Description</p>
     }
 
-    @if (LiveContent is not null)
-    {
-        <div class="demo-row">
-            @LiveContent
-        </div>
-    }
-
-    @if (!string.IsNullOrWhiteSpace(Code))
-    {
-        <div class="demo-codeblock">
-            <div class="demo-codeblock-label">Razor</div>
-            <pre class="demo-code"><code>@Code.Trim('\r', '\n')</code></pre>
-        </div>
-    }
-
-    @if (!string.IsNullOrWhiteSpace(Css))
-    {
-        <div class="demo-codeblock">
-            <div class="demo-codeblock-label">CSS</div>
-            <pre class="demo-code"><code>@Css.Trim('\r', '\n')</code></pre>
-        </div>
-    }
+    <HTabGroup class="demo-tabs">
+        <HTabList class="demo-tab-list">
+            @if (LiveContent is not null)
+            {
+                <HTab class="demo-tab">Preview</HTab>
+            }
+            @if (!string.IsNullOrWhiteSpace(Code))
+            {
+                <HTab class="demo-tab">Razor</HTab>
+            }
+            @if (!string.IsNullOrWhiteSpace(Css))
+            {
+                <HTab class="demo-tab">CSS</HTab>
+            }
+        </HTabList>
+        <HTabPanels class="demo-tab-panels">
+            @if (LiveContent is not null)
+            {
+                <HTabPanel class="demo-tab-panel">
+                    <div class="demo-row">
+                        @LiveContent
+                    </div>
+                </HTabPanel>
+            }
+            @if (!string.IsNullOrWhiteSpace(Code))
+            {
+                <HTabPanel class="demo-tab-panel">
+                    <pre class="demo-code"><code>@Code.Trim('\r', '\n')</code></pre>
+                </HTabPanel>
+            }
+            @if (!string.IsNullOrWhiteSpace(Css))
+            {
+                <HTabPanel class="demo-tab-panel">
+                    <pre class="demo-code"><code>@Css.Trim('\r', '\n')</code></pre>
+                </HTabPanel>
+            }
+        </HTabPanels>
+    </HTabGroup>
 </section>
 
 @code {

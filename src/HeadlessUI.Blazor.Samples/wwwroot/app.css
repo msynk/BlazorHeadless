@@ -585,6 +585,63 @@ body {
 }
 
 /* ============================================================
+   DemoBlock tabbed layout — dogfoods HTabGroup
+   ============================================================ */
+
+.demo-tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.demo-tab-list {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.demo-tab {
+    all: unset;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
+    box-sizing: border-box;
+}
+
+.demo-tab:hover {
+    color: var(--color-text, #18181b);
+}
+
+.demo-tab:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: -2px;
+    border-radius: 0.25rem;
+}
+
+.demo-tab[data-state="active"] {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+.demo-tab-panels {
+    margin-top: 1rem;
+}
+
+.demo-tab-panel {
+    min-height: 0;
+}
+
+.demo-tab-panel .demo-code {
+    margin-top: 0;
+}
+
+/* ============================================================
    Switch styles — purely consumer-defined
    ============================================================ */
 
