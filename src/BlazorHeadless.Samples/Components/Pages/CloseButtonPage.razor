@@ -13,30 +13,30 @@
                Code="@_dialogCode"
                Css="@_dialogCss">
         <Description>
-            Drop <code>&lt;HCloseButton&gt;</code> anywhere inside a Dialog and it will
+            Drop <code>&lt;BhCloseButton&gt;</code> anywhere inside a Dialog and it will
             automatically call the dialog's close callback. No need to wire up
             <code>@@onclick</code> or pass state around.
         </Description>
         <LiveContent>
-            <HButton OnClick="() => dialogOpen = true" class="btn btn-primary">
+            <BhButton OnClick="() => dialogOpen = true" class="btn btn-primary">
                 Open dialog
-            </HButton>
+            </BhButton>
 
-            <HDialog Open="dialogOpen" OnClose="() => dialogOpen = false">
-                <HDialogBackdrop class="dialog-backdrop" />
-                <HDialogPanel class="dialog-panel">
-                    <HDialogTitle class="dialog-title">Deactivate account</HDialogTitle>
-                    <HDialogDescription class="dialog-description">
+            <BhDialog Open="dialogOpen" OnClose="() => dialogOpen = false">
+                <BhDialogBackdrop class="dialog-backdrop" />
+                <BhDialogPanel class="dialog-panel">
+                    <BhDialogTitle class="dialog-title">Deactivate account</BhDialogTitle>
+                    <BhDialogDescription class="dialog-description">
                         This will permanently deactivate your account. All of your data
                         will be permanently removed.
-                    </HDialogDescription>
+                    </BhDialogDescription>
 
                     <div class="dialog-actions">
-                        <HCloseButton class="btn">Cancel</HCloseButton>
-                        <HCloseButton class="btn btn-danger">Deactivate</HCloseButton>
+                        <BhCloseButton class="btn">Cancel</BhCloseButton>
+                        <BhCloseButton class="btn btn-danger">Deactivate</BhCloseButton>
                     </div>
-                </HDialogPanel>
-            </HDialog>
+                </BhDialogPanel>
+            </BhDialog>
         </LiveContent>
     </DemoBlock>
 
@@ -44,32 +44,32 @@
                Code="@_popoverCode"
                Css="@_popoverCss">
         <Description>
-            Use <code>HCloseButton</code> inside a popover panel to close it on click.
+            Use <code>BhCloseButton</code> inside a popover panel to close it on click.
             Combine with the <code>As</code> parameter to render as an anchor or any
             other element.
         </Description>
         <LiveContent>
-            <HPopover class="popover">
-                <HPopoverButton class="popover-button">
+            <BhPopover class="popover">
+                <BhPopoverButton class="popover-button">
                     Solutions ▾
-                </HPopoverButton>
-                <HPopoverPanel class="popover-panel">
+                </BhPopoverButton>
+                <BhPopoverPanel class="popover-panel">
                     <h3 class="popover-title">Navigation</h3>
-                    <HCloseButton As="a" href="#analytics" class="popover-nav-link">
+                    <BhCloseButton As="a" href="#analytics" class="popover-nav-link">
                         Analytics
-                    </HCloseButton>
-                    <HCloseButton As="a" href="#engagement" class="popover-nav-link">
+                    </BhCloseButton>
+                    <BhCloseButton As="a" href="#engagement" class="popover-nav-link">
                         Engagement
-                    </HCloseButton>
-                    <HCloseButton As="a" href="#security" class="popover-nav-link">
+                    </BhCloseButton>
+                    <BhCloseButton As="a" href="#security" class="popover-nav-link">
                         Security
-                    </HCloseButton>
+                    </BhCloseButton>
                     <hr class="popover-divider" />
-                    <HCloseButton class="popover-dismiss">
+                    <BhCloseButton class="popover-dismiss">
                         Dismiss ✕
-                    </HCloseButton>
-                </HPopoverPanel>
-            </HPopover>
+                    </BhCloseButton>
+                </BhPopoverPanel>
+            </BhPopover>
         </LiveContent>
     </DemoBlock>
 
@@ -81,17 +81,17 @@
             closeable ancestor and calls its close method.
         </Description>
         <LiveContent>
-            <HDisclosure DefaultOpen="true" class="disclosure">
-                <HDisclosureButton class="disclosure-button">
+            <BhDisclosure DefaultOpen="true" class="disclosure">
+                <BhDisclosureButton class="disclosure-button">
                     Show details
-                </HDisclosureButton>
-                <HDisclosurePanel class="disclosure-panel">
+                </BhDisclosureButton>
+                <BhDisclosurePanel class="disclosure-panel">
                     <div class="disclosure-body">
                         <p>Here are some details you can collapse.</p>
-                        <HCloseButton class="btn btn-sm">Hide details</HCloseButton>
+                        <BhCloseButton class="btn btn-sm">Hide details</BhCloseButton>
                     </div>
-                </HDisclosurePanel>
-            </HDisclosure>
+                </BhDisclosurePanel>
+            </BhDisclosure>
         </LiveContent>
     </DemoBlock>
 
@@ -104,27 +104,27 @@
             <code>tabindex="0"</code>, and Enter/Space keyboard handling.
         </Description>
         <LiveContent>
-            <HPopover class="popover">
-                <HPopoverButton class="popover-button">
+            <BhPopover class="popover">
+                <BhPopoverButton class="popover-button">
                     Open panel ▾
-                </HPopoverButton>
-                <HPopoverPanel class="popover-panel">
+                </BhPopoverButton>
+                <BhPopoverPanel class="popover-panel">
                     <p class="popover-body">
                         The close actions below render as different elements:
                     </p>
                     <div class="close-variants">
-                        <HCloseButton class="btn btn-sm">
+                        <BhCloseButton class="btn btn-sm">
                             Button (default)
-                        </HCloseButton>
-                        <HCloseButton As="a" href="#" class="popover-nav-link">
+                        </BhCloseButton>
+                        <BhCloseButton As="a" href="#" class="popover-nav-link">
                             Anchor link
-                        </HCloseButton>
-                        <HCloseButton As="div" class="close-div">
+                        </BhCloseButton>
+                        <BhCloseButton As="div" class="close-div">
                             Div with role="button"
-                        </HCloseButton>
+                        </BhCloseButton>
                     </div>
-                </HPopoverPanel>
-            </HPopover>
+                </BhPopoverPanel>
+            </BhPopover>
         </LiveContent>
     </DemoBlock>
 
@@ -137,24 +137,24 @@
             for non-native elements) and a <code>data-disabled</code> styling hook.
         </Description>
         <LiveContent>
-            <HPopover class="popover">
-                <HPopoverButton class="popover-button">
+            <BhPopover class="popover">
+                <BhPopoverButton class="popover-button">
                     Panel is open ▾
-                </HPopoverButton>
-                <HPopoverPanel class="popover-panel">
+                </BhPopoverButton>
+                <BhPopoverPanel class="popover-panel">
                     <p class="popover-body">
                         The disabled close button below won't close this panel:
                     </p>
                     <div class="close-variants">
-                        <HCloseButton Disabled="true" class="btn btn-sm">
+                        <BhCloseButton Disabled="true" class="btn btn-sm">
                             Can't close (disabled)
-                        </HCloseButton>
-                        <HCloseButton class="btn btn-sm btn-primary">
+                        </BhCloseButton>
+                        <BhCloseButton class="btn btn-sm btn-primary">
                             Close (enabled)
-                        </HCloseButton>
+                        </BhCloseButton>
                     </div>
-                </HPopoverPanel>
-            </HPopover>
+                </BhPopoverPanel>
+            </BhPopover>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -165,25 +165,25 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _dialogCode = """
-<HButton OnClick="() => isOpen = true" class="btn btn-primary">
+<BhButton OnClick="() => isOpen = true" class="btn btn-primary">
     Open dialog
-</HButton>
+</BhButton>
 
-<HDialog Open="isOpen" OnClose="() => isOpen = false">
-    <HDialogBackdrop class="dialog-backdrop" />
-    <HDialogPanel class="dialog-panel">
-        <HDialogTitle>Deactivate account</HDialogTitle>
-        <HDialogDescription>
+<BhDialog Open="isOpen" OnClose="() => isOpen = false">
+    <BhDialogBackdrop class="dialog-backdrop" />
+    <BhDialogPanel class="dialog-panel">
+        <BhDialogTitle>Deactivate account</BhDialogTitle>
+        <BhDialogDescription>
             This will permanently deactivate your account.
-        </HDialogDescription>
+        </BhDialogDescription>
 
         <div class="dialog-actions">
-            <!-- No @onclick needed — HCloseButton finds the Dialog automatically -->
-            <HCloseButton class="btn">Cancel</HCloseButton>
-            <HCloseButton class="btn btn-danger">Deactivate</HCloseButton>
+            <!-- No @onclick needed — BhCloseButton finds the Dialog automatically -->
+            <BhCloseButton class="btn">Cancel</BhCloseButton>
+            <BhCloseButton class="btn btn-danger">Deactivate</BhCloseButton>
         </div>
-    </HDialogPanel>
-</HDialog>
+    </BhDialogPanel>
+</BhDialog>
 
 @code {
     private bool isOpen;
@@ -191,73 +191,73 @@
 """;
 
     private const string _popoverCode = """
-<HPopover class="popover">
-    <HPopoverButton class="popover-button">Solutions ▾</HPopoverButton>
-    <HPopoverPanel class="popover-panel">
+<BhPopover class="popover">
+    <BhPopoverButton class="popover-button">Solutions ▾</BhPopoverButton>
+    <BhPopoverPanel class="popover-panel">
         <h3 class="popover-title">Navigation</h3>
 
         <!-- Render as <a> elements that also close the popover on click -->
-        <HCloseButton As="a" href="#analytics" class="popover-nav-link">
+        <BhCloseButton As="a" href="#analytics" class="popover-nav-link">
             Analytics
-        </HCloseButton>
-        <HCloseButton As="a" href="#engagement" class="popover-nav-link">
+        </BhCloseButton>
+        <BhCloseButton As="a" href="#engagement" class="popover-nav-link">
             Engagement
-        </HCloseButton>
+        </BhCloseButton>
 
         <hr class="popover-divider" />
-        <HCloseButton class="popover-dismiss">Dismiss ✕</HCloseButton>
-    </HPopoverPanel>
-</HPopover>
+        <BhCloseButton class="popover-dismiss">Dismiss ✕</BhCloseButton>
+    </BhPopoverPanel>
+</BhPopover>
 """;
 
     private const string _disclosureCode = """
-<HDisclosure DefaultOpen="true" class="disclosure">
-    <HDisclosureButton class="disclosure-button">
+<BhDisclosure DefaultOpen="true" class="disclosure">
+    <BhDisclosureButton class="disclosure-button">
         Show details
-    </HDisclosureButton>
-    <HDisclosurePanel class="disclosure-panel">
+    </BhDisclosureButton>
+    <BhDisclosurePanel class="disclosure-panel">
         <div class="disclosure-body">
             <p>Here are some details you can collapse.</p>
-            <HCloseButton class="btn btn-sm">Hide details</HCloseButton>
+            <BhCloseButton class="btn btn-sm">Hide details</BhCloseButton>
         </div>
-    </HDisclosurePanel>
-</HDisclosure>
+    </BhDisclosurePanel>
+</BhDisclosure>
 """;
 
     private const string _polymorphicCode = """
-<HPopover class="popover">
-    <HPopoverButton class="popover-button">Open panel ▾</HPopoverButton>
-    <HPopoverPanel class="popover-panel">
+<BhPopover class="popover">
+    <BhPopoverButton class="popover-button">Open panel ▾</BhPopoverButton>
+    <BhPopoverPanel class="popover-panel">
         <!-- Default: renders as <button> -->
-        <HCloseButton class="btn btn-sm">Button (default)</HCloseButton>
+        <BhCloseButton class="btn btn-sm">Button (default)</BhCloseButton>
 
         <!-- Renders as <a> with role="button" and keyboard handling -->
-        <HCloseButton As="a" href="#" class="popover-nav-link">
+        <BhCloseButton As="a" href="#" class="popover-nav-link">
             Anchor link
-        </HCloseButton>
+        </BhCloseButton>
 
         <!-- Renders as <div> with role="button", tabindex, keyboard -->
-        <HCloseButton As="div" class="close-div">
+        <BhCloseButton As="div" class="close-div">
             Div with role="button"
-        </HCloseButton>
-    </HPopoverPanel>
-</HPopover>
+        </BhCloseButton>
+    </BhPopoverPanel>
+</BhPopover>
 """;
 
     private const string _disabledCode = """
-<HPopover class="popover">
-    <HPopoverButton class="popover-button">Panel is open ▾</HPopoverButton>
-    <HPopoverPanel class="popover-panel">
+<BhPopover class="popover">
+    <BhPopoverButton class="popover-button">Panel is open ▾</BhPopoverButton>
+    <BhPopoverPanel class="popover-panel">
         <p>The disabled close button won't close this panel:</p>
 
-        <HCloseButton Disabled="true" class="btn btn-sm">
+        <BhCloseButton Disabled="true" class="btn btn-sm">
             Can't close (disabled)
-        </HCloseButton>
-        <HCloseButton class="btn btn-sm btn-primary">
+        </BhCloseButton>
+        <BhCloseButton class="btn btn-sm btn-primary">
             Close (enabled)
-        </HCloseButton>
-    </HPopoverPanel>
-</HPopover>
+        </BhCloseButton>
+    </BhPopoverPanel>
+</BhPopover>
 """;
 
     private const string _dialogCss = """

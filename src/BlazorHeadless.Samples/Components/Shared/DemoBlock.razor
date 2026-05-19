@@ -1,6 +1,6 @@
 @*
     Reusable wrapper that renders a section heading, an optional description, and
-    a tabbed view with Preview / Razor / CSS panels. Uses the library's own HTabGroup
+    a tabbed view with Preview / Razor / CSS panels. Uses the library's own BhTabGroup
     so the demo app dogfoods the headless tab component.
 *@
 
@@ -14,44 +14,44 @@
         <p>@Description</p>
     }
 
-    <HTabGroup class="demo-tabs">
-        <HTabList class="demo-tab-list">
+    <BhTabGroup class="demo-tabs">
+        <BhTabList class="demo-tab-list">
             @if (LiveContent is not null)
             {
-                <HTab class="demo-tab">Preview</HTab>
+                <BhTab class="demo-tab">Preview</BhTab>
             }
             @if (!string.IsNullOrWhiteSpace(Code))
             {
-                <HTab class="demo-tab">Razor</HTab>
+                <BhTab class="demo-tab">Razor</BhTab>
             }
             @if (!string.IsNullOrWhiteSpace(Css))
             {
-                <HTab class="demo-tab">CSS</HTab>
+                <BhTab class="demo-tab">CSS</BhTab>
             }
-        </HTabList>
-        <HTabPanels class="demo-tab-panels">
+        </BhTabList>
+        <BhTabPanels class="demo-tab-panels">
             @if (LiveContent is not null)
             {
-                <HTabPanel class="demo-tab-panel">
+                <BhTabPanel class="demo-tab-panel">
                     <div class="demo-row">
                         @LiveContent
                     </div>
-                </HTabPanel>
+                </BhTabPanel>
             }
             @if (!string.IsNullOrWhiteSpace(Code))
             {
-                <HTabPanel class="demo-tab-panel">
+                <BhTabPanel class="demo-tab-panel">
                     <pre class="demo-code"><code>@Code.Trim('\r', '\n')</code></pre>
-                </HTabPanel>
+                </BhTabPanel>
             }
             @if (!string.IsNullOrWhiteSpace(Css))
             {
-                <HTabPanel class="demo-tab-panel">
+                <BhTabPanel class="demo-tab-panel">
                     <pre class="demo-code"><code>@Css.Trim('\r', '\n')</code></pre>
-                </HTabPanel>
+                </BhTabPanel>
             }
-        </HTabPanels>
-    </HTabGroup>
+        </BhTabPanels>
+    </BhTabGroup>
 </section>
 
 @code {

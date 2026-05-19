@@ -19,25 +19,25 @@
             opener button on close.
         </Description>
         <LiveContent>
-            <HButton OnClick="() => basicOpen = true" class="btn btn-primary">
+            <BhButton OnClick="() => basicOpen = true" class="btn btn-primary">
                 Open dialog
-            </HButton>
+            </BhButton>
 
-            <HDialog Open="basicOpen" OnClose="() => basicOpen = false">
-                <HDialogBackdrop class="dialog-backdrop" />
-                <HDialogPanel class="dialog-panel">
-                    <HDialogTitle class="dialog-title">Welcome aboard</HDialogTitle>
-                    <HDialogDescription class="dialog-description">
+            <BhDialog Open="basicOpen" OnClose="() => basicOpen = false">
+                <BhDialogBackdrop class="dialog-backdrop" />
+                <BhDialogPanel class="dialog-panel">
+                    <BhDialogTitle class="dialog-title">Welcome aboard</BhDialogTitle>
+                    <BhDialogDescription class="dialog-description">
                         This is a fully-accessible dialog. Try Tab and Shift+Tab — focus
                         cycles inside this panel. Press Escape to close.
-                    </HDialogDescription>
+                    </BhDialogDescription>
 
                     <div class="dialog-actions">
-                        <HButton OnClick="() => basicOpen = false" class="btn">Cancel</HButton>
-                        <HButton OnClick="() => basicOpen = false" class="btn btn-primary">Got it</HButton>
+                        <BhButton OnClick="() => basicOpen = false" class="btn">Cancel</BhButton>
+                        <BhButton OnClick="() => basicOpen = false" class="btn btn-primary">Got it</BhButton>
                     </div>
-                </HDialogPanel>
-            </HDialog>
+                </BhDialogPanel>
+            </BhDialog>
         </LiveContent>
     </DemoBlock>
 
@@ -50,27 +50,27 @@
             choice. Useful for destructive actions.
         </Description>
         <LiveContent>
-            <HButton OnClick="() => confirmOpen = true" class="btn">
+            <BhButton OnClick="() => confirmOpen = true" class="btn">
                 Delete account
-            </HButton>
+            </BhButton>
 
             <span class="demo-output">@confirmResult</span>
 
-            <HDialog Open="confirmOpen" OnClose="() => confirmOpen = false">
-                <HDialogBackdrop class="dialog-backdrop" DismissOnClick="false" />
-                <HDialogPanel class="dialog-panel" DismissOnEscape="false">
-                    <HDialogTitle class="dialog-title">Delete account?</HDialogTitle>
-                    <HDialogDescription class="dialog-description">
+            <BhDialog Open="confirmOpen" OnClose="() => confirmOpen = false">
+                <BhDialogBackdrop class="dialog-backdrop" DismissOnClick="false" />
+                <BhDialogPanel class="dialog-panel" DismissOnEscape="false">
+                    <BhDialogTitle class="dialog-title">Delete account?</BhDialogTitle>
+                    <BhDialogDescription class="dialog-description">
                         This will permanently remove your account and all its data.
                         This cannot be undone.
-                    </HDialogDescription>
+                    </BhDialogDescription>
 
                     <div class="dialog-actions">
-                        <HButton OnClick="HandleCancel" class="btn">Cancel</HButton>
-                        <HButton OnClick="HandleDelete" class="btn btn-danger">Yes, delete</HButton>
+                        <BhButton OnClick="HandleCancel" class="btn">Cancel</BhButton>
+                        <BhButton OnClick="HandleDelete" class="btn btn-danger">Yes, delete</BhButton>
                     </div>
-                </HDialogPanel>
-            </HDialog>
+                </BhDialogPanel>
+            </BhDialog>
         </LiveContent>
     </DemoBlock>
 
@@ -83,19 +83,19 @@
             background untouchable.
         </Description>
         <LiveContent>
-            <HButton OnClick="() => formOpen = true" class="btn btn-primary">
+            <BhButton OnClick="() => formOpen = true" class="btn btn-primary">
                 Edit profile
-            </HButton>
+            </BhButton>
 
             <span class="demo-output">@formResult</span>
 
-            <HDialog Open="formOpen" OnClose="() => formOpen = false">
-                <HDialogBackdrop class="dialog-backdrop" />
-                <HDialogPanel class="dialog-panel">
-                    <HDialogTitle class="dialog-title">Edit profile</HDialogTitle>
-                    <HDialogDescription class="dialog-description">
+            <BhDialog Open="formOpen" OnClose="() => formOpen = false">
+                <BhDialogBackdrop class="dialog-backdrop" />
+                <BhDialogPanel class="dialog-panel">
+                    <BhDialogTitle class="dialog-title">Edit profile</BhDialogTitle>
+                    <BhDialogDescription class="dialog-description">
                         Update your display name. Press Escape or click outside to cancel.
-                    </HDialogDescription>
+                    </BhDialogDescription>
 
                     <label class="dialog-field">
                         <span>Display name</span>
@@ -103,11 +103,11 @@
                     </label>
 
                     <div class="dialog-actions">
-                        <HButton OnClick="() => formOpen = false" class="btn">Cancel</HButton>
-                        <HButton OnClick="HandleSave" class="btn btn-primary">Save</HButton>
+                        <BhButton OnClick="() => formOpen = false" class="btn">Cancel</BhButton>
+                        <BhButton OnClick="HandleSave" class="btn btn-primary">Save</BhButton>
                     </div>
-                </HDialogPanel>
-            </HDialog>
+                </BhDialogPanel>
+            </BhDialog>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -141,24 +141,24 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HButton OnClick="() => isOpen = true" class="btn btn-primary">
+<BhButton OnClick="() => isOpen = true" class="btn btn-primary">
     Open dialog
-</HButton>
+</BhButton>
 
-<HDialog Open="isOpen" OnClose="() => isOpen = false">
-    <HDialogBackdrop class="dialog-backdrop" />
-    <HDialogPanel class="dialog-panel">
-        <HDialogTitle class="dialog-title">Welcome aboard</HDialogTitle>
-        <HDialogDescription class="dialog-description">
+<BhDialog Open="isOpen" OnClose="() => isOpen = false">
+    <BhDialogBackdrop class="dialog-backdrop" />
+    <BhDialogPanel class="dialog-panel">
+        <BhDialogTitle class="dialog-title">Welcome aboard</BhDialogTitle>
+        <BhDialogDescription class="dialog-description">
             This is a fully-accessible dialog…
-        </HDialogDescription>
+        </BhDialogDescription>
 
         <div class="dialog-actions">
-            <HButton OnClick="() => isOpen = false" class="btn">Cancel</HButton>
-            <HButton OnClick="() => isOpen = false" class="btn btn-primary">Got it</HButton>
+            <BhButton OnClick="() => isOpen = false" class="btn">Cancel</BhButton>
+            <BhButton OnClick="() => isOpen = false" class="btn btn-primary">Got it</BhButton>
         </div>
-    </HDialogPanel>
-</HDialog>
+    </BhDialogPanel>
+</BhDialog>
 
 @code {
     private bool isOpen;
@@ -166,28 +166,28 @@
 """;
 
     private const string _confirmCode = """
-<HDialog Open="isOpen" OnClose="() => isOpen = false">
-    <HDialogBackdrop class="dialog-backdrop" DismissOnClick="false" />
-    <HDialogPanel class="dialog-panel" DismissOnEscape="false">
-        <HDialogTitle class="dialog-title">Delete account?</HDialogTitle>
-        <HDialogDescription class="dialog-description">
+<BhDialog Open="isOpen" OnClose="() => isOpen = false">
+    <BhDialogBackdrop class="dialog-backdrop" DismissOnClick="false" />
+    <BhDialogPanel class="dialog-panel" DismissOnEscape="false">
+        <BhDialogTitle class="dialog-title">Delete account?</BhDialogTitle>
+        <BhDialogDescription class="dialog-description">
             This will permanently remove your account…
-        </HDialogDescription>
+        </BhDialogDescription>
 
         <div class="dialog-actions">
-            <HButton OnClick="HandleCancel" class="btn">Cancel</HButton>
-            <HButton OnClick="HandleDelete" class="btn btn-danger">Yes, delete</HButton>
+            <BhButton OnClick="HandleCancel" class="btn">Cancel</BhButton>
+            <BhButton OnClick="HandleDelete" class="btn btn-danger">Yes, delete</BhButton>
         </div>
-    </HDialogPanel>
-</HDialog>
+    </BhDialogPanel>
+</BhDialog>
 """;
 
     private const string _formCode = """
-<HDialog Open="isOpen" OnClose="() => isOpen = false">
-    <HDialogBackdrop class="dialog-backdrop" />
-    <HDialogPanel class="dialog-panel">
-        <HDialogTitle class="dialog-title">Edit profile</HDialogTitle>
-        <HDialogDescription class="dialog-description">…</HDialogDescription>
+<BhDialog Open="isOpen" OnClose="() => isOpen = false">
+    <BhDialogBackdrop class="dialog-backdrop" />
+    <BhDialogPanel class="dialog-panel">
+        <BhDialogTitle class="dialog-title">Edit profile</BhDialogTitle>
+        <BhDialogDescription class="dialog-description">…</BhDialogDescription>
 
         <label class="dialog-field">
             <span>Display name</span>
@@ -195,11 +195,11 @@
         </label>
 
         <div class="dialog-actions">
-            <HButton OnClick="() => isOpen = false" class="btn">Cancel</HButton>
-            <HButton OnClick="HandleSave" class="btn btn-primary">Save</HButton>
+            <BhButton OnClick="() => isOpen = false" class="btn">Cancel</BhButton>
+            <BhButton OnClick="HandleSave" class="btn btn-primary">Save</BhButton>
         </div>
-    </HDialogPanel>
-</HDialog>
+    </BhDialogPanel>
+</BhDialog>
 """;
 
     private const string _dialogCss = """

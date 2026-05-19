@@ -20,18 +20,18 @@
             <code>aria-activedescendant</code>) is handled automatically.
         </Description>
         <LiveContent>
-            <HMenu class="menu">
-                <HMenuButton class="menu-button" Context="b">
+            <BhMenu class="menu">
+                <BhMenuButton class="menu-button" Context="b">
                     Options
                     <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HMenuButton>
-                <HMenuItems class="menu-items">
-                    <HMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Delete"))'    class="menu-item" Label="Delete">Delete</HMenuItem>
-                </HMenuItems>
-            </HMenu>
+                </BhMenuButton>
+                <BhMenuItems class="menu-items">
+                    <BhMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Delete"))'    class="menu-item" Label="Delete">Delete</BhMenuItem>
+                </BhMenuItems>
+            </BhMenu>
 
             <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
         </LiveContent>
@@ -46,19 +46,19 @@
             ignored by typeahead.
         </Description>
         <LiveContent>
-            <HMenu class="menu">
-                <HMenuButton class="menu-button" Context="b">
+            <BhMenu class="menu">
+                <BhMenuButton class="menu-button" Context="b">
                     Account
                     <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HMenuButton>
-                <HMenuItems class="menu-items">
-                    <HMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Settings"))' class="menu-item" Label="Settings">Settings</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Billing"))'  class="menu-item" Label="Billing"
-                               Disabled="true">Billing (unavailable)</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Sign out"))' class="menu-item" Label="Sign out">Sign out</HMenuItem>
-                </HMenuItems>
-            </HMenu>
+                </BhMenuButton>
+                <BhMenuItems class="menu-items">
+                    <BhMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Settings"))' class="menu-item" Label="Settings">Settings</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Billing"))'  class="menu-item" Label="Billing"
+                               Disabled="true">Billing (unavailable)</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Sign out"))' class="menu-item" Label="Sign out">Sign out</BhMenuItem>
+                </BhMenuItems>
+            </BhMenu>
 
             <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
         </LiveContent>
@@ -73,46 +73,46 @@
             still works when the content is rich.
         </Description>
         <LiveContent>
-            <HMenu class="menu">
-                <HMenuButton class="menu-button" Context="b">
+            <BhMenu class="menu">
+                <BhMenuButton class="menu-button" Context="b">
                     File
                     <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HMenuButton>
-                <HMenuItems class="menu-items menu-items-wide">
-                    <HMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
+                </BhMenuButton>
+                <BhMenuItems class="menu-items menu-items-wide">
+                    <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
                         <span class="menu-item-icon">📄</span>
                         <span class="menu-item-body">
                             <strong>New file</strong>
                             <span>Create a blank document</span>
                         </span>
                         <span class="menu-item-shortcut">⌘N</span>
-                    </HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
+                    </BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
                         <span class="menu-item-icon">📂</span>
                         <span class="menu-item-body">
                             <strong>Open…</strong>
                             <span>Browse for a file</span>
                         </span>
                         <span class="menu-item-shortcut">⌘O</span>
-                    </HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
+                    </BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
                         <span class="menu-item-icon">💾</span>
                         <span class="menu-item-body">
                             <strong>Save</strong>
                             <span>Save the current document</span>
                         </span>
                         <span class="menu-item-shortcut">⌘S</span>
-                    </HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
+                    </BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
                                Disabled="true" Context="i">
                         <span class="menu-item-icon">📤</span>
                         <span class="menu-item-body">
                             <strong>Export</strong>
                             <span>Not available in this plan</span>
                         </span>
-                    </HMenuItem>
-                </HMenuItems>
-            </HMenu>
+                    </BhMenuItem>
+                </BhMenuItems>
+            </BhMenu>
 
             <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
         </LiveContent>
@@ -127,24 +127,24 @@
             doesn't need to know about them.
         </Description>
         <LiveContent>
-            <HMenu class="menu">
-                <HMenuButton class="menu-button" Context="b">
+            <BhMenu class="menu">
+                <BhMenuButton class="menu-button" Context="b">
                     More
                     <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HMenuButton>
-                <HMenuItems class="menu-items">
+                </BhMenuButton>
+                <BhMenuItems class="menu-items">
                     <li class="menu-section-label" role="presentation">View</li>
-                    <HMenuItem OnClick='@(() => Log("Zoom in"))'     class="menu-item" Label="Zoom in">Zoom in</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Zoom out"))'    class="menu-item" Label="Zoom out">Zoom out</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Full screen"))' class="menu-item" Label="Full screen">Full screen</HMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Zoom in"))'     class="menu-item" Label="Zoom in">Zoom in</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Zoom out"))'    class="menu-item" Label="Zoom out">Zoom out</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Full screen"))' class="menu-item" Label="Full screen">Full screen</BhMenuItem>
 
                     <li class="menu-divider" role="separator"></li>
 
                     <li class="menu-section-label" role="presentation">Help</li>
-                    <HMenuItem OnClick='@(() => Log("Documentation"))'    class="menu-item" Label="Documentation">Documentation</HMenuItem>
-                    <HMenuItem OnClick='@(() => Log("Keyboard shortcuts"))' class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</HMenuItem>
-                </HMenuItems>
-            </HMenu>
+                    <BhMenuItem OnClick='@(() => Log("Documentation"))'    class="menu-item" Label="Documentation">Documentation</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Keyboard shortcuts"))' class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</BhMenuItem>
+                </BhMenuItems>
+            </BhMenu>
 
             <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
         </LiveContent>
@@ -154,7 +154,7 @@
                Code="@_anchorCode"
                Css="@_anchorCss">
         <Description>
-            Set <code>Anchor</code> on <code>HMenuItems</code> to automatically position the
+            Set <code>Anchor</code> on <code>BhMenuItems</code> to automatically position the
             dropdown relative to the button. The panel uses <code>position: fixed</code> and
             auto-updates on scroll/resize. It flips to the opposite side if there's not enough
             space, and shifts to stay within the viewport. CSS custom properties
@@ -162,44 +162,44 @@
         </Description>
         <LiveContent>
             <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
-                <HMenu class="menu">
-                    <HMenuButton class="menu-button" Context="b">
+                <BhMenu class="menu">
+                    <BhMenuButton class="menu-button" Context="b">
                         Bottom Start
                         <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HMenuButton>
-                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                    </BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                                 class="menu-items-anchored">
-                        <HMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</HMenuItem>
-                    </HMenuItems>
-                </HMenu>
+                        <BhMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
 
-                <HMenu class="menu">
-                    <HMenuButton class="menu-button" Context="b">
+                <BhMenu class="menu">
+                    <BhMenuButton class="menu-button" Context="b">
                         Bottom End
                         <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HMenuButton>
-                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom end", Gap = 4 })"
+                    </BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
                                 class="menu-items-anchored">
-                        <HMenuItem OnClick='@(() => Log("Cut"))'   class="menu-item" Label="Cut">Cut</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Copy"))'  class="menu-item" Label="Copy">Copy</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Paste"))' class="menu-item" Label="Paste">Paste</HMenuItem>
-                    </HMenuItems>
-                </HMenu>
+                        <BhMenuItem OnClick='@(() => Log("Cut"))'   class="menu-item" Label="Cut">Cut</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Copy"))'  class="menu-item" Label="Copy">Copy</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Paste"))' class="menu-item" Label="Paste">Paste</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
 
-                <HMenu class="menu">
-                    <HMenuButton class="menu-button" Context="b">
+                <BhMenu class="menu">
+                    <BhMenuButton class="menu-button" Context="b">
                         Match Width
                         <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HMenuButton>
-                    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+                    </BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
                                 class="menu-items-anchored menu-items-match-width">
-                        <HMenuItem OnClick='@(() => Log("Option A"))' class="menu-item" Label="Option A">Option A</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Option B"))' class="menu-item" Label="Option B">Option B</HMenuItem>
-                        <HMenuItem OnClick='@(() => Log("Option C"))' class="menu-item" Label="Option C">Option C</HMenuItem>
-                    </HMenuItems>
-                </HMenu>
+                        <BhMenuItem OnClick='@(() => Log("Option A"))' class="menu-item" Label="Option A">Option A</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Option B"))' class="menu-item" Label="Option B">Option B</BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Option C"))' class="menu-item" Label="Option C">Option C</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
             </div>
 
             <span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
@@ -215,18 +215,18 @@
             and receives all the ARIA attributes.
         </Description>
         <LiveContent>
-            <HMenu class="menu">
-                <HMenuButton class="menu-button" Context="b">
+            <BhMenu class="menu">
+                <BhMenuButton class="menu-button" Context="b">
                     Navigate
                     <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HMenuButton>
-                <HMenuItems class="menu-items">
-                    <HMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</HMenuItem>
-                    <HMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</HMenuItem>
-                    <HMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</HMenuItem>
-                    <HMenuItem As="a" href="/accordion"  class="menu-item" Label="Accordion">Accordion</HMenuItem>
-                </HMenuItems>
-            </HMenu>
+                </BhMenuButton>
+                <BhMenuItems class="menu-items">
+                    <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
+                    <BhMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</BhMenuItem>
+                    <BhMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</BhMenuItem>
+                    <BhMenuItem As="a" href="/accordion"  class="menu-item" Label="Accordion">Accordion</BhMenuItem>
+                </BhMenuItems>
+            </BhMenu>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -239,85 +239,85 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HMenu class="menu">
-    <HMenuButton class="menu-button" Context="b">
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button" Context="b">
         Options
         <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HMenuButton>
-    <HMenuItems class="menu-items">
-        <HMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</HMenuItem>
-        <HMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
-        <HMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</HMenuItem>
-        <HMenuItem OnClick="Delete"    class="menu-item" Label="Delete">Delete</HMenuItem>
-    </HMenuItems>
-</HMenu>
+    </BhMenuButton>
+    <BhMenuItems class="menu-items">
+        <BhMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+        <BhMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</BhMenuItem>
+        <BhMenuItem OnClick="Delete"    class="menu-item" Label="Delete">Delete</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 """;
 
     private const string _disabledCode = """
-<HMenuItems class="menu-items">
-    <HMenuItem OnClick="Profile"  class="menu-item" Label="Profile">Profile</HMenuItem>
-    <HMenuItem OnClick="Settings" class="menu-item" Label="Settings">Settings</HMenuItem>
-    <HMenuItem OnClick="Billing"  class="menu-item" Label="Billing"
-               Disabled="true">Billing (unavailable)</HMenuItem>
-    <HMenuItem OnClick="SignOut"  class="menu-item" Label="Sign out">Sign out</HMenuItem>
-</HMenuItems>
+<BhMenuItems class="menu-items">
+    <BhMenuItem OnClick="Profile"  class="menu-item" Label="Profile">Profile</BhMenuItem>
+    <BhMenuItem OnClick="Settings" class="menu-item" Label="Settings">Settings</BhMenuItem>
+    <BhMenuItem OnClick="Billing"  class="menu-item" Label="Billing"
+               Disabled="true">Billing (unavailable)</BhMenuItem>
+    <BhMenuItem OnClick="SignOut"  class="menu-item" Label="Sign out">Sign out</BhMenuItem>
+</BhMenuItems>
 """;
 
     private const string _richCode = """
-<HMenuItem OnClick="NewFile" class="menu-item" Label="New file" Context="i">
+<BhMenuItem OnClick="NewFile" class="menu-item" Label="New file" Context="i">
     <span class="menu-item-icon">📄</span>
     <span class="menu-item-body">
         <strong>New file</strong>
         <span>Create a blank document</span>
     </span>
     <span class="menu-item-shortcut">⌘N</span>
-</HMenuItem>
+</BhMenuItem>
 
 @* Provide Label="New file" so typeahead matches the visible text,
    not the icon or shortcut. *@
 """;
 
     private const string _sectionsCode = """
-<HMenuItems class="menu-items">
+<BhMenuItems class="menu-items">
     <li class="menu-section-label" role="presentation">View</li>
-    <HMenuItem OnClick="ZoomIn"  class="menu-item" Label="Zoom in">Zoom in</HMenuItem>
-    <HMenuItem OnClick="ZoomOut" class="menu-item" Label="Zoom out">Zoom out</HMenuItem>
+    <BhMenuItem OnClick="ZoomIn"  class="menu-item" Label="Zoom in">Zoom in</BhMenuItem>
+    <BhMenuItem OnClick="ZoomOut" class="menu-item" Label="Zoom out">Zoom out</BhMenuItem>
 
     <li class="menu-divider" role="separator"></li>
 
     <li class="menu-section-label" role="presentation">Help</li>
-    <HMenuItem OnClick="Docs"      class="menu-item" Label="Documentation">Documentation</HMenuItem>
-    <HMenuItem OnClick="Shortcuts" class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</HMenuItem>
-</HMenuItems>
+    <BhMenuItem OnClick="Docs"      class="menu-item" Label="Documentation">Documentation</BhMenuItem>
+    <BhMenuItem OnClick="Shortcuts" class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</BhMenuItem>
+</BhMenuItems>
 """;
 
     private const string _polymorphicCode = """
-<HMenuItems class="menu-items">
-    <HMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</HMenuItem>
-    <HMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</HMenuItem>
-    <HMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</HMenuItem>
-</HMenuItems>
+<BhMenuItems class="menu-items">
+    <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
+    <BhMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</BhMenuItem>
+    <BhMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</BhMenuItem>
+</BhMenuItems>
 """;
 
     private const string _anchorCode = """
 @* Anchor positions the dropdown relative to the button automatically.
    It flips to the opposite side if there's not enough space. *@
 
-<HMenu class="menu">
-    <HMenuButton class="menu-button">Options ▾</HMenuButton>
-    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button">Options ▾</BhMenuButton>
+    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                 class="menu-items-anchored">
-        <HMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</HMenuItem>
-        <HMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</HMenuItem>
-        <HMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</HMenuItem>
-    </HMenuItems>
-</HMenu>
+        <BhMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+        <BhMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 
 @* Use --button-width to match the dropdown width to the trigger: *@
-<HMenuItems Anchor="@(new AnchorOptions { To = "bottom", Gap = 4 })"
+<BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
             class="menu-items-anchored menu-items-match-width">
     …
-</HMenuItems>
+</BhMenuItems>
 """;
 
     private const string _anchorCss = """
@@ -414,7 +414,7 @@
     text-decoration: none;
 }
 
-/* Hooks emitted by HMenuItem */
+/* Hooks emitted by BhMenuItem */
 .menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
 .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 """;

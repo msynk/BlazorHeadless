@@ -19,11 +19,11 @@
         </Description>
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
-                <HButton OnClick="() => showFade = !showFade" class="btn btn-primary">
+                <BhButton OnClick="() => showFade = !showFade" class="btn btn-primary">
                     @(showFade ? "Hide" : "Show")
-                </HButton>
+                </BhButton>
 
-                <HTransition Show="showFade"
+                <BhTransition Show="showFade"
                              Enter="transition-opacity duration-300"
                              EnterFrom="opacity-0"
                              EnterTo="opacity-100"
@@ -32,7 +32,7 @@
                              LeaveTo="opacity-0"
                              class="transition-demo-box">
                     <p>I fade in and out.</p>
-                </HTransition>
+                </BhTransition>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -48,11 +48,11 @@
         </Description>
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
-                <HButton OnClick="() => showScale = !showScale" class="btn btn-primary">
+                <BhButton OnClick="() => showScale = !showScale" class="btn btn-primary">
                     @(showScale ? "Hide" : "Show")
-                </HButton>
+                </BhButton>
 
-                <HTransition Show="showScale"
+                <BhTransition Show="showScale"
                              Enter="transition-all duration-300 ease-out"
                              EnterFrom="opacity-0 scale-95"
                              EnterTo="opacity-100 scale-100"
@@ -61,7 +61,7 @@
                              LeaveTo="opacity-0 scale-95"
                              class="transition-demo-box">
                     <p>I scale and fade.</p>
-                </HTransition>
+                </BhTransition>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -75,11 +75,11 @@
         </Description>
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
-                <HButton OnClick="() => showSlide = !showSlide" class="btn btn-primary">
+                <BhButton OnClick="() => showSlide = !showSlide" class="btn btn-primary">
                     @(showSlide ? "Hide" : "Show")
-                </HButton>
+                </BhButton>
 
-                <HTransition Show="showSlide"
+                <BhTransition Show="showSlide"
                              Enter="slide-enter"
                              EnterFrom="slide-enter-from"
                              EnterTo="slide-enter-to"
@@ -88,7 +88,7 @@
                              LeaveTo="slide-leave-to"
                              class="transition-demo-box slide-box">
                     <p>I slide down from zero height.</p>
-                </HTransition>
+                </BhTransition>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -102,11 +102,11 @@
         </Description>
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
-                <HButton OnClick="() => showAppear = !showAppear" class="btn btn-primary">
+                <BhButton OnClick="() => showAppear = !showAppear" class="btn btn-primary">
                     @(showAppear ? "Hide" : "Show")
-                </HButton>
+                </BhButton>
 
-                <HTransition Show="showAppear"
+                <BhTransition Show="showAppear"
                              Appear="true"
                              Enter="transition-all duration-500 ease-out"
                              EnterFrom="opacity-0 translate-y-4"
@@ -116,7 +116,7 @@
                              LeaveTo="opacity-0 translate-y-4"
                              class="transition-demo-box">
                     <p>I animate on first mount too.</p>
-                </HTransition>
+                </BhTransition>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -131,11 +131,11 @@
         </Description>
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
-                <HButton OnClick="() => showCallbacks = !showCallbacks" class="btn btn-primary">
+                <BhButton OnClick="() => showCallbacks = !showCallbacks" class="btn btn-primary">
                     @(showCallbacks ? "Hide" : "Show")
-                </HButton>
+                </BhButton>
 
-                <HTransition Show="showCallbacks"
+                <BhTransition Show="showCallbacks"
                              Enter="transition-opacity duration-300"
                              EnterFrom="opacity-0"
                              EnterTo="opacity-100"
@@ -148,7 +148,7 @@
                              AfterLeave='@(() => Log("AfterLeave"))'
                              class="transition-demo-box">
                     <p>Check the log below.</p>
-                </HTransition>
+                </BhTransition>
 
                 <div class="demo-output" style="white-space:pre-wrap;">@callbackLog</div>
             </div>
@@ -169,7 +169,7 @@
     // ── Source snippets ───────────────────────────────────────────────────────
 
     private const string _fadeCode = """
-<HTransition Show="@isOpen"
+<BhTransition Show="@isOpen"
              Enter="transition-opacity duration-300"
              EnterFrom="opacity-0"
              EnterTo="opacity-100"
@@ -177,11 +177,11 @@
              LeaveFrom="opacity-100"
              LeaveTo="opacity-0">
     <div class="panel">I fade in and out.</div>
-</HTransition>
+</BhTransition>
 """;
 
     private const string _scaleCode = """
-<HTransition Show="@isOpen"
+<BhTransition Show="@isOpen"
              Enter="transition-all duration-300 ease-out"
              EnterFrom="opacity-0 scale-95"
              EnterTo="opacity-100 scale-100"
@@ -189,11 +189,11 @@
              LeaveFrom="opacity-100 scale-100"
              LeaveTo="opacity-0 scale-95">
     <div class="panel">I scale and fade.</div>
-</HTransition>
+</BhTransition>
 """;
 
     private const string _slideCode = """
-<HTransition Show="@isOpen"
+<BhTransition Show="@isOpen"
              Enter="slide-enter"
              EnterFrom="slide-enter-from"
              EnterTo="slide-enter-to"
@@ -201,11 +201,11 @@
              LeaveFrom="slide-leave-from"
              LeaveTo="slide-leave-to">
     <div class="panel">I slide down.</div>
-</HTransition>
+</BhTransition>
 """;
 
     private const string _appearCode = """
-<HTransition Show="@isOpen"
+<BhTransition Show="@isOpen"
              Appear="true"
              Enter="transition-all duration-500 ease-out"
              EnterFrom="opacity-0 translate-y-4"
@@ -214,13 +214,13 @@
              LeaveFrom="opacity-100 translate-y-0"
              LeaveTo="opacity-0 translate-y-4">
     <div class="panel">I animate on first mount too.</div>
-</HTransition>
+</BhTransition>
 
 @* Without Appear="true", elements that start with Show="true" appear instantly. *@
 """;
 
     private const string _callbackCode = """
-<HTransition Show="@isOpen"
+<BhTransition Show="@isOpen"
              Enter="transition-opacity duration-300"
              EnterFrom="opacity-0"
              EnterTo="opacity-100"
@@ -232,7 +232,7 @@
              BeforeLeave="() => Log(\"BeforeLeave\")"
              AfterLeave="() => Log(\"AfterLeave\")">
     <div class="panel">Check the log.</div>
-</HTransition>
+</BhTransition>
 """;
 
     private const string _fadeCss = """

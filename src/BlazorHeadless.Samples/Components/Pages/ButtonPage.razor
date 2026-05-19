@@ -16,9 +16,9 @@
             Renders a native <code>&lt;button&gt;</code> with no styling. All visuals come from you.
         </Description>
         <LiveContent>
-            <HButton OnClick="HandleBasicClick" class="btn">
+            <BhButton OnClick="HandleBasicClick" class="btn">
                 Click me
-            </HButton>
+            </BhButton>
             <span class="demo-output">Clicked @basicClickCount times</span>
         </LiveContent>
     </DemoBlock>
@@ -30,9 +30,9 @@
             Sets the native <code>disabled</code> attribute and emits <code>data-disabled</code> for CSS hooks.
         </Description>
         <LiveContent>
-            <HButton Disabled="true" OnClick="HandleBasicClick" class="btn">
+            <BhButton Disabled="true" OnClick="HandleBasicClick" class="btn">
                 Can't click me
-            </HButton>
+            </BhButton>
         </LiveContent>
     </DemoBlock>
 
@@ -40,11 +40,11 @@
                Code="@_loadingCode"
                Css="@_btnLoadingCss">
         <Description>
-            Uses <code>RenderFragment&lt;ButtonContext&gt;</code> so you can conditionally render
+            Uses <code>RenderFragment&lt;BhButtonContext&gt;</code> so you can conditionally render
             a spinner driven by the button's own state.
         </Description>
         <LiveContent>
-            <HButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
+            <BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
                 @if (btn.Loading)
                 {
                     <span class="spinner"></span>
@@ -54,7 +54,7 @@
                 {
                     <span>Save Changes</span>
                 }
-            </HButton>
+            </BhButton>
         </LiveContent>
     </DemoBlock>
 
@@ -67,12 +67,12 @@
             and Enter/Space keyboard handling.
         </Description>
         <LiveContent>
-            <HButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
+            <BhButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
                 I'm actually an &lt;a&gt; tag
-            </HButton>
-            <HButton As="span" OnClick="HandleBasicClick" class="btn">
+            </BhButton>
+            <BhButton As="span" OnClick="HandleBasicClick" class="btn">
                 I'm a &lt;span&gt; with role="button"
-            </HButton>
+            </BhButton>
         </LiveContent>
     </DemoBlock>
 
@@ -80,15 +80,15 @@
                Code="@_toggleCode"
                Css="@_btnToggleCss">
         <Description>
-            Combine <code>HButton</code> with your own state to build a toggle. Pass
+            Combine <code>BhButton</code> with your own state to build a toggle. Pass
             <code>aria-pressed</code> via standard HTML attributes — they merge automatically.
         </Description>
         <LiveContent>
-            <HButton OnClick="TogglePressed"
+            <BhButton OnClick="TogglePressed"
                      class="@ToggleClass"
                      aria-pressed="@isPressed.ToString().ToLowerInvariant()">
                 @(isPressed ? "ON" : "OFF")
-            </HButton>
+            </BhButton>
         </LiveContent>
     </DemoBlock>
 
@@ -100,15 +100,15 @@
             variants — that's your domain.
         </Description>
         <LiveContent>
-            <HButton OnClick="HandleBasicClick" class="btn-data">
+            <BhButton OnClick="HandleBasicClick" class="btn-data">
                 Styled via [data-*]
-            </HButton>
-            <HButton Disabled="true" class="btn-data">
+            </BhButton>
+            <BhButton Disabled="true" class="btn-data">
                 Disabled via [data-disabled]
-            </HButton>
-            <HButton Loading="true" class="btn-data">
+            </BhButton>
+            <BhButton Loading="true" class="btn-data">
                 Loading via [data-loading]
-            </HButton>
+            </BhButton>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -134,19 +134,19 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HButton OnClick="HandleBasicClick" class="btn">
+<BhButton OnClick="HandleBasicClick" class="btn">
     Click me
-</HButton>
+</BhButton>
 """;
 
     private const string _disabledCode = """
-<HButton Disabled="true" class="btn">
+<BhButton Disabled="true" class="btn">
     Can't click me
-</HButton>
+</BhButton>
 """;
 
     private const string _loadingCode = """
-<HButton Loading="@isLoading" OnClick="Save" class="btn" Context="btn">
+<BhButton Loading="@isLoading" OnClick="Save" class="btn" Context="btn">
     @if (btn.Loading)
     {
         <span class="spinner"></span>
@@ -156,39 +156,39 @@
     {
         <span>Save Changes</span>
     }
-</HButton>
+</BhButton>
 """;
 
     private const string _polymorphicCode = """
-<HButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
+<BhButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
     I'm actually an <a> tag
-</HButton>
+</BhButton>
 
-<HButton As="span" OnClick="HandleClick" class="btn">
+<BhButton As="span" OnClick="HandleClick" class="btn">
     I'm a <span> with role="button"
-</HButton>
+</BhButton>
 """;
 
     private const string _toggleCode = """
-<HButton OnClick="Toggle"
+<BhButton OnClick="Toggle"
          class="@(isPressed ? "btn btn-toggle active" : "btn btn-toggle")"
          aria-pressed="@isPressed.ToString().ToLowerInvariant()">
     @(isPressed ? "ON" : "OFF")
-</HButton>
+</BhButton>
 """;
 
     private const string _dataAttrCode = """
-<HButton OnClick="HandleClick" class="btn-data">
+<BhButton OnClick="HandleClick" class="btn-data">
     Styled via [data-*]
-</HButton>
+</BhButton>
 
-<HButton Disabled="true" class="btn-data">
+<BhButton Disabled="true" class="btn-data">
     Disabled via [data-disabled]
-</HButton>
+</BhButton>
 
-<HButton Loading="true" class="btn-data">
+<BhButton Loading="true" class="btn-data">
     Loading via [data-loading]
-</HButton>
+</BhButton>
 """;
 
     private const string _btnCss = """
@@ -212,7 +212,7 @@
 """;
 
     private const string _btnDisabledCss = """
-/* Hooks emitted by HButton when Disabled="true" */
+/* Hooks emitted by BhButton when Disabled="true" */
 .btn[data-disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -221,7 +221,7 @@
 """;
 
     private const string _btnLoadingCss = """
-/* Hooks emitted by HButton when Loading="true" */
+/* Hooks emitted by BhButton when Loading="true" */
 .btn[data-loading] {
     opacity: 0.7;
     cursor: wait;
@@ -241,7 +241,7 @@
 """;
 
     private const string _btnLinkCss = """
-/* Anchor variant of HButton (As="a") */
+/* Anchor variant of BhButton (As="a") */
 .btn-link {
     background: transparent;
     border-color: transparent;
@@ -268,7 +268,7 @@
 """;
 
     private const string _dataAttrCss = """
-/* Style entirely via CSS attribute selectors emitted by HButton */
+/* Style entirely via CSS attribute selectors emitted by BhButton */
 .btn-data                { background: #18181b; color: white; }
 .btn-data[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 .btn-data[data-loading]  { opacity: 0.7; cursor: wait; }

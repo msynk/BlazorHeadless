@@ -18,12 +18,12 @@
             Unlike a Dialog, the rest of the page stays interactive.
         </Description>
         <LiveContent>
-            <HPopover class="popover">
-                <HPopoverButton class="popover-button" Context="b">
+            <BhPopover class="popover">
+                <BhPopoverButton class="popover-button" Context="b">
                     Learn more
                     <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HPopoverButton>
-                <HPopoverPanel class="popover-panel" Context="p">
+                </BhPopoverButton>
+                <BhPopoverPanel class="popover-panel" Context="p">
                     <h3 class="popover-title">BlazorHeadless</h3>
                     <p class="popover-body">
                         A headless component library for Blazor. Zero styles, full accessibility,
@@ -32,9 +32,9 @@
                     <a href="https://github.com" target="_blank" class="popover-link">
                         View on GitHub →
                     </a>
-                    <HPopoverButton class="popover-close-btn">Close</HPopoverButton>
-                </HPopoverPanel>
-            </HPopover>
+                    <BhPopoverButton class="popover-close-btn">Close</BhPopoverButton>
+                </BhPopoverPanel>
+            </BhPopover>
         </LiveContent>
     </DemoBlock>
 
@@ -42,56 +42,56 @@
                Code="@_groupCode"
                Css="@_groupCss">
         <Description>
-            Wrap multiple popovers in an <code>HPopoverGroup</code> so opening one
+            Wrap multiple popovers in an <code>BhPopoverGroup</code> so opening one
             automatically closes the others. Useful for navigation bars.
         </Description>
         <LiveContent>
-            <HPopoverGroup class="popover-group">
-                <HPopover class="popover">
-                    <HPopoverButton class="popover-button" Context="b">
+            <BhPopoverGroup class="popover-group">
+                <BhPopover class="popover">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Products
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel class="popover-panel">
+                    </BhPopoverButton>
+                    <BhPopoverPanel class="popover-panel">
                         <h3 class="popover-title">Products</h3>
                         <ul class="popover-nav-list">
                             <li><a href="#" class="popover-nav-link">Analytics</a></li>
                             <li><a href="#" class="popover-nav-link">Automation</a></li>
                             <li><a href="#" class="popover-nav-link">Commerce</a></li>
                         </ul>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
 
-                <HPopover class="popover">
-                    <HPopoverButton class="popover-button" Context="b">
+                <BhPopover class="popover">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Solutions
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel class="popover-panel">
+                    </BhPopoverButton>
+                    <BhPopoverPanel class="popover-panel">
                         <h3 class="popover-title">Solutions</h3>
                         <ul class="popover-nav-list">
                             <li><a href="#" class="popover-nav-link">Marketing</a></li>
                             <li><a href="#" class="popover-nav-link">Engineering</a></li>
                             <li><a href="#" class="popover-nav-link">Finance</a></li>
                         </ul>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
 
-                <HPopover class="popover">
-                    <HPopoverButton class="popover-button" Context="b">
+                <BhPopover class="popover">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Company
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel class="popover-panel">
+                    </BhPopoverButton>
+                    <BhPopoverPanel class="popover-panel">
                         <h3 class="popover-title">Company</h3>
                         <ul class="popover-nav-list">
                             <li><a href="#" class="popover-nav-link">About</a></li>
                             <li><a href="#" class="popover-nav-link">Blog</a></li>
                             <li><a href="#" class="popover-nav-link">Careers</a></li>
                         </ul>
-                    </HPopoverPanel>
-                </HPopover>
-            </HPopoverGroup>
+                    </BhPopoverPanel>
+                </BhPopover>
+            </BhPopoverGroup>
         </LiveContent>
     </DemoBlock>
 
@@ -106,25 +106,25 @@
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
                 <div class="demo-row">
-                    <HButton OnClick="ToggleControlled" class="btn">
+                    <BhButton OnClick="ToggleControlled" class="btn">
                         Toggle from outside
-                    </HButton>
+                    </BhButton>
                     <span class="demo-output">Open: <strong>@controlledOpen.ToString().ToLowerInvariant()</strong></span>
                 </div>
 
-                <HPopover Open="controlledOpen"
+                <BhPopover Open="controlledOpen"
                           OnOpenChange="v => controlledOpen = v"
                           class="popover">
-                    <HPopoverButton class="popover-button" Context="b">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Internal trigger
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel class="popover-panel">
+                    </BhPopoverButton>
+                    <BhPopoverPanel class="popover-panel">
                         <p class="popover-body">
                             Either trigger updates the same state — fully controlled.
                         </p>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -133,7 +133,7 @@
                Code="@_anchorCode"
                Css="@_anchorCss">
         <Description>
-            Set <code>Anchor</code> on <code>HPopoverPanel</code> to automatically position
+            Set <code>Anchor</code> on <code>BhPopoverPanel</code> to automatically position
             the panel relative to the button. The panel uses <code>position: fixed</code>,
             flips when there's not enough space, and auto-updates on scroll/resize.
             No <code>position: relative</code> on the parent or <code>position: absolute</code>
@@ -141,46 +141,46 @@
         </Description>
         <LiveContent>
             <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
-                <HPopover class="popover-anchored">
-                    <HPopoverButton class="popover-button" Context="b">
+                <BhPopover class="popover-anchored">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Bottom Start
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "bottom start", Gap = 8 })"
+                    </BhPopoverButton>
+                    <BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
                                    class="popover-panel-anchored" Context="p">
                         <p class="popover-body">
                             This panel is anchored to <strong>bottom start</strong> with an 8px gap.
                             It will flip to the top if there's not enough space below.
                         </p>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
 
-                <HPopover class="popover-anchored">
-                    <HPopoverButton class="popover-button" Context="b">
+                <BhPopover class="popover-anchored">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Top End
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "top end", Gap = 8 })"
+                    </BhPopoverButton>
+                    <BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "top end", Gap = 8 })"
                                    class="popover-panel-anchored" Context="p">
                         <p class="popover-body">
                             This panel is anchored to <strong>top end</strong>. It flips to the
                             bottom if there's not enough space above.
                         </p>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
 
-                <HPopover class="popover-anchored">
-                    <HPopoverButton class="popover-button" Context="b">
+                <BhPopover class="popover-anchored">
+                    <BhPopoverButton class="popover-button" Context="b">
                         Right
                         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HPopoverButton>
-                    <HPopoverPanel Anchor="@(new AnchorOptions { To = "right", Gap = 8 })"
+                    </BhPopoverButton>
+                    <BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "right", Gap = 8 })"
                                    class="popover-panel-anchored" Context="p">
                         <p class="popover-body">
                             This panel is anchored to the <strong>right</strong> side.
                         </p>
-                    </HPopoverPanel>
-                </HPopover>
+                    </BhPopoverPanel>
+                </BhPopover>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -193,13 +193,13 @@
             elements. Tab navigates freely inside and out (no focus trap).
         </Description>
         <LiveContent>
-            <HPopover class="popover">
-                <HPopoverButton class="popover-button" Context="b">
+            <BhPopover class="popover">
+                <BhPopoverButton class="popover-button" Context="b">
                     Notifications
                     <span class="popover-badge">3</span>
                     <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HPopoverButton>
-                <HPopoverPanel class="popover-panel popover-panel-wide">
+                </BhPopoverButton>
+                <BhPopoverPanel class="popover-panel popover-panel-wide">
                     <div class="popover-header">
                         <h3 class="popover-title">Notifications</h3>
                         <span class="popover-badge">3 new</span>
@@ -228,8 +228,8 @@
                         </li>
                     </ul>
                     <a href="#" class="popover-footer-link">View all notifications →</a>
-                </HPopoverPanel>
-            </HPopover>
+                </BhPopoverPanel>
+            </BhPopover>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -242,53 +242,53 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HPopover class="popover">
-    <HPopoverButton class="popover-button" Context="b">
+<BhPopover class="popover">
+    <BhPopoverButton class="popover-button" Context="b">
         Learn more
         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HPopoverButton>
-    <HPopoverPanel class="popover-panel" Context="p">
+    </BhPopoverButton>
+    <BhPopoverPanel class="popover-panel" Context="p">
         <h3 class="popover-title">BlazorHeadless</h3>
         <p class="popover-body">…</p>
 
-        @* HPopoverButton inside the panel acts as a Close button *@
-        <HPopoverButton class="popover-close-btn">Close</HPopoverButton>
-    </HPopoverPanel>
-</HPopover>
+        @* BhPopoverButton inside the panel acts as a Close button *@
+        <BhPopoverButton class="popover-close-btn">Close</BhPopoverButton>
+    </BhPopoverPanel>
+</BhPopover>
 """;
 
     private const string _groupCode = """
-<HPopoverGroup class="popover-group">
-    <HPopover class="popover">
-        <HPopoverButton class="popover-button" Context="b">
+<BhPopoverGroup class="popover-group">
+    <BhPopover class="popover">
+        <BhPopoverButton class="popover-button" Context="b">
             Products
             <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-        </HPopoverButton>
-        <HPopoverPanel class="popover-panel">…</HPopoverPanel>
-    </HPopover>
+        </BhPopoverButton>
+        <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
+    </BhPopover>
 
-    <HPopover class="popover">
-        <HPopoverButton class="popover-button" Context="b">
+    <BhPopover class="popover">
+        <BhPopoverButton class="popover-button" Context="b">
             Solutions
             <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-        </HPopoverButton>
-        <HPopoverPanel class="popover-panel">…</HPopoverPanel>
-    </HPopover>
-</HPopoverGroup>
+        </BhPopoverButton>
+        <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
+    </BhPopover>
+</BhPopoverGroup>
 
 @* Opening one popover automatically closes the others. *@
 """;
 
     private const string _controlledCode = """
-<HPopover Open="controlledOpen"
+<BhPopover Open="controlledOpen"
           OnOpenChange="v => controlledOpen = v"
           class="popover">
-    <HPopoverButton class="popover-button" Context="b">
+    <BhPopoverButton class="popover-button" Context="b">
         Internal trigger
         <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HPopoverButton>
-    <HPopoverPanel class="popover-panel">…</HPopoverPanel>
-</HPopover>
+    </BhPopoverButton>
+    <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
+</BhPopover>
 
 @code {
     private bool controlledOpen;
@@ -296,12 +296,12 @@
 """;
 
     private const string _richCode = """
-<HPopover class="popover">
-    <HPopoverButton class="popover-button" Context="b">
+<BhPopover class="popover">
+    <BhPopoverButton class="popover-button" Context="b">
         Notifications
         <span class="popover-badge">3</span>
-    </HPopoverButton>
-    <HPopoverPanel class="popover-panel popover-panel-wide">
+    </BhPopoverButton>
+    <BhPopoverPanel class="popover-panel popover-panel-wide">
         <div class="popover-header">
             <h3 class="popover-title">Notifications</h3>
         </div>
@@ -309,23 +309,23 @@
             <li class="notification-item">…</li>
         </ul>
         <a href="#" class="popover-footer-link">View all →</a>
-    </HPopoverPanel>
-</HPopover>
+    </BhPopoverPanel>
+</BhPopover>
 """;
 
     private const string _anchorCode = """
 @* Anchor positions the panel relative to the button automatically.
    Supports all sides: top, right, bottom, left — with start/end alignment. *@
 
-<HPopover class="popover-anchored">
-    <HPopoverButton class="popover-button" Context="b">
+<BhPopover class="popover-anchored">
+    <BhPopoverButton class="popover-button" Context="b">
         Bottom Start ▾
-    </HPopoverButton>
-    <HPopoverPanel Anchor="@(new AnchorOptions { To = "bottom start", Gap = 8 })"
+    </BhPopoverButton>
+    <BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
                    class="popover-panel-anchored" Context="p">
         <p>This panel is anchored with auto-flip and shift.</p>
-    </HPopoverPanel>
-</HPopover>
+    </BhPopoverPanel>
+</BhPopover>
 
 @* Available placements: top, top start, top end,
    bottom, bottom start, bottom end,

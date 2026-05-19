@@ -18,13 +18,13 @@
             <code>DefaultChecked</code> seeds the initial state.
         </Description>
         <LiveContent>
-            <HCheckbox class="checkbox" Context="c">
+            <BhCheckbox class="checkbox" Context="c">
                 @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-            </HCheckbox>
+            </BhCheckbox>
 
-            <HCheckbox DefaultChecked="true" class="checkbox" Context="c">
+            <BhCheckbox DefaultChecked="true" class="checkbox" Context="c">
                 @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-            </HCheckbox>
+            </BhCheckbox>
         </LiveContent>
     </DemoBlock>
 
@@ -36,19 +36,19 @@
         </Description>
         <LiveContent>
             <div style="display:flex; align-items:center; gap:1rem;">
-                <HCheckbox Checked="@acceptedTerms"
+                <BhCheckbox Checked="@acceptedTerms"
                            OnCheckedChange="v => acceptedTerms = v"
                            class="checkbox" Context="c">
                     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-                </HCheckbox>
+                </BhCheckbox>
 
                 <span class="demo-output">
                     Terms accepted: <strong>@(acceptedTerms ? "yes" : "no")</strong>
                 </span>
 
-                <HButton OnClick="() => acceptedTerms = !acceptedTerms" class="btn">
+                <BhButton OnClick="() => acceptedTerms = !acceptedTerms" class="btn">
                     Toggle from outside
-                </HButton>
+                </BhButton>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -61,13 +61,13 @@
             <code>disabled</code> attribute and a <code>data-disabled</code> hook.
         </Description>
         <LiveContent>
-            <HCheckbox Disabled="true" class="checkbox" Context="c">
+            <BhCheckbox Disabled="true" class="checkbox" Context="c">
                 @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-            </HCheckbox>
+            </BhCheckbox>
 
-            <HCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
+            <BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
                 @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-            </HCheckbox>
+            </BhCheckbox>
         </LiveContent>
     </DemoBlock>
 
@@ -83,13 +83,13 @@
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:0.5rem;">
                 <label class="checkbox-label">
-                    <HCheckbox Checked="@SelectAllChecked"
+                    <BhCheckbox Checked="@SelectAllChecked"
                                Indeterminate="@SelectAllIndeterminate"
                                OnCheckedChange="HandleSelectAll"
                                class="checkbox" Context="c">
                         @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
                         else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
-                    </HCheckbox>
+                    </BhCheckbox>
                     <strong>Select all</strong>
                 </label>
 
@@ -98,11 +98,11 @@
                     {
                         var captured = i;
                         <label class="checkbox-label">
-                            <HCheckbox Checked="@items[captured]"
+                            <BhCheckbox Checked="@items[captured]"
                                        OnCheckedChange="v => HandleItemChange(captured, v)"
                                        class="checkbox" Context="c">
                                 @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-                            </HCheckbox>
+                            </BhCheckbox>
                             <span>@($"Item {captured + 1}")</span>
                         </label>
                     }
@@ -120,9 +120,9 @@
         </Description>
         <LiveContent>
             <label class="checkbox-label">
-                <HCheckbox class="checkbox" Context="c">
+                <BhCheckbox class="checkbox" Context="c">
                     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-                </HCheckbox>
+                </BhCheckbox>
                 <span>Send me product updates</span>
             </label>
         </LiveContent>
@@ -141,10 +141,10 @@
                   @onsubmit:preventDefault="true"
                   style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start;">
                 <label class="checkbox-label">
-                    <HCheckbox Name="agree" Value="yes"
+                    <BhCheckbox Name="agree" Value="yes"
                                class="checkbox" Context="c">
                         @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-                    </HCheckbox>
+                    </BhCheckbox>
                     <span>I agree to the terms</span>
                 </label>
 
@@ -187,21 +187,21 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HCheckbox class="checkbox" Context="c">
+<BhCheckbox class="checkbox" Context="c">
     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 
-<HCheckbox DefaultChecked="true" class="checkbox" Context="c">
+<BhCheckbox DefaultChecked="true" class="checkbox" Context="c">
     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 """;
 
     private const string _controlledCode = """
-<HCheckbox Checked="@acceptedTerms"
+<BhCheckbox Checked="@acceptedTerms"
            OnCheckedChange="v => acceptedTerms = v"
            class="checkbox" Context="c">
     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 
 @code {
     private bool acceptedTerms;
@@ -209,23 +209,23 @@
 """;
 
     private const string _disabledCode = """
-<HCheckbox Disabled="true" class="checkbox" Context="c">
+<BhCheckbox Disabled="true" class="checkbox" Context="c">
     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 
-<HCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
+<BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
     @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 """;
 
     private const string _indeterminateCode = """
-<HCheckbox Checked="@SelectAllChecked"
+<BhCheckbox Checked="@SelectAllChecked"
            Indeterminate="@SelectAllIndeterminate"
            OnCheckedChange="HandleSelectAll"
            class="checkbox" Context="c">
     @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
     else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
-</HCheckbox>
+</BhCheckbox>
 
 @* …per-item checkboxes update items[i]… *@
 
@@ -244,9 +244,9 @@
 
     private const string _labelCode = """
 <label class="checkbox-label">
-    <HCheckbox class="checkbox" Context="c">
+    <BhCheckbox class="checkbox" Context="c">
         @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-    </HCheckbox>
+    </BhCheckbox>
     <span>Send me product updates</span>
 </label>
 """;
@@ -254,10 +254,10 @@
     private const string _formCode = """
 <form method="post">
     <label class="checkbox-label">
-        <HCheckbox Name="agree" Value="yes"
+        <BhCheckbox Name="agree" Value="yes"
                    class="checkbox" Context="c">
             @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
-        </HCheckbox>
+        </BhCheckbox>
         <span>I agree to the terms</span>
     </label>
 
@@ -292,7 +292,7 @@
 .checkbox:hover                 { border-color: #a1a1af; }
 .checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
 
-/* Hooks emitted by HCheckbox */
+/* Hooks emitted by BhCheckbox */
 .checkbox[data-state="checked"],
 .checkbox[data-state="indeterminate"] {
     background: #2563eb;
@@ -349,7 +349,7 @@
 
     private const string _formCss = """
 /* Reuses the .checkbox / .checkbox-label styles from earlier demos.
-   No additional CSS is needed — when Name is set HCheckbox renders an
+   No additional CSS is needed — when Name is set BhCheckbox renders an
    <input type="hidden"> sibling that is invisible by default. */
 """;
 }

@@ -18,21 +18,21 @@
             in your own code and pass only the matching options as children.
         </Description>
         <LiveContent>
-            <HCombobox TValue="string"
+            <BhCombobox TValue="string"
                        Value="@selectedFruit"
                        OnValueChange="v => selectedFruit = v"
                        OnQueryChange="HandleFruitQuery"
                        DisplayValue="v => v ?? string.Empty"
                        class="combobox">
                 <div class="combobox-input-wrapper">
-                    <HComboboxInput TValue="string"
+                    <BhComboboxInput TValue="string"
                                     Placeholder="Pick a fruit…"
                                     class="combobox-input" />
-                    <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                    <BhComboboxButton TValue="string" class="combobox-button" Context="b">
                         <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HComboboxButton>
+                    </BhComboboxButton>
                 </div>
-                <HComboboxOptions TValue="string" class="combobox-options">
+                <BhComboboxOptions TValue="string" class="combobox-options">
                     @if (filteredFruits.Count == 0)
                     {
                         <li class="combobox-empty">No matches.</li>
@@ -41,14 +41,14 @@
                     {
                         @foreach (var fruit in filteredFruits)
                         {
-                            <HComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
+                            <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
                                 <span>@fruit</span>
                                 @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
-                            </HComboboxOption>
+                            </BhComboboxOption>
                         }
                     }
-                </HComboboxOptions>
-            </HCombobox>
+                </BhComboboxOptions>
+            </BhCombobox>
 
             <span class="demo-output">Selected: <strong>@(selectedFruit ?? "(none)")</strong></span>
         </LiveContent>
@@ -63,7 +63,7 @@
             open after each pick.
         </Description>
         <LiveContent>
-            <HCombobox TValue="string" Multiple="true"
+            <BhCombobox TValue="string" Multiple="true"
                        Values="@pickedTags"
                        OnValuesChange="v => pickedTags = v"
                        OnQueryChange="HandleTagQuery"
@@ -79,14 +79,14 @@
                                     aria-label="@($"Remove {tag}")">×</button>
                         </span>
                     }
-                    <HComboboxInput TValue="string"
+                    <BhComboboxInput TValue="string"
                                     Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                                     class="combobox-input combobox-input-inline" />
-                    <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                    <BhComboboxButton TValue="string" class="combobox-button" Context="b">
                         <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HComboboxButton>
+                    </BhComboboxButton>
                 </div>
-                <HComboboxOptions TValue="string" class="combobox-options">
+                <BhComboboxOptions TValue="string" class="combobox-options">
                     @if (filteredTags.Count == 0)
                     {
                         <li class="combobox-empty">No matches.</li>
@@ -95,14 +95,14 @@
                     {
                         @foreach (var tag in filteredTags)
                         {
-                            <HComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o">
+                            <BhComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o">
                                 <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
                                 <span>@tag</span>
-                            </HComboboxOption>
+                            </BhComboboxOption>
                         }
                     }
-                </HComboboxOptions>
-            </HCombobox>
+                </BhComboboxOptions>
+            </BhCombobox>
 
             <span class="demo-output">Picked: <strong>@(pickedTags.Count == 0 ? "(none)" : string.Join(", ", pickedTags))</strong></span>
         </LiveContent>
@@ -117,21 +117,21 @@
             inside each option.
         </Description>
         <LiveContent>
-            <HCombobox TValue="Person"
+            <BhCombobox TValue="Person"
                        Value="@selectedPerson"
                        OnValueChange="v => selectedPerson = v"
                        OnQueryChange="HandlePersonQuery"
                        DisplayValue="p => p?.Name ?? string.Empty"
                        class="combobox">
                 <div class="combobox-input-wrapper">
-                    <HComboboxInput TValue="Person"
+                    <BhComboboxInput TValue="Person"
                                     Placeholder="Search people…"
                                     class="combobox-input" />
-                    <HComboboxButton TValue="Person" class="combobox-button" Context="b">
+                    <BhComboboxButton TValue="Person" class="combobox-button" Context="b">
                         <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HComboboxButton>
+                    </BhComboboxButton>
                 </div>
-                <HComboboxOptions TValue="Person" class="combobox-options">
+                <BhComboboxOptions TValue="Person" class="combobox-options">
                     @if (filteredPeople.Count == 0)
                     {
                         <li class="combobox-empty">No matches.</li>
@@ -140,7 +140,7 @@
                     {
                         @foreach (var person in filteredPeople)
                         {
-                            <HComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o">
+                            <BhComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o">
                                 <div class="person-row">
                                     <span class="person-avatar">@person.Initials</span>
                                     <div class="person-info">
@@ -149,11 +149,11 @@
                                     </div>
                                     @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
                                 </div>
-                            </HComboboxOption>
+                            </BhComboboxOption>
                         }
                     }
-                </HComboboxOptions>
-            </HCombobox>
+                </BhComboboxOptions>
+            </BhCombobox>
 
             <span class="demo-output">
                 Selected: <strong>@(selectedPerson?.Name ?? "(none)")</strong>
@@ -164,7 +164,7 @@
                Code="@_anchorCode"
                Css="@_anchorCss">
         <Description>
-            Set <code>Anchor</code> on <code>HComboboxOptions</code> to automatically position
+            Set <code>Anchor</code> on <code>BhComboboxOptions</code> to automatically position
             the dropdown relative to the input using <code>position: fixed</code>. The panel
             flips to the opposite side when there's not enough space, shifts to stay within
             the viewport, and auto-updates on scroll/resize. No <code>position: relative</code>
@@ -174,22 +174,22 @@
             <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
                 <div>
                     <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Bottom Start</p>
-                    <HCombobox TValue="string"
+                    <BhCombobox TValue="string"
                                Value="@anchorFruit"
                                OnValueChange="v => anchorFruit = v"
                                OnQueryChange="HandleAnchorFruitQuery"
                                DisplayValue="v => v ?? string.Empty"
                                class="combobox-anchored">
                         <div class="combobox-input-wrapper">
-                            <HComboboxInput TValue="string"
+                            <BhComboboxInput TValue="string"
                                             Placeholder="Pick a fruit…"
                                             class="combobox-input" />
-                            <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                            <BhComboboxButton TValue="string" class="combobox-button" Context="b">
                                 <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                            </HComboboxButton>
+                            </BhComboboxButton>
                         </div>
-                        <HComboboxOptions TValue="string"
-                                          Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                        <BhComboboxOptions TValue="string"
+                                          Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                                           class="combobox-options-anchored">
                             @if (anchorFilteredFruits.Count == 0)
                             {
@@ -199,34 +199,34 @@
                             {
                                 @foreach (var fruit in anchorFilteredFruits)
                                 {
-                                    <HComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
+                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
                                         <span>@fruit</span>
                                         @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
-                                    </HComboboxOption>
+                                    </BhComboboxOption>
                                 }
                             }
-                        </HComboboxOptions>
-                    </HCombobox>
+                        </BhComboboxOptions>
+                    </BhCombobox>
                 </div>
 
                 <div>
                     <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Top Start (flips down if no space)</p>
-                    <HCombobox TValue="string"
+                    <BhCombobox TValue="string"
                                Value="@anchorFruit2"
                                OnValueChange="v => anchorFruit2 = v"
                                OnQueryChange="HandleAnchorFruitQuery2"
                                DisplayValue="v => v ?? string.Empty"
                                class="combobox-anchored">
                         <div class="combobox-input-wrapper">
-                            <HComboboxInput TValue="string"
+                            <BhComboboxInput TValue="string"
                                             Placeholder="Pick a fruit…"
                                             class="combobox-input" />
-                            <HComboboxButton TValue="string" class="combobox-button" Context="b">
+                            <BhComboboxButton TValue="string" class="combobox-button" Context="b">
                                 <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                            </HComboboxButton>
+                            </BhComboboxButton>
                         </div>
-                        <HComboboxOptions TValue="string"
-                                          Anchor="@(new AnchorOptions { To = "top start", Gap = 4 })"
+                        <BhComboboxOptions TValue="string"
+                                          Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
                                           class="combobox-options-anchored">
                             @if (anchorFilteredFruits2.Count == 0)
                             {
@@ -236,14 +236,14 @@
                             {
                                 @foreach (var fruit in anchorFilteredFruits2)
                                 {
-                                    <HComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
+                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
                                         <span>@fruit</span>
                                         @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
-                                    </HComboboxOption>
+                                    </BhComboboxOption>
                                 }
                             }
-                        </HComboboxOptions>
-                    </HCombobox>
+                        </BhComboboxOptions>
+                    </BhCombobox>
                 </div>
             </div>
 
@@ -376,21 +376,21 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HCombobox TValue="string"
+<BhCombobox TValue="string"
            Value="@selectedFruit"
            OnValueChange="v => selectedFruit = v"
            OnQueryChange="HandleFruitQuery"
            DisplayValue="v => v ?? string.Empty"
            class="combobox">
     <div class="combobox-input-wrapper">
-        <HComboboxInput TValue="string"
+        <BhComboboxInput TValue="string"
                         Placeholder="Pick a fruit…"
                         class="combobox-input" />
-        <HComboboxButton TValue="string" class="combobox-button" Context="b">
+        <BhComboboxButton TValue="string" class="combobox-button" Context="b">
             <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-        </HComboboxButton>
+        </BhComboboxButton>
     </div>
-    <HComboboxOptions TValue="string" class="combobox-options">
+    <BhComboboxOptions TValue="string" class="combobox-options">
         @if (filteredFruits.Count == 0)
         {
             <li class="combobox-empty">No matches.</li>
@@ -399,13 +399,13 @@
         {
             @foreach (var fruit in filteredFruits)
             {
-                <HComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+                <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option">
                     @fruit
-                </HComboboxOption>
+                </BhComboboxOption>
             }
         }
-    </HComboboxOptions>
-</HCombobox>
+    </BhComboboxOptions>
+</BhCombobox>
 
 @code {
     private string? selectedFruit;
@@ -417,7 +417,7 @@
 """;
 
     private const string _multiCode = """
-<HCombobox TValue="string" Multiple="true"
+<BhCombobox TValue="string" Multiple="true"
            Values="@pickedTags"
            OnValuesChange="v => pickedTags = v"
            OnQueryChange="HandleTagQuery"
@@ -433,29 +433,29 @@
                         aria-label="@($"Remove {tag}")">×</button>
             </span>
         }
-        <HComboboxInput TValue="string" class="combobox-input combobox-input-inline" />
-        <HComboboxButton TValue="string" class="combobox-button">…</HComboboxButton>
+        <BhComboboxInput TValue="string" class="combobox-input combobox-input-inline" />
+        <BhComboboxButton TValue="string" class="combobox-button">…</BhComboboxButton>
     </div>
-    <HComboboxOptions TValue="string" class="combobox-options">
+    <BhComboboxOptions TValue="string" class="combobox-options">
         @* …filtered options with check marks for selected items… *@
-    </HComboboxOptions>
-</HCombobox>
+    </BhComboboxOptions>
+</BhCombobox>
 """;
 
     private const string _objectCode = """
 public sealed record Person(string Name, string Email);
 
-<HCombobox TValue="Person"
+<BhCombobox TValue="Person"
            Value="@selectedPerson"
            OnValueChange="v => selectedPerson = v"
            OnQueryChange="HandlePersonQuery"
            DisplayValue="p => p?.Name ?? string.Empty"
            class="combobox">
-    <HComboboxInput TValue="Person" class="combobox-input" />
-    <HComboboxOptions TValue="Person" class="combobox-options">
+    <BhComboboxInput TValue="Person" class="combobox-input" />
+    <BhComboboxOptions TValue="Person" class="combobox-options">
         @foreach (var person in filteredPeople)
         {
-            <HComboboxOption TValue="Person" Value="@person" class="combobox-option">
+            <BhComboboxOption TValue="Person" Value="@person" class="combobox-option">
                 <div class="person-row">
                     <span class="person-avatar">@person.Initials</span>
                     <div class="person-info">
@@ -463,10 +463,10 @@ public sealed record Person(string Name, string Email);
                         <span>@person.Email</span>
                     </div>
                 </div>
-            </HComboboxOption>
+            </BhComboboxOption>
         }
-    </HComboboxOptions>
-</HCombobox>
+    </BhComboboxOptions>
+</BhCombobox>
 """;
 
     private const string _comboboxCss = """
@@ -539,7 +539,7 @@ public sealed record Person(string Name, string Email);
     color: #18181b;
 }
 
-/* Hooks emitted by HComboboxOption */
+/* Hooks emitted by BhComboboxOption */
 .combobox-option[data-active]   { background: #eff6ff; }
 .combobox-option[data-selected] { font-weight: 600; }
 .combobox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
@@ -630,27 +630,27 @@ public sealed record Person(string Name, string Email);
    No position:relative on parent or position:absolute on panel needed.
    The panel uses position:fixed and auto-updates on scroll/resize. *@
 
-<HCombobox TValue="string"
+<BhCombobox TValue="string"
            Value="@selectedFruit"
            OnValueChange="v => selectedFruit = v"
            OnQueryChange="HandleFruitQuery"
            DisplayValue="v => v ?? string.Empty"
            class="combobox-anchored">
     <div class="combobox-input-wrapper">
-        <HComboboxInput TValue="string" Placeholder="Pick a fruit…" class="combobox-input" />
-        <HComboboxButton TValue="string" class="combobox-button">▾</HComboboxButton>
+        <BhComboboxInput TValue="string" Placeholder="Pick a fruit…" class="combobox-input" />
+        <BhComboboxButton TValue="string" class="combobox-button">▾</BhComboboxButton>
     </div>
-    <HComboboxOptions TValue="string"
-                      Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+    <BhComboboxOptions TValue="string"
+                      Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                       class="combobox-options-anchored">
         @foreach (var fruit in filteredFruits)
         {
-            <HComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+            <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option">
                 @fruit
-            </HComboboxOption>
+            </BhComboboxOption>
         }
-    </HComboboxOptions>
-</HCombobox>
+    </BhComboboxOptions>
+</BhCombobox>
 
 @* Available placements: top, top start, top end,
    bottom, bottom start, bottom end,

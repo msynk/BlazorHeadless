@@ -19,20 +19,20 @@
             <code>aria-activedescendant</code>) is handled for you.
         </Description>
         <LiveContent>
-            <HListbox TValue="string" Value="@favPerson"
+            <BhListbox TValue="string" Value="@favPerson"
                       OnValueChange="v => favPerson = v"
                       class="listbox">
-                <HListboxButton TValue="string" class="listbox-button" Context="b">
+                <BhListboxButton TValue="string" class="listbox-button" Context="b">
                     <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
                     <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HListboxButton>
-                <HListboxOptions TValue="string" class="listbox-options">
+                </BhListboxButton>
+                <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var name in people)
                     {
-                        <HListboxOption TValue="string" Value="@name" class="listbox-option">@name</HListboxOption>
+                        <BhListboxOption TValue="string" Value="@name" class="listbox-option">@name</BhListboxOption>
                     }
-                </HListboxOptions>
-            </HListbox>
+                </BhListboxOptions>
+            </BhListbox>
 
             <span class="demo-output">Selected: <strong>@(favPerson ?? "(none)")</strong></span>
         </LiveContent>
@@ -46,26 +46,26 @@
             open after each selection. The button label here renders the joined names.
         </Description>
         <LiveContent>
-            <HListbox TValue="string" Multiple="true"
+            <BhListbox TValue="string" Multiple="true"
                       Values="@favColors"
                       OnValuesChange="v => favColors = v"
                       class="listbox">
-                <HListboxButton TValue="string" class="listbox-button" Context="b">
+                <BhListboxButton TValue="string" class="listbox-button" Context="b">
                     <span>
                         @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
                     </span>
                     <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HListboxButton>
-                <HListboxOptions TValue="string" class="listbox-options">
+                </BhListboxButton>
+                <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var c in colors)
                     {
-                        <HListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
+                        <BhListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
                             <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
                             <span>@c</span>
-                        </HListboxOption>
+                        </BhListboxOption>
                     }
-                </HListboxOptions>
-            </HListbox>
+                </BhListboxOptions>
+            </BhListbox>
 
             <span class="demo-output">Selected: <strong>@string.Join(", ", favColors)</strong></span>
         </LiveContent>
@@ -79,19 +79,19 @@
             <code>data-disabled</code> for CSS, are skipped by arrow-key nav, and ignore typeahead matches.
         </Description>
         <LiveContent>
-            <HListbox TValue="string" DefaultValue='@("standard")' class="listbox">
-                <HListboxButton TValue="string" class="listbox-button" Context="b">
+            <BhListbox TValue="string" DefaultValue='@("standard")' class="listbox">
+                <BhListboxButton TValue="string" class="listbox-button" Context="b">
                     <span>@(b.Value ?? "Pick a plan")</span>
                     <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HListboxButton>
-                <HListboxOptions TValue="string" class="listbox-options">
-                    <HListboxOption TValue="string" Value="@("standard")" class="listbox-option">Standard</HListboxOption>
-                    <HListboxOption TValue="string" Value="@("pro")" class="listbox-option">Pro</HListboxOption>
-                    <HListboxOption TValue="string" Value="@("enterprise")" Disabled="true" class="listbox-option">
+                </BhListboxButton>
+                <BhListboxOptions TValue="string" class="listbox-options">
+                    <BhListboxOption TValue="string" Value="@("standard")" class="listbox-option">Standard</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("pro")" class="listbox-option">Pro</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("enterprise")" Disabled="true" class="listbox-option">
                         Enterprise (coming soon)
-                    </HListboxOption>
-                </HListboxOptions>
-            </HListbox>
+                    </BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>
         </LiveContent>
     </DemoBlock>
 
@@ -105,24 +105,24 @@
             still matches sensibly.
         </Description>
         <LiveContent>
-            <HListbox TValue="string" Value="@country"
+            <BhListbox TValue="string" Value="@country"
                       OnValueChange="v => country = v"
                       class="listbox">
-                <HListboxButton TValue="string" class="listbox-button" Context="b">
+                <BhListboxButton TValue="string" class="listbox-button" Context="b">
                     <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
                     <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                </HListboxButton>
-                <HListboxOptions TValue="string" class="listbox-options">
+                </BhListboxButton>
+                <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var c in countries)
                     {
-                        <HListboxOption TValue="string" Value="@c.Code" Label="@c.Name" class="listbox-option">
+                        <BhListboxOption TValue="string" Value="@c.Code" Label="@c.Name" class="listbox-option">
                             <span class="country-flag">@c.Flag</span>
                             <span class="country-name">@c.Name</span>
                             <span class="country-code">@c.Code</span>
-                        </HListboxOption>
+                        </BhListboxOption>
                     }
-                </HListboxOptions>
-            </HListbox>
+                </BhListboxOptions>
+            </BhListbox>
         </LiveContent>
     </DemoBlock>
 
@@ -130,7 +130,7 @@
                Code="@_anchorCode"
                Css="@_anchorCss">
         <Description>
-            Set <code>Anchor</code> on <code>HListboxOptions</code> to automatically position
+            Set <code>Anchor</code> on <code>BhListboxOptions</code> to automatically position
             the dropdown relative to the button using <code>position: fixed</code>. The panel
             flips to the opposite side when there's not enough space, shifts to stay within
             the viewport, and auto-updates on scroll/resize. The CSS variable
@@ -141,42 +141,42 @@
             <div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-end;">
                 <div>
                     <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Bottom Start (width matched)</p>
-                    <HListbox TValue="string" Value="@anchorPerson"
+                    <BhListbox TValue="string" Value="@anchorPerson"
                               OnValueChange="v => anchorPerson = v"
                               class="listbox-anchored">
-                        <HListboxButton TValue="string" class="listbox-button" Context="b">
+                        <BhListboxButton TValue="string" class="listbox-button" Context="b">
                             <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
                             <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                        </HListboxButton>
-                        <HListboxOptions TValue="string"
-                                         Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+                        </BhListboxButton>
+                        <BhListboxOptions TValue="string"
+                                         Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                                          class="listbox-options-anchored">
                             @foreach (var name in people)
                             {
-                                <HListboxOption TValue="string" Value="@name" class="listbox-option">@name</HListboxOption>
+                                <BhListboxOption TValue="string" Value="@name" class="listbox-option">@name</BhListboxOption>
                             }
-                        </HListboxOptions>
-                    </HListbox>
+                        </BhListboxOptions>
+                    </BhListbox>
                 </div>
 
                 <div>
                     <p style="font-size:0.8rem; color:#71717a; margin:0 0 0.5rem;">Top Start (flips down if no space)</p>
-                    <HListbox TValue="string" Value="@anchorPerson2"
+                    <BhListbox TValue="string" Value="@anchorPerson2"
                               OnValueChange="v => anchorPerson2 = v"
                               class="listbox-anchored">
-                        <HListboxButton TValue="string" class="listbox-button" Context="b">
+                        <BhListboxButton TValue="string" class="listbox-button" Context="b">
                             <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
                             <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                        </HListboxButton>
-                        <HListboxOptions TValue="string"
-                                         Anchor="@(new AnchorOptions { To = "top start", Gap = 4 })"
+                        </BhListboxButton>
+                        <BhListboxOptions TValue="string"
+                                         Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
                                          class="listbox-options-anchored">
                             @foreach (var name in people)
                             {
-                                <HListboxOption TValue="string" Value="@name" class="listbox-option">@name</HListboxOption>
+                                <BhListboxOption TValue="string" Value="@name" class="listbox-option">@name</BhListboxOption>
                             }
-                        </HListboxOptions>
-                    </HListbox>
+                        </BhListboxOptions>
+                    </BhListbox>
                 </div>
             </div>
 
@@ -197,17 +197,17 @@
             <form @onsubmit="HandleFormSubmit"
                   @onsubmit:preventDefault="true"
                   style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
-                <HListbox TValue="string" Name="role" DefaultValue='@("user")' class="listbox">
-                    <HListboxButton TValue="string" class="listbox-button" Context="b">
+                <BhListbox TValue="string" Name="role" DefaultValue='@("user")' class="listbox">
+                    <BhListboxButton TValue="string" class="listbox-button" Context="b">
                         <span>@(b.Value)</span>
                         <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-                    </HListboxButton>
-                    <HListboxOptions TValue="string" class="listbox-options">
-                        <HListboxOption TValue="string" Value="@("user")" class="listbox-option">User</HListboxOption>
-                        <HListboxOption TValue="string" Value="@("admin")" class="listbox-option">Admin</HListboxOption>
-                        <HListboxOption TValue="string" Value="@("owner")" class="listbox-option">Owner</HListboxOption>
-                    </HListboxOptions>
-                </HListbox>
+                    </BhListboxButton>
+                    <BhListboxOptions TValue="string" class="listbox-options">
+                        <BhListboxOption TValue="string" Value="@("user")" class="listbox-option">User</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("admin")" class="listbox-option">Admin</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("owner")" class="listbox-option">Owner</BhListboxOption>
+                    </BhListboxOptions>
+                </BhListbox>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -259,22 +259,22 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HListbox TValue="string" Value="@favPerson"
+<BhListbox TValue="string" Value="@favPerson"
           OnValueChange="v => favPerson = v"
           class="listbox">
-    <HListboxButton TValue="string" class="listbox-button" Context="b">
+    <BhListboxButton TValue="string" class="listbox-button" Context="b">
         <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
         <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HListboxButton>
-    <HListboxOptions TValue="string" class="listbox-options">
+    </BhListboxButton>
+    <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var name in people)
         {
-            <HListboxOption TValue="string" Value="@name" class="listbox-option">
+            <BhListboxOption TValue="string" Value="@name" class="listbox-option">
                 @name
-            </HListboxOption>
+            </BhListboxOption>
         }
-    </HListboxOptions>
-</HListbox>
+    </BhListboxOptions>
+</BhListbox>
 
 @code {
     private string? favPerson;
@@ -283,72 +283,72 @@
 """;
 
     private const string _multiCode = """
-<HListbox TValue="string" Multiple="true"
+<BhListbox TValue="string" Multiple="true"
           Values="@favColors"
           OnValuesChange="v => favColors = v"
           class="listbox">
-    <HListboxButton TValue="string" class="listbox-button" Context="b">
+    <BhListboxButton TValue="string" class="listbox-button" Context="b">
         <span>
             @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
         </span>
-    </HListboxButton>
-    <HListboxOptions TValue="string" class="listbox-options">
+    </BhListboxButton>
+    <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in colors)
         {
-            <HListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
+            <BhListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
                 <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
                 <span>@c</span>
-            </HListboxOption>
+            </BhListboxOption>
         }
-    </HListboxOptions>
-</HListbox>
+    </BhListboxOptions>
+</BhListbox>
 """;
 
     private const string _disabledCode = """
-<HListbox TValue="string" DefaultValue="standard" class="listbox">
-    <HListboxButton TValue="string" class="listbox-button">…</HListboxButton>
-    <HListboxOptions TValue="string" class="listbox-options">
-        <HListboxOption TValue="string" Value="standard"   class="listbox-option">Standard</HListboxOption>
-        <HListboxOption TValue="string" Value="pro"        class="listbox-option">Pro</HListboxOption>
-        <HListboxOption TValue="string" Value="enterprise" Disabled="true" class="listbox-option">
+<BhListbox TValue="string" DefaultValue="standard" class="listbox">
+    <BhListboxButton TValue="string" class="listbox-button">…</BhListboxButton>
+    <BhListboxOptions TValue="string" class="listbox-options">
+        <BhListboxOption TValue="string" Value="standard"   class="listbox-option">Standard</BhListboxOption>
+        <BhListboxOption TValue="string" Value="pro"        class="listbox-option">Pro</BhListboxOption>
+        <BhListboxOption TValue="string" Value="enterprise" Disabled="true" class="listbox-option">
             Enterprise (coming soon)
-        </HListboxOption>
-    </HListboxOptions>
-</HListbox>
+        </BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
 """;
 
     private const string _customCode = """
-<HListbox TValue="string" Value="@country"
+<BhListbox TValue="string" Value="@country"
           OnValueChange="v => country = v"
           class="listbox">
-    <HListboxButton TValue="string" class="listbox-button" Context="b">
+    <BhListboxButton TValue="string" class="listbox-button" Context="b">
         <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
-    </HListboxButton>
-    <HListboxOptions TValue="string" class="listbox-options">
+    </BhListboxButton>
+    <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in countries)
         {
-            <HListboxOption TValue="string" Value="@c.Code"
+            <BhListboxOption TValue="string" Value="@c.Code"
                             Label="@c.Name"
                             class="listbox-option">
                 <span class="country-flag">@c.Flag</span>
                 <span class="country-name">@c.Name</span>
                 <span class="country-code">@c.Code</span>
-            </HListboxOption>
+            </BhListboxOption>
         }
-    </HListboxOptions>
-</HListbox>
+    </BhListboxOptions>
+</BhListbox>
 """;
 
     private const string _formCode = """
 <form method="post">
-    <HListbox TValue="string" Name="role" DefaultValue="user" class="listbox">
-        <HListboxButton TValue="string" class="listbox-button">…</HListboxButton>
-        <HListboxOptions TValue="string" class="listbox-options">
-            <HListboxOption TValue="string" Value="user"  class="listbox-option">User</HListboxOption>
-            <HListboxOption TValue="string" Value="admin" class="listbox-option">Admin</HListboxOption>
-            <HListboxOption TValue="string" Value="owner" class="listbox-option">Owner</HListboxOption>
-        </HListboxOptions>
-    </HListbox>
+    <BhListbox TValue="string" Name="role" DefaultValue="user" class="listbox">
+        <BhListboxButton TValue="string" class="listbox-button">…</BhListboxButton>
+        <BhListboxOptions TValue="string" class="listbox-options">
+            <BhListboxOption TValue="string" Value="user"  class="listbox-option">User</BhListboxOption>
+            <BhListboxOption TValue="string" Value="admin" class="listbox-option">Admin</BhListboxOption>
+            <BhListboxOption TValue="string" Value="owner" class="listbox-option">Owner</BhListboxOption>
+        </BhListboxOptions>
+    </BhListbox>
     <button type="submit">Submit</button>
 </form>
 
@@ -408,7 +408,7 @@
     color: #18181b;
 }
 
-/* Hooks emitted by HListboxOption */
+/* Hooks emitted by BhListboxOption */
 .listbox-option[data-active]   { background: #eff6ff; }
 .listbox-option[data-selected] { font-weight: 600; }
 .listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
@@ -452,7 +452,7 @@
 
     private const string _formCss = """
 /* Reuses the .listbox styles from earlier demos.
-   When Name is set, HListbox renders <input type="hidden"> sibling(s) — one for
+   When Name is set, BhListbox renders <input type="hidden"> sibling(s) — one for
    single-select, or one per value for multi-select. */
 """;
 
@@ -461,24 +461,24 @@
    No position:relative on parent or position:absolute on panel needed.
    The panel uses position:fixed and auto-updates on scroll/resize. *@
 
-<HListbox TValue="string" Value="@person"
+<BhListbox TValue="string" Value="@person"
           OnValueChange="v => person = v"
           class="listbox-anchored">
-    <HListboxButton TValue="string" class="listbox-button" Context="b">
+    <BhListboxButton TValue="string" class="listbox-button" Context="b">
         <span>@(b.Value ?? "Select a person…")</span>
         <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HListboxButton>
-    <HListboxOptions TValue="string"
-                     Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })"
+    </BhListboxButton>
+    <BhListboxOptions TValue="string"
+                     Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                      class="listbox-options-anchored">
         @foreach (var name in people)
         {
-            <HListboxOption TValue="string" Value="@name" class="listbox-option">
+            <BhListboxOption TValue="string" Value="@name" class="listbox-option">
                 @name
-            </HListboxOption>
+            </BhListboxOption>
         }
-    </HListboxOptions>
-</HListbox>
+    </BhListboxOptions>
+</BhListbox>
 
 @* Available placements: top, top start, top end,
    bottom, bottom start, bottom end,

@@ -17,40 +17,40 @@
                Code="@_basicCode"
                Css="@_basicCss">
         <Description>
-            Use <code>HFieldset</code> and <code>HLegend</code> to group a set of
+            Use <code>BhFieldset</code> and <code>BhLegend</code> to group a set of
             form controls together with a title. The fieldset uses the native
             <code>&lt;fieldset&gt;</code> element while the legend renders as a
             <code>&lt;div&gt;</code> (since native <code>&lt;legend&gt;</code> is
             notoriously hard to style).
         </Description>
         <LiveContent>
-            <HFieldset class="fieldset">
+            <BhFieldset class="fieldset">
                 <header class="fieldset-header">
-                    <HLegend class="fieldset-legend">Shipping details</HLegend>
+                    <BhLegend class="fieldset-legend">Shipping details</BhLegend>
                     <p class="fieldset-hint">Where should we deliver your order?</p>
                 </header>
 
-                <HField class="field">
-                    <HLabel class="field-label">Street address</HLabel>
-                    <HInput name="address" placeholder="123 Main St" class="field-input" />
-                </HField>
+                <BhField class="field">
+                    <BhLabel class="field-label">Street address</BhLabel>
+                    <BhInput name="address" placeholder="123 Main St" class="field-input" />
+                </BhField>
 
-                <HField class="field">
-                    <HLabel class="field-label">Country</HLabel>
-                    <HSelect name="country" class="field-input field-select">
+                <BhField class="field">
+                    <BhLabel class="field-label">Country</BhLabel>
+                    <BhSelect name="country" class="field-input field-select">
                         <option>Canada</option>
                         <option>Mexico</option>
                         <option>United States</option>
-                    </HSelect>
-                </HField>
+                    </BhSelect>
+                </BhField>
 
-                <HField class="field">
-                    <HLabel class="field-label">Delivery notes</HLabel>
-                    <HTextarea name="notes" rows="3"
+                <BhField class="field">
+                    <BhLabel class="field-label">Delivery notes</BhLabel>
+                    <BhTextarea name="notes" rows="3"
                                placeholder="Leave at front door…"
                                class="field-input field-textarea" />
-                </HField>
-            </HFieldset>
+                </BhField>
+            </BhFieldset>
         </LiveContent>
     </DemoBlock>
 
@@ -58,29 +58,29 @@
                Code="@_disabledCode"
                Css="@_disabledCss">
         <Description>
-            Set <code>Disabled="true"</code> on the <code>HFieldset</code> to
+            Set <code>Disabled="true"</code> on the <code>BhFieldset</code> to
             disable every form control inside. The fieldset, legend, and all
             nested fields receive <code>data-disabled</code> for CSS hooks, and
             the native <code>disabled</code> attribute on the fieldset prevents
             interaction.
         </Description>
         <LiveContent>
-            <HFieldset Disabled="true" class="fieldset">
+            <BhFieldset Disabled="true" class="fieldset">
                 <header class="fieldset-header">
-                    <HLegend class="fieldset-legend">Account (locked)</HLegend>
+                    <BhLegend class="fieldset-legend">Account (locked)</BhLegend>
                     <p class="fieldset-hint">Verify your email to edit these fields.</p>
                 </header>
 
-                <HField class="field">
-                    <HLabel class="field-label">Username</HLabel>
-                    <HInput type="text" value="alice" class="field-input" />
-                </HField>
+                <BhField class="field">
+                    <BhLabel class="field-label">Username</BhLabel>
+                    <BhInput type="text" value="alice" class="field-input" />
+                </BhField>
 
-                <HField class="field">
-                    <HLabel class="field-label">Email</HLabel>
-                    <HInput type="email" value="alice@example.com" class="field-input" />
-                </HField>
-            </HFieldset>
+                <BhField class="field">
+                    <BhLabel class="field-label">Email</BhLabel>
+                    <BhInput type="email" value="alice@example.com" class="field-input" />
+                </BhField>
+            </BhFieldset>
         </LiveContent>
     </DemoBlock>
 
@@ -99,28 +99,28 @@
                     <span class="fieldset-status-dot"></span>
                     @(_disabled ? "Read-only" : "Editing")
                 </span>
-                <HButton class="btn" OnClick="@(() => _disabled = !_disabled)">
+                <BhButton class="btn" OnClick="@(() => _disabled = !_disabled)">
                     @(_disabled ? "Enable" : "Disable")
-                </HButton>
+                </BhButton>
             </div>
 
-            <HFieldset Disabled="_disabled" class="fieldset">
+            <BhFieldset Disabled="_disabled" class="fieldset">
                 <header class="fieldset-header">
-                    <HLegend class="fieldset-legend">Profile</HLegend>
+                    <BhLegend class="fieldset-legend">Profile</BhLegend>
                     <p class="fieldset-hint">Shown publicly on your profile page.</p>
                 </header>
 
-                <HField class="field">
-                    <HLabel class="field-label">Display name</HLabel>
-                    <HInput type="text" placeholder="Alice Anderson" class="field-input" />
-                </HField>
+                <BhField class="field">
+                    <BhLabel class="field-label">Display name</BhLabel>
+                    <BhInput type="text" placeholder="Alice Anderson" class="field-input" />
+                </BhField>
 
-                <HField class="field">
-                    <HLabel class="field-label">Bio</HLabel>
-                    <HTextarea rows="2" placeholder="Tell us about yourself…"
+                <BhField class="field">
+                    <BhLabel class="field-label">Bio</BhLabel>
+                    <BhTextarea rows="2" placeholder="Tell us about yourself…"
                                class="field-input field-textarea" />
-                </HField>
-            </HFieldset>
+                </BhField>
+            </BhFieldset>
         </LiveContent>
     </DemoBlock>
 </div>
@@ -131,31 +131,31 @@
     // ── Source snippets ───────────────────────────────────────────────────────
 
     private const string _basicCode = """
-<HFieldset class="fieldset">
+<BhFieldset class="fieldset">
     <header class="fieldset-header">
-        <HLegend class="fieldset-legend">Shipping details</HLegend>
+        <BhLegend class="fieldset-legend">Shipping details</BhLegend>
         <p class="fieldset-hint">Where should we deliver your order?</p>
     </header>
 
-    <HField class="field">
-        <HLabel class="field-label">Street address</HLabel>
-        <HInput name="address" class="field-input" />
-    </HField>
+    <BhField class="field">
+        <BhLabel class="field-label">Street address</BhLabel>
+        <BhInput name="address" class="field-input" />
+    </BhField>
 
-    <HField class="field">
-        <HLabel class="field-label">Country</HLabel>
-        <HSelect name="country" class="field-input field-select">
+    <BhField class="field">
+        <BhLabel class="field-label">Country</BhLabel>
+        <BhSelect name="country" class="field-input field-select">
             <option>Canada</option>
             <option>Mexico</option>
             <option>United States</option>
-        </HSelect>
-    </HField>
+        </BhSelect>
+    </BhField>
 
-    <HField class="field">
-        <HLabel class="field-label">Delivery notes</HLabel>
-        <HTextarea name="notes" rows="3" class="field-input field-textarea" />
-    </HField>
-</HFieldset>
+    <BhField class="field">
+        <BhLabel class="field-label">Delivery notes</BhLabel>
+        <BhTextarea name="notes" rows="3" class="field-input field-textarea" />
+    </BhField>
+</BhFieldset>
 
 @* Rendered HTML:
    <fieldset id="h-xxxx" aria-labelledby="h-xxxx-legend">
@@ -169,25 +169,25 @@
 """;
 
     private const string _disabledCode = """
-<HFieldset Disabled="true" class="fieldset">
+<BhFieldset Disabled="true" class="fieldset">
     <header class="fieldset-header">
-        <HLegend class="fieldset-legend">Account (locked)</HLegend>
+        <BhLegend class="fieldset-legend">Account (locked)</BhLegend>
         <p class="fieldset-hint">Verify your email to edit these fields.</p>
     </header>
 
-    <HField class="field">
-        <HLabel class="field-label">Username</HLabel>
-        <HInput type="text" value="alice" class="field-input" />
-    </HField>
+    <BhField class="field">
+        <BhLabel class="field-label">Username</BhLabel>
+        <BhInput type="text" value="alice" class="field-input" />
+    </BhField>
 
-    <HField class="field">
-        <HLabel class="field-label">Email</HLabel>
-        <HInput type="email" value="alice@example.com" class="field-input" />
-    </HField>
-</HFieldset>
+    <BhField class="field">
+        <BhLabel class="field-label">Email</BhLabel>
+        <BhInput type="email" value="alice@example.com" class="field-input" />
+    </BhField>
+</BhFieldset>
 
 @* The native <fieldset disabled> attribute disables every nested control,
-   and data-disabled cascades to the legend and each HField for styling. *@
+   and data-disabled cascades to the legend and each BhField for styling. *@
 """;
 
     private const string _toggleCode = """
@@ -200,27 +200,27 @@
         <span class="fieldset-status-dot"></span>
         @(_disabled ? "Read-only" : "Editing")
     </span>
-    <HButton OnClick="@(() => _disabled = !_disabled)" class="btn">
+    <BhButton OnClick="@(() => _disabled = !_disabled)" class="btn">
         @(_disabled ? "Enable" : "Disable")
-    </HButton>
+    </BhButton>
 </div>
 
-<HFieldset Disabled="_disabled" class="fieldset">
+<BhFieldset Disabled="_disabled" class="fieldset">
     <header class="fieldset-header">
-        <HLegend class="fieldset-legend">Profile</HLegend>
+        <BhLegend class="fieldset-legend">Profile</BhLegend>
         <p class="fieldset-hint">Shown publicly on your profile page.</p>
     </header>
 
-    <HField class="field">
-        <HLabel class="field-label">Display name</HLabel>
-        <HInput type="text" class="field-input" />
-    </HField>
+    <BhField class="field">
+        <BhLabel class="field-label">Display name</BhLabel>
+        <BhInput type="text" class="field-input" />
+    </BhField>
 
-    <HField class="field">
-        <HLabel class="field-label">Bio</HLabel>
-        <HTextarea rows="2" class="field-input field-textarea" />
-    </HField>
-</HFieldset>
+    <BhField class="field">
+        <BhLabel class="field-label">Bio</BhLabel>
+        <BhTextarea rows="2" class="field-input field-textarea" />
+    </BhField>
+</BhFieldset>
 """;
 
     // ── Styles (these are appended to wwwroot/app.css; here they're shown for documentation) ──
@@ -264,7 +264,7 @@
 """;
 
     private const string _disabledCss = """
-/* Hooks cascaded from HFieldset Disabled="true" */
+/* Hooks cascaded from BhFieldset Disabled="true" */
 .fieldset[data-disabled] {
     background: #fafafa;
     box-shadow: none;

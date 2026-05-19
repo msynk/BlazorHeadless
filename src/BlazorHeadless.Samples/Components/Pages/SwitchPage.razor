@@ -18,13 +18,13 @@
             <code>DefaultChecked</code> seeds the initial state.
         </Description>
         <LiveContent>
-            <HSwitch DefaultChecked="false" class="switch" Context="s">
+            <BhSwitch DefaultChecked="false" class="switch" Context="s">
                 <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-            </HSwitch>
+            </BhSwitch>
 
-            <HSwitch DefaultChecked="true" class="switch" Context="s">
+            <BhSwitch DefaultChecked="true" class="switch" Context="s">
                 <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-            </HSwitch>
+            </BhSwitch>
         </LiveContent>
     </DemoBlock>
 
@@ -37,19 +37,19 @@
         </Description>
         <LiveContent>
             <div style="display:flex; align-items:center; gap:1rem;">
-                <HSwitch Checked="@notificationsOn"
+                <BhSwitch Checked="@notificationsOn"
                          OnCheckedChange="v => notificationsOn = v"
                          class="switch" Context="s">
                     <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-                </HSwitch>
+                </BhSwitch>
 
                 <span class="demo-output">
                     Notifications: <strong>@(notificationsOn ? "on" : "off")</strong>
                 </span>
 
-                <HButton OnClick="() => notificationsOn = !notificationsOn" class="btn">
+                <BhButton OnClick="() => notificationsOn = !notificationsOn" class="btn">
                     Toggle from outside
-                </HButton>
+                </BhButton>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -62,13 +62,13 @@
             the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.
         </Description>
         <LiveContent>
-            <HSwitch DefaultChecked="false" Disabled="true" class="switch" Context="s">
+            <BhSwitch DefaultChecked="false" Disabled="true" class="switch" Context="s">
                 <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-            </HSwitch>
+            </BhSwitch>
 
-            <HSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
+            <BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
                 <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-            </HSwitch>
+            </BhSwitch>
         </LiveContent>
     </DemoBlock>
 
@@ -81,9 +81,9 @@
         </Description>
         <LiveContent>
             <label class="switch-label">
-                <HSwitch DefaultChecked="true" class="switch" Context="s">
+                <BhSwitch DefaultChecked="true" class="switch" Context="s">
                     <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-                </HSwitch>
+                </BhSwitch>
                 <span>Email me about updates</span>
             </label>
         </LiveContent>
@@ -98,9 +98,9 @@
             handling so the switch remains fully accessible.
         </Description>
         <LiveContent>
-            <HSwitch As="div" DefaultChecked="false" class="switch" Context="s">
+            <BhSwitch As="div" DefaultChecked="false" class="switch" Context="s">
                 <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-            </HSwitch>
+            </BhSwitch>
         </LiveContent>
     </DemoBlock>
 
@@ -117,11 +117,11 @@
                   @onsubmit:preventDefault="true"
                   style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
                 <label class="switch-label">
-                    <HSwitch Name="newsletter" Value="yes"
+                    <BhSwitch Name="newsletter" Value="yes"
                              DefaultChecked="false"
                              class="switch" Context="s">
                         <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-                    </HSwitch>
+                    </BhSwitch>
                     <span>Subscribe to newsletter</span>
                 </label>
 
@@ -151,19 +151,19 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HSwitch DefaultChecked="false" class="switch" Context="s">
+<BhSwitch DefaultChecked="false" class="switch" Context="s">
     <span class="switch-thumb"
           data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</HSwitch>
+</BhSwitch>
 """;
 
     private const string _controlledCode = """
-<HSwitch Checked="@notificationsOn"
+<BhSwitch Checked="@notificationsOn"
          OnCheckedChange="v => notificationsOn = v"
          class="switch" Context="s">
     <span class="switch-thumb"
           data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</HSwitch>
+</BhSwitch>
 
 @code {
     private bool notificationsOn = true;
@@ -171,38 +171,38 @@
 """;
 
     private const string _disabledCode = """
-<HSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
+<BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
     <span class="switch-thumb"
           data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</HSwitch>
+</BhSwitch>
 """;
 
     private const string _labelCode = """
 <label class="switch-label">
-    <HSwitch DefaultChecked="true" class="switch" Context="s">
+    <BhSwitch DefaultChecked="true" class="switch" Context="s">
         <span class="switch-thumb"
               data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-    </HSwitch>
+    </BhSwitch>
     <span>Email me about updates</span>
 </label>
 """;
 
     private const string _polymorphicCode = """
-<HSwitch As="div" DefaultChecked="false" class="switch" Context="s">
+<BhSwitch As="div" DefaultChecked="false" class="switch" Context="s">
     <span class="switch-thumb"
           data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</HSwitch>
+</BhSwitch>
 """;
 
     private const string _formCode = """
 <form method="post">
     <label class="switch-label">
-        <HSwitch Name="newsletter" Value="yes"
+        <BhSwitch Name="newsletter" Value="yes"
                  DefaultChecked="false"
                  class="switch" Context="s">
             <span class="switch-thumb"
                   data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-        </HSwitch>
+        </BhSwitch>
         <span>Subscribe to newsletter</span>
     </label>
 
@@ -237,7 +237,7 @@
     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
 }
 
-/* Hooks emitted by HSwitch */
+/* Hooks emitted by BhSwitch */
 .switch[data-state="checked"]   { background: #2563eb; }
 .switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
 
@@ -295,7 +295,7 @@
 
     private const string _polymorphicCss = """
 /* Reuses the .switch / .switch-thumb styles from the Basic demo.
-   When rendered with As="div" (or any non-native element) HSwitch automatically
+   When rendered with As="div" (or any non-native element) BhSwitch automatically
    adds tabindex="0" and a Space/Enter keydown handler — the focus ring still
    needs your :focus-visible rule to appear. */
 .switch:focus-visible {
@@ -305,7 +305,7 @@
 
     private const string _formCss = """
 /* Reuses the .switch / .switch-label styles from the earlier demos.
-   No additional CSS is needed — when Name is set HSwitch renders an
+   No additional CSS is needed — when Name is set BhSwitch renders an
    <input type="hidden"> sibling that is always invisible by default. */
 """;
 }

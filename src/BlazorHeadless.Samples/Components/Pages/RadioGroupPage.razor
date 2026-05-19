@@ -18,26 +18,26 @@
             <code>role="radiogroup"</code>, and <code>role="radio"</code> are wired automatically.
         </Description>
         <LiveContent>
-            <HRadioGroup DefaultValue="medium" class="radio-group">
+            <BhRadioGroup DefaultValue="medium" class="radio-group">
                 <label class="radio-label">
-                    <HRadio Value="small" class="radio" Context="r">
+                    <BhRadio Value="small" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Small</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="medium" class="radio" Context="r">
+                    <BhRadio Value="medium" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Medium</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="large" class="radio" Context="r">
+                    <BhRadio Value="large" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Large</span>
                 </label>
-            </HRadioGroup>
+            </BhRadioGroup>
         </LiveContent>
     </DemoBlock>
 
@@ -50,26 +50,26 @@
             <code>data-orientation="horizontal"</code> for CSS hooks.
         </Description>
         <LiveContent>
-            <HRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
+            <BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
                 <label class="radio-label">
-                    <HRadio Value="card" class="radio" Context="r">
+                    <BhRadio Value="card" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Card</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="bank" class="radio" Context="r">
+                    <BhRadio Value="bank" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Bank</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="paypal" class="radio" Context="r">
+                    <BhRadio Value="paypal" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>PayPal</span>
                 </label>
-            </HRadioGroup>
+            </BhRadioGroup>
         </LiveContent>
     </DemoBlock>
 
@@ -82,26 +82,26 @@
             disable everything at once.
         </Description>
         <LiveContent>
-            <HRadioGroup DefaultValue="standard" class="radio-group">
+            <BhRadioGroup DefaultValue="standard" class="radio-group">
                 <label class="radio-label">
-                    <HRadio Value="standard" class="radio" Context="r">
+                    <BhRadio Value="standard" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Standard shipping (3–5 days)</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="express" class="radio" Context="r">
+                    <BhRadio Value="express" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Express shipping (1–2 days)</span>
                 </label>
                 <label class="radio-label">
-                    <HRadio Value="same-day" Disabled="true" class="radio" Context="r">
+                    <BhRadio Value="same-day" Disabled="true" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <span>Same-day shipping (unavailable in your region)</span>
                 </label>
-            </HRadioGroup>
+            </BhRadioGroup>
         </LiveContent>
     </DemoBlock>
 
@@ -114,35 +114,35 @@
             and use the <code>data-state="checked"</code> hook to highlight the selected card.
         </Description>
         <LiveContent>
-            <HRadioGroup DefaultValue="pro" class="plan-group">
+            <BhRadioGroup DefaultValue="pro" class="plan-group">
                 <label class="plan-card">
-                    <HRadio Value="free" class="radio" Context="r">
+                    <BhRadio Value="free" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <div class="plan-info">
                         <strong>Free</strong>
                         <span>Up to 3 projects.</span>
                     </div>
                 </label>
                 <label class="plan-card">
-                    <HRadio Value="pro" class="radio" Context="r">
+                    <BhRadio Value="pro" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <div class="plan-info">
                         <strong>Pro — $9 / mo</strong>
                         <span>Unlimited projects, priority support.</span>
                     </div>
                 </label>
                 <label class="plan-card">
-                    <HRadio Value="team" class="radio" Context="r">
+                    <BhRadio Value="team" class="radio" Context="r">
                         @if (r.IsChecked) { <span class="radio-dot"></span> }
-                    </HRadio>
+                    </BhRadio>
                     <div class="plan-info">
                         <strong>Team — $29 / mo</strong>
                         <span>For groups, with shared workspaces.</span>
                     </div>
                 </label>
-            </HRadioGroup>
+            </BhRadioGroup>
         </LiveContent>
     </DemoBlock>
 
@@ -155,34 +155,34 @@
         <LiveContent>
             <div style="display:flex; flex-direction:column; gap:1rem; width:100%">
                 <div class="demo-row">
-                    <HButton OnClick='() => selectedColor = "red"' class="btn">Red</HButton>
-                    <HButton OnClick='() => selectedColor = "green"' class="btn">Green</HButton>
-                    <HButton OnClick='() => selectedColor = "blue"' class="btn">Blue</HButton>
+                    <BhButton OnClick='() => selectedColor = "red"' class="btn">Red</BhButton>
+                    <BhButton OnClick='() => selectedColor = "green"' class="btn">Green</BhButton>
+                    <BhButton OnClick='() => selectedColor = "blue"' class="btn">Blue</BhButton>
                     <span class="demo-output">Selected: <strong>@(selectedColor ?? "(none)")</strong></span>
                 </div>
 
-                <HRadioGroup Value="@selectedColor"
+                <BhRadioGroup Value="@selectedColor"
                              OnValueChange="v => selectedColor = v"
                              class="radio-group">
                     <label class="radio-label">
-                        <HRadio Value="red" class="radio" Context="r">
+                        <BhRadio Value="red" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Red</span>
                     </label>
                     <label class="radio-label">
-                        <HRadio Value="green" class="radio" Context="r">
+                        <BhRadio Value="green" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Green</span>
                     </label>
                     <label class="radio-label">
-                        <HRadio Value="blue" class="radio" Context="r">
+                        <BhRadio Value="blue" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Blue</span>
                     </label>
-                </HRadioGroup>
+                </BhRadioGroup>
             </div>
         </LiveContent>
     </DemoBlock>
@@ -198,26 +198,26 @@
             <form @onsubmit="HandleFormSubmit"
                   @onsubmit:preventDefault="true"
                   style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
-                <HRadioGroup Name="size" DefaultValue="m" class="radio-group">
+                <BhRadioGroup Name="size" DefaultValue="m" class="radio-group">
                     <label class="radio-label">
-                        <HRadio Value="s" class="radio" Context="r">
+                        <BhRadio Value="s" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Small</span>
                     </label>
                     <label class="radio-label">
-                        <HRadio Value="m" class="radio" Context="r">
+                        <BhRadio Value="m" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Medium</span>
                     </label>
                     <label class="radio-label">
-                        <HRadio Value="l" class="radio" Context="r">
+                        <BhRadio Value="l" class="radio" Context="r">
                             @if (r.IsChecked) { <span class="radio-dot"></span> }
-                        </HRadio>
+                        </BhRadio>
                         <span>Large</span>
                     </label>
-                </HRadioGroup>
+                </BhRadioGroup>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -242,90 +242,90 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<HRadioGroup DefaultValue="medium" class="radio-group">
+<BhRadioGroup DefaultValue="medium" class="radio-group">
     <label class="radio-label">
-        <HRadio Value="small" class="radio" Context="r">
+        <BhRadio Value="small" class="radio" Context="r">
             @if (r.IsChecked) { <span class="radio-dot"></span> }
-        </HRadio>
+        </BhRadio>
         <span>Small</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="medium" class="radio" Context="r">
+        <BhRadio Value="medium" class="radio" Context="r">
             @if (r.IsChecked) { <span class="radio-dot"></span> }
-        </HRadio>
+        </BhRadio>
         <span>Medium</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="large" class="radio" Context="r">
+        <BhRadio Value="large" class="radio" Context="r">
             @if (r.IsChecked) { <span class="radio-dot"></span> }
-        </HRadio>
+        </BhRadio>
         <span>Large</span>
     </label>
-</HRadioGroup>
+</BhRadioGroup>
 """;
 
     private const string _horizontalCode = """
-<HRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
+<BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
     <label class="radio-label">
-        <HRadio Value="card" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="card" class="radio" Context="r">…</BhRadio>
         <span>Card</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="bank" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="bank" class="radio" Context="r">…</BhRadio>
         <span>Bank</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="paypal" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="paypal" class="radio" Context="r">…</BhRadio>
         <span>PayPal</span>
     </label>
-</HRadioGroup>
+</BhRadioGroup>
 """;
 
     private const string _disabledCode = """
-<HRadioGroup DefaultValue="standard" class="radio-group">
+<BhRadioGroup DefaultValue="standard" class="radio-group">
     <label class="radio-label">
-        <HRadio Value="standard" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="standard" class="radio" Context="r">…</BhRadio>
         <span>Standard shipping</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="express" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="express" class="radio" Context="r">…</BhRadio>
         <span>Express shipping</span>
     </label>
     <label class="radio-label">
-        <HRadio Value="same-day" Disabled="true" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="same-day" Disabled="true" class="radio" Context="r">…</BhRadio>
         <span>Same-day shipping</span>
     </label>
-</HRadioGroup>
+</BhRadioGroup>
 """;
 
     private const string _cardCode = """
-<HRadioGroup DefaultValue="pro" class="plan-group">
+<BhRadioGroup DefaultValue="pro" class="plan-group">
     <label class="plan-card">
-        <HRadio Value="free" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="free" class="radio" Context="r">…</BhRadio>
         <div class="plan-info">
             <strong>Free</strong>
             <span>Up to 3 projects.</span>
         </div>
     </label>
     <label class="plan-card">
-        <HRadio Value="pro" class="radio" Context="r">…</HRadio>
+        <BhRadio Value="pro" class="radio" Context="r">…</BhRadio>
         <div class="plan-info">
             <strong>Pro — $9 / mo</strong>
             <span>Unlimited projects.</span>
         </div>
     </label>
     @* …more plans… *@
-</HRadioGroup>
+</BhRadioGroup>
 """;
 
     private const string _controlledCode = """
-<HRadioGroup Value="@selectedColor"
+<BhRadioGroup Value="@selectedColor"
              OnValueChange="v => selectedColor = v"
              class="radio-group">
-    <label class="radio-label"><HRadio Value="red"   class="radio" Context="r">…</HRadio>Red</label>
-    <label class="radio-label"><HRadio Value="green" class="radio" Context="r">…</HRadio>Green</label>
-    <label class="radio-label"><HRadio Value="blue"  class="radio" Context="r">…</HRadio>Blue</label>
-</HRadioGroup>
+    <label class="radio-label"><BhRadio Value="red"   class="radio" Context="r">…</BhRadio>Red</label>
+    <label class="radio-label"><BhRadio Value="green" class="radio" Context="r">…</BhRadio>Green</label>
+    <label class="radio-label"><BhRadio Value="blue"  class="radio" Context="r">…</BhRadio>Blue</label>
+</BhRadioGroup>
 
 @code {
     private string? selectedColor = "green";
@@ -334,11 +334,11 @@
 
     private const string _formCode = """
 <form method="post">
-    <HRadioGroup Name="size" DefaultValue="m" class="radio-group">
-        <label class="radio-label"><HRadio Value="s" class="radio" Context="r">…</HRadio>Small</label>
-        <label class="radio-label"><HRadio Value="m" class="radio" Context="r">…</HRadio>Medium</label>
-        <label class="radio-label"><HRadio Value="l" class="radio" Context="r">…</HRadio>Large</label>
-    </HRadioGroup>
+    <BhRadioGroup Name="size" DefaultValue="m" class="radio-group">
+        <label class="radio-label"><BhRadio Value="s" class="radio" Context="r">…</BhRadio>Small</label>
+        <label class="radio-label"><BhRadio Value="m" class="radio" Context="r">…</BhRadio>Medium</label>
+        <label class="radio-label"><BhRadio Value="l" class="radio" Context="r">…</BhRadio>Large</label>
+    </BhRadioGroup>
     <button type="submit">Submit</button>
 </form>
 
@@ -389,7 +389,7 @@
 .radio:hover         { border-color: #a1a1af; }
 .radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 
-/* Hooks emitted by HRadio */
+/* Hooks emitted by BhRadio */
 .radio[data-state="checked"] { border-color: #2563eb; }
 .radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
 
@@ -463,7 +463,7 @@
 
     private const string _formCss = """
 /* Reuses the .radio / .radio-group styles from earlier demos.
-   No additional CSS is needed — when Name is set HRadioGroup renders an
+   No additional CSS is needed — when Name is set BhRadioGroup renders an
    <input type="hidden"> sibling with the current value. */
 """;
 }
