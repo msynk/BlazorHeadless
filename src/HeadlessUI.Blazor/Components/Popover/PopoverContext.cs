@@ -8,7 +8,7 @@ namespace HeadlessUI.Blazor;
 /// <see cref="HPopoverBackdrop"/>). Carries open state, ARIA wiring ids, and
 /// the open/close callbacks.
 /// </summary>
-public sealed class PopoverContext
+public sealed class PopoverContext : ICloseContext
 {
     private readonly Func<Task> _openAsync;
     private readonly Func<Task> _closeAsync;

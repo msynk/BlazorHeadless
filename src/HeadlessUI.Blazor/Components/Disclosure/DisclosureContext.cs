@@ -6,7 +6,7 @@ namespace HeadlessUI.Blazor;
 /// Carries the open state, ARIA wiring ids, and the toggle/close callbacks
 /// so the children can coordinate without prop-drilling.
 /// </summary>
-public sealed class DisclosureContext
+public sealed class DisclosureContext : ICloseContext
 {
     /// <summary>Whether the disclosure panel is currently open.</summary>
     public required bool IsOpen { get; init; }
@@ -31,6 +31,13 @@ public sealed class DisclosureContext
 
     /// <summary>Closes the disclosure if currently open.</summary>
     public required Action Close { get; init; }
+
+    /// <inheritdoc />
+    Task ICloseContext.CloseAsync()
+    {
+        Close();
+        return Task.CompletedTask;
+    }
 }
 
 /// <summary>

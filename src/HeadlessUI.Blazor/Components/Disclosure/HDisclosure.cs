@@ -105,20 +105,28 @@ public class HDisclosure : HeadlessComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenComponent<CascadingValue<DisclosureContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
-        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+        var context = CreateContext();
+
+        builder.OpenComponent<CascadingValue<ICloseContext>>(0);
+        builder.AddComponentParameter(1, "Value", (ICloseContext)context);
+        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(closeOuter =>
         {
-            inner.OpenElement(0, Tag);
-            inner.AddAttribute(10, "id", ComponentId);
-            inner.AddMultipleAttributes(20, GetFinalAttributes());
+            closeOuter.OpenComponent<CascadingValue<DisclosureContext>>(0);
+            closeOuter.AddComponentParameter(1, "Value", context);
+            closeOuter.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+            {
+                inner.OpenElement(0, Tag);
+                inner.AddAttribute(10, "id", ComponentId);
+                inner.AddMultipleAttributes(20, GetFinalAttributes());
 
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
+                if (Ref is not null)
+                    inner.AddElementReferenceCapture(30, Ref);
 
-            inner.AddContent(40, ChildContent);
+                inner.AddContent(40, ChildContent);
 
-            inner.CloseElement();
+                inner.CloseElement();
+            }));
+            closeOuter.CloseComponent();
         }));
         builder.CloseComponent();
     }

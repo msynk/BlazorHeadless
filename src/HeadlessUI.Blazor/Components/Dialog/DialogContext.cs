@@ -8,7 +8,7 @@ namespace HeadlessUI.Blazor;
 /// <see cref="HDialogDescription"/>, <see cref="HDialogBackdrop"/>). Carries
 /// open state, ARIA wiring ids, and a close callback.
 /// </summary>
-public sealed class DialogContext
+public sealed class DialogContext : ICloseContext
 {
     private readonly Func<Task> _closeAsync;
     private readonly Action<ElementReference> _registerPanel;

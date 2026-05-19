@@ -100,32 +100,40 @@ public class HPopover : HeadlessComponentBase, IDisposable
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenComponent<CascadingValue<PopoverContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
-        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+        var context = CreateContext();
+
+        builder.OpenComponent<CascadingValue<ICloseContext>>(0);
+        builder.AddComponentParameter(1, "Value", (ICloseContext)context);
+        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(closeOuter =>
         {
-            inner.OpenElement(0, Tag);
-            inner.AddAttribute(10, "id", ComponentId);
-            inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
-            inner.AddContent(40, ChildContent);
-
-            // Click-outside overlay — only present while open.
-            if (IsOpen)
+            closeOuter.OpenComponent<CascadingValue<PopoverContext>>(0);
+            closeOuter.AddComponentParameter(1, "Value", context);
+            closeOuter.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
             {
-                inner.OpenElement(50, "div");
-                inner.AddAttribute(51, "data-headlessui-overlay", true);
-                inner.AddAttribute(52, "style",
-                    "position:fixed;inset:0;z-index:30;background:transparent;");
-                inner.AddAttribute(53, "onclick",
-                    EventCallback.Factory.Create<MouseEventArgs>(this, async _ => await CloseAsync()));
-                inner.CloseElement();
-            }
+                inner.OpenElement(0, Tag);
+                inner.AddAttribute(10, "id", ComponentId);
+                inner.AddMultipleAttributes(20, GetFinalAttributes());
 
-            inner.CloseElement();
+                if (Ref is not null)
+                    inner.AddElementReferenceCapture(30, Ref);
+
+                inner.AddContent(40, ChildContent);
+
+                // Click-outside overlay — only present while open.
+                if (IsOpen)
+                {
+                    inner.OpenElement(50, "div");
+                    inner.AddAttribute(51, "data-headlessui-overlay", true);
+                    inner.AddAttribute(52, "style",
+                        "position:fixed;inset:0;z-index:30;background:transparent;");
+                    inner.AddAttribute(53, "onclick",
+                        EventCallback.Factory.Create<MouseEventArgs>(this, async _ => await CloseAsync()));
+                    inner.CloseElement();
+                }
+
+                inner.CloseElement();
+            }));
+            closeOuter.CloseComponent();
         }));
         builder.CloseComponent();
     }
