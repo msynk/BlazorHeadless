@@ -286,6 +286,86 @@ function getScrollParents(element) {
     return parents;
 }
 
+// ─── Portal: DOM teleportation ──────────────────────────────────────────────
+
+const portalHandles = new Map();
+let portalHandleSeq = 0;
+
+/**
+ * Gets or creates the default portal root container appended to <body>.
+ */
+function getOrCreatePortalRoot() {
+    let root = document.getElementById('blazor-headlessui-portal-root');
+    if (!root) {
+        root = document.createElement('div');
+        root.setAttribute('id', 'blazor-headlessui-portal-root');
+        root.setAttribute('data-headlessui-portal-root', '');
+        document.body.appendChild(root);
+    }
+    return root;
+}
+
+export const portal = {
+    /**
+     * Moves the element with the given ID to a target container (or the default
+     * body-level portal root). Inserts a placeholder comment node so the element
+     * can be restored to its original position later.
+     *
+     * elementId: the id of the DOM element to teleport
+     * targetId: optional id of the target container; if null, uses the default portal root
+     */
+    move(element, targetId) {
+        // Support both Element and string ID
+        if (typeof element === 'string') element = document.getElementById(element);
+        if (!element) return -1;
+
+        // Create a placeholder to mark the original position.
+        const placeholder = document.createComment('portal-placeholder-' + element.id);
+        element.parentElement.insertBefore(placeholder, element);
+
+        // Determine the target container.
+        let target;
+        if (targetId) {
+            target = document.getElementById(targetId);
+        }
+        if (!target) {
+            target = getOrCreatePortalRoot();
+        }
+
+        // Move the element to the target.
+        target.appendChild(element);
+
+        const id = ++portalHandleSeq;
+        portalHandles.set(id, { element, placeholder });
+        return id;
+    },
+
+    /**
+     * Restores the element to its original position (before the placeholder)
+     * and removes the placeholder.
+     */
+    restore(handle) {
+        const state = portalHandles.get(handle);
+        if (!state) return;
+        portalHandles.delete(handle);
+
+        const { element, placeholder } = state;
+        if (!element || !placeholder) return;
+
+        // Move back to original position (before the placeholder).
+        if (placeholder.parentNode) {
+            placeholder.parentNode.insertBefore(element, placeholder);
+            placeholder.parentNode.removeChild(placeholder);
+        }
+
+        // Clean up the default portal root if it's empty.
+        const root = document.getElementById('blazor-headlessui-portal-root');
+        if (root && root.childNodes.length === 0) {
+            root.parentElement?.removeChild(root);
+        }
+    }
+};
+
 // ─── Focusable helpers ───────────────────────────────────────────────────────
 
 const FOCUSABLE_SELECTOR = [

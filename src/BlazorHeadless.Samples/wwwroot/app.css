@@ -2450,3 +2450,163 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================
+   Portal styles — purely consumer-defined
+   ============================================================ */
+
+.portal-overflow-box {
+    overflow: hidden;
+    height: 8rem;
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.portal-label {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0 0 0.5rem;
+}
+
+.portal-label code {
+    background: #f4f4f5;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+}
+
+.portal-content {
+    background: #eff6ff;
+    border: 1px solid var(--color-primary);
+    border-radius: 0.4rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+}
+
+.portal-content p {
+    margin: 0 0 0.25rem;
+}
+
+.portal-content p:last-child {
+    margin-bottom: 0;
+}
+
+.portal-hint {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+
+/* ---- Tooltip demo ---- */
+
+.portal-stacking-parent {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.portal-stacking-parent > p {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0 0 0.75rem;
+}
+
+.portal-stacking-parent > p code {
+    background: #f4f4f5;
+    padding: 0.1em 0.35em;
+    border-radius: 0.25rem;
+    font-size: 0.85em;
+}
+
+.portal-tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 120ms ease;
+}
+
+.portal-tooltip-trigger:hover {
+    background: #f4f4f5;
+}
+
+.portal-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #18181b;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+/* ---- Portal Group demo ---- */
+
+.portal-group-target {
+    border: 2px solid #a78bfa;
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+    min-height: 6rem;
+    background: #faf5ff;
+}
+
+.portal-group-label {
+    font-size: 0.85rem;
+    color: #6d28d9;
+    margin: 0;
+    font-weight: 500;
+}
+
+.portal-group-item {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.portal-group-item-a {
+    background: #dbeafe;
+    border: 1px solid #3b82f6;
+}
+
+.portal-group-item-b {
+    background: #dcfce7;
+    border: 1px solid #22c55e;
+}
+
+/* ---- Disabled portal demo ---- */
+
+.portal-toggle-demo {
+    width: 100%;
+}
+
+.portal-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.portal-content-alt {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}

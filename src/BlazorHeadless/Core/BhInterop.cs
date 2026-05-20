@@ -171,6 +171,49 @@ public sealed class BhInterop : IAsyncDisposable
         await module.InvokeVoidAsync("anchor.update", handle);
     }
 
+    // ── Portal ─────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Moves the element with the given <paramref name="elementId"/> to a target
+    /// container (or the default body-level portal root). A placeholder is left
+    /// at the original position so the element can be restored later.
+    /// Returns a handle that must be passed to <see cref="PortalRestoreAsync"/>.
+    /// </summary>
+    /// <param name="elementId">The id of the element to teleport.</param>
+    /// <param name="targetId">Optional id of the target container. If null, uses the default portal root appended to body.</param>
+    public async Task<int> PortalMoveByIdAsync(string elementId, string? targetId = null)
+    {
+        var module = await _module.Value;
+        return await module.InvokeAsync<int>("portal.move", elementId, targetId);
+    }
+
+    /// <summary>
+    /// Moves the given element to a target container (or the default body-level
+    /// portal root). Returns a handle that must be passed to
+    /// <see cref="PortalRestoreAsync"/> to move the element back.
+    /// </summary>
+    /// <param name="element">The element to teleport.</param>
+    /// <param name="targetId">Optional id of the target container. If null, uses the default portal root appended to body.</param>
+    public async Task<int> PortalMoveAsync(ElementReference element, string? targetId = null)
+    {
+        var module = await _module.Value;
+        return await module.InvokeAsync<int>("portal.move", element, targetId);
+    }
+
+    /// <summary>
+    /// Restores the element to its original position in the DOM (before the placeholder).
+    /// </summary>
+    public async ValueTask PortalRestoreAsync(int handle)
+    {
+        if (handle <= 0) return;
+        try
+        {
+            var module = await _module.Value;
+            await module.InvokeVoidAsync("portal.restore", handle);
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+    }
+
     // ── Transition ───────────────────────────────────────────────────────────
 
     /// <summary>

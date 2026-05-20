@@ -20,6 +20,7 @@ public static class BhServiceCollectionExtensions
     public static IServiceCollection AddBlazorHeadless(this IServiceCollection services)
     {
         services.AddScoped<BhInterop>();
+        services.AddScoped<BhPortalService>();
         return services;
     }
 }
