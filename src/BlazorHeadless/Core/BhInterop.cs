@@ -55,6 +55,44 @@ public sealed class BhInterop : IAsyncDisposable
         await module.InvokeVoidAsync("dialog.unlock", handle);
     }
 
+    // ── FocusTrap ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Traps keyboard focus inside <paramref name="container"/> by intercepting
+    /// Tab/Shift+Tab and cycling through focusable elements. Unlike
+    /// <see cref="DialogLockAsync"/>, this does NOT lock body scroll or mark
+    /// siblings inert — it only manages focus cycling.
+    /// Returns a handle that must be passed to <see cref="FocusTrapUnlockAsync"/> to release.
+    /// </summary>
+    /// <param name="container">The container element to trap focus within.</param>
+    /// <param name="initialFocus">Optional element that should receive focus on lock.</param>
+    /// <param name="returnFocus">Optional element to receive focus on unlock; defaults to whatever was active at lock time.</param>
+    public async Task<int> FocusTrapLockAsync(
+        ElementReference container,
+        ElementReference? initialFocus = null,
+        ElementReference? returnFocus = null)
+    {
+        var module = await _module.Value;
+        var options = new
+        {
+            initialFocus = (object?)initialFocus,
+            returnFocus = (object?)returnFocus,
+        };
+        return await module.InvokeAsync<int>("focusTrap.lock", container, options);
+    }
+
+    /// <summary>Releases the focus trap and restores the captured focus target.</summary>
+    public async ValueTask FocusTrapUnlockAsync(int handle)
+    {
+        if (handle <= 0) return;
+        try
+        {
+            var module = await _module.Value;
+            await module.InvokeVoidAsync("focusTrap.unlock", handle);
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+    }
+
     // ── Popover ──────────────────────────────────────────────────────────────
 
     /// <summary>

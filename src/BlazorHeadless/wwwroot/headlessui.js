@@ -432,6 +432,81 @@ export const dialog = {
     }
 };
 
+// ─── FocusTrap: standalone focus cycling (no scroll lock, no inert) ──────────
+
+const focusTrapHandles = new Map();
+let focusTrapHandleSeq = 0;
+
+export const focusTrap = {
+    /**
+     * Traps focus inside the given container by intercepting Tab/Shift+Tab.
+     * Unlike dialog.lock, this does NOT lock scroll or mark siblings inert.
+     * Returns a handle id that must be passed to focusTrap.unlock(...).
+     *
+     * options:
+     *   initialFocus:  optional Element to focus first
+     *   returnFocus:   optional Element to focus on unlock; default = activeElement at lock time
+     */
+    lock(container, options) {
+        if (!container) return -1;
+        options = options || {};
+
+        const previousActive = options.returnFocus || document.activeElement;
+
+        // Trap focus with a capture-phase keydown listener.
+        const onKeyDown = (e) => {
+            if (e.key !== 'Tab') return;
+            const focusables = focusableInside(container);
+            if (focusables.length === 0) {
+                e.preventDefault();
+                container.focus();
+                return;
+            }
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const active = document.activeElement;
+
+            if (e.shiftKey) {
+                if (active === first || !container.contains(active)) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (active === last || !container.contains(active)) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+        document.addEventListener('keydown', onKeyDown, true);
+
+        // Initial focus.
+        const initial = options.initialFocus || focusableInside(container)[0] || container;
+        if (initial) initial.focus({ preventScroll: true });
+
+        const id = ++focusTrapHandleSeq;
+        focusTrapHandles.set(id, { container, previousActive, onKeyDown });
+        return id;
+    },
+
+    /**
+     * Releases the focus trap and restores focus to the previously active element.
+     */
+    unlock(handle) {
+        const state = focusTrapHandles.get(handle);
+        if (!state) return;
+        focusTrapHandles.delete(handle);
+
+        document.removeEventListener('keydown', state.onKeyDown, true);
+
+        // Restore focus.
+        const target = state.previousActive;
+        if (target && typeof target.focus === 'function') {
+            target.focus({ preventScroll: true });
+        }
+    }
+};
+
 // ─── Popover: focus management (no trap, no scroll lock) ────────────────────
 
 export const popover = {
