@@ -4,86 +4,90 @@
 
 <nav class="nav-menu">
     <div class="nav-brand">
-        <a href="/">BlazorHeadless</a>
+        <a href="/" @onclick="OnNavLinkClicked">BlazorHeadless</a>
     </div>
 
     <div class="nav-section">
         <div class="nav-section-title">Components</div>
 
-        <NavLink class="nav-link" href="accordion">
+        <NavLink class="nav-link" href="accordion" @onclick="OnNavLinkClicked">
             Accordion
         </NavLink>
 
-        <NavLink class="nav-link" href="button">
+        <NavLink class="nav-link" href="button" @onclick="OnNavLinkClicked">
             Button
         </NavLink>
 
-        <NavLink class="nav-link" href="checkbox">
+        <NavLink class="nav-link" href="checkbox" @onclick="OnNavLinkClicked">
             Checkbox
         </NavLink>
 
-        <NavLink class="nav-link" href="close-button">
+        <NavLink class="nav-link" href="close-button" @onclick="OnNavLinkClicked">
             CloseButton
         </NavLink>
 
-        <NavLink class="nav-link" href="combobox">
+        <NavLink class="nav-link" href="combobox" @onclick="OnNavLinkClicked">
             Combobox
         </NavLink>
 
-        <NavLink class="nav-link" href="data-interactive">
+        <NavLink class="nav-link" href="data-interactive" @onclick="OnNavLinkClicked">
             DataInteractive
         </NavLink>
 
-        <NavLink class="nav-link" href="dialog">
+        <NavLink class="nav-link" href="dialog" @onclick="OnNavLinkClicked">
             Dialog
         </NavLink>
 
-        <NavLink class="nav-link" href="disclosure">
+        <NavLink class="nav-link" href="disclosure" @onclick="OnNavLinkClicked">
             Disclosure
         </NavLink>
 
-        <NavLink class="nav-link" href="field">
+        <NavLink class="nav-link" href="field" @onclick="OnNavLinkClicked">
             Field / Input
         </NavLink>
 
-        <NavLink class="nav-link" href="fieldset">
+        <NavLink class="nav-link" href="fieldset" @onclick="OnNavLinkClicked">
             Fieldset
         </NavLink>
 
-        <NavLink class="nav-link" href="focus-trap">
+        <NavLink class="nav-link" href="focus-trap" @onclick="OnNavLinkClicked">
             FocusTrap
         </NavLink>
 
-        <NavLink class="nav-link" href="listbox">
+        <NavLink class="nav-link" href="listbox" @onclick="OnNavLinkClicked">
             Listbox
         </NavLink>
 
-        <NavLink class="nav-link" href="menu">
+        <NavLink class="nav-link" href="menu" @onclick="OnNavLinkClicked">
             Menu
         </NavLink>
 
-        <NavLink class="nav-link" href="popover">
+        <NavLink class="nav-link" href="popover" @onclick="OnNavLinkClicked">
             Popover
         </NavLink>
 
-        <NavLink class="nav-link" href="portal">
+        <NavLink class="nav-link" href="portal" @onclick="OnNavLinkClicked">
             Portal
         </NavLink>
 
-        <NavLink class="nav-link" href="radiogroup">
+        <NavLink class="nav-link" href="radiogroup" @onclick="OnNavLinkClicked">
             Radio Group
         </NavLink>
 
-        <NavLink class="nav-link" href="switch">
+        <NavLink class="nav-link" href="switch" @onclick="OnNavLinkClicked">
             Switch
         </NavLink>
 
-        <NavLink class="nav-link" href="tabs">
+        <NavLink class="nav-link" href="tabs" @onclick="OnNavLinkClicked">
             Tabs
         </NavLink>
 
-        <NavLink class="nav-link" href="transition">
+        <NavLink class="nav-link" href="transition" @onclick="OnNavLinkClicked">
             Transition
         </NavLink>
     </div>
 </nav>
+
+@code {
+    [Parameter] public EventCallback OnNavLinkClicked { get; set; }
+}

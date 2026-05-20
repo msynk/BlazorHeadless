@@ -1,8 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <aside class="sidebar">
-        <NavMenu />
+    <header class="mobile-header">
+        <button class="mobile-menu-toggle" @onclick="ToggleSidebar" aria-label="Toggle navigation">
+            <span class="hamburger-icon" aria-hidden="true"></span>
+        </button>
+        <a class="mobile-brand" href="/">BlazorHeadless</a>
+    </header>
+
+    @if (_sidebarOpen)
+    {
+        <div class="sidebar-backdrop" @onclick="CloseSidebar"></div>
+    }
+
+    <aside class="sidebar @(_sidebarOpen ? "sidebar-open" : "")">
+        <NavMenu OnNavLinkClicked="CloseSidebar" />
     </aside>
 
     <main class="content">
@@ -17,3 +29,10 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private bool _sidebarOpen;
+
+    private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
+    private void CloseSidebar() => _sidebarOpen = false;
+}
