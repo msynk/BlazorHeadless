@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Button</h1>
         <p>A polymorphic, accessible button primitive with loading and disabled states.</p>
+        <SectionSwitcher Slug="button" />
     </header>
 
     <DemoBlock Title="Basic Button"
@@ -137,16 +138,29 @@
 <BhButton OnClick="HandleBasicClick" class="btn">
     Click me
 </BhButton>
+<span class="demo-output">Clicked @basicClickCount times</span>
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() => basicClickCount++;
+}
 """;
 
     private const string _disabledCode = """
-<BhButton Disabled="true" class="btn">
+<BhButton Disabled="true" OnClick="HandleBasicClick" class="btn">
     Can't click me
 </BhButton>
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() => basicClickCount++;
+}
 """;
 
     private const string _loadingCode = """
-<BhButton Loading="@isLoading" OnClick="Save" class="btn" Context="btn">
+<BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
     @if (btn.Loading)
     {
         <span class="spinner"></span>
@@ -157,38 +171,66 @@
         <span>Save Changes</span>
     }
 </BhButton>
+
+@code {
+    private bool isLoading;
+
+    private async Task HandleLoadingClick()
+    {
+        isLoading = true;
+        await Task.Delay(2000);
+        isLoading = false;
+    }
+}
 """;
 
     private const string _polymorphicCode = """
 <BhButton As="a" href="https://github.com" target="_blank" class="btn btn-link">
     I'm actually an <a> tag
 </BhButton>
-
-<BhButton As="span" OnClick="HandleClick" class="btn">
+<BhButton As="span" OnClick="HandleBasicClick" class="btn">
     I'm a <span> with role="button"
 </BhButton>
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() => basicClickCount++;
+}
 """;
 
     private const string _toggleCode = """
-<BhButton OnClick="Toggle"
-         class="@(isPressed ? "btn btn-toggle active" : "btn btn-toggle")"
+<BhButton OnClick="TogglePressed"
+         class="@ToggleClass"
          aria-pressed="@isPressed.ToString().ToLowerInvariant()">
     @(isPressed ? "ON" : "OFF")
 </BhButton>
+
+@code {
+    private bool isPressed;
+
+    private string ToggleClass => isPressed ? "btn btn-toggle active" : "btn btn-toggle";
+
+    private void TogglePressed() => isPressed = !isPressed;
+}
 """;
 
     private const string _dataAttrCode = """
-<BhButton OnClick="HandleClick" class="btn-data">
+<BhButton OnClick="HandleBasicClick" class="btn-data">
     Styled via [data-*]
 </BhButton>
-
 <BhButton Disabled="true" class="btn-data">
     Disabled via [data-disabled]
 </BhButton>
-
 <BhButton Loading="true" class="btn-data">
     Loading via [data-loading]
 </BhButton>
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() => basicClickCount++;
+}
 """;
 
     private const string _btnCss = """

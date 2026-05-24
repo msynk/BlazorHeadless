@@ -11,6 +11,7 @@
             much easier-to-style version of the native <code>fieldset</code> and
             <code>legend</code> elements.
         </p>
+        <SectionSwitcher Slug="fieldset" />
     </header>
 
     <DemoBlock Title="Basic example"
@@ -25,10 +26,10 @@
         </Description>
         <LiveContent>
             <BhFieldset class="fieldset">
-                <header class="fieldset-header">
+                <div class="fieldset-header">
                     <BhLegend class="fieldset-legend">Shipping details</BhLegend>
                     <p class="fieldset-hint">Where should we deliver your order?</p>
-                </header>
+                </div>
 
                 <BhField class="field">
                     <BhLabel class="field-label">Street address</BhLabel>
@@ -66,10 +67,10 @@
         </Description>
         <LiveContent>
             <BhFieldset Disabled="true" class="fieldset">
-                <header class="fieldset-header">
+                <div class="fieldset-header">
                     <BhLegend class="fieldset-legend">Account (locked)</BhLegend>
                     <p class="fieldset-hint">Verify your email to edit these fields.</p>
-                </header>
+                </div>
 
                 <BhField class="field">
                     <BhLabel class="field-label">Username</BhLabel>
@@ -105,10 +106,10 @@
             </div>
 
             <BhFieldset Disabled="_disabled" class="fieldset">
-                <header class="fieldset-header">
+                <div class="fieldset-header">
                     <BhLegend class="fieldset-legend">Profile</BhLegend>
                     <p class="fieldset-hint">Shown publicly on your profile page.</p>
-                </header>
+                </div>
 
                 <BhField class="field">
                     <BhLabel class="field-label">Display name</BhLabel>
@@ -132,10 +133,10 @@
 
     private const string _basicCode = """
 <BhFieldset class="fieldset">
-    <header class="fieldset-header">
+    <div class="fieldset-header">
         <BhLegend class="fieldset-legend">Shipping details</BhLegend>
         <p class="fieldset-hint">Where should we deliver your order?</p>
-    </header>
+    </div>
 
     <BhField class="field">
         <BhLabel class="field-label">Street address</BhLabel>
@@ -159,21 +160,32 @@
 
 @* Rendered HTML:
    <fieldset id="h-xxxx" aria-labelledby="h-xxxx-legend">
-       <header class="fieldset-header">
+       <div class="fieldset-header">
            <div id="h-xxxx-legend" role="legend">Shipping details</div>
-           …
-       </header>
-       …
+           <p class="fieldset-hint">Where should we deliver your order?</p>
+       </div>
+       <div id="h-xxxx-field-1" class="field">
+           <label for="h-xxxx-input-1" id="h-xxxx-label-1">Street address</label>
+           <input id="h-xxxx-input-1" name="address" />
+       </div>
+       <div id="h-xxxx-field-2" class="field">
+           <label for="h-xxxx-input-2" id="h-xxxx-label-2">Country</label>
+           <select id="h-xxxx-input-2" name="country">…options…</select>
+       </div>
+       <div id="h-xxxx-field-3" class="field">
+           <label for="h-xxxx-input-3" id="h-xxxx-label-3">Delivery notes</label>
+           <textarea id="h-xxxx-input-3" name="notes"></textarea>
+       </div>
    </fieldset>
 *@
 """;
 
     private const string _disabledCode = """
 <BhFieldset Disabled="true" class="fieldset">
-    <header class="fieldset-header">
+    <div class="fieldset-header">
         <BhLegend class="fieldset-legend">Account (locked)</BhLegend>
         <p class="fieldset-hint">Verify your email to edit these fields.</p>
-    </header>
+    </div>
 
     <BhField class="field">
         <BhLabel class="field-label">Username</BhLabel>
@@ -206,10 +218,10 @@
 </div>
 
 <BhFieldset Disabled="_disabled" class="fieldset">
-    <header class="fieldset-header">
+    <div class="fieldset-header">
         <BhLegend class="fieldset-legend">Profile</BhLegend>
         <p class="fieldset-hint">Shown publicly on your profile page.</p>
-    </header>
+    </div>
 
     <BhField class="field">
         <BhLabel class="field-label">Display name</BhLabel>

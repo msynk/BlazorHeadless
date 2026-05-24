@@ -1,0 +1,188 @@
+@page "/tw/field"
+@rendermode InteractiveServer
+
+<PageTitle>Field / Input — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Field / Input</h1>
+        <p class="mt-2 text-zinc-500">Form primitives with auto-wired ARIA labels, descriptions, and validation state.</p>
+        <TwSectionSwitcher Slug="field" />
+    </header>
+
+    <TwDemoBlock Title="Basic Field" Code="@_basicCode">
+        <Description>
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhField</code> auto-wires <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">for</code>, <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">id</code>, and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-describedby</code>.
+        </Description>
+        <LiveContent>
+            <BhField class="flex w-full max-w-sm flex-col gap-1.5">
+                <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Email</BhLabel>
+                <BhInput type="email" placeholder="you@example.com"
+                         class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+                <BhDescription class="m-0 text-xs text-zinc-500">We'll never share your email.</BhDescription>
+            </BhField>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Textarea" Code="@_textareaCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhTextarea</code> works identically.</Description>
+        <LiveContent>
+            <BhField class="flex w-full max-w-sm flex-col gap-1.5">
+                <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Bio</BhLabel>
+                <BhTextarea rows="3" placeholder="Tell us about yourself…"
+                            class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600 resize-y min-h-16" />
+                <BhDescription class="m-0 text-xs text-zinc-500">Max 280 characters.</BhDescription>
+            </BhField>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Select" Code="@_selectCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhSelect</code> renders a native select with the same ARIA wiring.</Description>
+        <LiveContent>
+            <BhField class="flex w-full max-w-sm flex-col gap-1.5">
+                <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Country</BhLabel>
+                <BhSelect class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed appearance-none pr-8">
+                    <option value="">Choose…</option>
+                    <option value="us">United States</option>
+                    <option value="gb">United Kingdom</option>
+                    <option value="fr">France</option>
+                    <option value="de">Germany</option>
+                </BhSelect>
+                <BhDescription class="m-0 text-xs text-zinc-500">Where you're based.</BhDescription>
+            </BhField>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Disabled Field" Code="@_disabledCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled:</code> cascades to label and input.</Description>
+        <LiveContent>
+            <BhField Disabled="true" class="flex w-full max-w-sm flex-col gap-1.5">
+                <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Username</BhLabel>
+                <BhInput type="text" value="alice"
+                         class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed" />
+                <BhDescription class="m-0 text-xs text-zinc-500">Cannot be changed.</BhDescription>
+            </BhField>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Invalid Field" Code="@_invalidCode">
+        <Description>The <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-invalid:</code> Tailwind variant lets you style invalid fields without a custom selector.</Description>
+        <LiveContent>
+            <BhField Invalid="true" class="flex w-full max-w-sm flex-col gap-1.5">
+                <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Password</BhLabel>
+                <BhInput type="password" value="123"
+                         class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+                <BhDescription class="m-0 text-xs text-red-600">
+                    Password must be at least 8 characters.
+                </BhDescription>
+            </BhField>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Multiple Fields (form layout)" Code="@_formCode">
+        <Description>Each <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhField</code> manages its own id namespace.</Description>
+        <LiveContent>
+            <form class="flex w-full max-w-sm flex-col gap-4" @onsubmit:preventDefault>
+                <BhField class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900">First name</BhLabel>
+                    <BhInput type="text" placeholder="Alice"
+                             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+                </BhField>
+                <BhField class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900">Last name</BhLabel>
+                    <BhInput type="text" placeholder="Anderson"
+                             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+                </BhField>
+                <BhField class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900">Email</BhLabel>
+                    <BhInput type="email" placeholder="alice@example.com"
+                             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+                    <BhDescription class="m-0 text-xs text-zinc-500">Your work email.</BhDescription>
+                </BhField>
+                <BhButton Type="submit"
+                          class="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700 self-start">
+                    Submit
+                </BhButton>
+            </form>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private const string _basicCode = """
+<BhField class="flex w-full max-w-sm flex-col gap-1.5">
+    <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Email</BhLabel>
+    <BhInput type="email" placeholder="you@example.com"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+    <BhDescription class="m-0 text-xs text-zinc-500">We'll never share your email.</BhDescription>
+</BhField>
+""";
+
+    private const string _textareaCode = """
+<BhField class="flex w-full max-w-sm flex-col gap-1.5">
+    <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Bio</BhLabel>
+    <BhTextarea rows="3" placeholder="Tell us about yourself…"
+                class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600 resize-y min-h-16" />
+    <BhDescription class="m-0 text-xs text-zinc-500">Max 280 characters.</BhDescription>
+</BhField>
+""";
+
+    private const string _selectCode = """
+<BhField class="flex w-full max-w-sm flex-col gap-1.5">
+    <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Country</BhLabel>
+    <BhSelect class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed appearance-none pr-8">
+        <option value="">Choose…</option>
+        <option value="us">United States</option>
+        <option value="gb">United Kingdom</option>
+        <option value="fr">France</option>
+        <option value="de">Germany</option>
+    </BhSelect>
+    <BhDescription class="m-0 text-xs text-zinc-500">Where you're based.</BhDescription>
+</BhField>
+""";
+
+    private const string _disabledCode = """
+<BhField Disabled="true" class="flex w-full max-w-sm flex-col gap-1.5">
+    <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Username</BhLabel>
+    <BhInput type="text" value="alice"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed" />
+    <BhDescription class="m-0 text-xs text-zinc-500">Cannot be changed.</BhDescription>
+</BhField>
+""";
+
+    private const string _invalidCode = """
+<BhField Invalid="true" class="flex w-full max-w-sm flex-col gap-1.5">
+    <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Password</BhLabel>
+    <BhInput type="password" value="123"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+    <BhDescription class="m-0 text-xs text-red-600">
+        Password must be at least 8 characters.
+    </BhDescription>
+</BhField>
+""";
+
+    private const string _formCode = """
+<form class="flex w-full max-w-sm flex-col gap-4" @onsubmit:preventDefault>
+    <BhField class="flex w-full flex-col gap-1.5">
+        <BhLabel class="text-sm font-semibold text-zinc-900">First name</BhLabel>
+        <BhInput type="text" placeholder="Alice"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+    </BhField>
+    <BhField class="flex w-full flex-col gap-1.5">
+        <BhLabel class="text-sm font-semibold text-zinc-900">Last name</BhLabel>
+        <BhInput type="text" placeholder="Anderson"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+    </BhField>
+    <BhField class="flex w-full flex-col gap-1.5">
+        <BhLabel class="text-sm font-semibold text-zinc-900">Email</BhLabel>
+        <BhInput type="email" placeholder="alice@example.com"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" />
+        <BhDescription class="m-0 text-xs text-zinc-500">Your work email.</BhDescription>
+    </BhField>
+    <BhButton Type="submit"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700 self-start">
+        Submit
+    </BhButton>
+</form>
+""";
+}

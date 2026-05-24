@@ -11,4 +11,63 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
 
+  <!-- ============================================================
+       Tailwind v4 (standalone CLI) build pipeline.
+       No Node toolchain required.
+
+       - Binary is downloaded once into tools/ on first build.
+       - tailwind/input.css is compiled into wwwroot/tailwind.css.
+       - Both tools/ and wwwroot/tailwind.css are git-ignored.
+
+       Override TailwindVersion if you need to pin a different release.
+       ============================================================ -->
+  <PropertyGroup>
+    <TailwindVersion>v4.1.15</TailwindVersion>
+    <TailwindToolsDir>$(MSBuildThisFileDirectory)tools\</TailwindToolsDir>
+    <TailwindBinary Condition="'$(OS)' == 'Windows_NT'">$(TailwindToolsDir)tailwindcss.exe</TailwindBinary>
+    <TailwindBinary Condition="'$(OS)' != 'Windows_NT'">$(TailwindToolsDir)tailwindcss</TailwindBinary>
+    <TailwindInput>$(MSBuildThisFileDirectory)tailwind\input.css</TailwindInput>
+    <TailwindOutput>$(MSBuildThisFileDirectory)wwwroot\tailwind.css</TailwindOutput>
+  </PropertyGroup>
+
+  <Target Name="DownloadTailwindCli"
+          BeforeTargets="BuildTailwindCss"
+          Condition="!Exists('$(TailwindBinary)')">
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <TailwindAsset>tailwindcss-windows-x64.exe</TailwindAsset>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND $([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))">
+      <TailwindAsset Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) == 'Arm64'">tailwindcss-macos-arm64</TailwindAsset>
+      <TailwindAsset Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) != 'Arm64'">tailwindcss-macos-x64</TailwindAsset>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TailwindAsset)' == ''">
+      <TailwindAsset Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) == 'Arm64'">tailwindcss-linux-arm64</TailwindAsset>
+      <TailwindAsset Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) != 'Arm64'">tailwindcss-linux-x64</TailwindAsset>
+    </PropertyGroup>
+    <PropertyGroup>
+      <TailwindUrl>https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindVersion)/$(TailwindAsset)</TailwindUrl>
+    </PropertyGroup>
+    <MakeDir Directories="$(TailwindToolsDir)" />
+    <Message Importance="high" Text="Downloading Tailwind CLI $(TailwindVersion) from $(TailwindUrl) ..." />
+    <DownloadFile SourceUrl="$(TailwindUrl)" DestinationFolder="$(TailwindToolsDir)" />
+    <Move SourceFiles="$(TailwindToolsDir)$(TailwindAsset)"
+          DestinationFiles="$(TailwindBinary)"
+          Condition="!Exists('$(TailwindBinary)')" />
+    <Exec Command="chmod +x &quot;$(TailwindBinary)&quot;" Condition="'$(OS)' != 'Windows_NT'" />
+  </Target>
+
+  <Target Name="BuildTailwindCss"
+          BeforeTargets="AssignTargetPaths;PrepareForBuild"
+          Inputs="$(TailwindInput);@(Content);@(Compile);@(None)"
+          Outputs="$(TailwindOutput)">
+    <Message Importance="high" Text="Compiling Tailwind CSS -> $(TailwindOutput)" />
+    <Exec Command="&quot;$(TailwindBinary)&quot; --input &quot;$(TailwindInput)&quot; --output &quot;$(TailwindOutput)&quot; --minify"
+          WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
+
+  <ItemGroup>
+    <!-- Keep the editor tidy: surface the input + tools area in the project. -->
+    <None Include="tailwind\input.css" />
+  </ItemGroup>
+
 </Project>

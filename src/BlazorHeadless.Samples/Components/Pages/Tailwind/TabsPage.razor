@@ -1,0 +1,308 @@
+@page "/tw/tabs"
+@rendermode InteractiveServer
+
+<PageTitle>Tabs — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Tabs</h1>
+        <p class="mt-2 text-zinc-500">Accessible tab group with roving tabindex and full keyboard navigation.</p>
+        <TwSectionSwitcher Slug="tabs" />
+    </header>
+
+    <TwDemoBlock Title="Basic Tabs" Code="@_basicCode">
+        <Description>Click or use Left / Right / Home / End. Disabled tabs are skipped.</Description>
+        <LiveContent>
+            <BhTabGroup class="flex w-full flex-col gap-4">
+                <BhTabList class="flex border-b border-zinc-200 gap-1">
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Account</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Profile</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Notifications</BhTab>
+                </BhTabList>
+                <BhTabPanels class="mt-2">
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">Account</h3>
+                        <p class="text-sm text-zinc-500">Manage your account settings and preferences.</p>
+                    </BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">Profile</h3>
+                        <p class="text-sm text-zinc-500">Update your public profile information.</p>
+                    </BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">Notifications</h3>
+                        <p class="text-sm text-zinc-500">Choose what alerts you'd like to receive.</p>
+                    </BhTabPanel>
+                </BhTabPanels>
+            </BhTabGroup>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Vertical Orientation" Code="@_verticalCode">
+        <Description>Set <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Vertical="true"</code>. The <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-orientation-vertical:</code> variant flips the layout.</Description>
+        <LiveContent>
+            <BhTabGroup Vertical="true" class="flex w-full items-start gap-6">
+                <BhTabList class="flex flex-col border-r border-zinc-200 min-w-48">
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">General</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Security</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Integrations</BhTab>
+                </BhTabList>
+                <BhTabPanels class="flex-1">
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">General</h3>
+                        <p class="text-sm text-zinc-500">Application-wide settings.</p>
+                    </BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">Security</h3>
+                        <p class="text-sm text-zinc-500">Two-factor auth, sessions, and audit log.</p>
+                    </BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900">
+                        <h3 class="text-sm font-semibold text-zinc-900">Integrations</h3>
+                        <p class="text-sm text-zinc-500">Connect third-party services.</p>
+                    </BhTabPanel>
+                </BhTabPanels>
+            </BhTabGroup>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Manual Activation" Code="@_manualCode">
+        <Description>With <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Manual="true"</code> arrow keys move focus only — press Space or Enter to activate.</Description>
+        <LiveContent>
+            <BhTabGroup Manual="true" class="flex w-full flex-col gap-4">
+                <BhTabList class="flex border-b border-zinc-200 gap-1">
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Inbox</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Sent</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Drafts</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Archive</BhTab>
+                </BhTabList>
+                <BhTabPanels class="mt-2">
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Inbox content</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Sent content</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Drafts content</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Archive content</p></BhTabPanel>
+                </BhTabPanels>
+            </BhTabGroup>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Disabled Tab" Code="@_disabledCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled:</code> dims the tab; arrow-key navigation skips it.</Description>
+        <LiveContent>
+            <BhTabGroup class="flex w-full flex-col gap-4">
+                <BhTabList class="flex border-b border-zinc-200 gap-1">
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Free</BhTab>
+                    <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Pro</BhTab>
+                    <BhTab Disabled="true"
+                           class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Enterprise (coming soon)</BhTab>
+                </BhTabList>
+                <BhTabPanels class="mt-2">
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Free plan features.</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Pro plan features.</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Enterprise plan features.</p></BhTabPanel>
+                </BhTabPanels>
+            </BhTabGroup>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Render Context (state-driven content)" Code="@_renderContextCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Context="t"</code> exposes <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">t.IsSelected</code> for state-driven badges.</Description>
+        <LiveContent>
+            <BhTabGroup class="flex w-full flex-col gap-4">
+                <BhTabList class="flex border-b border-zinc-200 gap-1">
+                    <BhTab Context="t"
+                           class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+                        <span>Messages</span>
+                        <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+                    </BhTab>
+                    <BhTab Context="t"
+                           class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+                        <span>Mentions</span>
+                        <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+                    </BhTab>
+                    <BhTab Context="t"
+                           class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+                        <span>All</span>
+                    </BhTab>
+                </BhTabList>
+                <BhTabPanels class="mt-2">
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Direct messages</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Mentions of you</p></BhTabPanel>
+                    <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Everything together</p></BhTabPanel>
+                </BhTabPanels>
+            </BhTabGroup>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Controlled" Code="@_controlledCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">SelectedIndex</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OnSelectedIndexChange</code>.</Description>
+        <LiveContent>
+            <div class="flex flex-col gap-4 w-full">
+                <div class="flex flex-wrap items-center gap-3">
+                    @for (var i = 0; i < 3; i++)
+                    {
+                        var captured = i;
+                        <BhButton OnClick="() => selectedIndex = captured"
+                                  class="@($"inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium cursor-pointer {(selectedIndex == captured ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700" : "bg-white border-zinc-200 text-zinc-900 hover:bg-zinc-100")}")">
+                            Select tab @(captured + 1)
+                        </BhButton>
+                    }
+                    <span class="text-sm text-zinc-500">SelectedIndex: <strong class="text-zinc-900">@selectedIndex</strong></span>
+                </div>
+                <BhTabGroup SelectedIndex="@selectedIndex" OnSelectedIndexChange="i => selectedIndex = i" class="flex w-full flex-col gap-4">
+                    <BhTabList class="flex border-b border-zinc-200 gap-1">
+                        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 1</BhTab>
+                        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 2</BhTab>
+                        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 3</BhTab>
+                    </BhTabList>
+                    <BhTabPanels class="mt-2">
+                        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">First panel</p></BhTabPanel>
+                        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Second panel</p></BhTabPanel>
+                        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Third panel</p></BhTabPanel>
+                    </BhTabPanels>
+                </BhTabGroup>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private int selectedIndex;
+
+    private const string _basicCode = """
+<BhTabGroup class="flex w-full flex-col gap-4">
+    <BhTabList class="flex border-b border-zinc-200 gap-1">
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Account</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Profile</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Notifications</BhTab>
+    </BhTabList>
+    <BhTabPanels class="mt-2">
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">Account</h3>
+            <p class="text-sm text-zinc-500">Manage your account settings and preferences.</p>
+        </BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">Profile</h3>
+            <p class="text-sm text-zinc-500">Update your public profile information.</p>
+        </BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">Notifications</h3>
+            <p class="text-sm text-zinc-500">Choose what alerts you'd like to receive.</p>
+        </BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
+""";
+
+    private const string _verticalCode = """
+<BhTabGroup Vertical="true" class="flex w-full items-start gap-6">
+    <BhTabList class="flex flex-col border-r border-zinc-200 min-w-48">
+        <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">General</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Security</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Integrations</BhTab>
+    </BhTabList>
+    <BhTabPanels class="flex-1">
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">General</h3>
+            <p class="text-sm text-zinc-500">Application-wide settings.</p>
+        </BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">Security</h3>
+            <p class="text-sm text-zinc-500">Two-factor auth, sessions, and audit log.</p>
+        </BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900">
+            <h3 class="text-sm font-semibold text-zinc-900">Integrations</h3>
+            <p class="text-sm text-zinc-500">Connect third-party services.</p>
+        </BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
+""";
+
+    private const string _manualCode = """
+<BhTabGroup Manual="true" class="flex w-full flex-col gap-4">
+    <BhTabList class="flex border-b border-zinc-200 gap-1">
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Inbox</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Sent</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Drafts</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Archive</BhTab>
+    </BhTabList>
+    <BhTabPanels class="mt-2">
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Inbox content</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Sent content</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Drafts content</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Archive content</p></BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
+""";
+
+    private const string _disabledCode = """
+<BhTabGroup class="flex w-full flex-col gap-4">
+    <BhTabList class="flex border-b border-zinc-200 gap-1">
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Free</BhTab>
+        <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Pro</BhTab>
+        <BhTab Disabled="true"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Enterprise (coming soon)</BhTab>
+    </BhTabList>
+    <BhTabPanels class="mt-2">
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Free plan features.</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Pro plan features.</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Enterprise plan features.</p></BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
+""";
+
+    private const string _renderContextCode = """
+<BhTabGroup class="flex w-full flex-col gap-4">
+    <BhTabList class="flex border-b border-zinc-200 gap-1">
+        <BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+            <span>Messages</span>
+            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+        </BhTab>
+        <BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+            <span>Mentions</span>
+            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+        </BhTab>
+        <BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+            <span>All</span>
+        </BhTab>
+    </BhTabList>
+    <BhTabPanels class="mt-2">
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Direct messages</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Mentions of you</p></BhTabPanel>
+        <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Everything together</p></BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
+""";
+
+    private const string _controlledCode = """
+<div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-wrap items-center gap-3">
+        @for (var i = 0; i < 3; i++)
+        {
+            var captured = i;
+            <BhButton OnClick="() => selectedIndex = captured"
+                      class="@($"inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium cursor-pointer {(selectedIndex == captured ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700" : "bg-white border-zinc-200 text-zinc-900 hover:bg-zinc-100")}")">
+                Select tab @(captured + 1)
+            </BhButton>
+        }
+        <span class="text-sm text-zinc-500">SelectedIndex: <strong class="text-zinc-900">@selectedIndex</strong></span>
+    </div>
+    <BhTabGroup SelectedIndex="@selectedIndex" OnSelectedIndexChange="i => selectedIndex = i" class="flex w-full flex-col gap-4">
+        <BhTabList class="flex border-b border-zinc-200 gap-1">
+            <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 1</BhTab>
+            <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 2</BhTab>
+            <BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">Tab 3</BhTab>
+        </BhTabList>
+        <BhTabPanels class="mt-2">
+            <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">First panel</p></BhTabPanel>
+            <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Second panel</p></BhTabPanel>
+            <BhTabPanel class="py-2 text-zinc-900"><p class="text-sm text-zinc-500">Third panel</p></BhTabPanel>
+        </BhTabPanels>
+    </BhTabGroup>
+</div>
+
+@code {
+    private int selectedIndex;
+}
+""";
+}

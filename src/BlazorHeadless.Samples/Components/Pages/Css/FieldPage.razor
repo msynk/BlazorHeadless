@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Field / Input</h1>
         <p>Form primitives with auto-wired ARIA labels, descriptions, and validation state.</p>
+        <SectionSwitcher Slug="field" />
     </header>
 
     <DemoBlock Title="Basic Field"
@@ -144,7 +145,8 @@
 
 @* Rendered HTML:
    <label for="h-xxxx-input" id="h-xxxx-label">Email</label>
-   <input id="h-xxxx-input" aria-describedby="h-xxxx-description" … />
+   <input id="h-xxxx-input" type="email" placeholder="you@example.com"
+          aria-describedby="h-xxxx-description" />
    <p id="h-xxxx-description">We'll never share your email.</p>
 *@
 """;

@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Listbox</h1>
         <p>An accessible custom select with single/multi-select, full keyboard navigation, and typeahead.</p>
+        <SectionSwitcher Slug="listbox" />
     </header>
 
     <DemoBlock Title="Basic Listbox"
@@ -278,7 +279,11 @@
 
 @code {
     private string? favPerson;
-    private string[] people = ["Alice", "Benjamin", "Caterina", "…"];
+
+    private string[] people = new[] {
+        "Alice", "Benjamin", "Caterina", "Daniel",
+        "Eleanor", "Felix", "Genevieve", "Henry"
+    };
 }
 """;
 
@@ -291,6 +296,7 @@
         <span>
             @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
         </span>
+        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in colors)
@@ -302,11 +308,19 @@
         }
     </BhListboxOptions>
 </BhListbox>
+
+@code {
+    private IReadOnlyCollection<string> favColors = Array.Empty<string>();
+    private string[] colors = new[] { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
+}
 """;
 
     private const string _disabledCode = """
 <BhListbox TValue="string" DefaultValue="standard" class="listbox">
-    <BhListboxButton TValue="string" class="listbox-button">…</BhListboxButton>
+    <BhListboxButton TValue="string" class="listbox-button" Context="b">
+        <span>@(b.Value ?? "Pick a plan")</span>
+        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         <BhListboxOption TValue="string" Value="standard"   class="listbox-option">Standard</BhListboxOption>
         <BhListboxOption TValue="string" Value="pro"        class="listbox-option">Pro</BhListboxOption>
@@ -323,6 +337,7 @@
           class="listbox">
     <BhListboxButton TValue="string" class="listbox-button" Context="b">
         <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
+        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in countries)
@@ -337,20 +352,59 @@
         }
     </BhListboxOptions>
 </BhListbox>
+
+@code {
+    private record Country(string Code, string Name, string Flag);
+
+    private string? country = "fr";
+
+    private Country[] countries = new[]
+    {
+        new Country("us", "United States", "🇺🇸"),
+        new Country("gb", "United Kingdom", "🇬🇧"),
+        new Country("fr", "France",         "🇫🇷"),
+        new Country("de", "Germany",        "🇩🇪"),
+        new Country("jp", "Japan",          "🇯🇵"),
+        new Country("br", "Brazil",         "🇧🇷"),
+    };
+
+    private Country? LookupCountry(string? code) =>
+        code is null ? null : countries.FirstOrDefault(c => c.Code == code);
+}
 """;
 
     private const string _formCode = """
-<form method="post">
+<form @onsubmit="HandleFormSubmit"
+      @onsubmit:preventDefault="true"
+      style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
     <BhListbox TValue="string" Name="role" DefaultValue="user" class="listbox">
-        <BhListboxButton TValue="string" class="listbox-button">…</BhListboxButton>
+        <BhListboxButton TValue="string" class="listbox-button" Context="b">
+            <span>@(b.Value)</span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhListboxButton>
         <BhListboxOptions TValue="string" class="listbox-options">
             <BhListboxOption TValue="string" Value="user"  class="listbox-option">User</BhListboxOption>
             <BhListboxOption TValue="string" Value="admin" class="listbox-option">Admin</BhListboxOption>
             <BhListboxOption TValue="string" Value="owner" class="listbox-option">Owner</BhListboxOption>
         </BhListboxOptions>
     </BhListbox>
-    <button type="submit">Submit</button>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    @if (lastSubmitted is not null)
+    {
+        <span class="demo-output">@lastSubmitted</span>
+    }
 </form>
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit()
+    {
+        lastSubmitted = "(submitted — when single-select, posts role=<value>; when multi-select, posts a separate field per value)";
+    }
+}
 
 @* When Multiple="true" a separate hidden input is rendered per selected value. *@
 """;

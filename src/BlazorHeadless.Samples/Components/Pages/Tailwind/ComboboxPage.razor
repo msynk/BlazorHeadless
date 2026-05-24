@@ -1,0 +1,551 @@
+@page "/tw/combobox"
+@rendermode InteractiveServer
+
+<PageTitle>Combobox — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Combobox</h1>
+        <p class="mt-2 text-zinc-500">Accessible typeable autocomplete with consumer-driven filtering.</p>
+        <TwSectionSwitcher Slug="combobox" />
+    </header>
+
+    <TwDemoBlock Title="Basic Combobox" Code="@_basicCode">
+        <Description>Type to filter; you handle the filtering and pass matching options.</Description>
+        <LiveContent>
+            <BhCombobox TValue="string"
+                        Value="@selectedFruit"
+                        OnValueChange="v => selectedFruit = v"
+                        OnQueryChange="HandleFruitQuery"
+                        DisplayValue="v => v ?? string.Empty"
+                        class="relative inline-block min-w-72">
+                <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+                    <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
+                                     class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+                    <BhComboboxButton TValue="string"
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                                      Context="b">
+                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    </BhComboboxButton>
+                </div>
+                <BhComboboxOptions TValue="string"
+                                   class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    @if (filteredFruits.Count == 0)
+                    {
+                        <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+                    }
+                    else
+                    {
+                        @foreach (var fruit in filteredFruits)
+                        {
+                            <BhComboboxOption TValue="string" Value="@fruit"
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"
+                                              Context="o">
+                                <span>@fruit</span>
+                                @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                            </BhComboboxOption>
+                        }
+                    }
+                </BhComboboxOptions>
+            </BhCombobox>
+            <span class="text-sm text-zinc-500">Selected: <strong class="text-zinc-900">@(selectedFruit ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Multi-select with chips" Code="@_multiCode">
+        <Description>Selected values render as chips above the input.</Description>
+        <LiveContent>
+            <BhCombobox TValue="string" Multiple="true"
+                        Values="@pickedTags"
+                        OnValuesChange="v => pickedTags = v"
+                        OnQueryChange="HandleTagQuery"
+                        class="relative inline-block min-w-72">
+                <div class="relative flex flex-wrap items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600 p-1 gap-1">
+                    @foreach (var tag in pickedTags)
+                    {
+                        <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                            @tag
+                            <button type="button"
+                                    class="cursor-pointer rounded-full px-1 text-base leading-tight hover:bg-blue-100"
+                                    @onclick="() => RemoveTag(tag)"
+                                    aria-label="@($"Remove {tag}")">×</button>
+                        </span>
+                    }
+                    <BhComboboxInput TValue="string"
+                                     Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
+                                     class="flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none w-auto min-w-24 px-1 py-1" />
+                    <BhComboboxButton TValue="string"
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                                      Context="b">
+                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    </BhComboboxButton>
+                </div>
+                <BhComboboxOptions TValue="string"
+                                   class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    @if (filteredTags.Count == 0)
+                    {
+                        <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+                    }
+                    else
+                    {
+                        @foreach (var tag in filteredTags)
+                        {
+                            <BhComboboxOption TValue="string" Value="@tag"
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                              Context="o">
+                                <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                                <span>@tag</span>
+                            </BhComboboxOption>
+                        }
+                    }
+                </BhComboboxOptions>
+            </BhCombobox>
+            <span class="text-sm text-zinc-500">Picked: <strong class="text-zinc-900">@(pickedTags.Count == 0 ? "(none)" : string.Join(", ", pickedTags))</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Object values with rich content" Code="@_objectCode">
+        <Description>Bind to objects; provide <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">DisplayValue</code>.</Description>
+        <LiveContent>
+            <BhCombobox TValue="Person"
+                        Value="@selectedPerson"
+                        OnValueChange="v => selectedPerson = v"
+                        OnQueryChange="HandlePersonQuery"
+                        DisplayValue="p => p?.Name ?? string.Empty"
+                        class="relative inline-block min-w-72">
+                <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+                    <BhComboboxInput TValue="Person" Placeholder="Search people…"
+                                     class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+                    <BhComboboxButton TValue="Person"
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                                      Context="b">
+                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    </BhComboboxButton>
+                </div>
+                <BhComboboxOptions TValue="Person"
+                                   class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    @if (filteredPeople.Count == 0)
+                    {
+                        <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+                    }
+                    else
+                    {
+                        @foreach (var person in filteredPeople)
+                        {
+                            <BhComboboxOption TValue="Person" Value="@person"
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                              Context="o">
+                                <div class="flex w-full items-center gap-2.5">
+                                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
+                                    <div class="flex flex-1 flex-col leading-tight">
+                                        <strong class="text-sm text-zinc-900">@person.Name</strong>
+                                        <span class="text-xs text-zinc-500">@person.Email</span>
+                                    </div>
+                                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                </div>
+                            </BhComboboxOption>
+                        }
+                    }
+                </BhComboboxOptions>
+            </BhCombobox>
+            <span class="text-sm text-zinc-500">Selected: <strong class="text-zinc-900">@(selectedPerson?.Name ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Anchor Positioning" Code="@_anchorCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Anchor</code> auto-positions and flips.</Description>
+        <LiveContent>
+            <div class="flex flex-wrap items-end gap-8">
+                <div>
+                    <p class="text-xs text-zinc-500 mb-2">Bottom Start</p>
+                    <BhCombobox TValue="string" Value="@anchorFruit" OnValueChange="v => anchorFruit = v"
+                                OnQueryChange="HandleAnchorFruitQuery" DisplayValue="v => v ?? string.Empty" class="inline-block min-w-72">
+                        <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+                            <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
+                                             class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+                            <BhComboboxButton TValue="string"
+                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                                              Context="b">
+                                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                            </BhComboboxButton>
+                        </div>
+                        <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                                           class="z-[9999] m-0 min-w-72 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                            @if (anchorFilteredFruits.Count == 0)
+                            {
+                                <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+                            }
+                            else
+                            {
+                                @foreach (var fruit in anchorFilteredFruits)
+                                {
+                                    <BhComboboxOption TValue="string" Value="@fruit"
+                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                                      Context="o">
+                                        <span>@fruit</span>
+                                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                    </BhComboboxOption>
+                                }
+                            }
+                        </BhComboboxOptions>
+                    </BhCombobox>
+                </div>
+
+                <div>
+                    <p class="text-xs text-zinc-500 mb-2">Top Start</p>
+                    <BhCombobox TValue="string" Value="@anchorFruit2" OnValueChange="v => anchorFruit2 = v"
+                                OnQueryChange="HandleAnchorFruitQuery2" DisplayValue="v => v ?? string.Empty" class="inline-block min-w-72">
+                        <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+                            <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
+                                             class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+                            <BhComboboxButton TValue="string"
+                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                                              Context="b">
+                                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                            </BhComboboxButton>
+                        </div>
+                        <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
+                                           class="z-[9999] m-0 min-w-72 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                            @if (anchorFilteredFruits2.Count == 0)
+                            {
+                                <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+                            }
+                            else
+                            {
+                                @foreach (var fruit in anchorFilteredFruits2)
+                                {
+                                    <BhComboboxOption TValue="string" Value="@fruit"
+                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                                      Context="o">
+                                        <span>@fruit</span>
+                                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                    </BhComboboxOption>
+                                }
+                            }
+                        </BhComboboxOptions>
+                    </BhCombobox>
+                </div>
+            </div>
+            <span class="text-sm text-zinc-500 mt-3">Selected: <strong class="text-zinc-900">@(anchorFruit ?? anchorFruit2 ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private string? selectedFruit;
+    private readonly string[] allFruits =
+    {
+        "Apple", "Apricot", "Banana", "Blueberry", "Cherry", "Coconut", "Cranberry",
+        "Grape", "Kiwi", "Lemon", "Lime", "Mango", "Orange", "Papaya",
+        "Peach", "Pear", "Pineapple", "Plum", "Raspberry", "Strawberry",
+    };
+    private List<string> filteredFruits = new();
+    private void HandleFruitQuery(string q) =>
+        filteredFruits = string.IsNullOrWhiteSpace(q) ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    private string? anchorFruit;
+    private string? anchorFruit2;
+    private List<string> anchorFilteredFruits = new();
+    private List<string> anchorFilteredFruits2 = new();
+    private void HandleAnchorFruitQuery(string q) =>
+        anchorFilteredFruits = string.IsNullOrWhiteSpace(q) ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+    private void HandleAnchorFruitQuery2(string q) =>
+        anchorFilteredFruits2 = string.IsNullOrWhiteSpace(q) ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    private IReadOnlyCollection<string> pickedTags = Array.Empty<string>();
+    private readonly string[] allTags =
+    {
+        "design", "engineering", "marketing", "sales", "support",
+        "research", "product", "operations", "finance", "legal",
+    };
+    private List<string> filteredTags = new();
+    private void HandleTagQuery(string q) =>
+        filteredTags = string.IsNullOrWhiteSpace(q) ? allTags.ToList()
+            : allTags.Where(t => t.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+    private void RemoveTag(string tag) =>
+        pickedTags = pickedTags.Where(t => t != tag).ToList();
+
+    public sealed record Person(string Name, string Email)
+    {
+        public string Initials =>
+            string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => p[0]));
+    }
+
+    private Person? selectedPerson;
+    private readonly Person[] allPeople =
+    {
+        new("Alice Anderson",  "alice@example.com"),
+        new("Benjamin Brown",  "ben@example.com"),
+        new("Caterina Costa",  "cat@example.com"),
+        new("Daniel Davis",    "dan@example.com"),
+        new("Eleanor Evans",   "ellie@example.com"),
+        new("Felix Foster",    "felix@example.com"),
+        new("Genevieve Gomez", "gen@example.com"),
+        new("Henry Hughes",    "henry@example.com"),
+    };
+    private List<Person> filteredPeople = new();
+    private void HandlePersonQuery(string q) =>
+        filteredPeople = string.IsNullOrWhiteSpace(q) ? allPeople.ToList()
+            : allPeople.Where(p =>
+                p.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                p.Email.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized()
+    {
+        filteredFruits = allFruits.ToList();
+        filteredTags   = allTags.ToList();
+        filteredPeople = allPeople.ToList();
+        anchorFilteredFruits = allFruits.ToList();
+        anchorFilteredFruits2 = allFruits.ToList();
+    }
+
+    private const string _basicCode = """
+<BhCombobox TValue="string"
+            Value="@selectedFruit"
+            OnValueChange="v => selectedFruit = v"
+            OnQueryChange="HandleFruitQuery"
+            DisplayValue="v => v ?? string.Empty"
+            class="relative inline-block min-w-72">
+    <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+        <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
+                         class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+        <BhComboboxButton TValue="string"
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                          Context="b">
+            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+        </BhComboboxButton>
+    </div>
+    <BhComboboxOptions TValue="string"
+                       class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        @if (filteredFruits.Count == 0)
+        {
+            <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+        }
+        else
+        {
+            @foreach (var fruit in filteredFruits)
+            {
+                <BhComboboxOption TValue="string" Value="@fruit"
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"
+                                  Context="o">
+                    <span>@fruit</span>
+                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                </BhComboboxOption>
+            }
+        }
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    private string? selectedFruit;
+    private readonly string[] allFruits =
+    {
+        "Apple", "Apricot", "Banana", "Blueberry", "Cherry", "Coconut", "Cranberry",
+        "Grape", "Kiwi", "Lemon", "Lime", "Mango", "Orange", "Papaya",
+        "Peach", "Pear", "Pineapple", "Plum", "Raspberry", "Strawberry",
+    };
+    private List<string> filteredFruits = new();
+
+    private void HandleFruitQuery(string q) =>
+        filteredFruits = string.IsNullOrWhiteSpace(q) ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized() => filteredFruits = allFruits.ToList();
+}
+""";
+
+    private const string _multiCode = """
+<BhCombobox TValue="string" Multiple="true"
+            Values="@pickedTags"
+            OnValuesChange="v => pickedTags = v"
+            OnQueryChange="HandleTagQuery"
+            class="relative inline-block min-w-72">
+    <div class="relative flex flex-wrap items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600 p-1 gap-1">
+        @foreach (var tag in pickedTags)
+        {
+            <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                @tag
+                <button type="button"
+                        class="cursor-pointer rounded-full px-1 text-base leading-tight hover:bg-blue-100"
+                        @onclick="() => RemoveTag(tag)"
+                        aria-label="@($"Remove {tag}")">×</button>
+            </span>
+        }
+        <BhComboboxInput TValue="string"
+                         Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
+                         class="flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none w-auto min-w-24 px-1 py-1" />
+        <BhComboboxButton TValue="string"
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                          Context="b">
+            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+        </BhComboboxButton>
+    </div>
+    <BhComboboxOptions TValue="string"
+                       class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        @if (filteredTags.Count == 0)
+        {
+            <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+        }
+        else
+        {
+            @foreach (var tag in filteredTags)
+            {
+                <BhComboboxOption TValue="string" Value="@tag"
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                  Context="o">
+                    <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                    <span>@tag</span>
+                </BhComboboxOption>
+            }
+        }
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    private IReadOnlyCollection<string> pickedTags = Array.Empty<string>();
+    private readonly string[] allTags =
+    {
+        "design", "engineering", "marketing", "sales", "support",
+        "research", "product", "operations", "finance", "legal",
+    };
+    private List<string> filteredTags = new();
+
+    private void HandleTagQuery(string q) =>
+        filteredTags = string.IsNullOrWhiteSpace(q) ? allTags.ToList()
+            : allTags.Where(t => t.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    private void RemoveTag(string tag) =>
+        pickedTags = pickedTags.Where(t => t != tag).ToList();
+
+    protected override void OnInitialized() => filteredTags = allTags.ToList();
+}
+""";
+
+    private const string _objectCode = """
+<BhCombobox TValue="Person"
+            Value="@selectedPerson"
+            OnValueChange="v => selectedPerson = v"
+            OnQueryChange="HandlePersonQuery"
+            DisplayValue="p => p?.Name ?? string.Empty"
+            class="relative inline-block min-w-72">
+    <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+        <BhComboboxInput TValue="Person" Placeholder="Search people…"
+                         class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+        <BhComboboxButton TValue="Person"
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                          Context="b">
+            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+        </BhComboboxButton>
+    </div>
+    <BhComboboxOptions TValue="Person"
+                       class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        @if (filteredPeople.Count == 0)
+        {
+            <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+        }
+        else
+        {
+            @foreach (var person in filteredPeople)
+            {
+                <BhComboboxOption TValue="Person" Value="@person"
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                  Context="o">
+                    <div class="flex w-full items-center gap-2.5">
+                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
+                        <div class="flex flex-1 flex-col leading-tight">
+                            <strong class="text-sm text-zinc-900">@person.Name</strong>
+                            <span class="text-xs text-zinc-500">@person.Email</span>
+                        </div>
+                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                    </div>
+                </BhComboboxOption>
+            }
+        }
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    public sealed record Person(string Name, string Email)
+    {
+        public string Initials =>
+            string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => p[0]));
+    }
+
+    private Person? selectedPerson;
+    private readonly Person[] allPeople =
+    {
+        new("Alice Anderson",  "alice@example.com"),
+        new("Benjamin Brown",  "ben@example.com"),
+        new("Caterina Costa",  "cat@example.com"),
+        new("Daniel Davis",    "dan@example.com"),
+        new("Eleanor Evans",   "ellie@example.com"),
+        new("Felix Foster",    "felix@example.com"),
+        new("Genevieve Gomez", "gen@example.com"),
+        new("Henry Hughes",    "henry@example.com"),
+    };
+    private List<Person> filteredPeople = new();
+
+    private void HandlePersonQuery(string q) =>
+        filteredPeople = string.IsNullOrWhiteSpace(q) ? allPeople.ToList()
+            : allPeople.Where(p =>
+                p.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                p.Email.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized() => filteredPeople = allPeople.ToList();
+}
+""";
+
+    private const string _anchorCode = """
+<BhCombobox TValue="string" Value="@anchorFruit" OnValueChange="v => anchorFruit = v"
+            OnQueryChange="HandleAnchorFruitQuery" DisplayValue="v => v ?? string.Empty" class="inline-block min-w-72">
+    <div class="relative flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+        <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
+                         class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+        <BhComboboxButton TValue="string"
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
+                          Context="b">
+            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+        </BhComboboxButton>
+    </div>
+    <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                       class="z-[9999] m-0 min-w-72 max-h-64 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        @if (anchorFilteredFruits.Count == 0)
+        {
+            <li class="px-2.5 py-2.5 text-sm text-zinc-500 italic list-none">No matches.</li>
+        }
+        else
+        {
+            @foreach (var fruit in anchorFilteredFruits)
+            {
+                <BhComboboxOption TValue="string" Value="@fruit"
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
+                                  Context="o">
+                    <span>@fruit</span>
+                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                </BhComboboxOption>
+            }
+        }
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    private string? anchorFruit;
+    private readonly string[] allFruits =
+    {
+        "Apple", "Apricot", "Banana", "Blueberry", "Cherry", "Coconut", "Cranberry",
+        "Grape", "Kiwi", "Lemon", "Lime", "Mango", "Orange", "Papaya",
+        "Peach", "Pear", "Pineapple", "Plum", "Raspberry", "Strawberry",
+    };
+    private List<string> anchorFilteredFruits = new();
+
+    private void HandleAnchorFruitQuery(string q) =>
+        anchorFilteredFruits = string.IsNullOrWhiteSpace(q) ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized() => anchorFilteredFruits = allFruits.ToList();
+}
+""";
+}

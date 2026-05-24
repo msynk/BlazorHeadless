@@ -4,11 +4,19 @@
    Everything here is consumer-authored.
    ============================================================ */
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
+/* Establish layer order so Tailwind's utility layer (declared in
+   wwwroot/tailwind.css) wins against this reset on the /tw pages.
+   Specific component rules below remain unlayered and still beat
+   utilities by specificity on the CSS pages. */
+@layer base, theme, components, utilities;
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+        margin: 0;
+    }
 }
 
 :root {
@@ -2875,4 +2883,50 @@ body {
     .radio-card {
         min-width: 0;
     }
+}
+
+
+/* ============================================================
+   Section switcher (header toggle between CSS / Tailwind pages)
+   ============================================================ */
+.section-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: 0.78rem;
+}
+
+.section-switcher-label {
+    color: var(--color-muted);
+    font-weight: 500;
+    padding: 0 0.35rem 0 0.5rem;
+}
+
+.section-switcher-link {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    color: var(--color-muted);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.section-switcher-link:hover {
+    color: var(--color-text);
+    background: #f4f4f5;
+}
+
+.section-switcher-link-active {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.section-switcher-link-active:hover {
+    color: #fff;
+    background: var(--color-primary-hover);
 }

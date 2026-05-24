@@ -1,0 +1,458 @@
+@page "/tw/listbox"
+@rendermode InteractiveServer
+
+<PageTitle>Listbox — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Listbox</h1>
+        <p class="mt-2 text-zinc-500">Accessible custom select with single/multi-select, full keyboard navigation, and typeahead.</p>
+        <TwSectionSwitcher Slug="listbox" />
+    </header>
+
+    <TwDemoBlock Title="Basic Listbox" Code="@_basicCode">
+        <Description>Click or use Space / Enter / arrow keys / typeahead.</Description>
+        <LiveContent>
+            <BhListbox TValue="string" Value="@favPerson" OnValueChange="v => favPerson = v" class="relative inline-block min-w-56">
+                <BhListboxButton TValue="string"
+                                 class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                                 Context="b">
+                    <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </BhListboxButton>
+                <BhListboxOptions TValue="string"
+                                  class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    <BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Alice</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Benjamin</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Caterina</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Daniel</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Eleanor</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Felix</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Genevieve</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Henry</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>
+            <span class="text-sm text-zinc-500">Selected: <strong class="text-zinc-900">@(favPerson ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Multi-select" Code="@_multiCode">
+        <Description>Set <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Multiple="true"</code>. Use <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-selected:</code> for the check.</Description>
+        <LiveContent>
+            <BhListbox TValue="string" Multiple="true" Values="@favColors" OnValuesChange="v => favColors = v" class="relative inline-block min-w-56">
+                <BhListboxButton TValue="string"
+                                 class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                                 Context="b">
+                    <span>@(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))</span>
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </BhListboxButton>
+                <BhListboxOptions TValue="string"
+                                  class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    <BhListboxOption TValue="string" Value="@("Red")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Red</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Green")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Green</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Blue")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Blue</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Yellow")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Yellow</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Purple")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Purple</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Orange")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed" Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>Orange</span>
+                    </BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>
+            <span class="text-sm text-zinc-500">Selected: <strong class="text-zinc-900">@string.Join(", ", favColors)</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Disabled Options" Code="@_disabledCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled:</code> dims and skips disabled options.</Description>
+        <LiveContent>
+            <BhListbox TValue="string" DefaultValue='@("standard")' class="relative inline-block min-w-56">
+                <BhListboxButton TValue="string"
+                                 class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                                 Context="b">
+                    <span>@(b.Value ?? "Pick a plan")</span>
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </BhListboxButton>
+                <BhListboxOptions TValue="string"
+                                  class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    <BhListboxOption TValue="string" Value="@("standard")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Standard</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("pro")"        class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Pro</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("enterprise")" Disabled="true"
+                                     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Enterprise (coming soon)</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Custom Option Content" Code="@_customCode">
+        <Description>Rich content per option; provide <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Label</code> for typeahead.</Description>
+        <LiveContent>
+            <BhListbox TValue="string" Value="@country" OnValueChange="v => country = v" class="relative inline-block min-w-56">
+                <BhListboxButton TValue="string"
+                                 class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                                 Context="b">
+                    <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </BhListboxButton>
+                <BhListboxOptions TValue="string"
+                                  class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    <BhListboxOption TValue="string" Value="@("us")" Label="United States"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇺🇸</span>
+                        <span class="flex-1">United States</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">us</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("gb")" Label="United Kingdom" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇬🇧</span>
+                        <span class="flex-1">United Kingdom</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">gb</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("fr")" Label="France"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇫🇷</span>
+                        <span class="flex-1">France</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">fr</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("de")" Label="Germany" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇩🇪</span>
+                        <span class="flex-1">Germany</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">de</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("jp")" Label="Japan"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇯🇵</span>
+                        <span class="flex-1">Japan</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">jp</span>
+                    </BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("br")" Label="Brazil"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                        <span class="text-base">🇧🇷</span>
+                        <span class="flex-1">Brazil</span>
+                        <span class="text-xs text-zinc-500 uppercase tracking-wide">br</span>
+                    </BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Anchor Positioning" Code="@_anchorCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Anchor</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">--button-width</code> for matched-width dropdowns.</Description>
+        <LiveContent>
+            <div class="flex flex-wrap items-end gap-8">
+                <div>
+                    <p class="text-xs text-zinc-500 mb-2">Bottom Start (width matched)</p>
+                    <BhListbox TValue="string" Value="@anchorPerson" OnValueChange="v => anchorPerson = v" class="inline-block min-w-56">
+                        <BhListboxButton TValue="string"
+                                         class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                                         Context="b">
+                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </BhListboxButton>
+                        <BhListboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                                          class="z-[9999] m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg w-[var(--button-width)]">
+                            <BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Alice</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Benjamin</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Caterina</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Daniel</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Eleanor</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Felix</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Genevieve</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Henry</BhListboxOption>
+                        </BhListboxOptions>
+                    </BhListbox>
+                </div>
+
+                <div>
+                    <p class="text-xs text-zinc-500 mb-2">Top Start (flips down if no space)</p>
+                    <BhListbox TValue="string" Value="@anchorPerson2" OnValueChange="v => anchorPerson2 = v" class="inline-block min-w-56">
+                        <BhListboxButton TValue="string"
+                                         class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                                         Context="b">
+                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </BhListboxButton>
+                        <BhListboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
+                                          class="z-[9999] m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg w-[var(--button-width)]">
+                            <BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Alice</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Benjamin</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Caterina</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Daniel</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Eleanor</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Felix</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Genevieve</BhListboxOption>
+                            <BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Henry</BhListboxOption>
+                        </BhListboxOptions>
+                    </BhListbox>
+                </div>
+            </div>
+            <span class="text-sm text-zinc-500 mt-3">Selected: <strong class="text-zinc-900">@(anchorPerson ?? anchorPerson2 ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Form Submission" Code="@_formCode">
+        <Description>Set <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Name</code> to render hidden inputs.</Description>
+        <LiveContent>
+            <form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true" class="flex flex-col items-start gap-3">
+                <BhListbox TValue="string" Name="role" DefaultValue='@("user")' class="relative inline-block min-w-56">
+                    <BhListboxButton TValue="string"
+                                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                                     Context="b">
+                        <span class="capitalize">@(b.Value)</span>
+                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    </BhListboxButton>
+                    <BhListboxOptions TValue="string"
+                                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                        <BhListboxOption TValue="string" Value="@("user")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">User</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("admin")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Admin</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("owner")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Owner</BhListboxOption>
+                    </BhListboxOptions>
+                </BhListbox>
+                <button type="submit" class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700">Submit</button>
+                @if (lastSubmitted is not null)
+                {
+                    <span class="text-sm text-zinc-500">@lastSubmitted</span>
+                }
+            </form>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private string? favPerson;
+    private string? anchorPerson;
+    private string? anchorPerson2;
+    private IReadOnlyCollection<string> favColors = Array.Empty<string>();
+    private string? country = "fr";
+    private string? lastSubmitted;
+
+    private record Country(string Code, string Name, string Flag);
+
+    private readonly Country[] countries =
+    {
+        new("us", "United States", "🇺🇸"),
+        new("gb", "United Kingdom", "🇬🇧"),
+        new("fr", "France",          "🇫🇷"),
+        new("de", "Germany",         "🇩🇪"),
+        new("jp", "Japan",           "🇯🇵"),
+        new("br", "Brazil",          "🇧🇷"),
+    };
+
+    private Country? LookupCountry(string? code) =>
+        code is null ? null : countries.FirstOrDefault(c => c.Code == code);
+
+    private void HandleFormSubmit() =>
+        lastSubmitted = "(submitted — single-select posts role=<value>; multi posts a separate field per value)";
+
+    private const string _basicCode = """
+<BhListbox TValue="string" Value="@favPerson" OnValueChange="v => favPerson = v" class="relative inline-block min-w-56">
+    <BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b">
+        <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Alice</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Benjamin</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Caterina</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Daniel</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Eleanor</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Felix</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Genevieve</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Henry</BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+
+@code {
+    private string? favPerson;
+}
+""";
+
+    private const string _multiCode = """
+<BhListbox TValue="string" Multiple="true" Values="@favColors" OnValuesChange="v => favColors = v" class="relative inline-block min-w-56">
+    <BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b">
+        <span>@(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))</span>
+        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <BhListboxOption TValue="string" Value="@("Red")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Red</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Green")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Green</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Blue")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Blue</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Yellow")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Yellow</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Purple")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Purple</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Orange")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o">
+            <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+            <span>Orange</span>
+        </BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+
+@code {
+    private IReadOnlyCollection<string> favColors = Array.Empty<string>();
+}
+""";
+
+    private const string _disabledCode = """
+<BhListbox TValue="string" DefaultValue='@("standard")' class="relative inline-block min-w-56">
+    <BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b">
+        <span>@(b.Value ?? "Pick a plan")</span>
+        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <BhListboxOption TValue="string" Value="@("standard")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Standard</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("pro")"        class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Pro</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("enterprise")" Disabled="true"
+                         class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">Enterprise (coming soon)</BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+""";
+
+    private const string _customCode = """
+<BhListbox TValue="string" Value="@country" OnValueChange="v => country = v" class="relative inline-block min-w-56">
+    <BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b">
+        <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
+        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <BhListboxOption TValue="string" Value="@("us")" Label="United States"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇺🇸</span>
+            <span class="flex-1">United States</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">us</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("gb")" Label="United Kingdom" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇬🇧</span>
+            <span class="flex-1">United Kingdom</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">gb</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("fr")" Label="France"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇫🇷</span>
+            <span class="flex-1">France</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">fr</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("de")" Label="Germany" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇩🇪</span>
+            <span class="flex-1">Germany</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">de</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("jp")" Label="Japan"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇯🇵</span>
+            <span class="flex-1">Japan</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">jp</span>
+        </BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("br")" Label="Brazil"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+            <span class="text-base">🇧🇷</span>
+            <span class="flex-1">Brazil</span>
+            <span class="text-xs text-zinc-500 uppercase tracking-wide">br</span>
+        </BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+
+@code {
+    private record Country(string Code, string Name, string Flag);
+
+    private readonly Country[] countries =
+    {
+        new("us", "United States", "🇺🇸"),
+        new("gb", "United Kingdom", "🇬🇧"),
+        new("fr", "France",          "🇫🇷"),
+        new("de", "Germany",         "🇩🇪"),
+        new("jp", "Japan",           "🇯🇵"),
+        new("br", "Brazil",          "🇧🇷"),
+    };
+
+    private string? country = "fr";
+
+    private Country? LookupCountry(string? code) =>
+        code is null ? null : countries.FirstOrDefault(c => c.Code == code);
+}
+""";
+
+    private const string _anchorCode = """
+<BhListbox TValue="string" Value="@anchorPerson" OnValueChange="v => anchorPerson = v" class="inline-block min-w-56">
+    <BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b">
+        <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                      class="z-[9999] m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg w-[var(--button-width)]">
+        <BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Alice</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Benjamin</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Caterina</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Daniel</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Eleanor</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Felix</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Genevieve</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Henry</BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+""";
+
+    private const string _formCode = """
+<form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true" class="flex flex-col items-start gap-3">
+    <BhListbox TValue="string" Name="role" DefaultValue='@("user")' class="relative inline-block min-w-56">
+        <BhListboxButton TValue="string"
+                         class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b">
+            <span class="capitalize">@(b.Value)</span>
+            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+        </BhListboxButton>
+        <BhListboxOptions TValue="string"
+                          class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+            <BhListboxOption TValue="string" Value="@("user")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">User</BhListboxOption>
+            <BhListboxOption TValue="string" Value="@("admin")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Admin</BhListboxOption>
+            <BhListboxOption TValue="string" Value="@("owner")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">Owner</BhListboxOption>
+        </BhListboxOptions>
+    </BhListbox>
+    <button type="submit" class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700">Submit</button>
+    @if (lastSubmitted is not null)
+    {
+        <span class="text-sm text-zinc-500">@lastSubmitted</span>
+    }
+</form>
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit() =>
+        lastSubmitted = "(submitted — single-select posts role=<value>; multi posts a separate field per value)";
+}
+""";
+}

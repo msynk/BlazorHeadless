@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Popover</h1>
         <p>A non-modal floating panel with focus management, Escape-to-close, and group coordination.</p>
+        <SectionSwitcher Slug="popover" />
     </header>
 
     <DemoBlock Title="Basic Popover"
@@ -249,8 +250,13 @@
     </BhPopoverButton>
     <BhPopoverPanel class="popover-panel" Context="p">
         <h3 class="popover-title">BlazorHeadless</h3>
-        <p class="popover-body">…</p>
-
+        <p class="popover-body">
+            A headless component library for Blazor. Zero styles, full accessibility,
+            complete control over your design.
+        </p>
+        <a href="https://github.com" target="_blank" class="popover-link">
+            View on GitHub →
+        </a>
         @* BhPopoverButton inside the panel acts as a Close button *@
         <BhPopoverButton class="popover-close-btn">Close</BhPopoverButton>
     </BhPopoverPanel>
@@ -264,7 +270,14 @@
             Products
             <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
         </BhPopoverButton>
-        <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
+        <BhPopoverPanel class="popover-panel">
+            <h3 class="popover-title">Products</h3>
+            <ul class="popover-nav-list">
+                <li><a href="#" class="popover-nav-link">Analytics</a></li>
+                <li><a href="#" class="popover-nav-link">Automation</a></li>
+                <li><a href="#" class="popover-nav-link">Commerce</a></li>
+            </ul>
+        </BhPopoverPanel>
     </BhPopover>
 
     <BhPopover class="popover">
@@ -272,7 +285,29 @@
             Solutions
             <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
         </BhPopoverButton>
-        <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
+        <BhPopoverPanel class="popover-panel">
+            <h3 class="popover-title">Solutions</h3>
+            <ul class="popover-nav-list">
+                <li><a href="#" class="popover-nav-link">Marketing</a></li>
+                <li><a href="#" class="popover-nav-link">Engineering</a></li>
+                <li><a href="#" class="popover-nav-link">Finance</a></li>
+            </ul>
+        </BhPopoverPanel>
+    </BhPopover>
+
+    <BhPopover class="popover">
+        <BhPopoverButton class="popover-button" Context="b">
+            Company
+            <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhPopoverButton>
+        <BhPopoverPanel class="popover-panel">
+            <h3 class="popover-title">Company</h3>
+            <ul class="popover-nav-list">
+                <li><a href="#" class="popover-nav-link">About</a></li>
+                <li><a href="#" class="popover-nav-link">Blog</a></li>
+                <li><a href="#" class="popover-nav-link">Careers</a></li>
+            </ul>
+        </BhPopoverPanel>
     </BhPopover>
 </BhPopoverGroup>
 
@@ -280,18 +315,33 @@
 """;
 
     private const string _controlledCode = """
-<BhPopover Open="controlledOpen"
-          OnOpenChange="v => controlledOpen = v"
-          class="popover">
-    <BhPopoverButton class="popover-button" Context="b">
-        Internal trigger
-        <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </BhPopoverButton>
-    <BhPopoverPanel class="popover-panel">…</BhPopoverPanel>
-</BhPopover>
+<div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;">
+    <div class="demo-row">
+        <BhButton OnClick="ToggleControlled" class="btn">
+            Toggle from outside
+        </BhButton>
+        <span class="demo-output">Open: <strong>@controlledOpen.ToString().ToLowerInvariant()</strong></span>
+    </div>
+
+    <BhPopover Open="controlledOpen"
+              OnOpenChange="v => controlledOpen = v"
+              class="popover">
+        <BhPopoverButton class="popover-button" Context="b">
+            Internal trigger
+            <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhPopoverButton>
+        <BhPopoverPanel class="popover-panel">
+            <p class="popover-body">
+                Either trigger updates the same state — fully controlled.
+            </p>
+        </BhPopoverPanel>
+    </BhPopover>
+</div>
 
 @code {
     private bool controlledOpen;
+
+    private void ToggleControlled() => controlledOpen = !controlledOpen;
 }
 """;
 
@@ -300,15 +350,37 @@
     <BhPopoverButton class="popover-button" Context="b">
         Notifications
         <span class="popover-badge">3</span>
+        <span class="popover-chevron @(b.IsOpen ? "open" : "")">▾</span>
     </BhPopoverButton>
     <BhPopoverPanel class="popover-panel popover-panel-wide">
         <div class="popover-header">
             <h3 class="popover-title">Notifications</h3>
+            <span class="popover-badge">3 new</span>
         </div>
         <ul class="notification-list">
-            <li class="notification-item">…</li>
+            <li class="notification-item">
+                <span class="notification-dot"></span>
+                <div>
+                    <strong>Alice commented on your post</strong>
+                    <span>2 minutes ago</span>
+                </div>
+            </li>
+            <li class="notification-item">
+                <span class="notification-dot"></span>
+                <div>
+                    <strong>Your export is ready</strong>
+                    <span>15 minutes ago</span>
+                </div>
+            </li>
+            <li class="notification-item">
+                <span class="notification-dot"></span>
+                <div>
+                    <strong>New team member joined</strong>
+                    <span>1 hour ago</span>
+                </div>
+            </li>
         </ul>
-        <a href="#" class="popover-footer-link">View all →</a>
+        <a href="#" class="popover-footer-link">View all notifications →</a>
     </BhPopoverPanel>
 </BhPopover>
 """;

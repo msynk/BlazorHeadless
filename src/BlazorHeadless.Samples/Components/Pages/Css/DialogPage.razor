@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Dialog</h1>
         <p>An accessible modal with focus trap, scroll lock, and inert background.</p>
+        <SectionSwitcher Slug="dialog" />
     </header>
 
     <DemoBlock Title="Basic Dialog"
@@ -150,7 +151,8 @@
     <BhDialogPanel class="dialog-panel">
         <BhDialogTitle class="dialog-title">Welcome aboard</BhDialogTitle>
         <BhDialogDescription class="dialog-description">
-            This is a fully-accessible dialog…
+            This is a fully-accessible dialog. Try Tab and Shift+Tab — focus
+            cycles inside this panel. Press Escape to close.
         </BhDialogDescription>
 
         <div class="dialog-actions">
@@ -166,12 +168,19 @@
 """;
 
     private const string _confirmCode = """
+<BhButton OnClick="() => isOpen = true" class="btn">
+    Delete account
+</BhButton>
+
+<span class="demo-output">@confirmResult</span>
+
 <BhDialog Open="isOpen" OnClose="() => isOpen = false">
     <BhDialogBackdrop class="dialog-backdrop" DismissOnClick="false" />
     <BhDialogPanel class="dialog-panel" DismissOnEscape="false">
         <BhDialogTitle class="dialog-title">Delete account?</BhDialogTitle>
         <BhDialogDescription class="dialog-description">
-            This will permanently remove your account…
+            This will permanently remove your account and all its data.
+            This cannot be undone.
         </BhDialogDescription>
 
         <div class="dialog-actions">
@@ -180,14 +189,39 @@
         </div>
     </BhDialogPanel>
 </BhDialog>
+
+@code {
+    private bool isOpen;
+    private string? confirmResult;
+
+    private void HandleCancel()
+    {
+        isOpen = false;
+        confirmResult = "Cancelled.";
+    }
+
+    private void HandleDelete()
+    {
+        isOpen = false;
+        confirmResult = "Account deleted (just kidding).";
+    }
+}
 """;
 
     private const string _formCode = """
+<BhButton OnClick="() => isOpen = true" class="btn btn-primary">
+    Edit profile
+</BhButton>
+
+<span class="demo-output">@formResult</span>
+
 <BhDialog Open="isOpen" OnClose="() => isOpen = false">
     <BhDialogBackdrop class="dialog-backdrop" />
     <BhDialogPanel class="dialog-panel">
         <BhDialogTitle class="dialog-title">Edit profile</BhDialogTitle>
-        <BhDialogDescription class="dialog-description">…</BhDialogDescription>
+        <BhDialogDescription class="dialog-description">
+            Update your display name. Press Escape or click outside to cancel.
+        </BhDialogDescription>
 
         <label class="dialog-field">
             <span>Display name</span>
@@ -200,6 +234,18 @@
         </div>
     </BhDialogPanel>
 </BhDialog>
+
+@code {
+    private bool isOpen;
+    private string? formResult;
+    private string displayName = "Alice";
+
+    private void HandleSave()
+    {
+        isOpen = false;
+        formResult = $"Saved: {displayName}";
+    }
+}
 """;
 
     private const string _dialogCss = """

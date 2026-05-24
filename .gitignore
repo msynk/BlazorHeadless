@@ -422,3 +422,8 @@ FodyWeavers.xsd
 
 #cursor
 .cursor
+
+
+# Tailwind standalone CLI binary + generated output (Samples project)
+src/BlazorHeadless.Samples/tools/
+src/BlazorHeadless.Samples/wwwroot/tailwind.css

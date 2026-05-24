@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Combobox</h1>
         <p>An accessible typeable autocomplete with consumer-driven filtering.</p>
+        <SectionSwitcher Slug="combobox" />
     </header>
 
     <DemoBlock Title="Basic Combobox"
@@ -409,10 +410,20 @@
 
 @code {
     private string? selectedFruit;
-    private List<string> filteredFruits = …;
+    private string[] allFruits = new[] {
+        "Apple", "Apricot", "Banana", "Blueberry", "Cherry",
+        "Coconut", "Cranberry", "Grape", "Kiwi", "Lemon",
+        "Lime", "Mango", "Orange", "Papaya", "Peach",
+        "Pear", "Pineapple", "Plum", "Raspberry", "Strawberry"
+    };
+    private List<string> filteredFruits = new();
 
     private void HandleFruitQuery(string q) =>
-        filteredFruits = allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+        filteredFruits = string.IsNullOrWhiteSpace(q)
+            ? allFruits.ToList()
+            : allFruits.Where(f => f.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized() => filteredFruits = allFruits.ToList();
 }
 """;
 
@@ -433,17 +444,59 @@
                         aria-label="@($"Remove {tag}")">×</button>
             </span>
         }
-        <BhComboboxInput TValue="string" class="combobox-input combobox-input-inline" />
-        <BhComboboxButton TValue="string" class="combobox-button">…</BhComboboxButton>
+        <BhComboboxInput TValue="string"
+                        Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
+                        class="combobox-input combobox-input-inline" />
+        <BhComboboxButton TValue="string" class="combobox-button" Context="b">
+            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string" class="combobox-options">
-        @* …filtered options with check marks for selected items… *@
+        @if (filteredTags.Count == 0)
+        {
+            <li class="combobox-empty">No matches.</li>
+        }
+        else
+        {
+            @foreach (var tag in filteredTags)
+            {
+                <BhComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o">
+                    <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
+                    <span>@tag</span>
+                </BhComboboxOption>
+            }
+        }
     </BhComboboxOptions>
 </BhCombobox>
+
+@code {
+    private IReadOnlyCollection<string> pickedTags = Array.Empty<string>();
+    private string[] allTags = new[] {
+        "design", "engineering", "marketing", "sales", "support",
+        "research", "product", "operations", "finance", "legal"
+    };
+    private List<string> filteredTags = new();
+
+    private void HandleTagQuery(string q) =>
+        filteredTags = string.IsNullOrWhiteSpace(q)
+            ? allTags.ToList()
+            : allTags.Where(t => t.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    private void RemoveTag(string tag) =>
+        pickedTags = pickedTags.Where(t => t != tag).ToList();
+
+    protected override void OnInitialized() => filteredTags = allTags.ToList();
+}
 """;
 
     private const string _objectCode = """
-public sealed record Person(string Name, string Email);
+public sealed record Person(string Name, string Email)
+{
+    public string Initials =>
+        string.Concat(Name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                          .Take(2)
+                          .Select(p => p[0]));
+}
 
 <BhCombobox TValue="Person"
            Value="@selectedPerson"
@@ -451,22 +504,62 @@ public sealed record Person(string Name, string Email);
            OnQueryChange="HandlePersonQuery"
            DisplayValue="p => p?.Name ?? string.Empty"
            class="combobox">
-    <BhComboboxInput TValue="Person" class="combobox-input" />
+    <div class="combobox-input-wrapper">
+        <BhComboboxInput TValue="Person"
+                        Placeholder="Search people…"
+                        class="combobox-input" />
+        <BhComboboxButton TValue="Person" class="combobox-button" Context="b">
+            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhComboboxButton>
+    </div>
     <BhComboboxOptions TValue="Person" class="combobox-options">
-        @foreach (var person in filteredPeople)
+        @if (filteredPeople.Count == 0)
         {
-            <BhComboboxOption TValue="Person" Value="@person" class="combobox-option">
-                <div class="person-row">
-                    <span class="person-avatar">@person.Initials</span>
-                    <div class="person-info">
-                        <strong>@person.Name</strong>
-                        <span>@person.Email</span>
+            <li class="combobox-empty">No matches.</li>
+        }
+        else
+        {
+            @foreach (var person in filteredPeople)
+            {
+                <BhComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o">
+                    <div class="person-row">
+                        <span class="person-avatar">@person.Initials</span>
+                        <div class="person-info">
+                            <strong>@person.Name</strong>
+                            <span>@person.Email</span>
+                        </div>
+                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
                     </div>
-                </div>
-            </BhComboboxOption>
+                </BhComboboxOption>
+            }
         }
     </BhComboboxOptions>
 </BhCombobox>
+
+@code {
+    private Person? selectedPerson;
+    private Person[] allPeople = new[]
+    {
+        new Person("Alice Anderson",  "alice@example.com"),
+        new Person("Benjamin Brown",  "ben@example.com"),
+        new Person("Caterina Costa",  "cat@example.com"),
+        new Person("Daniel Davis",    "dan@example.com"),
+        new Person("Eleanor Evans",   "ellie@example.com"),
+        new Person("Felix Foster",    "felix@example.com"),
+        new Person("Genevieve Gomez", "gen@example.com"),
+        new Person("Henry Hughes",    "henry@example.com"),
+    };
+    private List<Person> filteredPeople = new();
+
+    private void HandlePersonQuery(string q) =>
+        filteredPeople = string.IsNullOrWhiteSpace(q)
+            ? allPeople.ToList()
+            : allPeople.Where(p =>
+                p.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                p.Email.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override void OnInitialized() => filteredPeople = allPeople.ToList();
+}
 """;
 
     private const string _comboboxCss = """

@@ -1,0 +1,39 @@
+/* ============================================================
+   Tailwind v4 input.
+   Compiled by the MSBuild target in BlazorHeadless.Samples.csproj
+   into wwwroot/tailwind.css and served via @Assets["tailwind.css"].
+
+   The Razor sources for the Tailwind section live under
+   Components/Pages/Tw/ and Components/Shared/Tw/.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* Tell Tailwind where to scan for class usage. */
+@source "../Components/**/*.razor";
+@source "../Components/**/*.cs";
+
+/* ------------------------------------------------------------
+   Custom variants for BlazorHeadless data-attributes.
+   Use them like:
+     class="bg-white data-state-open:bg-zinc-100"
+     class="opacity-100 data-disabled:opacity-50"
+     class="bg-transparent data-active:bg-blue-50"
+   ------------------------------------------------------------ */
+@custom-variant data-state-open    (&[data-state="open"]);
+@custom-variant data-state-closed  (&[data-state="closed"]);
+@custom-variant data-state-checked (&[data-state="checked"]);
+@custom-variant data-state-unchecked    (&[data-state="unchecked"]);
+@custom-variant data-state-indeterminate (&[data-state="indeterminate"]);
+@custom-variant data-state-active  (&[data-state="active"]);
+@custom-variant data-active        (&[data-active]);
+@custom-variant data-selected      (&[data-selected]);
+@custom-variant data-disabled      (&[data-disabled]);
+@custom-variant data-loading       (&[data-loading]);
+@custom-variant data-orientation-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-orientation-vertical   (&[data-orientation="vertical"]);
+
+/* Make the [hidden] attribute beat utility display values. */
+@layer utilities {
+    [hidden] { display: none !important; }
+}

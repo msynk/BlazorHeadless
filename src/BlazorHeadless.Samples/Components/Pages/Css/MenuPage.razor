@@ -7,6 +7,7 @@
     <header class="demo-header">
         <h1>Menu</h1>
         <p>An accessible dropdown menu with keyboard navigation, typeahead, and zero visual opinion.</p>
+        <SectionSwitcher Slug="menu" />
     </header>
 
     <DemoBlock Title="Basic Menu"
@@ -245,79 +246,165 @@
         <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
     </BhMenuButton>
     <BhMenuItems class="menu-items">
-        <BhMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</BhMenuItem>
-        <BhMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
-        <BhMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</BhMenuItem>
-        <BhMenuItem OnClick="Delete"    class="menu-item" Label="Delete">Delete</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Duplicate"))' class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Archive"))'   class="menu-item" Label="Archive">Archive</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Delete"))'    class="menu-item" Label="Delete">Delete</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
+
+<span class="demo-output">Last action: <strong>@(lastAction ?? "(none)")</strong></span>
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) => lastAction = action;
+}
+""";
+
+    private const string _disabledCode = """
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button" Context="b">
+        Account
+        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhMenuButton>
+    <BhMenuItems class="menu-items">
+        <BhMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Settings"))' class="menu-item" Label="Settings">Settings</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Billing"))'  class="menu-item" Label="Billing"
+                   Disabled="true">Billing (unavailable)</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Sign out"))' class="menu-item" Label="Sign out">Sign out</BhMenuItem>
     </BhMenuItems>
 </BhMenu>
 """;
 
-    private const string _disabledCode = """
-<BhMenuItems class="menu-items">
-    <BhMenuItem OnClick="Profile"  class="menu-item" Label="Profile">Profile</BhMenuItem>
-    <BhMenuItem OnClick="Settings" class="menu-item" Label="Settings">Settings</BhMenuItem>
-    <BhMenuItem OnClick="Billing"  class="menu-item" Label="Billing"
-               Disabled="true">Billing (unavailable)</BhMenuItem>
-    <BhMenuItem OnClick="SignOut"  class="menu-item" Label="Sign out">Sign out</BhMenuItem>
-</BhMenuItems>
-""";
-
     private const string _richCode = """
-<BhMenuItem OnClick="NewFile" class="menu-item" Label="New file" Context="i">
-    <span class="menu-item-icon">📄</span>
-    <span class="menu-item-body">
-        <strong>New file</strong>
-        <span>Create a blank document</span>
-    </span>
-    <span class="menu-item-shortcut">⌘N</span>
-</BhMenuItem>
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button" Context="b">
+        File
+        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhMenuButton>
+    <BhMenuItems class="menu-items menu-items-wide">
+        <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
+            <span class="menu-item-icon">📄</span>
+            <span class="menu-item-body">
+                <strong>New file</strong>
+                <span>Create a blank document</span>
+            </span>
+            <span class="menu-item-shortcut">⌘N</span>
+        </BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
+            <span class="menu-item-icon">📂</span>
+            <span class="menu-item-body">
+                <strong>Open…</strong>
+                <span>Browse for a file</span>
+            </span>
+            <span class="menu-item-shortcut">⌘O</span>
+        </BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
+            <span class="menu-item-icon">💾</span>
+            <span class="menu-item-body">
+                <strong>Save</strong>
+                <span>Save the current document</span>
+            </span>
+            <span class="menu-item-shortcut">⌘S</span>
+        </BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
+                   Disabled="true" Context="i">
+            <span class="menu-item-icon">📤</span>
+            <span class="menu-item-body">
+                <strong>Export</strong>
+                <span>Not available in this plan</span>
+            </span>
+        </BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 
 @* Provide Label="New file" so typeahead matches the visible text,
    not the icon or shortcut. *@
 """;
 
     private const string _sectionsCode = """
-<BhMenuItems class="menu-items">
-    <li class="menu-section-label" role="presentation">View</li>
-    <BhMenuItem OnClick="ZoomIn"  class="menu-item" Label="Zoom in">Zoom in</BhMenuItem>
-    <BhMenuItem OnClick="ZoomOut" class="menu-item" Label="Zoom out">Zoom out</BhMenuItem>
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button" Context="b">
+        More
+        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhMenuButton>
+    <BhMenuItems class="menu-items">
+        <li class="menu-section-label" role="presentation">View</li>
+        <BhMenuItem OnClick='@(() => Log("Zoom in"))'     class="menu-item" Label="Zoom in">Zoom in</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Zoom out"))'    class="menu-item" Label="Zoom out">Zoom out</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Full screen"))' class="menu-item" Label="Full screen">Full screen</BhMenuItem>
 
-    <li class="menu-divider" role="separator"></li>
+        <li class="menu-divider" role="separator"></li>
 
-    <li class="menu-section-label" role="presentation">Help</li>
-    <BhMenuItem OnClick="Docs"      class="menu-item" Label="Documentation">Documentation</BhMenuItem>
-    <BhMenuItem OnClick="Shortcuts" class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</BhMenuItem>
-</BhMenuItems>
+        <li class="menu-section-label" role="presentation">Help</li>
+        <BhMenuItem OnClick='@(() => Log("Documentation"))'      class="menu-item" Label="Documentation">Documentation</BhMenuItem>
+        <BhMenuItem OnClick='@(() => Log("Keyboard shortcuts"))' class="menu-item" Label="Keyboard shortcuts">Keyboard shortcuts</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 """;
 
     private const string _polymorphicCode = """
-<BhMenuItems class="menu-items">
-    <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
-    <BhMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</BhMenuItem>
-    <BhMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</BhMenuItem>
-</BhMenuItems>
+<BhMenu class="menu">
+    <BhMenuButton class="menu-button" Context="b">
+        Navigate
+        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhMenuButton>
+    <BhMenuItems class="menu-items">
+        <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
+        <BhMenuItem As="a" href="/switch"     class="menu-item" Label="Switch">Switch</BhMenuItem>
+        <BhMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure">Disclosure</BhMenuItem>
+        <BhMenuItem As="a" href="/accordion"  class="menu-item" Label="Accordion">Accordion</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 """;
 
     private const string _anchorCode = """
 @* Anchor positions the dropdown relative to the button automatically.
    It flips to the opposite side if there's not enough space. *@
 
-<BhMenu class="menu">
-    <BhMenuButton class="menu-button">Options ▾</BhMenuButton>
-    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
-                class="menu-items-anchored">
-        <BhMenuItem OnClick="Edit"      class="menu-item" Label="Edit">Edit</BhMenuItem>
-        <BhMenuItem OnClick="Duplicate" class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
-        <BhMenuItem OnClick="Archive"   class="menu-item" Label="Archive">Archive</BhMenuItem>
-    </BhMenuItems>
-</BhMenu>
+<div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+    <BhMenu class="menu">
+        <BhMenuButton class="menu-button" Context="b">
+            Bottom Start
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                    class="menu-items-anchored">
+            <BhMenuItem OnClick="@(() => Log("Edit"))"      class="menu-item" Label="Edit">Edit</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Duplicate"))" class="menu-item" Label="Duplicate">Duplicate</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Archive"))"   class="menu-item" Label="Archive">Archive</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
 
-@* Use --button-width to match the dropdown width to the trigger: *@
-<BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
-            class="menu-items-anchored menu-items-match-width">
-    …
-</BhMenuItems>
+    <BhMenu class="menu">
+        <BhMenuButton class="menu-button" Context="b">
+            Bottom End
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
+                    class="menu-items-anchored">
+            <BhMenuItem OnClick="@(() => Log("Cut"))"   class="menu-item" Label="Cut">Cut</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Copy"))"  class="menu-item" Label="Copy">Copy</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Paste"))" class="menu-item" Label="Paste">Paste</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    @* Use --button-width to match the dropdown width to the trigger *@
+    <BhMenu class="menu">
+        <BhMenuButton class="menu-button" Context="b">
+            Match Width
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
+                    class="menu-items-anchored menu-items-match-width">
+            <BhMenuItem OnClick="@(() => Log("Option A"))" class="menu-item" Label="Option A">Option A</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Option B"))" class="menu-item" Label="Option B">Option B</BhMenuItem>
+            <BhMenuItem OnClick="@(() => Log("Option C"))" class="menu-item" Label="Option C">Option C</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+</div>
 """;
 
     private const string _anchorCss = """
