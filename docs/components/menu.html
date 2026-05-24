@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menu — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html" class="active">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Menu</h1>
+        <p class="lead">An accessible dropdown menu with keyboard navigation, typeahead, and zero visual opinion.</p>
+        <h2 id="basic-menu">Basic Menu</h2>
+        <p>Click the button or press Space / Enter / arrow keys to open. Use Up / Down to navigate, Home / End to jump, Enter / Space to activate, Escape to close. Type a letter to jump to the first matching item. ARIA wiring (<code>aria-haspopup="menu"</code>, <code>aria-expanded</code>, <code>aria-activedescendant</code>) is handled automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
+    &lt;BhMenuButton class="menu-button" Context="b"&gt;
+        Options
+        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items"&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Edit"))'      class="menu-item" Label="Edit"&gt;Edit&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Duplicate"))' class="menu-item" Label="Duplicate"&gt;Duplicate&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Archive"))'   class="menu-item" Label="Archive"&gt;Archive&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Delete"))'    class="menu-item" Label="Delete"&gt;Delete&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;
+
+&lt;span class="demo-output"&gt;Last action: &lt;strong&gt;@(lastAction ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) =&gt; lastAction = action;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by BhMenuItem */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                  Context="b"&gt;
+        Options
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Edit"))'      class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Edit"&gt;Edit&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Duplicate"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Duplicate"&gt;Duplicate&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Archive"))'   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Archive"&gt;Archive&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Delete"))'    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Delete"&gt;Delete&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;
+
+@code {
+    private string? lastAction;
+    private void Log(string action) =&gt; lastAction = action;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-items">Disabled Items</h2>
+        <p>Set <code>Disabled="true"</code> on individual items. Disabled items receive <code>data-disabled</code> for CSS, are skipped by arrow-key nav, and are ignored by typeahead.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
+    &lt;BhMenuButton class="menu-button" Context="b"&gt;
+        Account
+        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items"&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Profile"))'  class="menu-item" Label="Profile"&gt;Profile&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Settings"))' class="menu-item" Label="Settings"&gt;Settings&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Billing"))'  class="menu-item" Label="Billing"
+                   Disabled="true"&gt;Billing (unavailable)&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Sign out"))' class="menu-item" Label="Sign out"&gt;Sign out&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" on an item */
+.menu-item[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation and typeahead skip disabled items automatically. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Profile"))'  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Profile"&gt;Profile&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Settings"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Settings"&gt;Settings&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Billing"))'  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Billing" Disabled="true"&gt;Billing (unavailable)&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Sign out"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Sign out"&gt;Sign out&lt;/BhMenuItem&gt;
+&lt;/BhMenuItems&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="rich-item-content">Rich item content</h2>
+        <p>Items can contain any markup. Use the <code>data-active</code> hook to drive the highlighted style and provide a <code>Label</code> string so typeahead still works when the content is rich.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
+    &lt;BhMenuButton class="menu-button" Context="b"&gt;
+        File
+        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items menu-items-wide"&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("New file"))' class="menu-item" Label="New file" Context="i"&gt;
+            &lt;span class="menu-item-icon"&gt;📄&lt;/span&gt;
+            &lt;span class="menu-item-body"&gt;
+                &lt;strong&gt;New file&lt;/strong&gt;
+                &lt;span&gt;Create a blank document&lt;/span&gt;
+            &lt;/span&gt;
+            &lt;span class="menu-item-shortcut"&gt;⌘N&lt;/span&gt;
+        &lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Open"))' class="menu-item" Label="Open" Context="i"&gt;
+            &lt;span class="menu-item-icon"&gt;📂&lt;/span&gt;
+            &lt;span class="menu-item-body"&gt;
+                &lt;strong&gt;Open…&lt;/strong&gt;
+                &lt;span&gt;Browse for a file&lt;/span&gt;
+            &lt;/span&gt;
+            &lt;span class="menu-item-shortcut"&gt;⌘O&lt;/span&gt;
+        &lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Save"))' class="menu-item" Label="Save" Context="i"&gt;
+            &lt;span class="menu-item-icon"&gt;💾&lt;/span&gt;
+            &lt;span class="menu-item-body"&gt;
+                &lt;strong&gt;Save&lt;/strong&gt;
+                &lt;span&gt;Save the current document&lt;/span&gt;
+            &lt;/span&gt;
+            &lt;span class="menu-item-shortcut"&gt;⌘S&lt;/span&gt;
+        &lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Export"))' class="menu-item" Label="Export"
+                   Disabled="true" Context="i"&gt;
+            &lt;span class="menu-item-icon"&gt;📤&lt;/span&gt;
+            &lt;span class="menu-item-body"&gt;
+                &lt;strong&gt;Export&lt;/strong&gt;
+                &lt;span&gt;Not available in this plan&lt;/span&gt;
+            &lt;/span&gt;
+        &lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;
+
+@* Provide Label="New file" so typeahead matches the visible text,
+   not the icon or shortcut. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Rich item layout: icon + body (title + description) + shortcut */
+.menu-items-wide { min-width: 16rem; }
+
+.menu-item-icon     { font-size: 1rem; flex-shrink: 0; }
+.menu-item-shortcut { margin-left: auto; font-size: 0.75rem; color: #71717a; }
+
+.menu-item-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    line-height: 1.25;
+}
+
+.menu-item-body strong { font-size: 0.875rem; }
+.menu-item-body span   { font-size: 0.75rem; color: #71717a; }
+
+/* Active state overrides the muted description colour */
+.menu-item[data-active] .menu-item-body span { color: #93c5fd; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-64 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("New file"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="New file"&gt;
+        &lt;span class="text-base flex-shrink-0"&gt;📄&lt;/span&gt;
+        &lt;span class="flex flex-1 flex-col leading-tight"&gt;
+            &lt;strong class="text-sm"&gt;New file&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Create a blank document&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="ml-auto text-xs text-zinc-500"&gt;⌘N&lt;/span&gt;
+    &lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Open"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Open"&gt;
+        &lt;span class="text-base flex-shrink-0"&gt;📂&lt;/span&gt;
+        &lt;span class="flex flex-1 flex-col leading-tight"&gt;
+            &lt;strong class="text-sm"&gt;Open…&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Browse for a file&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="ml-auto text-xs text-zinc-500"&gt;⌘O&lt;/span&gt;
+    &lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Save"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Save"&gt;
+        &lt;span class="text-base flex-shrink-0"&gt;💾&lt;/span&gt;
+        &lt;span class="flex flex-1 flex-col leading-tight"&gt;
+            &lt;strong class="text-sm"&gt;Save&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Save the current document&lt;/span&gt;
+        &lt;/span&gt;
+        &lt;span class="ml-auto text-xs text-zinc-500"&gt;⌘S&lt;/span&gt;
+    &lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Export"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Export" Disabled="true"&gt;
+        &lt;span class="text-base flex-shrink-0"&gt;📤&lt;/span&gt;
+        &lt;span class="flex flex-1 flex-col leading-tight"&gt;
+            &lt;strong class="text-sm"&gt;Export&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Not available in this plan&lt;/span&gt;
+        &lt;/span&gt;
+    &lt;/BhMenuItem&gt;
+&lt;/BhMenuItems&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="sections-and-dividers">Sections and dividers</h2>
+        <p>Group related items with a plain <code>&lt;li&gt;</code> divider or a section heading. These are regular HTML elements — the menu component doesn't need to know about them.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
+    &lt;BhMenuButton class="menu-button" Context="b"&gt;
+        More
+        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items"&gt;
+        &lt;li class="menu-section-label" role="presentation"&gt;View&lt;/li&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Zoom in"))'     class="menu-item" Label="Zoom in"&gt;Zoom in&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Zoom out"))'    class="menu-item" Label="Zoom out"&gt;Zoom out&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Full screen"))' class="menu-item" Label="Full screen"&gt;Full screen&lt;/BhMenuItem&gt;
+
+        &lt;li class="menu-divider" role="separator"&gt;&lt;/li&gt;
+
+        &lt;li class="menu-section-label" role="presentation"&gt;Help&lt;/li&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Documentation"))'      class="menu-item" Label="Documentation"&gt;Documentation&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Keyboard shortcuts"))' class="menu-item" Label="Keyboard shortcuts"&gt;Keyboard shortcuts&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Section label — not an interactive item, just a visual grouping header */
+.menu-section-label {
+    padding: 0.35rem 0.65rem 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #71717a;
+    list-style: none;
+}
+
+/* Divider between sections */
+.menu-divider {
+    height: 1px;
+    background: #e4e4e7;
+    margin: 0.25rem 0;
+    list-style: none;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+    &lt;li class="px-2.5 pt-1.5 pb-0.5 text-xs font-semibold uppercase tracking-wider text-zinc-500" role="presentation"&gt;View&lt;/li&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Zoom in"))'     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Zoom in"&gt;Zoom in&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Zoom out"))'    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Zoom out"&gt;Zoom out&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Full screen"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Full screen"&gt;Full screen&lt;/BhMenuItem&gt;
+    &lt;li class="my-1 h-px bg-zinc-200" role="separator"&gt;&lt;/li&gt;
+    &lt;li class="px-2.5 pt-1.5 pb-0.5 text-xs font-semibold uppercase tracking-wider text-zinc-500" role="presentation"&gt;Help&lt;/li&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Documentation"))'      class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Documentation"&gt;Documentation&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Keyboard shortcuts"))' class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700" Label="Keyboard shortcuts"&gt;Keyboard shortcuts&lt;/BhMenuItem&gt;
+&lt;/BhMenuItems&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="anchor-positioning">Anchor Positioning</h2>
+        <p>Set <code>Anchor</code> on <code>BhMenuItems</code> to automatically position the dropdown relative to the button. The panel uses <code>position: fixed</code> and auto-updates on scroll/resize. It flips to the opposite side if there's not enough space, and shifts to stay within the viewport. CSS custom properties <code>--button-width</code>, <code>--anchor-gap</code> are exposed on the panel.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Anchor positions the dropdown relative to the button automatically.
+   It flips to the opposite side if there's not enough space. *@
+
+&lt;div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;"&gt;
+    &lt;BhMenu class="menu"&gt;
+        &lt;BhMenuButton class="menu-button" Context="b"&gt;
+            Bottom Start
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhMenuButton&gt;
+        &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                    class="menu-items-anchored"&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Edit"))"      class="menu-item" Label="Edit"&gt;Edit&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Duplicate"))" class="menu-item" Label="Duplicate"&gt;Duplicate&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Archive"))"   class="menu-item" Label="Archive"&gt;Archive&lt;/BhMenuItem&gt;
+        &lt;/BhMenuItems&gt;
+    &lt;/BhMenu&gt;
+
+    &lt;BhMenu class="menu"&gt;
+        &lt;BhMenuButton class="menu-button" Context="b"&gt;
+            Bottom End
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhMenuButton&gt;
+        &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
+                    class="menu-items-anchored"&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Cut"))"   class="menu-item" Label="Cut"&gt;Cut&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Copy"))"  class="menu-item" Label="Copy"&gt;Copy&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Paste"))" class="menu-item" Label="Paste"&gt;Paste&lt;/BhMenuItem&gt;
+        &lt;/BhMenuItems&gt;
+    &lt;/BhMenu&gt;
+
+    @* Use --button-width to match the dropdown width to the trigger *@
+    &lt;BhMenu class="menu"&gt;
+        &lt;BhMenuButton class="menu-button" Context="b"&gt;
+            Match Width
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhMenuButton&gt;
+        &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
+                    class="menu-items-anchored menu-items-match-width"&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Option A"))" class="menu-item" Label="Option A"&gt;Option A&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Option B"))" class="menu-item" Label="Option B"&gt;Option B&lt;/BhMenuItem&gt;
+            &lt;BhMenuItem OnClick="@(() =&gt; Log("Option C"))" class="menu-item" Label="Option C"&gt;Option C&lt;/BhMenuItem&gt;
+        &lt;/BhMenuItems&gt;
+    &lt;/BhMenu&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* When using Anchor, the panel is position:fixed by the JS engine.
+   No need for position:relative on the parent or position:absolute on the panel.
+   Use a high z-index to ensure the panel renders above all other page content. */
+.menu-items-anchored {
+    z-index: 9999;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Use the --button-width CSS variable to match the trigger width */
+.menu-items-match-width {
+    min-width: unset;
+    width: var(--button-width);
+}
+
+/* Items inside the anchored panel */
+.menu-items-anchored .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+.menu-items-anchored .menu-item[data-active] { background: #eff6ff; color: #1d4ed8; }
+.menu-items-anchored .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                  Context="b"&gt;
+        Bottom Start
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                 class="z-[9999] m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Edit"))' Label="Edit"
+                    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Edit&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Duplicate"))' Label="Duplicate"
+                    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Duplicate&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Archive"))' Label="Archive"
+                    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Archive&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;
+
+@* Match-width: BhMenuItems exposes --button-width which can be used in arbitrary values: *@
+&lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
+             class="z-[9999] m-0 min-w-0 w-[var(--button-width)] list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Option A"))' Label="Option A"
+                class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Option A&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Option B"))' Label="Option B"
+                class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Option B&lt;/BhMenuItem&gt;
+    &lt;BhMenuItem OnClick='@(() =&gt; Log("Option C"))' Label="Option C"
+                class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Option C&lt;/BhMenuItem&gt;
+&lt;/BhMenuItems&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="polymorphic-items">Polymorphic items</h2>
+        <p>Set <code>As="a"</code> on an item to render it as an anchor tag — useful for navigation links inside a menu. The item still participates in keyboard nav and receives all the ARIA attributes.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
+    &lt;BhMenuButton class="menu-button" Context="b"&gt;
+        Navigate
+        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items"&gt;
+        &lt;BhMenuItem As="a" href="/button"     class="menu-item" Label="Button"&gt;Button&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="/switch"     class="menu-item" Label="Switch"&gt;Switch&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="/disclosure" class="menu-item" Label="Disclosure"&gt;Disclosure&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="/accordion"  class="menu-item" Label="Accordion"&gt;Accordion&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* When As="a" the item renders as an anchor. The same .menu-item styles apply
+   because the data-active / data-disabled hooks are emitted regardless of tag. */
+.menu-item[data-active] {
+    background: #eff6ff;
+    color: #1d4ed8;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                  Context="b"&gt;
+        Navigate
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhMenuItem As="a" href="tw/button"     Label="Button"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Button&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="tw/switch"     Label="Switch"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Switch&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="tw/disclosure" Label="Disclosure" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Disclosure&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem As="a" href="tw/accordion"  Label="Accordion"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Accordion&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="listbox.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Listbox</span>
+        </a>
+            <a class="next" href="popover.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Popover</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

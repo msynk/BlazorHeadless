@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DataInteractive — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html" class="active">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>DataInteractive</h1>
+        <p class="lead">A wrapper that forwards <code>data-hover</code>, <code>data-active</code>, and
+            <code>data-focus</code> attributes to its child element for consistent interactive
+            state styling — without relying on CSS pseudo-classes.</p>
+        <h2 id="basic-usage">Basic Usage</h2>
+        <p>Wrap any element to get <code>data-hover</code>, <code>data-active</code>, and <code>data-focus</code> attributes applied automatically. Style with CSS attribute selectors.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="interactive-btn"&gt;
+    Hover, focus, or press me
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.interactive-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+/* Style via data attributes instead of :hover/:active/:focus */
+.interactive-btn[data-hover] {
+    background: #f0f9ff;
+    border-color: #7dd3fc;
+    color: #0369a1;
+}
+.interactive-btn[data-active] {
+    background: #0ea5e9;
+    border-color: #0ea5e9;
+    color: #fff;
+    transform: scale(0.97);
+}
+.interactive-btn[data-focus] {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button"
+                   class="inline-flex items-center rounded-lg border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium cursor-pointer transition-all data-[hover]:bg-sky-50 data-[hover]:border-sky-300 data-[hover]:text-sky-700 data-active:bg-sky-500 data-active:border-sky-500 data-active:text-white data-active:scale-[0.97] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"&gt;
+    Hover, focus, or press me
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="link-wrapper">Link Wrapper</h2>
+        <p>Use <code>As="a"</code> to wrap a link element. The data attributes let you style hover/focus/active states consistently across all interactive elements.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="a" href="/dashboard" class="interactive-link"&gt;
+    Dashboard
+&lt;/BhDataInteractive&gt;
+&lt;BhDataInteractive As="a" href="/settings" class="interactive-link"&gt;
+    Settings
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.interactive-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #3b82f6;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all 150ms ease;
+}
+
+.interactive-link[data-hover] {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+.interactive-link[data-active] {
+    background: #dbeafe;
+    color: #1e40af;
+}
+.interactive-link[data-focus] {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="a" href="#"
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+    Dashboard
+&lt;/BhDataInteractive&gt;
+&lt;BhDataInteractive As="a" href="#"
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+    Settings
+&lt;/BhDataInteractive&gt;
+&lt;BhDataInteractive As="a" href="#"
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+    Profile
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="render-context">Render Context</h2>
+        <p>Access the interactive state via the render context to conditionally render content or apply classes based on hover, focus, and active states.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="interactive-card" Context="state"&gt;
+    &lt;span class="card-icon"&gt;
+        @(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")
+    &lt;/span&gt;
+    &lt;span class="card-label"&gt;
+        @if (state.Active)      { &lt;span&gt;Pressing!&lt;/span&gt; }
+        else if (state.Hover)   { &lt;span&gt;Hovering…&lt;/span&gt; }
+        else if (state.Focus)   { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
+        else                    { &lt;span&gt;Interact with me&lt;/span&gt; }
+    &lt;/span&gt;
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.interactive-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e4e4e7;
+    border-radius: 0.75rem;
+    background: #fff;
+    cursor: pointer;
+    transition: all 200ms ease;
+    font-size: 1rem;
+}
+
+.interactive-card[data-hover] {
+    border-color: #a78bfa;
+    background: #faf5ff;
+}
+.interactive-card[data-active] {
+    border-color: #7c3aed;
+    background: #ede9fe;
+    transform: scale(0.96);
+}
+.interactive-card[data-focus] {
+    outline: 2px solid #7c3aed;
+    outline-offset: 2px;
+}
+
+.card-icon { font-size: 1.5rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button"
+                   class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"
+                   Context="state"&gt;
+    &lt;span class="text-2xl"&gt;@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")&lt;/span&gt;
+    &lt;span&gt;
+        @if (state.Active)    { &lt;span&gt;Pressing!&lt;/span&gt; }
+        else if (state.Hover) { &lt;span&gt;Hovering…&lt;/span&gt; }
+        else if (state.Focus) { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
+        else                  { &lt;span&gt;Interact with me&lt;/span&gt; }
+    &lt;/span&gt;
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-state">Disabled State</h2>
+        <p>When <code>Disabled="true"</code>, all interactive state tracking is suppressed and <code>data-disabled</code> is emitted instead.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="interactive-btn" Disabled="true"&gt;
+    I'm disabled
+&lt;/BhDataInteractive&gt;
+&lt;BhDataInteractive As="button" class="interactive-btn"&gt;
+    I'm enabled
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.interactive-btn[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" Disabled="true"
+                   class="inline-flex items-center rounded-lg border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium data-disabled:opacity-40 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+    I'm disabled
+&lt;/BhDataInteractive&gt;
+&lt;BhDataInteractive As="button"
+                   class="inline-flex items-center rounded-lg border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium cursor-pointer data-[hover]:bg-zinc-100"&gt;
+    I'm enabled
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="card-grid">Card Grid</h2>
+        <p>Build interactive cards that respond to hover, focus, and press. The data attributes give you full control over each state's visual treatment.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="card-grid"&gt;
+    &lt;BhDataInteractive As="div" class="card" tabindex="0"&gt;
+        &lt;div class="card-title"&gt;Analytics&lt;/div&gt;
+        &lt;div class="card-desc"&gt;View your dashboard metrics&lt;/div&gt;
+    &lt;/BhDataInteractive&gt;
+    &lt;BhDataInteractive As="div" class="card" tabindex="0"&gt;
+        &lt;div class="card-title"&gt;Reports&lt;/div&gt;
+        &lt;div class="card-desc"&gt;Generate monthly reports&lt;/div&gt;
+    &lt;/BhDataInteractive&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    padding: 1.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    background: #fff;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+.card[data-hover] {
+    border-color: #a78bfa;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+    transform: translateY(-2px);
+}
+.card[data-active] {
+    border-color: #7c3aed;
+    background: #faf5ff;
+    transform: translateY(0);
+    box-shadow: none;
+}
+.card[data-focus] {
+    outline: 2px solid #7c3aed;
+    outline-offset: 2px;
+}
+
+.card-title { font-weight: 600; margin-bottom: 0.25rem; }
+.card-desc  { font-size: 0.8rem; color: #71717a; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="grid w-full gap-4 grid-cols-[repeat(auto-fit,minmax(180px,1fr))]"&gt;
+    &lt;BhDataInteractive As="div" tabindex="0"
+                       class="rounded-xl border border-zinc-200 bg-white p-5 cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:shadow-lg data-[hover]:-translate-y-0.5 data-active:border-violet-600 data-active:bg-violet-50 data-active:translate-y-0 data-active:shadow-none data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"&gt;
+        &lt;div class="font-semibold mb-1 text-zinc-900"&gt;Analytics&lt;/div&gt;
+        &lt;div class="text-xs text-zinc-500"&gt;View your dashboard metrics&lt;/div&gt;
+    &lt;/BhDataInteractive&gt;
+    &lt;BhDataInteractive As="div" tabindex="0"
+                       class="rounded-xl border border-zinc-200 bg-white p-5 cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:shadow-lg data-[hover]:-translate-y-0.5 data-active:border-violet-600 data-active:bg-violet-50 data-active:translate-y-0 data-active:shadow-none data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"&gt;
+        &lt;div class="font-semibold mb-1 text-zinc-900"&gt;Reports&lt;/div&gt;
+        &lt;div class="text-xs text-zinc-500"&gt;Generate monthly reports&lt;/div&gt;
+    &lt;/BhDataInteractive&gt;
+    &lt;BhDataInteractive As="div" tabindex="0"
+                       class="rounded-xl border border-zinc-200 bg-white p-5 cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:shadow-lg data-[hover]:-translate-y-0.5 data-active:border-violet-600 data-active:bg-violet-50 data-active:translate-y-0 data-active:shadow-none data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"&gt;
+        &lt;div class="font-semibold mb-1 text-zinc-900"&gt;Settings&lt;/div&gt;
+        &lt;div class="text-xs text-zinc-500"&gt;Configure your workspace&lt;/div&gt;
+    &lt;/BhDataInteractive&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="state-inspector">State Inspector</h2>
+        <p>A live view of the data attributes being applied. Interact with the element and watch the state indicators update in real time.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="inspector-target" Context="s"&gt;
+    &lt;span&gt;Interact with this button&lt;/span&gt;
+    &lt;div class="inspector-states"&gt;
+        &lt;span&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
+        &lt;span&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
+        &lt;span&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.inspector-target {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 2rem;
+    border: 2px solid #e4e4e7;
+    border-radius: 0.75rem;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 150ms ease;
+    min-width: 280px;
+}
+
+.inspector-target[data-hover]  { border-color: #60a5fa; background: #eff6ff; }
+.inspector-target[data-active] { border-color: #2563eb; background: #dbeafe; }
+.inspector-target[data-focus]  { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.inspector-label { font-weight: 500; }
+
+.inspector-states {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.state-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-family: monospace;
+    border-radius: 0.25rem;
+    background: #f4f4f5;
+    color: #71717a;
+    border: 1px solid #e4e4e7;
+}
+
+.state-badge.state-on {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button"
+                   class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"
+                   Context="s"&gt;
+    &lt;span class="font-medium"&gt;Interact with this button&lt;/span&gt;
+    &lt;div class="flex flex-wrap gap-2"&gt;
+        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
+        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
+        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/BhDataInteractive&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="combobox.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Combobox</span>
+        </a>
+            <a class="next" href="dialog.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Dialog</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CloseButton — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html" class="active">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>CloseButton</h1>
+        <p class="lead">A utility button pre-wired to close the nearest enclosing Dialog, Popover, or Disclosure — saves boilerplate for dismiss actions.</p>
+        <h2 id="inside-a-dialog">Inside a Dialog</h2>
+        <p>Drop <code>&lt;BhCloseButton&gt;</code> anywhere inside a Dialog and it will automatically call the dialog's close callback. No need to wire up <code>@@onclick</code> or pass state around.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true" class="btn btn-primary"&gt;
+    Open dialog
+&lt;/BhButton&gt;
+
+&lt;BhDialog Open="isOpen" OnClose="() =&gt; isOpen = false"&gt;
+    &lt;BhDialogBackdrop class="dialog-backdrop" /&gt;
+    &lt;BhDialogPanel class="dialog-panel"&gt;
+        &lt;BhDialogTitle&gt;Deactivate account&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription&gt;
+            This will permanently deactivate your account.
+        &lt;/BhDialogDescription&gt;
+
+        &lt;div class="dialog-actions"&gt;
+            &lt;!-- No @onclick needed — BhCloseButton finds the Dialog automatically --&gt;
+            &lt;BhCloseButton class="btn"&gt;Cancel&lt;/BhCloseButton&gt;
+            &lt;BhCloseButton class="btn btn-danger"&gt;Deactivate&lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool isOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.dialog-backdrop { background: rgba(0, 0, 0, 0.5); }
+
+.dialog-panel {
+    margin: 4rem auto;
+    max-width: 28rem;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.dialog-title       { font-size: 1.1rem; font-weight: 600; color: #18181b; }
+.dialog-description { font-size: 0.9rem; color: #71717a; }
+.dialog-actions     { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
+
+.btn-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; dialogOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+    Open dialog
+&lt;/BhButton&gt;
+&lt;BhDialog Open="dialogOpen" OnClose="() =&gt; dialogOpen = false"&gt;
+    &lt;BhDialogBackdrop class="bg-black/50" /&gt;
+    &lt;BhDialogPanel class="mx-auto my-16 max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3"&gt;
+        &lt;BhDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Deactivate account&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="text-sm text-zinc-500"&gt;
+            This will permanently deactivate your account. All of your data will be permanently removed.
+        &lt;/BhDialogDescription&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhCloseButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;Cancel&lt;/BhCloseButton&gt;
+            &lt;BhCloseButton class="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-red-700"&gt;Deactivate&lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool dialogOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="inside-a-popover">Inside a Popover</h2>
+        <p>Use <code>BhCloseButton</code> inside a popover panel to close it on click. Combine with the <code>As</code> parameter to render as an anchor or any other element.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
+    &lt;BhPopoverButton class="popover-button"&gt;Solutions ▾&lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel"&gt;
+        &lt;h3 class="popover-title"&gt;Navigation&lt;/h3&gt;
+
+        &lt;!-- Render as &lt;a&gt; elements that also close the popover on click --&gt;
+        &lt;BhCloseButton As="a" href="#analytics" class="popover-nav-link"&gt;
+            Analytics
+        &lt;/BhCloseButton&gt;
+        &lt;BhCloseButton As="a" href="#engagement" class="popover-nav-link"&gt;
+            Engagement
+        &lt;/BhCloseButton&gt;
+
+        &lt;hr class="popover-divider" /&gt;
+        &lt;BhCloseButton class="popover-dismiss"&gt;Dismiss ✕&lt;/BhCloseButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.popover { position: relative; display: inline-block; }
+
+.popover-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.popover-panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 31;
+    min-width: 14rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.popover-title      { font-size: 0.9rem; font-weight: 600; margin: 0; }
+.popover-nav-link   { font-size: 0.85rem; color: #2563eb; text-decoration: none; padding: 0.3rem 0; }
+.popover-nav-link:hover { text-decoration: underline; }
+.popover-divider    { border: none; border-top: 1px solid #e4e4e7; margin: 0.25rem 0; }
+
+.popover-dismiss {
+    all: unset;
+    display: block;
+    width: 100%;
+    font-size: 0.8rem;
+    font-family: inherit;
+    color: #71717a;
+    cursor: pointer;
+    text-align: center;
+    padding: 0.4rem;
+    border-radius: 0.35rem;
+    box-sizing: border-box;
+}
+.popover-dismiss:hover { color: #18181b; background: #f4f4f5; }
+.popover-dismiss:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer hover:border-zinc-400 data-state-open:border-blue-600"&gt;
+        Solutions ▾
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-56 rounded-lg border border-zinc-200 bg-white p-3 shadow-lg flex flex-col gap-1.5"&gt;
+        &lt;h3 class="text-sm font-semibold m-0"&gt;Navigation&lt;/h3&gt;
+        &lt;BhCloseButton As="a" href="#analytics"  class="py-1 text-sm text-blue-600 no-underline hover:underline"&gt;Analytics&lt;/BhCloseButton&gt;
+        &lt;BhCloseButton As="a" href="#engagement" class="py-1 text-sm text-blue-600 no-underline hover:underline"&gt;Engagement&lt;/BhCloseButton&gt;
+        &lt;BhCloseButton As="a" href="#security"   class="py-1 text-sm text-blue-600 no-underline hover:underline"&gt;Security&lt;/BhCloseButton&gt;
+        &lt;hr class="my-1 border-t border-zinc-200" /&gt;
+        &lt;BhCloseButton class="block w-full rounded-md p-1.5 text-center text-xs text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"&gt;Dismiss ✕&lt;/BhCloseButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="inside-a-disclosure">Inside a Disclosure</h2>
+        <p>Works the same way inside a Disclosure. The button finds the nearest closeable ancestor and calls its close method.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="disclosure"&gt;
+    &lt;BhDisclosureButton class="disclosure-button"&gt;
+        Show details
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
+        &lt;div class="disclosure-body"&gt;
+            &lt;p&gt;Here are some details you can collapse.&lt;/p&gt;
+            &lt;BhCloseButton class="btn btn-sm"&gt;Hide details&lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover              { background: #f4f4f5; }
+.disclosure-button[data-state="open"] { background: #f4f4f5; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.btn-sm { font-size: 0.8rem; padding: 0.35rem 0.7rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white"&gt;
+    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 font-medium hover:bg-zinc-100 data-state-open:bg-zinc-100"&gt;
+        Show details
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3.5 flex flex-col gap-3 text-sm text-zinc-500"&gt;
+            &lt;p&gt;Here are some details you can collapse.&lt;/p&gt;
+            &lt;BhCloseButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-900 px-3 py-1.5 cursor-pointer hover:bg-zinc-100 self-start"&gt;Hide details&lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="polymorphic-rendering-as">Polymorphic rendering (As)</h2>
+        <p>Use the <code>As</code> parameter to render the close button as any HTML element. Non-native button elements automatically receive <code>role="button"</code>, <code>tabindex="0"</code>, and Enter/Space keyboard handling.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
+    &lt;BhPopoverButton class="popover-button"&gt;Open panel ▾&lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel"&gt;
+        &lt;!-- Default: renders as &lt;button&gt; --&gt;
+        &lt;BhCloseButton class="btn btn-sm"&gt;Button (default)&lt;/BhCloseButton&gt;
+
+        &lt;!-- Renders as &lt;a&gt; with role="button" and keyboard handling --&gt;
+        &lt;BhCloseButton As="a" href="#" class="popover-nav-link"&gt;
+            Anchor link
+        &lt;/BhCloseButton&gt;
+
+        &lt;!-- Renders as &lt;div&gt; with role="button", tabindex, keyboard --&gt;
+        &lt;BhCloseButton As="div" class="close-div"&gt;
+            Div with role="button"
+        &lt;/BhCloseButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .popover styles from above */
+
+.close-variants {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.close-div {
+    padding: 0.4rem 0.7rem;
+    background: #f4f4f5;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+.close-div:hover        { background: #e4e4e7; }
+.close-div:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer hover:border-zinc-400 data-state-open:border-blue-600"&gt;
+        Open panel ▾
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-56 rounded-lg border border-zinc-200 bg-white p-3 shadow-lg flex flex-col gap-1.5"&gt;
+        &lt;p class="text-sm text-zinc-500 m-0"&gt;The close actions below render as different elements:&lt;/p&gt;
+        &lt;div class="mt-2 flex flex-col gap-2"&gt;
+            &lt;BhCloseButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-900 px-3 py-1.5 cursor-pointer hover:bg-zinc-100"&gt;Button (default)&lt;/BhCloseButton&gt;
+            &lt;BhCloseButton As="a" href="#" class="py-1 text-sm text-blue-600 no-underline hover:underline"&gt;Anchor link&lt;/BhCloseButton&gt;
+            &lt;BhCloseButton As="div" class="rounded-md bg-zinc-100 px-2.5 py-1.5 text-center text-sm cursor-pointer hover:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;Div with role="button"&lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-state">Disabled state</h2>
+        <p>Set <code>Disabled="true"</code> to prevent the close action. The button receives the native <code>disabled</code> attribute (or <code>aria-disabled</code> for non-native elements) and a <code>data-disabled</code> styling hook.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
+    &lt;BhPopoverButton class="popover-button"&gt;Panel is open ▾&lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel"&gt;
+        &lt;p&gt;The disabled close button won't close this panel:&lt;/p&gt;
+
+        &lt;BhCloseButton Disabled="true" class="btn btn-sm"&gt;
+            Can't close (disabled)
+        &lt;/BhCloseButton&gt;
+        &lt;BhCloseButton class="btn btn-sm btn-primary"&gt;
+            Close (enabled)
+        &lt;/BhCloseButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .popover styles from above */
+
+/* Style the disabled state via the data-disabled attribute */
+[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer hover:border-zinc-400 data-state-open:border-blue-600"&gt;
+        Panel is open ▾
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-56 rounded-lg border border-zinc-200 bg-white p-3 shadow-lg flex flex-col gap-1.5"&gt;
+        &lt;p class="text-sm text-zinc-500 m-0"&gt;The disabled close button below won't close this panel:&lt;/p&gt;
+        &lt;div class="mt-2 flex flex-col gap-2"&gt;
+            &lt;BhCloseButton Disabled="true"
+                           class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-900 px-3 py-1.5 cursor-pointer hover:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                Can't close (disabled)
+            &lt;/BhCloseButton&gt;
+            &lt;BhCloseButton class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 text-xs font-medium text-white px-3 py-1.5 cursor-pointer hover:bg-blue-700"&gt;
+                Close (enabled)
+            &lt;/BhCloseButton&gt;
+        &lt;/div&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="checkbox.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Checkbox</span>
+        </a>
+            <a class="next" href="combobox.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Combobox</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

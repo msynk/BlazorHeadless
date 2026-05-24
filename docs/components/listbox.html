@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Listbox — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html" class="active">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Listbox</h1>
+        <p class="lead">An accessible custom select with single/multi-select, full keyboard navigation, and typeahead.</p>
+        <h2 id="basic-listbox">Basic Listbox</h2>
+        <p>Click the button or press Space / Enter / arrow keys to open. Use Up / Down to navigate, Home / End to jump, Enter / Space to select, Escape to close, or simply type to jump to an option. ARIA wiring (<code>combobox</code>, <code>listbox</code>, <code>aria-activedescendant</code>) is handled for you.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Value="@favPerson"
+          OnValueChange="v =&gt; favPerson = v"
+          class="listbox"&gt;
+    &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+        &lt;span&gt;@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)&lt;/span&gt;
+        &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string" class="listbox-options"&gt;
+        @foreach (var name in people)
+        {
+            &lt;BhListboxOption TValue="string" Value="@name" class="listbox-option"&gt;
+                @name
+            &lt;/BhListboxOption&gt;
+        }
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private string? favPerson;
+
+    private string[] people = new[] {
+        "Alice", "Benjamin", "Caterina", "Daniel",
+        "Eleanor", "Felix", "Genevieve", "Henry"
+    };
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.listbox          { position: relative; display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 31). */
+.listbox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Value="@favPerson" OnValueChange="v =&gt; favPerson = v" class="relative inline-block min-w-56"&gt;
+    &lt;BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b"&gt;
+        &lt;span&gt;@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Alice&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Benjamin&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Caterina&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Daniel&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Eleanor&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Felix&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Genevieve&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Henry&lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private string? favPerson;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multi-select">Multi-select</h2>
+        <p>Set <code>Multiple="true"</code> to allow selecting many values. The panel stays open after each selection. The button label here renders the joined names.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Multiple="true"
+          Values="@favColors"
+          OnValuesChange="v =&gt; favColors = v"
+          class="listbox"&gt;
+    &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+        &lt;span&gt;
+            @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
+        &lt;/span&gt;
+        &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string" class="listbox-options"&gt;
+        @foreach (var c in colors)
+        {
+            &lt;BhListboxOption TValue="string" Value="@c" class="listbox-option" Context="o"&gt;
+                &lt;span class="check-mark"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+                &lt;span&gt;@c&lt;/span&gt;
+            &lt;/BhListboxOption&gt;
+        }
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private IReadOnlyCollection&lt;string&gt; favColors = Array.Empty&lt;string&gt;();
+    private string[] colors = new[] { "Red", "Green", "Blue", "Yellow", "Purple", "Orange" };
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .listbox / .listbox-option styles from the Basic demo.
+   The check-mark glyph is shown for selected options. */
+.check-mark {
+    display: inline-block;
+    width: 1rem;
+    color: #2563eb;
+    font-weight: 700;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Multiple="true" Values="@favColors" OnValuesChange="v =&gt; favColors = v" class="relative inline-block min-w-56"&gt;
+    &lt;BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b"&gt;
+        &lt;span&gt;@(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Red")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Red&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Green")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Green&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Blue")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Blue&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Yellow")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Yellow&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Purple")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Purple&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Orange")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold" Context="o"&gt;
+            &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+            &lt;span&gt;Orange&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private IReadOnlyCollection&lt;string&gt; favColors = Array.Empty&lt;string&gt;();
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-options">Disabled Options</h2>
+        <p>Mark individual options with <code>Disabled="true"</code>. They render with <code>data-disabled</code> for CSS, are skipped by arrow-key nav, and ignore typeahead matches.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" DefaultValue="standard" class="listbox"&gt;
+    &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+        &lt;span&gt;@(b.Value ?? "Pick a plan")&lt;/span&gt;
+        &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string" class="listbox-options"&gt;
+        &lt;BhListboxOption TValue="string" Value="standard"   class="listbox-option"&gt;Standard&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="pro"        class="listbox-option"&gt;Pro&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="enterprise" Disabled="true" class="listbox-option"&gt;
+            Enterprise (coming soon)
+        &lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when an option is disabled */
+.listbox-option[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation and typeahead skip disabled options. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" DefaultValue='@("standard")' class="relative inline-block min-w-56"&gt;
+    &lt;BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="b"&gt;
+        &lt;span&gt;@(b.Value ?? "Pick a plan")&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhListboxOption TValue="string" Value="@("standard")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Standard&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("pro")"        class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Pro&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("enterprise")" Disabled="true"
+                         class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Enterprise (coming soon)&lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="custom-option-content">Custom Option Content</h2>
+        <p>Options can render any markup. Use the <code>data-active</code> and <code>data-selected</code> hooks to drive the highlighted and selected styles. Provide a <code>Label</code> string when your content is rich so typeahead still matches sensibly.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Value="@country"
+          OnValueChange="v =&gt; country = v"
+          class="listbox"&gt;
+    &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+        &lt;span&gt;@(LookupCountry(b.Value)?.Name ?? "Pick a country")&lt;/span&gt;
+        &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string" class="listbox-options"&gt;
+        @foreach (var c in countries)
+        {
+            &lt;BhListboxOption TValue="string" Value="@c.Code"
+                            Label="@c.Name"
+                            class="listbox-option"&gt;
+                &lt;span class="country-flag"&gt;@c.Flag&lt;/span&gt;
+                &lt;span class="country-name"&gt;@c.Name&lt;/span&gt;
+                &lt;span class="country-code"&gt;@c.Code&lt;/span&gt;
+            &lt;/BhListboxOption&gt;
+        }
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private record Country(string Code, string Name, string Flag);
+
+    private string? country = "fr";
+
+    private Country[] countries = new[]
+    {
+        new Country("us", "United States", "🇺🇸"),
+        new Country("gb", "United Kingdom", "🇬🇧"),
+        new Country("fr", "France",         "🇫🇷"),
+        new Country("de", "Germany",        "🇩🇪"),
+        new Country("jp", "Japan",          "🇯🇵"),
+        new Country("br", "Brazil",         "🇧🇷"),
+    };
+
+    private Country? LookupCountry(string? code) =&gt;
+        code is null ? null : countries.FirstOrDefault(c =&gt; c.Code == code);
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Rich option layout: flag + name + code */
+.country-flag { font-size: 1.05rem; }
+.country-name { flex: 1 1 auto; }
+.country-code {
+    font-size: 0.7rem;
+    color: #71717a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Provide Label="@c.Name" on each option so typeahead matches the visible
+   country name rather than the country code stored as the value. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Value="@country" OnValueChange="v =&gt; country = v" class="relative inline-block min-w-56"&gt;
+    &lt;BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b"&gt;
+        &lt;span&gt;@(LookupCountry(b.Value)?.Name ?? "Pick a country")&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string"
+                      class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;BhListboxOption TValue="string" Value="@("us")" Label="United States"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇺🇸&lt;/span&gt;
+            &lt;span class="flex-1"&gt;United States&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;us&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("gb")" Label="United Kingdom" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇬🇧&lt;/span&gt;
+            &lt;span class="flex-1"&gt;United Kingdom&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;gb&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("fr")" Label="France"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇫🇷&lt;/span&gt;
+            &lt;span class="flex-1"&gt;France&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;fr&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("de")" Label="Germany" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇩🇪&lt;/span&gt;
+            &lt;span class="flex-1"&gt;Germany&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;de&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("jp")" Label="Japan"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇯🇵&lt;/span&gt;
+            &lt;span class="flex-1"&gt;Japan&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;jp&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("br")" Label="Brazil"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+            &lt;span class="text-base"&gt;🇧🇷&lt;/span&gt;
+            &lt;span class="flex-1"&gt;Brazil&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-500 uppercase tracking-wide"&gt;br&lt;/span&gt;
+        &lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@code {
+    private record Country(string Code, string Name, string Flag);
+
+    private readonly Country[] countries =
+    {
+        new("us", "United States", "🇺🇸"),
+        new("gb", "United Kingdom", "🇬🇧"),
+        new("fr", "France",          "🇫🇷"),
+        new("de", "Germany",         "🇩🇪"),
+        new("jp", "Japan",           "🇯🇵"),
+        new("br", "Brazil",          "🇧🇷"),
+    };
+
+    private string? country = "fr";
+
+    private Country? LookupCountry(string? code) =&gt;
+        code is null ? null : countries.FirstOrDefault(c =&gt; c.Code == code);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="anchor-positioning">Anchor Positioning</h2>
+        <p>Set <code>Anchor</code> on <code>BhListboxOptions</code> to automatically position the dropdown relative to the button using <code>position: fixed</code>. The panel flips to the opposite side when there's not enough space, shifts to stay within the viewport, and auto-updates on scroll/resize. The CSS variable <code>--button-width</code> is exposed so you can match the dropdown width to the trigger. No <code>position: relative</code> on the parent is needed.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Anchor positions the dropdown relative to the button automatically.
+   No position:relative on parent or position:absolute on panel needed.
+   The panel uses position:fixed and auto-updates on scroll/resize. *@
+
+&lt;BhListbox TValue="string" Value="@person"
+          OnValueChange="v =&gt; person = v"
+          class="listbox-anchored"&gt;
+    &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+        &lt;span&gt;@(b.Value ?? "Select a person…")&lt;/span&gt;
+        &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string"
+                     Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                     class="listbox-options-anchored"&gt;
+        @foreach (var name in people)
+        {
+            &lt;BhListboxOption TValue="string" Value="@name" class="listbox-option"&gt;
+                @name
+            &lt;/BhListboxOption&gt;
+        }
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;
+
+@* Available placements: top, top start, top end,
+   bottom, bottom start, bottom end,
+   left, left start, left end,
+   right, right start, right end
+
+   The panel auto-flips to the opposite side if there's not enough space.
+   Use --button-width CSS variable to match the trigger width. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* When using Anchor, the panel is position:fixed by the JS engine.
+   No position:relative on parent needed. */
+.listbox-anchored { display: inline-block; min-width: 14rem; }
+
+.listbox-options-anchored {
+    z-index: 9999;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+    /* Match the button width using the exposed CSS variable */
+    width: var(--button-width);
+}
+
+/* Explicit hidden override — required when the panel has display set */
+.listbox-options-anchored[hidden] { display: none; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhListbox TValue="string" Value="@anchorPerson" OnValueChange="v =&gt; anchorPerson = v" class="inline-block min-w-56"&gt;
+    &lt;BhListboxButton TValue="string"
+                     class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b"&gt;
+        &lt;span&gt;@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhListboxButton&gt;
+    &lt;BhListboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                      class="z-[9999] m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg w-[var(--button-width)]"&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Alice")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Alice&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Benjamin")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Benjamin&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Caterina")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Caterina&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Daniel")"    class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Daniel&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Eleanor")"   class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Eleanor&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Felix")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Felix&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Genevieve")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Genevieve&lt;/BhListboxOption&gt;
+        &lt;BhListboxOption TValue="string" Value="@("Henry")"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Henry&lt;/BhListboxOption&gt;
+    &lt;/BhListboxOptions&gt;
+&lt;/BhListbox&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="form-submission">Form Submission</h2>
+        <p>Set <code>Name</code> on the listbox and the selection participates in plain HTML form posts. In multi-select mode a separate hidden input is rendered for each value.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit"
+      @onsubmit:preventDefault="true"
+      style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;"&gt;
+    &lt;BhListbox TValue="string" Name="role" DefaultValue="user" class="listbox"&gt;
+        &lt;BhListboxButton TValue="string" class="listbox-button" Context="b"&gt;
+            &lt;span&gt;@(b.Value)&lt;/span&gt;
+            &lt;span class="listbox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhListboxButton&gt;
+        &lt;BhListboxOptions TValue="string" class="listbox-options"&gt;
+            &lt;BhListboxOption TValue="string" Value="user"  class="listbox-option"&gt;User&lt;/BhListboxOption&gt;
+            &lt;BhListboxOption TValue="string" Value="admin" class="listbox-option"&gt;Admin&lt;/BhListboxOption&gt;
+            &lt;BhListboxOption TValue="string" Value="owner" class="listbox-option"&gt;Owner&lt;/BhListboxOption&gt;
+        &lt;/BhListboxOptions&gt;
+    &lt;/BhListbox&gt;
+
+    &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+
+    @if (lastSubmitted is not null)
+    {
+        &lt;span class="demo-output"&gt;@lastSubmitted&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit()
+    {
+        lastSubmitted = "(submitted — when single-select, posts role=&lt;value&gt;; when multi-select, posts a separate field per value)";
+    }
+}
+
+@* When Multiple="true" a separate hidden input is rendered per selected value. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .listbox styles from earlier demos.
+   When Name is set, BhListbox renders &lt;input type="hidden"&gt; sibling(s) — one for
+   single-select, or one per value for multi-select. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true" class="flex flex-col items-start gap-3"&gt;
+    &lt;BhListbox TValue="string" Name="role" DefaultValue='@("user")' class="relative inline-block min-w-56"&gt;
+        &lt;BhListboxButton TValue="string"
+                         class="flex w-full items-center justify-between rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            &lt;span class="capitalize"&gt;@(b.Value)&lt;/span&gt;
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhListboxButton&gt;
+        &lt;BhListboxOptions TValue="string"
+                          class="absolute top-[calc(100%+0.25rem)] left-0 right-0 z-30 m-0 max-h-56 overflow-y-auto list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+            &lt;BhListboxOption TValue="string" Value="@("user")"  class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;User&lt;/BhListboxOption&gt;
+            &lt;BhListboxOption TValue="string" Value="@("admin")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Admin&lt;/BhListboxOption&gt;
+            &lt;BhListboxOption TValue="string" Value="@("owner")" class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;Owner&lt;/BhListboxOption&gt;
+        &lt;/BhListboxOptions&gt;
+    &lt;/BhListbox&gt;
+    &lt;button type="submit" class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;Submit&lt;/button&gt;
+    @if (lastSubmitted is not null)
+    {
+        &lt;span class="text-sm text-zinc-500"&gt;@lastSubmitted&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit() =&gt;
+        lastSubmitted = "(submitted — single-select posts role=&lt;value&gt;; multi posts a separate field per value)";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="focus-trap.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">FocusTrap</span>
+        </a>
+            <a class="next" href="menu.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Menu</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

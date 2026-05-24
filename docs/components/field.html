@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Field / Input — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html" class="active">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Field / Input</h1>
+        <p class="lead">Form primitives with auto-wired ARIA labels, descriptions, and validation state.</p>
+        <h2 id="basic-field">Basic Field</h2>
+        <p>Wrap a label, input, and description in an <code>BhField</code>. The label's <code>for</code>, the input's <code>id</code>, and the description's <code>aria-describedby</code> are all wired automatically — no manual id management.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="field"&gt;
+    &lt;BhLabel class="field-label"&gt;Email&lt;/BhLabel&gt;
+    &lt;BhInput type="email" placeholder="you@example.com" class="field-input" /&gt;
+    &lt;BhDescription class="field-description"&gt;We'll never share your email.&lt;/BhDescription&gt;
+&lt;/BhField&gt;
+
+@* Rendered HTML:
+   &lt;label for="h-xxxx-input" id="h-xxxx-label"&gt;Email&lt;/label&gt;
+   &lt;input id="h-xxxx-input" type="email" placeholder="you@example.com"
+          aria-describedby="h-xxxx-description" /&gt;
+   &lt;p id="h-xxxx-description"&gt;We'll never share your email.&lt;/p&gt;
+*@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="flex w-full max-w-sm flex-col gap-1.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Email&lt;/BhLabel&gt;
+    &lt;BhInput type="email" placeholder="you@example.com"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" /&gt;
+    &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;We'll never share your email.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="textarea">Textarea</h2>
+        <p><code>BhTextarea</code> works identically to <code>BhInput</code> — same ARIA wiring, same data attributes. Standard HTML attributes like <code>rows</code> pass through.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="field"&gt;
+    &lt;BhLabel class="field-label"&gt;Bio&lt;/BhLabel&gt;
+    &lt;BhTextarea rows="3" placeholder="Tell us about yourself…" class="field-input" /&gt;
+    &lt;BhDescription class="field-description"&gt;Max 280 characters.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .field / .field-input styles from the Basic demo.
+   The textarea just needs a resize rule. */
+.field-textarea { resize: vertical; min-height: 4rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="flex w-full max-w-sm flex-col gap-1.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Bio&lt;/BhLabel&gt;
+    &lt;BhTextarea rows="3" placeholder="Tell us about yourself…"
+                class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600 resize-y min-h-16" /&gt;
+    &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;Max 280 characters.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="select">Select</h2>
+        <p><code>BhSelect</code> renders a native <code>&lt;select&gt;</code> with the same auto-wired ARIA. Place <code>&lt;option&gt;</code> elements inside.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="field"&gt;
+    &lt;BhLabel class="field-label"&gt;Country&lt;/BhLabel&gt;
+    &lt;BhSelect class="field-input field-select"&gt;
+        &lt;option value=""&gt;Choose…&lt;/option&gt;
+        &lt;option value="us"&gt;United States&lt;/option&gt;
+        &lt;option value="gb"&gt;United Kingdom&lt;/option&gt;
+    &lt;/BhSelect&gt;
+    &lt;BhDescription class="field-description"&gt;Where you're based.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .field / .field-input styles from the Basic demo.
+   The select needs a small appearance override. */
+.field-select { appearance: none; padding-right: 2rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="flex w-full max-w-sm flex-col gap-1.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Country&lt;/BhLabel&gt;
+    &lt;BhSelect class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed appearance-none pr-8"&gt;
+        &lt;option value=""&gt;Choose…&lt;/option&gt;
+        &lt;option value="us"&gt;United States&lt;/option&gt;
+        &lt;option value="gb"&gt;United Kingdom&lt;/option&gt;
+        &lt;option value="fr"&gt;France&lt;/option&gt;
+        &lt;option value="de"&gt;Germany&lt;/option&gt;
+    &lt;/BhSelect&gt;
+    &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;Where you're based.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-field">Disabled Field</h2>
+        <p>Set <code>Disabled="true"</code> on the <code>BhField</code> to disable all children at once. The field, label, and input all receive <code>data-disabled</code> for CSS hooks.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField Disabled="true" class="field"&gt;
+    &lt;BhLabel class="field-label"&gt;Username&lt;/BhLabel&gt;
+    &lt;BhInput type="text" value="alice" class="field-input" /&gt;
+    &lt;BhDescription class="field-description"&gt;Cannot be changed.&lt;/BhDescription&gt;
+&lt;/BhField&gt;
+
+@* All children receive data-disabled for CSS hooks. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" on the field */
+.field[data-disabled]       { opacity: 0.6; }
+.field-input[data-disabled] { cursor: not-allowed; background: #fafafa; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField Disabled="true" class="flex w-full max-w-sm flex-col gap-1.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Username&lt;/BhLabel&gt;
+    &lt;BhInput type="text" value="alice"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-50 data-disabled:opacity-50 data-disabled:cursor-not-allowed" /&gt;
+    &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;Cannot be changed.&lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="invalid-field">Invalid Field</h2>
+        <p>Set <code>Invalid="true"</code> on the <code>BhField</code> to mark the input as invalid. The input receives <code>aria-invalid="true"</code> and <code>data-invalid</code> for CSS hooks. Use the description to show an error message.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField Invalid="true" class="field"&gt;
+    &lt;BhLabel class="field-label"&gt;Password&lt;/BhLabel&gt;
+    &lt;BhInput type="password" value="123" class="field-input" /&gt;
+    &lt;BhDescription class="field-description field-error"&gt;
+        Password must be at least 8 characters.
+    &lt;/BhDescription&gt;
+&lt;/BhField&gt;
+
+@* The input receives aria-invalid="true" and data-invalid. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Invalid="true" on the field */
+.field-input[data-invalid] {
+    border-color: #dc2626;
+}
+
+.field-input[data-invalid]:focus-visible {
+    outline-color: #dc2626;
+}
+
+.field-error { color: #dc2626; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField Invalid="true" class="flex w-full max-w-sm flex-col gap-1.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Password&lt;/BhLabel&gt;
+    &lt;BhInput type="password" value="123"
+             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" /&gt;
+    &lt;BhDescription class="m-0 text-xs text-red-600"&gt;
+        Password must be at least 8 characters.
+    &lt;/BhDescription&gt;
+&lt;/BhField&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multiple-fields-form-layout">Multiple Fields (form layout)</h2>
+        <p>Compose multiple <code>BhField</code> components into a form. Each field manages its own id namespace — no collisions.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form class="field-form"&gt;
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;First name&lt;/BhLabel&gt;
+        &lt;BhInput type="text" placeholder="Alice" class="field-input" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Last name&lt;/BhLabel&gt;
+        &lt;BhInput type="text" placeholder="Anderson" class="field-input" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Email&lt;/BhLabel&gt;
+        &lt;BhInput type="email" placeholder="alice@example.com" class="field-input" /&gt;
+        &lt;BhDescription class="field-description"&gt;Your work email.&lt;/BhDescription&gt;
+    &lt;/BhField&gt;
+
+    &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Simple vertical form layout */
+.field-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 24rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form class="flex w-full max-w-sm flex-col gap-4" @onsubmit:preventDefault&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900"&gt;First name&lt;/BhLabel&gt;
+        &lt;BhInput type="text" placeholder="Alice"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+    &lt;/BhField&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900"&gt;Last name&lt;/BhLabel&gt;
+        &lt;BhInput type="text" placeholder="Anderson"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+    &lt;/BhField&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900"&gt;Email&lt;/BhLabel&gt;
+        &lt;BhInput type="email" placeholder="alice@example.com"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;Your work email.&lt;/BhDescription&gt;
+    &lt;/BhField&gt;
+    &lt;BhButton Type="submit"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700 self-start"&gt;
+        Submit
+    &lt;/BhButton&gt;
+&lt;/form&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="disclosure.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Disclosure</span>
+        </a>
+            <a class="next" href="fieldset.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Fieldset</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

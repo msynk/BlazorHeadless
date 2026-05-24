@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Disclosure — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html" class="active">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Disclosure</h1>
+        <p class="lead">A single show/hide region toggled by a button — the simplest collapsible primitive.</p>
+        <h2 id="basic-disclosure">Basic Disclosure</h2>
+        <p>Renders a button and a panel. Clicking the button toggles the panel. <code>aria-expanded</code>, <code>aria-controls</code>, and <code>aria-labelledby</code> are wired automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="disclosure"&gt;
+    &lt;BhDisclosureButton class="disclosure-button"&gt;
+        Show details
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
+        &lt;div class="disclosure-body"&gt;
+            Disclosure is the simpler sibling of Accordion: one trigger, one panel,
+            zero coordination across siblings.
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover                { background: #f4f4f5; }
+.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
+.disclosure-button[data-state="open"]   { background: #f4f4f5; }
+.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+        Show details
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+            Disclosure is the simpler sibling of Accordion: one trigger, one panel, zero coordination.
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="default-open">Default Open</h2>
+        <p>Set <code>DefaultOpen="true"</code> to render the panel open initially (uncontrolled).</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="disclosure"&gt;
+    &lt;BhDisclosureButton class="disclosure-button"&gt;
+        Already open
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
+        &lt;div class="disclosure-body"&gt;
+            I'm open by default. Click the button to close me.
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .disclosure / .disclosure-button styles from the Basic demo.
+   When DefaultOpen="true" the button is rendered with data-state="open" on
+   first paint so the open-state styles apply immediately. */
+.disclosure-button[data-state="open"] { background: #f4f4f5; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+        Already open
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+            I'm open by default. Click the button to close me.
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="render-context-rotating-chevron-close">Render Context (rotating chevron + Close)</h2>
+        <p><code>BhDisclosure</code>, <code>BhDisclosureButton</code>, and <code>BhDisclosurePanel</code> all expose a <code>BhDisclosureRenderContext</code> via <code>Context="d"</code>. Use it to drive UI from the open state and to call <code>d.Close()</code> from anywhere inside.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="disclosure"&gt;
+    &lt;BhDisclosureButton class="disclosure-button" Context="d"&gt;
+        &lt;span&gt;What's inside?&lt;/span&gt;
+        &lt;span class="disclosure-chevron @(d.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel class="disclosure-panel" Context="d"&gt;
+        &lt;div class="disclosure-body"&gt;
+            &lt;p&gt;You can close me from inside the panel:&lt;/p&gt;
+            &lt;button class="btn" @onclick="d.Close"&gt;Close panel&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Rotating chevron driven by BhDisclosureRenderContext.IsOpen */
+.disclosure-chevron      { transition: transform 200ms ease; color: #71717a; }
+.disclosure-chevron.open { transform: rotate(180deg); }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                        Context="d"&gt;
+        &lt;span&gt;What's inside?&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(d.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel Context="d"&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+            &lt;p&gt;You can close me from inside the panel:&lt;/p&gt;
+            &lt;button class="mt-3 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100" @onclick="d.Close"&gt;Close panel&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled">Disabled</h2>
+        <p>Set <code>Disabled="true"</code> on the root to block interaction. The button receives both the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure Disabled="true" class="disclosure"&gt;
+    &lt;BhDisclosureButton class="disclosure-button"&gt;Can't toggle me&lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
+        &lt;div class="disclosure-body"&gt;You'll never see this content.&lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" */
+.disclosure-button[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* The root &lt;BhDisclosure&gt; element also receives data-disabled — useful for
+   dimming the entire region. */
+.disclosure[data-disabled] {
+    background: #fafafa;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure Disabled="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+        Can't toggle me
+    &lt;/BhDisclosureButton&gt;
+    &lt;BhDisclosurePanel&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;You'll never see this content.&lt;/div&gt;
+    &lt;/BhDisclosurePanel&gt;
+&lt;/BhDisclosure&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive the open state externally with <code>Open</code> + <code>OnOpenChange</code>. The button below opens or closes the disclosure programmatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:1rem; width:100%"&gt;
+    &lt;div class="demo-row"&gt;
+        &lt;BhButton OnClick="ToggleControlled" class="btn"&gt;
+            Toggle from outside
+        &lt;/BhButton&gt;
+        &lt;span class="demo-output"&gt;Open: @controlledOpen.ToString().ToLowerInvariant()&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhDisclosure Open="controlledOpen"
+                 OnOpenChange="v =&gt; controlledOpen = v"
+                 class="disclosure"&gt;
+        &lt;BhDisclosureButton class="disclosure-button"&gt;
+            Internal trigger
+        &lt;/BhDisclosureButton&gt;
+        &lt;BhDisclosurePanel class="disclosure-panel"&gt;
+            &lt;div class="disclosure-body"&gt;
+                Either trigger updates the same state — fully controlled.
+            &lt;/div&gt;
+        &lt;/BhDisclosurePanel&gt;
+    &lt;/BhDisclosure&gt;
+&lt;/div&gt;
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .disclosure / .disclosure-button styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Open value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 w-full"&gt;
+    &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        &lt;BhButton OnClick="ToggleControlled"
+                  class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"&gt;
+            Toggle from outside
+        &lt;/BhButton&gt;
+        &lt;span class="text-sm text-zinc-500"&gt;Open: @controlledOpen.ToString().ToLowerInvariant()&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhDisclosure Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v"
+                  class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+        &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            Internal trigger
+        &lt;/BhDisclosureButton&gt;
+        &lt;BhDisclosurePanel&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Either trigger updates the same state.&lt;/div&gt;
+        &lt;/BhDisclosurePanel&gt;
+    &lt;/BhDisclosure&gt;
+&lt;/div&gt;
+
+@code {
+    private bool controlledOpen;
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="dialog.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Dialog</span>
+        </a>
+            <a class="next" href="field.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Field / Input</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

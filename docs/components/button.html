@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Button — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html" class="active">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Button</h1>
+        <p class="lead">A polymorphic, accessible button primitive with loading and disabled states.</p>
+        <h2 id="basic-button">Basic Button</h2>
+        <p>Renders a native <code>&lt;button&gt;</code> with no styling. All visuals come from you.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="HandleBasicClick" class="btn"&gt;
+    Click me
+&lt;/BhButton&gt;
+&lt;span class="demo-output"&gt;Clicked @basicClickCount times&lt;/span&gt;
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="HandleBasicClick"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 hover:border-zinc-300 active:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;
+    Click me
+&lt;/BhButton&gt;
+&lt;span class="text-sm text-zinc-500"&gt;Clicked @basicClickCount times&lt;/span&gt;
+
+@code {
+    private int basicClickCount;
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-state">Disabled State</h2>
+        <p>Sets the native <code>disabled</code> attribute and emits <code>data-disabled</code> for CSS hooks.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton Disabled="true" OnClick="HandleBasicClick" class="btn"&gt;
+    Can't click me
+&lt;/BhButton&gt;
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted by BhButton when Disabled="true" */
+.btn[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton Disabled="true"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 hover:border-zinc-300 active:bg-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+    Can't click me
+&lt;/BhButton&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="loading-state-with-context">Loading State with Context</h2>
+        <p>Uses <code>RenderFragment&lt;BhButtonContext&gt;</code> so you can conditionally render a spinner driven by the button's own state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn"&gt;
+    @if (btn.Loading)
+    {
+        &lt;span class="spinner"&gt;&lt;/span&gt;
+        &lt;span&gt;Saving…&lt;/span&gt;
+    }
+    else
+    {
+        &lt;span&gt;Save Changes&lt;/span&gt;
+    }
+&lt;/BhButton&gt;
+
+@code {
+    private bool isLoading;
+
+    private async Task HandleLoadingClick()
+    {
+        isLoading = true;
+        await Task.Delay(2000);
+        isLoading = false;
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted by BhButton when Loading="true" */
+.btn[data-loading] {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton Loading="@isLoading" OnClick="HandleLoadingClick"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait"
+          Context="btn"&gt;
+    @if (btn.Loading)
+    {
+        &lt;span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"&gt;&lt;/span&gt;
+        &lt;span&gt;Saving…&lt;/span&gt;
+    }
+    else
+    {
+        &lt;span&gt;Save Changes&lt;/span&gt;
+    }
+&lt;/BhButton&gt;
+
+@code {
+    private bool isLoading;
+
+    private async Task HandleLoadingClick()
+    {
+        isLoading = true;
+        await Task.Delay(2000);
+        isLoading = false;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="polymorphic-rendering">Polymorphic Rendering</h2>
+        <p>Set <code>As="a"</code> to render as an anchor while retaining all button semantics. Non-native elements automatically receive <code>role="button"</code>, <code>tabindex="0"</code>, and Enter/Space keyboard handling.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton As="a" href="https://github.com" target="_blank" class="btn btn-link"&gt;
+    I'm actually an &lt;a&gt; tag
+&lt;/BhButton&gt;
+&lt;BhButton As="span" OnClick="HandleBasicClick" class="btn"&gt;
+    I'm a &lt;span&gt; with role="button"
+&lt;/BhButton&gt;
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Anchor variant of BhButton (As="a") */
+.btn-link {
+    background: transparent;
+    border-color: transparent;
+    color: #2563eb;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.btn-link:hover { color: #1d4ed8; background: #eff6ff; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton As="a" href="https://github.com" target="_blank"
+          class="inline-flex items-center gap-2 rounded-lg border border-transparent bg-transparent px-4 py-2 text-sm font-medium text-blue-600 underline underline-offset-2 transition-colors hover:bg-blue-50 hover:text-blue-700"&gt;
+    I'm actually an &lt;a&gt; tag
+&lt;/BhButton&gt;
+
+&lt;BhButton As="span" OnClick="HandleBasicClick"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100"&gt;
+    I'm a &lt;span&gt; with role="button"
+&lt;/BhButton&gt;
+
+@code {
+    private int basicClickCount;
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="toggle-button">Toggle Button</h2>
+        <p>Combine <code>BhButton</code> with your own state to build a toggle. Pass <code>aria-pressed</code> via standard HTML attributes — they merge automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="TogglePressed"
+         class="@ToggleClass"
+         aria-pressed="@isPressed.ToString().ToLowerInvariant()"&gt;
+    @(isPressed ? "ON" : "OFF")
+&lt;/BhButton&gt;
+
+@code {
+    private bool isPressed;
+
+    private string ToggleClass =&gt; isPressed ? "btn btn-toggle active" : "btn btn-toggle";
+
+    private void TogglePressed() =&gt; isPressed = !isPressed;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Toggle button — driven by your own aria-pressed state */
+.btn-toggle {
+    min-width: 4rem;
+    justify-content: center;
+}
+
+.btn-toggle.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="TogglePressed"
+          class="@(isPressed
+              ? "inline-flex min-w-16 items-center justify-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              : "inline-flex min-w-16 items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600")"
+          aria-pressed="@isPressed.ToString().ToLowerInvariant()"&gt;
+    @(isPressed ? "ON" : "OFF")
+&lt;/BhButton&gt;
+
+@code {
+    private bool isPressed;
+    private void TogglePressed() =&gt; isPressed = !isPressed;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="styled-via-data-attributes">Styled via Data Attributes</h2>
+        <p>Style entirely via CSS attribute selectors. No component API for colors, sizes, or variants — that's your domain.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="HandleBasicClick" class="btn-data"&gt;
+    Styled via [data-*]
+&lt;/BhButton&gt;
+&lt;BhButton Disabled="true" class="btn-data"&gt;
+    Disabled via [data-disabled]
+&lt;/BhButton&gt;
+&lt;BhButton Loading="true" class="btn-data"&gt;
+    Loading via [data-loading]
+&lt;/BhButton&gt;
+
+@code {
+    private int basicClickCount;
+
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Style entirely via CSS attribute selectors emitted by BhButton */
+.btn-data                { background: #18181b; color: white; }
+.btn-data[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+.btn-data[data-loading]  { opacity: 0.7; cursor: wait; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="HandleBasicClick"
+          class="inline-flex items-center gap-2 rounded-lg border border-transparent bg-zinc-900 px-4 py-2 text-sm font-medium text-white cursor-pointer data-disabled:opacity-40 data-disabled:cursor-not-allowed data-loading:opacity-70 data-loading:cursor-wait"&gt;
+    Styled via [data-*]
+&lt;/BhButton&gt;
+
+&lt;BhButton Disabled="true"
+          class="inline-flex items-center gap-2 rounded-lg border border-transparent bg-zinc-900 px-4 py-2 text-sm font-medium text-white cursor-pointer data-disabled:opacity-40 data-disabled:cursor-not-allowed data-loading:opacity-70 data-loading:cursor-wait"&gt;
+    Disabled via [data-disabled]
+&lt;/BhButton&gt;
+
+&lt;BhButton Loading="true"
+          class="inline-flex items-center gap-2 rounded-lg border border-transparent bg-zinc-900 px-4 py-2 text-sm font-medium text-white cursor-pointer data-disabled:opacity-40 data-disabled:cursor-not-allowed data-loading:opacity-70 data-loading:cursor-wait"&gt;
+    Loading via [data-loading]
+&lt;/BhButton&gt;
+
+@code {
+    private int basicClickCount;
+    private void HandleBasicClick() =&gt; basicClickCount++;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="accordion.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Accordion</span>
+        </a>
+            <a class="next" href="checkbox.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Checkbox</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

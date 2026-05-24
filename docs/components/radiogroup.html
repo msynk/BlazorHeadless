@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Radio Group — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html" class="active">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Radio Group</h1>
+        <p class="lead">An accessible single-select group with roving tabindex and full keyboard support.</p>
+        <h2 id="basic-radio-group">Basic Radio Group</h2>
+        <p>Click a radio or use Up / Down arrow keys (Left / Right when horizontal) to navigate and select. Disabled radios are skipped. <code>aria-checked</code>, <code>role="radiogroup"</code>, and <code>role="radio"</code> are wired automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="medium" class="radio-group"&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="small" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Small&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="medium" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Medium&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="large" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Large&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+.radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="medium" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="small"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Small&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="medium"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Medium&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="large"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Large&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="horizontal-orientation">Horizontal Orientation</h2>
+        <p>Set <code>Vertical="false"</code> to lay radios out horizontally. Arrow-key navigation switches to Left / Right and the group emits <code>data-orientation="horizontal"</code> for CSS hooks.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group"&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="card" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Card&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="bank" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Bank&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="paypal" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;PayPal&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The group emits data-orientation="horizontal" when Vertical="false" */
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup Vertical="false" DefaultValue="card" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="card"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Card&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="bank"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Bank&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="paypal"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;PayPal&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-radio">Disabled Radio</h2>
+        <p>Set <code>Disabled="true"</code> on individual radios. Arrow-key navigation skips disabled options. Set <code>Disabled="true"</code> on the root group to disable everything at once.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="standard" class="radio-group"&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="standard" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Standard shipping (3–5 days)&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="express" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Express shipping (1–2 days)&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="radio-label"&gt;
+        &lt;BhRadio Value="same-day" Disabled="true" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Same-day shipping (unavailable in your region)&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" on a radio (or the root group) */
+.radio[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation skips disabled radios automatically. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="standard" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="standard"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Standard shipping (3–5 days)&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="express"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Express shipping (1–2 days)&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhRadio Value="same-day" Disabled="true"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;span&gt;Same-day shipping (unavailable in your region)&lt;/span&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="card-style-options">Card-style options</h2>
+        <p>Because the radio is the only interactive element, you can place rich content (titles, descriptions, prices) inside the <code>&lt;label&gt;</code> wrapper and use the <code>data-state="checked"</code> hook to highlight the selected card.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="pro" class="plan-group"&gt;
+    &lt;label class="plan-card"&gt;
+        &lt;BhRadio Value="free" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="plan-info"&gt;
+            &lt;strong&gt;Free&lt;/strong&gt;
+            &lt;span&gt;Up to 3 projects.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+    &lt;label class="plan-card"&gt;
+        &lt;BhRadio Value="pro" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="plan-info"&gt;
+            &lt;strong&gt;Pro — $9 / mo&lt;/strong&gt;
+            &lt;span&gt;Unlimited projects, priority support.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+    &lt;label class="plan-card"&gt;
+        &lt;BhRadio Value="team" class="radio" Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="plan-info"&gt;
+            &lt;strong&gt;Team — $29 / mo&lt;/strong&gt;
+            &lt;span&gt;For groups, with shared workspaces.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Card-style group: each label is the styled selectable surface,
+   driven by the data-state attribute on the inner radio. */
+.plan-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.plan-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 120ms ease, background 120ms ease;
+}
+
+.plan-card:has(.radio[data-state="checked"]) {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.plan-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.plan-info strong { font-size: 0.95rem; color: #18181b; }
+.plan-info span   { font-size: 0.8rem; color: #71717a; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="pro" class="flex flex-col gap-2.5 w-full max-w-md"&gt;
+    &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
+        &lt;BhRadio Value="free"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="flex flex-col gap-0.5"&gt;
+            &lt;strong class="text-sm text-zinc-900"&gt;Free&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Up to 3 projects.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+    &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
+        &lt;BhRadio Value="pro"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="flex flex-col gap-0.5"&gt;
+            &lt;strong class="text-sm text-zinc-900"&gt;Pro — $9 / mo&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;Unlimited projects, priority support.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+    &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
+        &lt;BhRadio Value="team"
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                 Context="r"&gt;
+            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+        &lt;/BhRadio&gt;
+        &lt;div class="flex flex-col gap-0.5"&gt;
+            &lt;strong class="text-sm text-zinc-900"&gt;Team — $29 / mo&lt;/strong&gt;
+            &lt;span class="text-xs text-zinc-500"&gt;For groups, with shared workspaces.&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/label&gt;
+&lt;/BhRadioGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive selection externally with <code>Value</code> and <code>OnValueChange</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:1rem; width:100%"&gt;
+    &lt;div class="demo-row"&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "red"' class="btn"&gt;Red&lt;/BhButton&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "green"' class="btn"&gt;Green&lt;/BhButton&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "blue"' class="btn"&gt;Blue&lt;/BhButton&gt;
+        &lt;span class="demo-output"&gt;Selected: &lt;strong&gt;@(selectedColor ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhRadioGroup Value="@selectedColor"
+                 OnValueChange="v =&gt; selectedColor = v"
+                 class="radio-group"&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="red" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Red&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="green" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Green&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="blue" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Blue&lt;/span&gt;
+        &lt;/label&gt;
+    &lt;/BhRadioGroup&gt;
+&lt;/div&gt;
+
+@code {
+    private string? selectedColor = "green";
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .radio / .radio-group styles from the Basic demo.
+   Controlled mode adds no new CSS hooks — data-state simply reflects whatever
+   Value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 w-full"&gt;
+    &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "red"'   class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;Red&lt;/BhButton&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "green"' class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;Green&lt;/BhButton&gt;
+        &lt;BhButton OnClick='() =&gt; selectedColor = "blue"'  class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;Blue&lt;/BhButton&gt;
+        &lt;span class="text-sm text-zinc-500"&gt;Selected: &lt;strong class="text-zinc-900"&gt;@(selectedColor ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;BhRadioGroup Value="@selectedColor" OnValueChange="v =&gt; selectedColor = v" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="red"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Red&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="green"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Green&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="blue"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Blue&lt;/span&gt;
+        &lt;/label&gt;
+    &lt;/BhRadioGroup&gt;
+&lt;/div&gt;
+
+@code {
+    private string? selectedColor = "green";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="form-submission">Form Submission</h2>
+        <p>Set <code>Name</code> on the group to render a hidden <code>&lt;input&gt;</code> carrying the selected value, so plain HTML form posts include the group's selection.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit"
+      @onsubmit:preventDefault="true"
+      style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;"&gt;
+    &lt;BhRadioGroup Name="size" DefaultValue="m" class="radio-group"&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="s" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Small&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="m" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Medium&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="radio-label"&gt;
+            &lt;BhRadio Value="l" class="radio" Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Large&lt;/span&gt;
+        &lt;/label&gt;
+    &lt;/BhRadioGroup&gt;
+
+    &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
+
+    @if (lastSubmitted is not null)
+    {
+        &lt;span class="demo-output"&gt;@lastSubmitted&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit()
+    {
+        lastSubmitted = "(submitted — the form posts size=&lt;selected value&gt;)";
+    }
+}
+
+@* The group renders a single hidden input — posts:  size=&lt;selected value&gt; *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .radio / .radio-group styles from earlier demos.
+   No additional CSS is needed — when Name is set BhRadioGroup renders an
+   &lt;input type="hidden"&gt; sibling with the current value. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true" class="flex flex-col items-start gap-3"&gt;
+    &lt;BhRadioGroup Name="size" DefaultValue="m" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="s"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Small&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="m"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Medium&lt;/span&gt;
+        &lt;/label&gt;
+        &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+            &lt;BhRadio Value="l"
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                     Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/BhRadio&gt;
+            &lt;span&gt;Large&lt;/span&gt;
+        &lt;/label&gt;
+    &lt;/BhRadioGroup&gt;
+    &lt;button type="submit" class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;Submit&lt;/button&gt;
+    @if (lastSubmitted is not null)
+    {
+        &lt;span class="text-sm text-zinc-500"&gt;@lastSubmitted&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit() =&gt;
+        lastSubmitted = "(submitted — the form posts size=&lt;selected value&gt;)";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="portal.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Portal</span>
+        </a>
+            <a class="next" href="switch.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Switch</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

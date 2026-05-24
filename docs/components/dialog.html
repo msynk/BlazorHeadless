@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dialog — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html" class="active">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Dialog</h1>
+        <p class="lead">An accessible modal with focus trap, scroll lock, and inert background.</p>
+        <h2 id="basic-dialog">Basic Dialog</h2>
+        <p>Click the button to open the dialog. While open, focus is trapped inside the panel, body scroll is locked, the rest of the page is marked <code>inert</code>, and Escape or clicking the backdrop closes it. Focus is returned to the opener button on close.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true" class="btn btn-primary"&gt;
+    Open dialog
+&lt;/BhButton&gt;
+
+&lt;BhDialog Open="isOpen" OnClose="() =&gt; isOpen = false"&gt;
+    &lt;BhDialogBackdrop class="dialog-backdrop" /&gt;
+    &lt;BhDialogPanel class="dialog-panel"&gt;
+        &lt;BhDialogTitle class="dialog-title"&gt;Welcome aboard&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="dialog-description"&gt;
+            This is a fully-accessible dialog. Try Tab and Shift+Tab — focus
+            cycles inside this panel. Press Escape to close.
+        &lt;/BhDialogDescription&gt;
+
+        &lt;div class="dialog-actions"&gt;
+            &lt;BhButton OnClick="() =&gt; isOpen = false" class="btn"&gt;Cancel&lt;/BhButton&gt;
+            &lt;BhButton OnClick="() =&gt; isOpen = false" class="btn btn-primary"&gt;Got it&lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool isOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The library applies minimal default positioning (position:fixed inset:0)
+   so consumers can layer the backdrop and panel inside it. Everything else is yours. */
+
+.dialog-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-panel {
+    /* Centre the panel in the viewport */
+    margin: 4rem auto;
+    max-width: 28rem;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.dialog-title       { font-size: 1.1rem; font-weight: 600; color: #18181b; }
+.dialog-description { font-size: 0.9rem; color: #71717a; }
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; basicOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+    Open dialog
+&lt;/BhButton&gt;
+&lt;BhDialog Open="basicOpen" OnClose="() =&gt; basicOpen = false"&gt;
+    &lt;BhDialogBackdrop class="bg-black/50" /&gt;
+    &lt;BhDialogPanel class="mx-auto my-16 max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3"&gt;
+        &lt;BhDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Welcome aboard&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="text-sm text-zinc-500"&gt;
+            This is a fully-accessible dialog. Try Tab and Shift+Tab — focus
+            cycles inside this panel. Press Escape to close.
+        &lt;/BhDialogDescription&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhButton OnClick="() =&gt; basicOpen = false"
+                      class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+                Cancel
+            &lt;/BhButton&gt;
+            &lt;BhButton OnClick="() =&gt; basicOpen = false"
+                      class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+                Got it
+            &lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool basicOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="confirmation-no-backdrop-dismiss">Confirmation (no backdrop dismiss)</h2>
+        <p>Set <code>DismissOnClick="false"</code> on the backdrop and <code>DismissOnEscape="false"</code> on the panel to require an explicit choice. Useful for destructive actions.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true" class="btn"&gt;
+    Delete account
+&lt;/BhButton&gt;
+
+&lt;span class="demo-output"&gt;@confirmResult&lt;/span&gt;
+
+&lt;BhDialog Open="isOpen" OnClose="() =&gt; isOpen = false"&gt;
+    &lt;BhDialogBackdrop class="dialog-backdrop" DismissOnClick="false" /&gt;
+    &lt;BhDialogPanel class="dialog-panel" DismissOnEscape="false"&gt;
+        &lt;BhDialogTitle class="dialog-title"&gt;Delete account?&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="dialog-description"&gt;
+            This will permanently remove your account and all its data.
+            This cannot be undone.
+        &lt;/BhDialogDescription&gt;
+
+        &lt;div class="dialog-actions"&gt;
+            &lt;BhButton OnClick="HandleCancel" class="btn"&gt;Cancel&lt;/BhButton&gt;
+            &lt;BhButton OnClick="HandleDelete" class="btn btn-danger"&gt;Yes, delete&lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool isOpen;
+    private string? confirmResult;
+
+    private void HandleCancel()
+    {
+        isOpen = false;
+        confirmResult = "Cancelled.";
+    }
+
+    private void HandleDelete()
+    {
+        isOpen = false;
+        confirmResult = "Account deleted (just kidding).";
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .dialog-panel / .dialog-backdrop styles from the Basic demo. */
+
+.btn-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; confirmOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+    Delete account
+&lt;/BhButton&gt;
+&lt;span class="text-sm text-zinc-500"&gt;@confirmResult&lt;/span&gt;
+&lt;BhDialog Open="confirmOpen" OnClose="() =&gt; confirmOpen = false"&gt;
+    &lt;BhDialogBackdrop class="bg-black/50" DismissOnClick="false" /&gt;
+    &lt;BhDialogPanel class="mx-auto my-16 max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3" DismissOnEscape="false"&gt;
+        &lt;BhDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Delete account?&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="text-sm text-zinc-500"&gt;
+            This will permanently remove your account and all its data.
+            This cannot be undone.
+        &lt;/BhDialogDescription&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhButton OnClick="HandleCancel"
+                      class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+                Cancel
+            &lt;/BhButton&gt;
+            &lt;BhButton OnClick="HandleDelete"
+                      class="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-red-700"&gt;
+                Yes, delete
+            &lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool confirmOpen;
+    private string? confirmResult;
+
+    private void HandleCancel() { confirmOpen = false; confirmResult = "Cancelled."; }
+    private void HandleDelete() { confirmOpen = false; confirmResult = "Account deleted (just kidding)."; }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-form-fields">With form fields</h2>
+        <p>The dialog also works as a focusable form container. Tab cycles between the inputs and buttons; the focus trap keeps them all reachable while keeping the background untouchable.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true" class="btn btn-primary"&gt;
+    Edit profile
+&lt;/BhButton&gt;
+
+&lt;span class="demo-output"&gt;@formResult&lt;/span&gt;
+
+&lt;BhDialog Open="isOpen" OnClose="() =&gt; isOpen = false"&gt;
+    &lt;BhDialogBackdrop class="dialog-backdrop" /&gt;
+    &lt;BhDialogPanel class="dialog-panel"&gt;
+        &lt;BhDialogTitle class="dialog-title"&gt;Edit profile&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="dialog-description"&gt;
+            Update your display name. Press Escape or click outside to cancel.
+        &lt;/BhDialogDescription&gt;
+
+        &lt;label class="dialog-field"&gt;
+            &lt;span&gt;Display name&lt;/span&gt;
+            &lt;input type="text" @bind="displayName" class="dialog-input" /&gt;
+        &lt;/label&gt;
+
+        &lt;div class="dialog-actions"&gt;
+            &lt;BhButton OnClick="() =&gt; isOpen = false" class="btn"&gt;Cancel&lt;/BhButton&gt;
+            &lt;BhButton OnClick="HandleSave" class="btn btn-primary"&gt;Save&lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool isOpen;
+    private string? formResult;
+    private string displayName = "Alice";
+
+    private void HandleSave()
+    {
+        isOpen = false;
+        formResult = $"Saved: {displayName}";
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.dialog-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: #18181b;
+}
+
+.dialog-input {
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.dialog-input:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; formOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+    Edit profile
+&lt;/BhButton&gt;
+&lt;span class="text-sm text-zinc-500"&gt;@formResult&lt;/span&gt;
+&lt;BhDialog Open="formOpen" OnClose="() =&gt; formOpen = false"&gt;
+    &lt;BhDialogBackdrop class="bg-black/50" /&gt;
+    &lt;BhDialogPanel class="mx-auto my-16 max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3"&gt;
+        &lt;BhDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Edit profile&lt;/BhDialogTitle&gt;
+        &lt;BhDialogDescription class="text-sm text-zinc-500"&gt;
+            Update your display name. Press Escape or click outside to cancel.
+        &lt;/BhDialogDescription&gt;
+        &lt;label class="flex flex-col gap-1.5 text-sm"&gt;
+            &lt;span&gt;Display name&lt;/span&gt;
+            &lt;input type="text" @bind="displayName"
+                   class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;/label&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhButton OnClick="() =&gt; formOpen = false"
+                      class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+                Cancel
+            &lt;/BhButton&gt;
+            &lt;BhButton OnClick="HandleSave"
+                      class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+                Save
+            &lt;/BhButton&gt;
+        &lt;/div&gt;
+    &lt;/BhDialogPanel&gt;
+&lt;/BhDialog&gt;
+
+@code {
+    private bool formOpen;
+    private string? formResult;
+    private string displayName = "Alice";
+
+    private void HandleSave() { formOpen = false; formResult = $"Saved: {displayName}"; }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="data-interactive.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">DataInteractive</span>
+        </a>
+            <a class="next" href="disclosure.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Disclosure</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

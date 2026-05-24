@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Popover — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html" class="active">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Popover</h1>
+        <p class="lead">A non-modal floating panel with focus management, Escape-to-close, and group coordination.</p>
+        <h2 id="basic-popover">Basic Popover</h2>
+        <p>Click the button to open the panel. Focus moves into the panel automatically. Press Escape or click outside to close — focus returns to the button. Unlike a Dialog, the rest of the page stays interactive.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
+    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+        Learn more
+        &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel" Context="p"&gt;
+        &lt;h3 class="popover-title"&gt;BlazorHeadless&lt;/h3&gt;
+        &lt;p class="popover-body"&gt;
+            A headless component library for Blazor. Zero styles, full accessibility,
+            complete control over your design.
+        &lt;/p&gt;
+        &lt;a href="https://github.com" target="_blank" class="popover-link"&gt;
+            View on GitHub →
+        &lt;/a&gt;
+        @* BhPopoverButton inside the panel acts as a Close button *@
+        &lt;BhPopoverButton class="popover-close-btn"&gt;Close&lt;/BhPopoverButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.popover { position: relative; display: inline-block; }
+
+.popover-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.popover-button:hover               { border-color: #a1a1af; }
+.popover-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.popover-button[data-state="open"]  { border-color: #2563eb; }
+
+.popover-chevron       { transition: transform 200ms ease; color: #71717a; }
+.popover-chevron.open  { transform: rotate(180deg); }
+
+/* Panel — sits above the click-outside overlay (z-index: 30 inline) */
+.popover-panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 31;
+    min-width: 16rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.popover-title  { font-size: 0.95rem; font-weight: 600; color: #18181b; margin: 0; }
+.popover-body   { font-size: 0.875rem; color: #71717a; margin: 0; }
+.popover-link   { font-size: 0.875rem; color: #2563eb; text-decoration: none; }
+.popover-link:hover { text-decoration: underline; }
+
+.popover-close-btn {
+    all: unset;
+    font-size: 0.8rem;
+    color: #71717a;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b"&gt;
+        Learn more
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
+        &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;BlazorHeadless&lt;/h3&gt;
+        &lt;p class="text-sm text-zinc-500 m-0"&gt;A headless component library for Blazor. Zero styles, full accessibility, complete control over your design.&lt;/p&gt;
+        &lt;a href="https://github.com" target="_blank" class="text-sm text-blue-600 no-underline hover:underline"&gt;View on GitHub →&lt;/a&gt;
+        &lt;BhPopoverButton Context="closeBtn"
+                         class="bg-transparent border-0 p-0 text-xs text-zinc-500 cursor-pointer underline underline-offset-2"&gt;
+            Close
+        &lt;/BhPopoverButton&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="popover-group-mutual-exclusion">Popover Group (mutual exclusion)</h2>
+        <p>Wrap multiple popovers in an <code>BhPopoverGroup</code> so opening one automatically closes the others. Useful for navigation bars.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopoverGroup class="popover-group"&gt;
+    &lt;BhPopover class="popover"&gt;
+        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+            Products
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="popover-panel"&gt;
+            &lt;h3 class="popover-title"&gt;Products&lt;/h3&gt;
+            &lt;ul class="popover-nav-list"&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Analytics&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Automation&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Commerce&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+
+    &lt;BhPopover class="popover"&gt;
+        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+            Solutions
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="popover-panel"&gt;
+            &lt;h3 class="popover-title"&gt;Solutions&lt;/h3&gt;
+            &lt;ul class="popover-nav-list"&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Marketing&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Engineering&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Finance&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+
+    &lt;BhPopover class="popover"&gt;
+        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+            Company
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="popover-panel"&gt;
+            &lt;h3 class="popover-title"&gt;Company&lt;/h3&gt;
+            &lt;ul class="popover-nav-list"&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;About&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Blog&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="popover-nav-link"&gt;Careers&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+&lt;/BhPopoverGroup&gt;
+
+@* Opening one popover automatically closes the others. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Wrap popovers in a flex row for a nav-bar layout */
+.popover-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Opening one popover closes the others — no extra CSS needed. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopoverGroup class="flex items-center gap-2"&gt;
+    &lt;BhPopover class="relative inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Products
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Products&lt;/h3&gt;
+            &lt;ul class="list-none p-0 m-0 flex flex-col gap-1"&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Analytics&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Automation&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Commerce&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+    &lt;BhPopover class="relative inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Solutions
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Solutions&lt;/h3&gt;
+            &lt;ul class="list-none p-0 m-0 flex flex-col gap-1"&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Marketing&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Engineering&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Finance&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+    &lt;BhPopover class="relative inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Company
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Company&lt;/h3&gt;
+            &lt;ul class="list-none p-0 m-0 flex flex-col gap-1"&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;About&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Blog&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#" class="text-sm text-blue-600 no-underline hover:underline"&gt;Careers&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+&lt;/BhPopoverGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive the open state externally with <code>Open</code> and <code>OnOpenChange</code>. The button below opens or closes the popover programmatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:1rem; align-items:flex-start;"&gt;
+    &lt;div class="demo-row"&gt;
+        &lt;BhButton OnClick="ToggleControlled" class="btn"&gt;
+            Toggle from outside
+        &lt;/BhButton&gt;
+        &lt;span class="demo-output"&gt;Open: &lt;strong&gt;@controlledOpen.ToString().ToLowerInvariant()&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhPopover Open="controlledOpen"
+              OnOpenChange="v =&gt; controlledOpen = v"
+              class="popover"&gt;
+        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+            Internal trigger
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="popover-panel"&gt;
+            &lt;p class="popover-body"&gt;
+                Either trigger updates the same state — fully controlled.
+            &lt;/p&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+&lt;/div&gt;
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .popover / .popover-panel styles from the Basic demo.
+   Controlled mode adds no new CSS hooks — data-state simply reflects
+   whatever Open value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        &lt;BhButton OnClick="ToggleControlled"
+                  class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+            Toggle from outside
+        &lt;/BhButton&gt;
+        &lt;span class="text-sm text-zinc-500"&gt;Open: &lt;strong class="text-zinc-900"&gt;@controlledOpen.ToString().ToLowerInvariant()&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;BhPopover Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v" class="relative inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Internal trigger
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
+            &lt;p class="text-sm text-zinc-500 m-0"&gt;Either trigger updates the same state.&lt;/p&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+&lt;/div&gt;
+
+@code {
+    private bool controlledOpen;
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="anchor-positioning">Anchor Positioning</h2>
+        <p>Set <code>Anchor</code> on <code>BhPopoverPanel</code> to automatically position the panel relative to the button. The panel uses <code>position: fixed</code>, flips when there's not enough space, and auto-updates on scroll/resize. No <code>position: relative</code> on the parent or <code>position: absolute</code> on the panel needed.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Anchor positions the panel relative to the button automatically.
+   Supports all sides: top, right, bottom, left — with start/end alignment. *@
+
+&lt;BhPopover class="popover-anchored"&gt;
+    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+        Bottom Start ▾
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
+                   class="popover-panel-anchored" Context="p"&gt;
+        &lt;p&gt;This panel is anchored with auto-flip and shift.&lt;/p&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;
+
+@* Available placements: top, top start, top end,
+   bottom, bottom start, bottom end,
+   left, left start, left end,
+   right, right start, right end *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* When using Anchor, the panel is position:fixed by the JS engine.
+   No position:relative on parent needed. */
+.popover-anchored { display: inline-block; }
+
+.popover-panel-anchored {
+    z-index: 31;
+    min-width: 16rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-wrap items-start gap-6"&gt;
+    &lt;BhPopover class="inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Bottom Start
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
+                        class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
+            &lt;p class="text-sm text-zinc-500 m-0"&gt;Anchored to &lt;strong&gt;bottom start&lt;/strong&gt;. Auto-flips when there's not enough space.&lt;/p&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+    &lt;BhPopover class="inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Top End
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "top end", Gap = 8 })"
+                        class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
+            &lt;p class="text-sm text-zinc-500 m-0"&gt;Anchored to &lt;strong&gt;top end&lt;/strong&gt;. Auto-flips when there's not enough space.&lt;/p&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+    &lt;BhPopover class="inline-block"&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                         Context="b"&gt;
+            Right
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhPopoverButton&gt;
+        &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "right", Gap = 8 })"
+                        class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
+            &lt;p class="text-sm text-zinc-500 m-0"&gt;Anchored to &lt;strong&gt;right&lt;/strong&gt;. Auto-flips when there's not enough space.&lt;/p&gt;
+        &lt;/BhPopoverPanel&gt;
+    &lt;/BhPopover&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="rich-panel-content">Rich panel content</h2>
+        <p>The panel can contain any content — forms, images, links, nested interactive elements. Tab navigates freely inside and out (no focus trap).</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
+    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
+        Notifications
+        &lt;span class="popover-badge"&gt;3&lt;/span&gt;
+        &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel popover-panel-wide"&gt;
+        &lt;div class="popover-header"&gt;
+            &lt;h3 class="popover-title"&gt;Notifications&lt;/h3&gt;
+            &lt;span class="popover-badge"&gt;3 new&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;ul class="notification-list"&gt;
+            &lt;li class="notification-item"&gt;
+                &lt;span class="notification-dot"&gt;&lt;/span&gt;
+                &lt;div&gt;
+                    &lt;strong&gt;Alice commented on your post&lt;/strong&gt;
+                    &lt;span&gt;2 minutes ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li class="notification-item"&gt;
+                &lt;span class="notification-dot"&gt;&lt;/span&gt;
+                &lt;div&gt;
+                    &lt;strong&gt;Your export is ready&lt;/strong&gt;
+                    &lt;span&gt;15 minutes ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li class="notification-item"&gt;
+                &lt;span class="notification-dot"&gt;&lt;/span&gt;
+                &lt;div&gt;
+                    &lt;strong&gt;New team member joined&lt;/strong&gt;
+                    &lt;span&gt;1 hour ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;a href="#" class="popover-footer-link"&gt;View all notifications →&lt;/a&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.popover-panel-wide { min-width: 22rem; padding: 0; overflow: hidden; }
+
+.popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.popover-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.45rem;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.notification-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.6rem 1rem;
+    transition: background 120ms ease;
+}
+
+.notification-item:hover { background: #f4f4f5; }
+
+.notification-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #2563eb;
+    border-radius: 999px;
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+}
+
+.notification-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.notification-item strong { font-size: 0.85rem; color: #18181b; }
+.notification-item span   { font-size: 0.75rem; color: #71717a; }
+
+.popover-footer-link {
+    display: block;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    color: #2563eb;
+    text-decoration: none;
+    border-top: 1px solid #e4e4e7;
+    text-align: center;
+}
+
+.popover-footer-link:hover { background: #f4f4f5; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
+                     Context="b"&gt;
+        Notifications
+        &lt;span class="ml-1 inline-flex items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-xs font-bold text-white"&gt;3&lt;/span&gt;
+        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-88 rounded-lg border border-zinc-200 bg-white shadow-lg overflow-hidden"&gt;
+        &lt;div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Notifications&lt;/h3&gt;
+            &lt;span class="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-bold text-white"&gt;3 new&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;ul class="list-none m-0 py-1"&gt;
+            &lt;li class="flex items-start gap-2.5 px-4 py-2.5 hover:bg-zinc-50"&gt;
+                &lt;span class="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-600"&gt;&lt;/span&gt;
+                &lt;div class="flex flex-col gap-0.5"&gt;
+                    &lt;strong class="text-sm text-zinc-900"&gt;Alice commented on your post&lt;/strong&gt;
+                    &lt;span class="text-xs text-zinc-500"&gt;2 minutes ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li class="flex items-start gap-2.5 px-4 py-2.5 hover:bg-zinc-50"&gt;
+                &lt;span class="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-600"&gt;&lt;/span&gt;
+                &lt;div class="flex flex-col gap-0.5"&gt;
+                    &lt;strong class="text-sm text-zinc-900"&gt;Your export is ready&lt;/strong&gt;
+                    &lt;span class="text-xs text-zinc-500"&gt;15 minutes ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+            &lt;li class="flex items-start gap-2.5 px-4 py-2.5 hover:bg-zinc-50"&gt;
+                &lt;span class="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-600"&gt;&lt;/span&gt;
+                &lt;div class="flex flex-col gap-0.5"&gt;
+                    &lt;strong class="text-sm text-zinc-900"&gt;New team member joined&lt;/strong&gt;
+                    &lt;span class="text-xs text-zinc-500"&gt;1 hour ago&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;a href="#" class="block border-t border-zinc-200 py-2.5 text-center text-sm text-blue-600 no-underline hover:bg-zinc-50"&gt;View all notifications →&lt;/a&gt;
+    &lt;/BhPopoverPanel&gt;
+&lt;/BhPopover&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="menu.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Menu</span>
+        </a>
+            <a class="next" href="portal.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Portal</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

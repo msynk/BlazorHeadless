@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fieldset — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html" class="active">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Fieldset</h1>
+        <p class="lead">Group a set of form controls together with a fully accessible but
+            much easier-to-style version of the native <code>fieldset</code> and
+            <code>legend</code> elements.</p>
+        <h2 id="basic-example">Basic example</h2>
+        <p>Use <code>BhFieldset</code> and <code>BhLegend</code> to group a set of form controls together with a title. The fieldset uses the native <code>&lt;fieldset&gt;</code> element while the legend renders as a <code>&lt;div&gt;</code> (since native <code>&lt;legend&gt;</code> is notoriously hard to style).</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhFieldset class="fieldset"&gt;
+    &lt;div class="fieldset-header"&gt;
+        &lt;BhLegend class="fieldset-legend"&gt;Shipping details&lt;/BhLegend&gt;
+        &lt;p class="fieldset-hint"&gt;Where should we deliver your order?&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Street address&lt;/BhLabel&gt;
+        &lt;BhInput name="address" class="field-input" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Country&lt;/BhLabel&gt;
+        &lt;BhSelect name="country" class="field-input field-select"&gt;
+            &lt;option&gt;Canada&lt;/option&gt;
+            &lt;option&gt;Mexico&lt;/option&gt;
+            &lt;option&gt;United States&lt;/option&gt;
+        &lt;/BhSelect&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Delivery notes&lt;/BhLabel&gt;
+        &lt;BhTextarea name="notes" rows="3" class="field-input field-textarea" /&gt;
+    &lt;/BhField&gt;
+&lt;/BhFieldset&gt;
+
+@* Rendered HTML:
+   &lt;fieldset id="h-xxxx" aria-labelledby="h-xxxx-legend"&gt;
+       &lt;div class="fieldset-header"&gt;
+           &lt;div id="h-xxxx-legend" role="legend"&gt;Shipping details&lt;/div&gt;
+           &lt;p class="fieldset-hint"&gt;Where should we deliver your order?&lt;/p&gt;
+       &lt;/div&gt;
+       &lt;div id="h-xxxx-field-1" class="field"&gt;
+           &lt;label for="h-xxxx-input-1" id="h-xxxx-label-1"&gt;Street address&lt;/label&gt;
+           &lt;input id="h-xxxx-input-1" name="address" /&gt;
+       &lt;/div&gt;
+       &lt;div id="h-xxxx-field-2" class="field"&gt;
+           &lt;label for="h-xxxx-input-2" id="h-xxxx-label-2"&gt;Country&lt;/label&gt;
+           &lt;select id="h-xxxx-input-2" name="country"&gt;…options…&lt;/select&gt;
+       &lt;/div&gt;
+       &lt;div id="h-xxxx-field-3" class="field"&gt;
+           &lt;label for="h-xxxx-input-3" id="h-xxxx-label-3"&gt;Delivery notes&lt;/label&gt;
+           &lt;textarea id="h-xxxx-input-3" name="notes"&gt;&lt;/textarea&gt;
+       &lt;/div&gt;
+   &lt;/fieldset&gt;
+*@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.fieldset {
+    /* Reset native &lt;fieldset&gt; defaults and re-style as a card */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 0;
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    max-width: 28rem;
+}
+
+.fieldset-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #f4f4f5;
+}
+
+.fieldset-legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.fieldset-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+}
+
+/* Reuses the .field / .field-input rules that ship with the Field demo. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhFieldset class="flex max-w-md flex-col gap-5 rounded-lg border border-zinc-200 bg-white p-6 m-0 shadow-sm data-disabled:bg-zinc-50 data-disabled:shadow-none"&gt;
+    &lt;div class="flex flex-col gap-1 border-b border-zinc-100 pb-3"&gt;
+        &lt;BhLegend class="text-base font-semibold text-zinc-900 data-disabled:text-zinc-500"&gt;Shipping details&lt;/BhLegend&gt;
+        &lt;p class="m-0 text-sm text-zinc-500"&gt;Where should we deliver your order?&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Street address&lt;/BhLabel&gt;
+        &lt;BhInput name="address" placeholder="123 Main St"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed" /&gt;
+    &lt;/BhField&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Country&lt;/BhLabel&gt;
+        &lt;BhSelect name="country"
+                  class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed appearance-none pr-8"&gt;
+            &lt;option&gt;Canada&lt;/option&gt;
+            &lt;option&gt;Mexico&lt;/option&gt;
+            &lt;option&gt;United States&lt;/option&gt;
+        &lt;/BhSelect&gt;
+    &lt;/BhField&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Delivery notes&lt;/BhLabel&gt;
+        &lt;BhTextarea name="notes" rows="3" placeholder="Leave at front door…"
+                    class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed resize-y" /&gt;
+    &lt;/BhField&gt;
+&lt;/BhFieldset&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabling-a-fieldset">Disabling a fieldset</h2>
+        <p>Set <code>Disabled="true"</code> on the <code>BhFieldset</code> to disable every form control inside. The fieldset, legend, and all nested fields receive <code>data-disabled</code> for CSS hooks, and the native <code>disabled</code> attribute on the fieldset prevents interaction.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhFieldset Disabled="true" class="fieldset"&gt;
+    &lt;div class="fieldset-header"&gt;
+        &lt;BhLegend class="fieldset-legend"&gt;Account (locked)&lt;/BhLegend&gt;
+        &lt;p class="fieldset-hint"&gt;Verify your email to edit these fields.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Username&lt;/BhLabel&gt;
+        &lt;BhInput type="text" value="alice" class="field-input" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Email&lt;/BhLabel&gt;
+        &lt;BhInput type="email" value="alice@example.com" class="field-input" /&gt;
+    &lt;/BhField&gt;
+&lt;/BhFieldset&gt;
+
+@* The native &lt;fieldset disabled&gt; attribute disables every nested control,
+   and data-disabled cascades to the legend and each BhField for styling. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks cascaded from BhFieldset Disabled="true" */
+.fieldset[data-disabled] {
+    background: #fafafa;
+    box-shadow: none;
+}
+
+.fieldset[data-disabled] .field-input,
+.fieldset[data-disabled] .field-input:disabled {
+    background: #f4f4f5;
+    color: var(--color-muted);
+    cursor: not-allowed;
+}
+
+.fieldset-legend[data-disabled] {
+    color: var(--color-muted);
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhFieldset Disabled="true" class="flex max-w-md flex-col gap-5 rounded-lg border border-zinc-200 bg-white p-6 m-0 shadow-sm data-disabled:bg-zinc-50 data-disabled:shadow-none"&gt;
+    &lt;div class="flex flex-col gap-1 border-b border-zinc-100 pb-3"&gt;
+        &lt;BhLegend class="text-base font-semibold text-zinc-900 data-disabled:text-zinc-500"&gt;Account (locked)&lt;/BhLegend&gt;
+        &lt;p class="m-0 text-sm text-zinc-500"&gt;Verify your email to edit these fields.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Username&lt;/BhLabel&gt;
+        &lt;BhInput type="text" value="alice"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed" /&gt;
+    &lt;/BhField&gt;
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Email&lt;/BhLabel&gt;
+        &lt;BhInput type="email" value="alice@example.com"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed" /&gt;
+    &lt;/BhField&gt;
+&lt;/BhFieldset&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="toggling-at-runtime">Toggling at runtime</h2>
+        <p>Bind <code>Disabled</code> to a state value to enable or disable the entire group dynamically. Every nested input reflects the change through both the native <code>disabled</code> attribute and <code>data-disabled</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@code {
+    private bool _disabled;
+}
+
+&lt;div class="fieldset-toolbar"&gt;
+    &lt;span class="fieldset-status" data-active="@(!_disabled)"&gt;
+        &lt;span class="fieldset-status-dot"&gt;&lt;/span&gt;
+        @(_disabled ? "Read-only" : "Editing")
+    &lt;/span&gt;
+    &lt;BhButton OnClick="@(() =&gt; _disabled = !_disabled)" class="btn"&gt;
+        @(_disabled ? "Enable" : "Disable")
+    &lt;/BhButton&gt;
+&lt;/div&gt;
+
+&lt;BhFieldset Disabled="_disabled" class="fieldset"&gt;
+    &lt;div class="fieldset-header"&gt;
+        &lt;BhLegend class="fieldset-legend"&gt;Profile&lt;/BhLegend&gt;
+        &lt;p class="fieldset-hint"&gt;Shown publicly on your profile page.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Display name&lt;/BhLabel&gt;
+        &lt;BhInput type="text" class="field-input" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Bio&lt;/BhLabel&gt;
+        &lt;BhTextarea rows="2" class="field-input field-textarea" /&gt;
+    &lt;/BhField&gt;
+&lt;/BhFieldset&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.fieldset-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 28rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.fieldset-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-muted);
+}
+
+.fieldset-status[data-active="true"]                    { color: #15803d; }
+.fieldset-status-dot                                    { width: .5rem; height: .5rem; border-radius: 999px; background: #a1a1af; }
+.fieldset-status[data-active="true"] .fieldset-status-dot { background: #22c55e; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex w-full max-w-md flex-col gap-3"&gt;
+    &lt;div class="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2"&gt;
+        &lt;span class="@($"inline-flex items-center gap-2 text-sm font-medium {(_disabled ? "text-zinc-500" : "text-emerald-700")}")"&gt;
+            &lt;span class="@($"h-2 w-2 rounded-full {(_disabled ? "bg-zinc-400" : "bg-emerald-500")}")"&gt;&lt;/span&gt;
+            @(_disabled ? "Read-only" : "Editing")
+        &lt;/span&gt;
+        &lt;BhButton class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"
+                  OnClick="@(() =&gt; _disabled = !_disabled)"&gt;
+            @(_disabled ? "Enable" : "Disable")
+        &lt;/BhButton&gt;
+    &lt;/div&gt;
+
+    &lt;BhFieldset Disabled="_disabled" class="flex max-w-md flex-col gap-5 rounded-lg border border-zinc-200 bg-white p-6 m-0 shadow-sm data-disabled:bg-zinc-50 data-disabled:shadow-none"&gt;
+        &lt;div class="flex flex-col gap-1 border-b border-zinc-100 pb-3"&gt;
+            &lt;BhLegend class="text-base font-semibold text-zinc-900 data-disabled:text-zinc-500"&gt;Profile&lt;/BhLegend&gt;
+            &lt;p class="m-0 text-sm text-zinc-500"&gt;Shown publicly on your profile page.&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+            &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Display name&lt;/BhLabel&gt;
+            &lt;BhInput type="text" placeholder="Alice Anderson"
+                     class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed" /&gt;
+        &lt;/BhField&gt;
+        &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+            &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50"&gt;Bio&lt;/BhLabel&gt;
+            &lt;BhTextarea rows="2" placeholder="Tell us about yourself…"
+                        class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-disabled:bg-zinc-100 data-disabled:cursor-not-allowed resize-y" /&gt;
+        &lt;/BhField&gt;
+    &lt;/BhFieldset&gt;
+&lt;/div&gt;
+
+@code {
+    private bool _disabled;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="field.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Field / Input</span>
+        </a>
+            <a class="next" href="focus-trap.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">FocusTrap</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

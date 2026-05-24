@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portal — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html" class="active">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Portal</h1>
+        <p class="lead">Renders children into a different part of the DOM tree (a body-level container by default). Useful for tooltips, dropdowns, and modals that need to escape overflow or z-index stacking contexts.</p>
+        <h2 id="basic-portal">Basic Portal</h2>
+        <p>Toggle the portal on and off. When enabled, the content is teleported to a container appended to <code>&lt;body&gt;</code>, escaping any overflow or z-index constraints of its parent. Inspect the DOM to see the element move.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Requires &lt;BhPortalOutlet /&gt; in your root layout *@
+
+&lt;BhButton OnClick="() =&gt; enabled = !enabled" class="btn"&gt;
+    @(enabled ? "Disable portal" : "Enable portal")
+&lt;/BhButton&gt;
+
+&lt;div style="overflow: hidden; height: 120px;"&gt;
+    &lt;BhPortal Enabled="enabled"&gt;
+        &lt;div class="my-content"&gt;
+            I'm portalled to the outlet at the end of the layout!
+        &lt;/div&gt;
+    &lt;/BhPortal&gt;
+&lt;/div&gt;
+
+@code {
+    private bool enabled = true;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.portal-overflow-box {
+    overflow: hidden;
+    height: 8rem;
+    border: 2px dashed #d4d4d8;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.portal-content {
+    background: #eff6ff;
+    border: 1px solid #2563eb;
+    border-radius: 0.4rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; basicEnabled = !basicEnabled"
+          class="@(basicEnabled
+              ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+              : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+    @(basicEnabled ? "Disable portal" : "Enable portal")
+&lt;/BhButton&gt;
+&lt;div class="mt-4 h-32 overflow-hidden rounded-lg border-2 border-dashed border-zinc-300 p-4 relative"&gt;
+    &lt;p class="text-sm text-zinc-500"&gt;This box has &lt;code class="rounded bg-zinc-100 px-1 text-xs"&gt;overflow: hidden&lt;/code&gt;.&lt;/p&gt;
+    &lt;BhPortal Enabled="basicEnabled"&gt;
+        &lt;div class="rounded-md border border-blue-600 bg-blue-50 px-4 py-3 text-sm"&gt;
+            &lt;p&gt;I'm portalled content!&lt;/p&gt;
+            &lt;p class="mt-1 text-xs"&gt;
+                @(basicEnabled
+                    ? "✓ I'm rendered at the end of &lt;body&gt;, escaping the overflow box."
+                    : "I'm rendered in place (portal disabled).")
+            &lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/BhPortal&gt;
+&lt;/div&gt;
+
+@code {
+    private bool basicEnabled = true;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="tooltip-escaping-stacking-context">Tooltip escaping stacking context</h2>
+        <p>A common use case: a tooltip that needs to escape a parent with <code>overflow: hidden</code> or a restrictive <code>z-index</code>. The portal moves the tooltip to body level so it's always visible.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Requires &lt;BhPortalOutlet /&gt; in your root layout *@
+
+&lt;div style="overflow: hidden; position: relative; z-index: 1;"&gt;
+    &lt;div @onmouseenter="() =&gt; show = true"
+         @onmouseleave="() =&gt; show = false"&gt;
+        Hover me
+    &lt;/div&gt;
+
+    @if (show)
+    {
+        &lt;BhPortal&gt;
+            &lt;div class="tooltip"&gt;
+                This tooltip escapes the stacking context!
+            &lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+&lt;/div&gt;
+
+@code {
+    private bool show;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.portal-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #18181b;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="overflow-hidden rounded-lg border-2 border-dashed border-zinc-300 p-4 relative z-[1]"&gt;
+    &lt;p class="text-sm"&gt;This container has &lt;code class="rounded bg-zinc-100 px-1 text-xs"&gt;overflow: hidden&lt;/code&gt; and &lt;code class="rounded bg-zinc-100 px-1 text-xs"&gt;z-index: 1&lt;/code&gt;.&lt;/p&gt;
+    &lt;div class="mt-3 inline-block cursor-default rounded-md bg-zinc-100 px-3 py-2 text-sm"
+         @onmouseenter="() =&gt; tooltipVisible = true"
+         @onmouseleave="() =&gt; tooltipVisible = false"&gt;
+        Hover me for a tooltip
+    &lt;/div&gt;
+    @if (tooltipVisible)
+    {
+        &lt;BhPortal&gt;
+            &lt;div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] rounded-md bg-zinc-900 px-4 py-2 text-sm text-white shadow-lg"&gt;
+                This tooltip escapes the stacking context via Portal!
+            &lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+&lt;/div&gt;
+
+@code {
+    private bool tooltipVisible;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="portal-group-shared-target">Portal Group (shared target)</h2>
+        <p>Use <code>BhPortalGroup</code> to direct all nested portals into a shared container element instead of the default body-level root. This is useful when you want portalled content to land in a specific region of your layout.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPortalGroup class="my-portal-target"&gt;
+    &lt;p&gt;Portals land inside this group element:&lt;/p&gt;
+
+    @if (showA)
+    {
+        &lt;BhPortal&gt;
+            &lt;div&gt;Portal A content&lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+
+    @if (showB)
+    {
+        &lt;BhPortal&gt;
+            &lt;div&gt;Portal B content&lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+&lt;/BhPortalGroup&gt;
+
+@code {
+    private bool showA;
+    private bool showB;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.portal-group-target {
+    border: 2px solid #a78bfa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    min-height: 6rem;
+    background: #faf5ff;
+}
+
+.portal-group-item {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.portal-group-item-a { background: #dbeafe; border: 1px solid #3b82f6; }
+.portal-group-item-b { background: #dcfce7; border: 1px solid #22c55e; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex gap-2 flex-wrap"&gt;
+    &lt;BhButton OnClick="() =&gt; groupShowA = !groupShowA"
+              class="@(groupShowA
+                  ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                  : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+        Toggle Portal A
+    &lt;/BhButton&gt;
+    &lt;BhButton OnClick="() =&gt; groupShowB = !groupShowB"
+              class="@(groupShowB
+                  ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                  : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+        Toggle Portal B
+    &lt;/BhButton&gt;
+&lt;/div&gt;
+&lt;BhPortalGroup class="mt-4 min-h-24 rounded-lg border-2 border-violet-300 bg-violet-50 p-4"&gt;
+    &lt;p class="text-sm"&gt;Portal Group target container (portals land here):&lt;/p&gt;
+    @if (groupShowA)
+    {
+        &lt;BhPortal&gt;
+            &lt;div class="mt-2 rounded-md border border-blue-500 bg-blue-100 px-3 py-2 text-sm"&gt;Portal A content&lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+    @if (groupShowB)
+    {
+        &lt;BhPortal&gt;
+            &lt;div class="mt-2 rounded-md border border-emerald-500 bg-emerald-100 px-3 py-2 text-sm"&gt;Portal B content&lt;/div&gt;
+        &lt;/BhPortal&gt;
+    }
+&lt;/BhPortalGroup&gt;
+
+@code {
+    private bool groupShowA;
+    private bool groupShowB;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-portal-render-in-place">Disabled portal (render in place)</h2>
+        <p>Set <code>Enabled="false"</code> to render content in its natural DOM position without teleportation. This is useful for conditional portalling based on viewport size or other runtime conditions.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhPortal Enabled="portalEnabled"&gt;
+    &lt;div class="my-content"&gt;
+        @(portalEnabled ? "Portalled to body!" : "Rendered in place.")
+    &lt;/div&gt;
+&lt;/BhPortal&gt;
+
+@code {
+    private bool portalEnabled;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.portal-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.portal-content-alt {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-3"&gt;
+    &lt;label class="inline-flex items-center gap-2 text-sm cursor-pointer"&gt;
+        &lt;input type="checkbox" @bind="disabledPortalEnabled" /&gt;
+        Portal enabled
+    &lt;/label&gt;
+    &lt;div class="h-32 overflow-hidden rounded-lg border-2 border-dashed border-zinc-300 p-4 relative"&gt;
+        &lt;p class="text-sm text-zinc-500"&gt;Container with &lt;code class="rounded bg-zinc-100 px-1 text-xs"&gt;overflow: hidden&lt;/code&gt;.&lt;/p&gt;
+        &lt;BhPortal Enabled="disabledPortalEnabled"&gt;
+            &lt;div class="rounded-md border border-amber-500 bg-amber-100 px-4 py-3 text-sm"&gt;
+                &lt;p&gt;@(disabledPortalEnabled ? "Portalled to body!" : "Rendered in place.")&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/BhPortal&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+@code {
+    private bool disabledPortalEnabled;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="popover.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Popover</span>
+        </a>
+            <a class="next" href="radiogroup.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Radio Group</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

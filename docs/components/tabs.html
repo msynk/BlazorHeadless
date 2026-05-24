@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tabs — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html" class="active">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Tabs</h1>
+        <p class="lead">An accessible tab group with roving tabindex, full keyboard navigation, and zero visual opinion.</p>
+        <h2 id="basic-tabs">Basic Tabs</h2>
+        <p>Click a tab or use Left / Right arrow keys, Home, and End to navigate. Disabled tabs are skipped automatically. ARIA roles, <code>aria-selected</code>, <code>aria-controls</code>, and <code>aria-labelledby</code> are wired automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="tabs"&gt;
+    &lt;BhTabList class="tab-list"&gt;
+        &lt;BhTab class="tab"&gt;Account&lt;/BhTab&gt;
+        &lt;BhTab class="tab"&gt;Profile&lt;/BhTab&gt;
+        &lt;BhTab class="tab"&gt;Notifications&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="tab-panels"&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;Account&lt;/h3&gt;
+            &lt;p&gt;Manage your account settings and preferences.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;Profile&lt;/h3&gt;
+            &lt;p&gt;Update your public profile information.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;Notifications&lt;/h3&gt;
+            &lt;p&gt;Choose what alerts you'd like to receive.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tab-list {
+    display: flex;
+    border-bottom: 1px solid #e4e4e7;
+    gap: 0.25rem;
+}
+
+.tab {
+    all: unset;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #71717a;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
+    box-sizing: border-box;
+}
+
+.tab:hover                  { color: #18181b; }
+.tab:focus-visible          { outline: 2px solid #2563eb; outline-offset: -2px; border-radius: 0.25rem; }
+
+/* Hooks emitted by BhTab */
+.tab[data-state="active"]   { color: #2563eb; border-bottom-color: #2563eb; }
+.tab[data-disabled]         { opacity: 0.4; cursor: not-allowed; }
+
+.tab-panel {
+    padding: 0.5rem 0;
+    color: #18181b;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="flex w-full flex-col gap-4"&gt;
+    &lt;BhTabList class="flex border-b border-zinc-200 gap-1"&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Account&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Profile&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Notifications&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="mt-2"&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;Account&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Manage your account settings and preferences.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;Profile&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Update your public profile information.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;Notifications&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Choose what alerts you'd like to receive.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="vertical-orientation">Vertical Orientation</h2>
+        <p>Set <code>Vertical="true"</code> to render tabs in a column. Arrow-key navigation switches to Up / Down, and the root and tablist both emit <code>data-orientation="vertical"</code> for CSS layout hooks.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup Vertical="true" class="tabs tabs-vertical"&gt;
+    &lt;BhTabList class="tab-list"&gt;
+        &lt;BhTab class="tab"&gt;General&lt;/BhTab&gt;
+        &lt;BhTab class="tab"&gt;Security&lt;/BhTab&gt;
+        &lt;BhTab class="tab"&gt;Integrations&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="tab-panels"&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;General&lt;/h3&gt;
+            &lt;p&gt;Application-wide settings.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;Security&lt;/h3&gt;
+            &lt;p&gt;Two-factor auth, sessions, and audit log.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;
+            &lt;h3&gt;Integrations&lt;/h3&gt;
+            &lt;p&gt;Connect third-party services.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .tabs / .tab / .tab-panels styles from the Basic demo.
+   When Vertical="true" the root and tablist receive data-orientation="vertical",
+   which we use to flip the layout. */
+.tabs[data-orientation="vertical"] {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.tabs[data-orientation="vertical"] .tab-list {
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid #e4e4e7;
+    min-width: 12rem;
+}
+
+.tabs[data-orientation="vertical"] .tab {
+    border-bottom: none;
+    border-right: 2px solid transparent;
+    text-align: start;
+}
+
+.tabs[data-orientation="vertical"] .tab[data-state="active"] {
+    border-right-color: #2563eb;
+    border-bottom-color: transparent;
+}
+
+.tabs[data-orientation="vertical"] .tab-panels { flex: 1 1 auto; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup Vertical="true" class="flex w-full items-start gap-6"&gt;
+    &lt;BhTabList class="flex flex-col border-r border-zinc-200 min-w-48"&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;General&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Security&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-r-2 border-transparent text-start px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Integrations&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="flex-1"&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;General&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Application-wide settings.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;Security&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Two-factor auth, sessions, and audit log.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;
+            &lt;h3 class="text-sm font-semibold text-zinc-900"&gt;Integrations&lt;/h3&gt;
+            &lt;p class="text-sm text-zinc-500"&gt;Connect third-party services.&lt;/p&gt;
+        &lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="manual-activation">Manual Activation</h2>
+        <p>With <code>Manual="true"</code> arrow keys only move keyboard focus; press Space or Enter to activate the focused tab. Useful when activating a tab is expensive (loads data, navigates, etc.) — try it: focus a tab, then arrow without selecting.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup Manual="true" class="flex w-full flex-col gap-4"&gt;
+    &lt;BhTabList class="flex border-b border-zinc-200 gap-1"&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Inbox&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Sent&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Drafts&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Archive&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="mt-2"&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Inbox content&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Sent content&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Drafts content&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Archive content&lt;/p&gt;&lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-tab">Disabled Tab</h2>
+        <p>Set <code>Disabled="true"</code> on individual tabs. Arrow-key navigation skips disabled tabs, and the disabled tab still receives <code>data-disabled</code> for CSS hooks.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="tabs"&gt;
+    &lt;BhTabList class="tab-list"&gt;
+        &lt;BhTab class="tab"&gt;Free&lt;/BhTab&gt;
+        &lt;BhTab class="tab"&gt;Pro&lt;/BhTab&gt;
+        &lt;BhTab class="tab" Disabled="true"&gt;Enterprise (coming soon)&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="tab-panels"&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Free plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Pro plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Enterprise plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when a tab is disabled */
+.tab[data-disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Arrow-key navigation skips disabled tabs automatically — no JS needed. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="flex w-full flex-col gap-4"&gt;
+    &lt;BhTabList class="flex border-b border-zinc-200 gap-1"&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Free&lt;/BhTab&gt;
+        &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Pro&lt;/BhTab&gt;
+        &lt;BhTab Disabled="true"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Enterprise (coming soon)&lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="mt-2"&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Free plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Pro plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Enterprise plan features.&lt;/p&gt;&lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="render-context-state-driven-content">Render Context (state-driven content)</h2>
+        <p><code>BhTab</code> exposes a <code>BhTabRenderContext</code> via <code>Context="t"</code> so you can render badges, icons, or active indicators driven by the tab's own state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="tabs"&gt;
+    &lt;BhTabList class="tab-list"&gt;
+        &lt;BhTab class="tab" Context="t"&gt;
+            &lt;span&gt;Messages&lt;/span&gt;
+            &lt;span class="badge @(t.IsSelected ? "badge-active" : "")"&gt;12&lt;/span&gt;
+        &lt;/BhTab&gt;
+        &lt;BhTab class="tab" Context="t"&gt;
+            &lt;span&gt;Mentions&lt;/span&gt;
+            &lt;span class="badge @(t.IsSelected ? "badge-active" : "")"&gt;3&lt;/span&gt;
+        &lt;/BhTab&gt;
+        &lt;BhTab class="tab" Context="t"&gt;
+            &lt;span&gt;All&lt;/span&gt;
+        &lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="tab-panels"&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Direct messages&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Mentions of you&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Everything together&lt;/p&gt;&lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The Tab render-prop context exposes IsSelected so you can style children
+   based on the parent tab's state. */
+.badge {
+    margin-left: 0.5rem;
+    padding: 0.05rem 0.4rem;
+    background: #e4e4e7;
+    color: #52525b;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background: #2563eb;
+    color: #fff;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTabGroup class="flex w-full flex-col gap-4"&gt;
+    &lt;BhTabList class="flex border-b border-zinc-200 gap-1"&gt;
+        &lt;BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;
+            &lt;span&gt;Messages&lt;/span&gt;
+            &lt;span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")"&gt;12&lt;/span&gt;
+        &lt;/BhTab&gt;
+        &lt;BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;
+            &lt;span&gt;Mentions&lt;/span&gt;
+            &lt;span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")"&gt;3&lt;/span&gt;
+        &lt;/BhTab&gt;
+        &lt;BhTab Context="t"
+               class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;
+            &lt;span&gt;All&lt;/span&gt;
+        &lt;/BhTab&gt;
+    &lt;/BhTabList&gt;
+    &lt;BhTabPanels class="mt-2"&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Direct messages&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Mentions of you&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Everything together&lt;/p&gt;&lt;/BhTabPanel&gt;
+    &lt;/BhTabPanels&gt;
+&lt;/BhTabGroup&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive selection externally with <code>SelectedIndex</code> and <code>OnSelectedIndexChange</code>. The buttons below select tabs programmatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:1rem; width:100%"&gt;
+    &lt;div class="demo-row"&gt;
+        @for (var i = 0; i &lt; 3; i++)
+        {
+            var captured = i;
+            &lt;BhButton OnClick="() =&gt; selectedIndex = captured"
+                     class="@(selectedIndex == captured ? "btn btn-primary" : "btn")"&gt;
+                Select tab @(captured + 1)
+            &lt;/BhButton&gt;
+        }
+        &lt;span class="demo-output"&gt;SelectedIndex: &lt;strong&gt;@selectedIndex&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhTabGroup SelectedIndex="@selectedIndex"
+               OnSelectedIndexChange="i =&gt; selectedIndex = i"
+               class="tabs"&gt;
+        &lt;BhTabList class="tab-list"&gt;
+            &lt;BhTab class="tab"&gt;Tab 1&lt;/BhTab&gt;
+            &lt;BhTab class="tab"&gt;Tab 2&lt;/BhTab&gt;
+            &lt;BhTab class="tab"&gt;Tab 3&lt;/BhTab&gt;
+        &lt;/BhTabList&gt;
+        &lt;BhTabPanels class="tab-panels"&gt;
+            &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;First panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+            &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Second panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+            &lt;BhTabPanel class="tab-panel"&gt;&lt;p&gt;Third panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;/BhTabPanels&gt;
+    &lt;/BhTabGroup&gt;
+&lt;/div&gt;
+
+@code {
+    private int selectedIndex;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .tabs / .tab styles from the Basic demo.
+   Controlled mode adds no new CSS hooks — data-state simply reflects whatever
+   SelectedIndex value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 w-full"&gt;
+    &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        @for (var i = 0; i &lt; 3; i++)
+        {
+            var captured = i;
+            &lt;BhButton OnClick="() =&gt; selectedIndex = captured"
+                      class="@($"inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium cursor-pointer {(selectedIndex == captured ? "bg-blue-600 border-blue-600 text-white hover:bg-blue-700" : "bg-white border-zinc-200 text-zinc-900 hover:bg-zinc-100")}")"&gt;
+                Select tab @(captured + 1)
+            &lt;/BhButton&gt;
+        }
+        &lt;span class="text-sm text-zinc-500"&gt;SelectedIndex: &lt;strong class="text-zinc-900"&gt;@selectedIndex&lt;/strong&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;BhTabGroup SelectedIndex="@selectedIndex" OnSelectedIndexChange="i =&gt; selectedIndex = i" class="flex w-full flex-col gap-4"&gt;
+        &lt;BhTabList class="flex border-b border-zinc-200 gap-1"&gt;
+            &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Tab 1&lt;/BhTab&gt;
+            &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Tab 2&lt;/BhTab&gt;
+            &lt;BhTab class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;Tab 3&lt;/BhTab&gt;
+        &lt;/BhTabList&gt;
+        &lt;BhTabPanels class="mt-2"&gt;
+            &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;First panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+            &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Second panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+            &lt;BhTabPanel class="py-2 text-zinc-900"&gt;&lt;p class="text-sm text-zinc-500"&gt;Third panel&lt;/p&gt;&lt;/BhTabPanel&gt;
+        &lt;/BhTabPanels&gt;
+    &lt;/BhTabGroup&gt;
+&lt;/div&gt;
+
+@code {
+    private int selectedIndex;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="switch.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Switch</span>
+        </a>
+            <a class="next" href="transition.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Transition</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

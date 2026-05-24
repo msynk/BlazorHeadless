@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accordion — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html" class="active">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Accordion</h1>
+        <p class="lead">A vertically stacked set of collapsible sections, single or multiple open at a time.</p>
+        <h2 id="basic-accordion-single">Basic Accordion (Single)</h2>
+        <p>Only one item can be open at a time. <code>DefaultValue</code> seeds the initial open item. Each trigger gets <code>aria-expanded</code> and <code>aria-controls</code> automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion DefaultValue="item-1" class="accordion"&gt;
+    &lt;BhAccordionItem Value="item-1" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            What is BlazorHeadless?
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;
+                BlazorHeadless is a headless component library for Blazor.
+                Behaviour and accessibility are built in; styling is entirely up to you.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="item-2" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            Why headless?
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;
+                You own the look and feel entirely. ARIA and keyboard support never have to be
+                re-implemented.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="item-3" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            How do I style it?
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;
+                Use &lt;code&gt;data-state="open"|"closed"&lt;/code&gt; on any element, or just apply
+                classes. The library emits no styles of its own.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.accordion {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-item            { border-bottom: 1px solid #e4e4e7; }
+.accordion-item:last-child { border-bottom: none; }
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover               { background: #f4f4f5; }
+.accordion-trigger:focus-visible       { outline: 2px solid #2563eb; outline-offset: -2px; }
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+.accordion-trigger[data-disabled]      { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Rotating chevron driven by BhAccordionTriggerContext.IsOpen */
+.accordion-chevron      { transition: transform 200ms ease; color: #71717a; }
+.accordion-chevron.open { transform: rotate(180deg); }
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion DefaultValue="item-1" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
+    &lt;BhAccordionItem Value="item-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            What is BlazorHeadless?
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+                BlazorHeadless is a headless component library for Blazor.
+                Behaviour and accessibility are built in; styling is entirely up to you.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="item-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            Why headless?
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+                You own the look and feel entirely. ARIA and keyboard support never have to be re-implemented.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="item-3" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            How do I style it?
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
+                Use &lt;code&gt;data-state="open"|"closed"&lt;/code&gt; on any element, or just apply classes. The library emits no styles of its own.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multiple-open-items">Multiple Open Items</h2>
+        <p>Set <code>Type="BhAccordionType.Multiple"</code> to allow any number of panels open simultaneously.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion Type="BhAccordionType.Multiple" class="accordion"&gt;
+    &lt;BhAccordionItem Value="faq-1" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            Can I open multiple panels?
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;
+                Yes — every panel is independent. Try opening both!
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="faq-2" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            Does this one close when I open another?
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;
+                No — both can be open at once.
+            &lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
+   With Type="BhAccordionType.Multiple" any combination of items can be open;
+   the same data-state="open|closed" hook drives every panel independently. */
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion Type="BhAccordionType.Multiple" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
+    &lt;BhAccordionItem Value="faq-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            Can I open multiple panels?
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Yes — every panel is independent. Try opening both!&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+    &lt;BhAccordionItem Value="faq-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            Does this one close when I open another?
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;No — both can be open at once.&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-item">Disabled Item</h2>
+        <p>Individual items can be disabled via <code>Disabled="true"</code>. The whole accordion can also be disabled at the root.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion class="accordion"&gt;
+    &lt;BhAccordionItem Value="d-1" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            I am enabled
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;This item works normally.&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+
+    &lt;BhAccordionItem Value="d-2" Disabled="true" class="accordion-item"&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+            I am disabled
+            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent class="accordion-content"&gt;
+            &lt;div class="accordion-body"&gt;You should not be able to open this.&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when an item is disabled (or the entire accordion is) */
+.accordion-trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* BhAccordionItem itself also receives data-disabled — useful for striping
+   the row, dimming icons, etc. */
+.accordion-item[data-disabled] {
+    background: #fafafa;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAccordion class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
+    &lt;BhAccordionItem Value="d-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            I am enabled
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;This item works normally.&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+    &lt;BhAccordionItem Value="d-2" Disabled="true" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                            Context="t"&gt;
+            I am disabled
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhAccordionTrigger&gt;
+        &lt;BhAccordionContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;You should not be able to open this.&lt;/div&gt;
+        &lt;/BhAccordionContent&gt;
+    &lt;/BhAccordionItem&gt;
+&lt;/BhAccordion&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled-accordion">Controlled Accordion</h2>
+        <p>Drive the open state externally with <code>Value</code> + <code>OnValueChange</code>. The button below toggles "Panel 2" programmatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:1rem; width:100%"&gt;
+    &lt;div class="demo-row"&gt;
+        &lt;BhButton OnClick="ToggleControlledItem" class="btn"&gt;
+            Toggle "Panel 2"
+        &lt;/BhButton&gt;
+        &lt;span class="demo-output"&gt;Open: @(controlledValue ?? "none")&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhAccordion Value="@controlledValue"
+                OnValueChange="v =&gt; controlledValue = v"
+                class="accordion"&gt;
+        &lt;BhAccordionItem Value="ctrl-1" class="accordion-item"&gt;
+            &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+                Panel 1
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/BhAccordionTrigger&gt;
+            &lt;BhAccordionContent class="accordion-content"&gt;
+                &lt;div class="accordion-body"&gt;Controlled by external state.&lt;/div&gt;
+            &lt;/BhAccordionContent&gt;
+        &lt;/BhAccordionItem&gt;
+
+        &lt;BhAccordionItem Value="ctrl-2" class="accordion-item"&gt;
+            &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
+                Panel 2
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/BhAccordionTrigger&gt;
+            &lt;BhAccordionContent class="accordion-content"&gt;
+                &lt;div class="accordion-body"&gt;This panel is toggled by the button above.&lt;/div&gt;
+            &lt;/BhAccordionContent&gt;
+        &lt;/BhAccordionItem&gt;
+    &lt;/BhAccordion&gt;
+&lt;/div&gt;
+
+@code {
+    private string? controlledValue;
+
+    private void ToggleControlledItem()
+    {
+        controlledValue = controlledValue == "ctrl-2" ? null : "ctrl-2";
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — the data-state attribute
+   reflects whatever Value/Values you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 w-full"&gt;
+    &lt;div class="flex flex-wrap items-center gap-3"&gt;
+        &lt;BhButton OnClick="ToggleControlledItem"
+                  class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"&gt;
+            Toggle "Panel 2"
+        &lt;/BhButton&gt;
+        &lt;span class="text-sm text-zinc-500"&gt;Open: @(controlledValue ?? "none")&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;BhAccordion Value="@controlledValue" OnValueChange="v =&gt; controlledValue = v" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
+        &lt;BhAccordionItem Value="ctrl-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                                Context="t"&gt;
+                Panel 1
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/BhAccordionTrigger&gt;
+            &lt;BhAccordionContent&gt;
+                &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Controlled by external state.&lt;/div&gt;
+            &lt;/BhAccordionContent&gt;
+        &lt;/BhAccordionItem&gt;
+        &lt;BhAccordionItem Value="ctrl-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
+            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
+                                Context="t"&gt;
+                Panel 2
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/BhAccordionTrigger&gt;
+            &lt;BhAccordionContent&gt;
+                &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;This panel is toggled by the button above.&lt;/div&gt;
+            &lt;/BhAccordionContent&gt;
+        &lt;/BhAccordionItem&gt;
+    &lt;/BhAccordion&gt;
+&lt;/div&gt;
+
+@code {
+    private string? controlledValue;
+
+    private void ToggleControlledItem()
+    {
+        controlledValue = controlledValue == "ctrl-2" ? null : "ctrl-2";
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="../getting-started.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Getting started</span>
+        </a>
+            <a class="next" href="button.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Button</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkbox — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html" class="active">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Checkbox</h1>
+        <p class="lead">An accessible tri-state checkbox primitive with full keyboard support and zero visual opinion.</p>
+        <h2 id="basic-checkbox-uncontrolled">Basic Checkbox (Uncontrolled)</h2>
+        <p>Renders a native <code>&lt;button&gt;</code> with <code>role="checkbox"</code> and <code>aria-checked</code>. Click or press Space to toggle. <code>DefaultChecked</code> seeds the initial state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox class="checkbox" Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;
+
+&lt;BhCheckbox DefaultChecked="true" class="checkbox" Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+            Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;
+
+&lt;BhCheckbox DefaultChecked="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+            Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive state externally with <code>Checked</code> + <code>OnCheckedChange</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Checked="@acceptedTerms"
+           OnCheckedChange="v =&gt; acceptedTerms = v"
+           class="checkbox" Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;
+
+@code {
+    private bool acceptedTerms;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .checkbox styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Checked value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex items-center gap-4"&gt;
+    &lt;BhCheckbox Checked="@acceptedTerms" OnCheckedChange="v =&gt; acceptedTerms = v"
+                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/BhCheckbox&gt;
+    &lt;span class="text-sm text-zinc-500"&gt;
+        Terms accepted: &lt;strong class="text-zinc-900"&gt;@(acceptedTerms ? "yes" : "no")&lt;/strong&gt;
+    &lt;/span&gt;
+    &lt;BhButton OnClick="() =&gt; acceptedTerms = !acceptedTerms"
+              class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+        Toggle from outside
+    &lt;/BhButton&gt;
+&lt;/div&gt;
+
+@code {
+    private bool acceptedTerms;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled">Disabled</h2>
+        <p>Set <code>Disabled="true"</code> to block interaction. Receives the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Disabled="true" class="checkbox" Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;
+
+&lt;BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" */
+.checkbox[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+            Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;
+
+&lt;BhCheckbox DefaultChecked="true" Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+            Context="c"&gt;
+    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;/BhCheckbox&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="indeterminate-select-all-pattern">Indeterminate (Select All pattern)</h2>
+        <p>Setting <code>Indeterminate="true"</code> emits <code>aria-checked="mixed"</code> and <code>data-state="indeterminate"</code>. The classic use-case is a "select all" checkbox that reflects partial child selection. Clicking an indeterminate checkbox advances it to checked.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div style="display:flex; flex-direction:column; gap:0.5rem;"&gt;
+    &lt;label class="checkbox-label"&gt;
+        &lt;BhCheckbox Checked="@SelectAllChecked"
+                   Indeterminate="@SelectAllIndeterminate"
+                   OnCheckedChange="HandleSelectAll"
+                   class="checkbox" Context="c"&gt;
+            @if (c.IsIndeterminate)  { &lt;span class="checkbox-dash"&gt;–&lt;/span&gt; }
+            else if (c.IsChecked)    { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+        &lt;/BhCheckbox&gt;
+        &lt;strong&gt;Select all&lt;/strong&gt;
+    &lt;/label&gt;
+
+    &lt;div style="display:flex; flex-direction:column; gap:0.4rem; margin-left:1.6rem;"&gt;
+        @for (var i = 0; i &lt; items.Length; i++)
+        {
+            var captured = i;
+            &lt;label class="checkbox-label"&gt;
+                &lt;BhCheckbox Checked="@items[captured]"
+                           OnCheckedChange="v =&gt; HandleItemChange(captured, v)"
+                           class="checkbox" Context="c"&gt;
+                    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                &lt;/BhCheckbox&gt;
+                &lt;span&gt;@($"Item {captured + 1}")&lt;/span&gt;
+            &lt;/label&gt;
+        }
+    &lt;/div&gt;
+&lt;/div&gt;
+
+@code {
+    private bool[] items = new[] { false, false, false };
+
+    private bool SelectAllChecked       =&gt; items.All(x =&gt; x);
+    private bool SelectAllIndeterminate =&gt; items.Any(x =&gt; x) &amp;&amp; !SelectAllChecked;
+
+    private void HandleSelectAll(bool checkAll)
+    {
+        for (var i = 0; i &lt; items.Length; i++) items[i] = checkAll;
+    }
+
+    private void HandleItemChange(int index, bool value) =&gt; items[index] = value;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Indeterminate="true" */
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* The dash glyph rendered inside the box for the mixed state */
+.checkbox-dash {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 0;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-2"&gt;
+    &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
+        &lt;BhCheckbox Checked="@SelectAllChecked" Indeterminate="@SelectAllIndeterminate" OnCheckedChange="HandleSelectAll"
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                    Context="c"&gt;
+            @if (c.IsIndeterminate) { &lt;span class="text-base leading-none font-bold"&gt;–&lt;/span&gt; }
+            else if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+        &lt;/BhCheckbox&gt;
+        &lt;strong&gt;Select all&lt;/strong&gt;
+    &lt;/label&gt;
+    &lt;div class="flex flex-col gap-1.5 ml-6"&gt;
+        @for (var i = 0; i &lt; items.Length; i++)
+        {
+            var captured = i;
+            &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
+                &lt;BhCheckbox Checked="@items[captured]" OnCheckedChange="v =&gt; HandleItemChange(captured, v)"
+                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                            Context="c"&gt;
+                    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                &lt;/BhCheckbox&gt;
+                &lt;span&gt;Item @(captured + 1)&lt;/span&gt;
+            &lt;/label&gt;
+        }
+    &lt;/div&gt;
+&lt;/div&gt;
+
+@code {
+    private bool[] items = new[] { false, false, false };
+
+    private bool SelectAllChecked =&gt; items.All(x =&gt; x);
+    private bool SelectAllIndeterminate =&gt; items.Any(x =&gt; x) &amp;&amp; !SelectAllChecked;
+
+    private void HandleSelectAll(bool checkAll)
+    {
+        for (var i = 0; i &lt; items.Length; i++) items[i] = checkAll;
+    }
+
+    private void HandleItemChange(int index, bool value) =&gt; items[index] = value;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-label">With label</h2>
+        <p>Wrap the checkbox in a <code>&lt;label&gt;</code> so clicking the text toggles the checkbox — standard HTML behaviour.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;label class="checkbox-label"&gt;
+    &lt;BhCheckbox class="checkbox" Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/BhCheckbox&gt;
+    &lt;span&gt;Send me product updates&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Wrapper that aligns the checkbox with its text label */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
+    &lt;BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/BhCheckbox&gt;
+    &lt;span&gt;Send me product updates&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="form-submission">Form Submission</h2>
+        <p>Set <code>Name</code> to render an adjacent <code>&lt;input type="hidden"&gt;</code> so the checkbox state participates in plain form posts. The hidden input is only present when the checkbox is checked or indeterminate, mirroring native checkbox behaviour.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form method="post"&gt;
+    &lt;label class="checkbox-label"&gt;
+        &lt;BhCheckbox Name="agree" Value="yes"
+                   class="checkbox" Context="c"&gt;
+            @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+        &lt;/BhCheckbox&gt;
+        &lt;span&gt;I agree to the terms&lt;/span&gt;
+    &lt;/label&gt;
+
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+
+@* When checked, posts:  agree=yes *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .checkbox / .checkbox-label styles from earlier demos.
+   No additional CSS is needed — when Name is set BhCheckbox renders an
+   &lt;input type="hidden"&gt; sibling that is invisible by default. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true"
+      class="flex flex-col items-start gap-2"&gt;
+    &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
+        &lt;BhCheckbox Name="agree" Value="yes"
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                    Context="c"&gt;
+            @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+        &lt;/BhCheckbox&gt;
+        &lt;span&gt;I agree to the terms&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;button type="submit"
+            class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        Submit
+    &lt;/button&gt;
+    @if (lastSubmitted is not null)
+    {
+        &lt;span class="text-sm text-zinc-500"&gt;@lastSubmitted&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmitted;
+
+    private void HandleFormSubmit() =&gt;
+        lastSubmitted = "(submitted — when checked, the form posts agree=yes)";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="button.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Button</span>
+        </a>
+            <a class="next" href="close-button.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">CloseButton</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

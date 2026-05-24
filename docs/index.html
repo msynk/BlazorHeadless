@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BlazorHeadless — Headless UI components for Blazor</title>
+    <link rel="stylesheet" href="assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="index.html" class="active">Overview</a></li>
+        <li><a href="getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="components/accordion.html">Accordion</a></li>
+            <li><a href="components/button.html">Button</a></li>
+            <li><a href="components/checkbox.html">Checkbox</a></li>
+            <li><a href="components/close-button.html">CloseButton</a></li>
+            <li><a href="components/combobox.html">Combobox</a></li>
+            <li><a href="components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="components/dialog.html">Dialog</a></li>
+            <li><a href="components/disclosure.html">Disclosure</a></li>
+            <li><a href="components/field.html">Field / Input</a></li>
+            <li><a href="components/fieldset.html">Fieldset</a></li>
+            <li><a href="components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="components/listbox.html">Listbox</a></li>
+            <li><a href="components/menu.html">Menu</a></li>
+            <li><a href="components/popover.html">Popover</a></li>
+            <li><a href="components/portal.html">Portal</a></li>
+            <li><a href="components/radiogroup.html">Radio Group</a></li>
+            <li><a href="components/switch.html">Switch</a></li>
+            <li><a href="components/tabs.html">Tabs</a></li>
+            <li><a href="components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>BlazorHeadless</h1>
+        <p class="lead">A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Style it your way with plain CSS, Tailwind, or any design system.</p>
+
+        <div class="hero-cards">
+            <a class="hero-card" href="getting-started.html">
+                <strong>Getting started →</strong>
+                <span>Install the package, register services, and build your first component.</span>
+            </a>
+            <a class="hero-card" href="components/menu.html">
+                <strong>Browse components →</strong>
+                <span>19 unstyled, accessible primitives ready to wire into any design.</span>
+            </a>
+            <a class="hero-card" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">
+                <strong>GitHub →</strong>
+                <span>Source code, issues, and contributions.</span>
+            </a>
+        </div>
+
+        <h2 id="why-headless">Why headless?</h2>
+        <ul>
+            <li><strong>Zero visual opinion.</strong> The library ships no CSS, only semantic HTML and <code>data-*</code> hooks.</li>
+            <li><strong>Accessibility built in.</strong> ARIA roles, states, and keyboard interactions are handled for you.</li>
+            <li><strong>Polymorphic rendering.</strong> Every component renders as any HTML element via the <code>As</code> parameter.</li>
+            <li><strong>Styling hooks via data attributes.</strong> <code>[data-state]</code>, <code>[data-disabled]</code>, <code>[data-active]</code>, and friends.</li>
+            <li><strong>Attribute merging.</strong> <code>class</code> and <code>style</code> concatenate; everything else lets the consumer win.</li>
+            <li><strong>Controlled and uncontrolled.</strong> Every stateful component supports both modes.</li>
+            <li><strong>Render-prop context.</strong> Child content receives a typed render context for state-driven UI.</li>
+            <li><strong>Anchor positioning.</strong> Automatic floating panel positioning with flip/shift via JS interop.</li>
+        </ul>
+
+        <h2 id="components">Components</h2>
+        <p>BlazorHeadless ships 19 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
+
+        <div class="component-grid">
+            <a href="components/accordion.html">Accordion</a>
+            <a href="components/button.html">Button</a>
+            <a href="components/checkbox.html">Checkbox</a>
+            <a href="components/close-button.html">CloseButton</a>
+            <a href="components/combobox.html">Combobox</a>
+            <a href="components/data-interactive.html">DataInteractive</a>
+            <a href="components/dialog.html">Dialog</a>
+            <a href="components/disclosure.html">Disclosure</a>
+            <a href="components/field.html">Field / Input</a>
+            <a href="components/fieldset.html">Fieldset</a>
+            <a href="components/focus-trap.html">FocusTrap</a>
+            <a href="components/listbox.html">Listbox</a>
+            <a href="components/menu.html">Menu</a>
+            <a href="components/popover.html">Popover</a>
+            <a href="components/portal.html">Portal</a>
+            <a href="components/radiogroup.html">Radio Group</a>
+            <a href="components/switch.html">Switch</a>
+            <a href="components/tabs.html">Tabs</a>
+            <a href="components/transition.html">Transition</a>
+        </div>
+
+        <h2 id="styling">Styling philosophy</h2>
+        <p>Every component emits <code>data-*</code> attributes that mirror its state. Style with attribute selectors and stay framework-agnostic.</p>
+
+        <pre class="code-block"><code class="language-css">[data-state="open"]          { /* expanded / open */ }
+[data-state="closed"]        { /* collapsed / closed */ }
+[data-state="checked"]       { /* switch/checkbox on */ }
+[data-state="unchecked"]     { /* switch/checkbox off */ }
+[data-state="indeterminate"] { /* checkbox mixed state */ }
+[data-state="active"]        { /* selected tab */ }
+[data-active]                { background: #eff6ff; }
+[data-selected]              { font-weight: 600; }
+[data-disabled]              { opacity: 0.5; pointer-events: none; }
+[data-loading]               { cursor: progress; }
+[data-orientation="horizontal"] { /* tablists, radio groups */ }
+[data-orientation="vertical"]   { /* tablists, radio groups */ }
+</code></pre>
+
+        <h2 id="requirements">Requirements</h2>
+        <ul>
+            <li>.NET 10</li>
+            <li><code>Microsoft.AspNetCore.Components.Web</code> 10.x</li>
+        </ul>
+
+        <h2 id="next">Next steps</h2>
+        <p>Continue to <a href="getting-started.html">Getting started</a> to install the package and wire up your first component.</p>
+        <nav class="pager">
+            
+            <a class="next" href="getting-started.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Getting started</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

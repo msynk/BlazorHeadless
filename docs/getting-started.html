@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Getting started — BlazorHeadless</title>
+    <link rel="stylesheet" href="assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html" class="active">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="components/accordion.html">Accordion</a></li>
+            <li><a href="components/button.html">Button</a></li>
+            <li><a href="components/checkbox.html">Checkbox</a></li>
+            <li><a href="components/close-button.html">CloseButton</a></li>
+            <li><a href="components/combobox.html">Combobox</a></li>
+            <li><a href="components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="components/dialog.html">Dialog</a></li>
+            <li><a href="components/disclosure.html">Disclosure</a></li>
+            <li><a href="components/field.html">Field / Input</a></li>
+            <li><a href="components/fieldset.html">Fieldset</a></li>
+            <li><a href="components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="components/listbox.html">Listbox</a></li>
+            <li><a href="components/menu.html">Menu</a></li>
+            <li><a href="components/popover.html">Popover</a></li>
+            <li><a href="components/portal.html">Portal</a></li>
+            <li><a href="components/radiogroup.html">Radio Group</a></li>
+            <li><a href="components/switch.html">Switch</a></li>
+            <li><a href="components/tabs.html">Tabs</a></li>
+            <li><a href="components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Getting started</h1>
+        <p class="lead">Install BlazorHeadless, register the JS interop service, and build your first component in under five minutes.</p>
+
+        <h2 id="install">1. Install the package</h2>
+        <p>Add the package reference to your Blazor project:</p>
+        <pre class="code-block"><code class="language-bash">dotnet add package BlazorHeadless</code></pre>
+
+        <p>Or in <code>.csproj</code>:</p>
+        <pre class="code-block"><code class="language-markup">&lt;ItemGroup&gt;
+    &lt;PackageReference Include="BlazorHeadless" Version="*" /&gt;
+&lt;/ItemGroup&gt;</code></pre>
+
+        <h2 id="register">2. Register services</h2>
+        <p>In <code>Program.cs</code>, call <code>AddBlazorHeadless()</code> on the service collection. This registers the JS interop service used by Dialog, Popover, Transition, Portal, FocusTrap, and anchor positioning.</p>
+
+        <pre class="code-block"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+builder.Services.AddBlazorHeadless();
+
+var app = builder.Build();
+// ...</code></pre>
+
+        <h2 id="imports">3. Add usings</h2>
+        <p>Add the namespace to your <code>_Imports.razor</code> so components are available everywhere:</p>
+        <pre class="code-block"><code class="language-markup">@using BlazorHeadless</code></pre>
+
+        <h2 id="portal-outlet">4. Add a portal outlet (optional)</h2>
+        <p>If you plan to use <a href="components/portal.html"><code>BhPortal</code></a>, add an outlet to your root layout so portalled content has somewhere to land:</p>
+        <pre class="code-block"><code class="language-markup">&lt;BhPortalOutlet /&gt;</code></pre>
+
+        <h2 id="first-component">5. Use your first component</h2>
+        <p>Drop a Menu into any page. The library handles ARIA wiring, keyboard navigation, click-outside, and focus management — you control every pixel of the visuals.</p>
+
+        <pre class="code-block"><code class="language-markup">&lt;BhMenu&gt;
+    &lt;BhMenuButton class="btn"&gt;Options ▾&lt;/BhMenuButton&gt;
+    &lt;BhMenuItems class="menu-items"&gt;
+        &lt;BhMenuItem OnClick="Edit"   class="menu-item"&gt;Edit&lt;/BhMenuItem&gt;
+        &lt;BhMenuItem OnClick="Delete" class="menu-item" Disabled="true"&gt;Delete&lt;/BhMenuItem&gt;
+    &lt;/BhMenuItems&gt;
+&lt;/BhMenu&gt;</code></pre>
+
+        <h2 id="styling-approaches">6. Pick a styling approach</h2>
+        <p>Components emit <code>data-*</code> attributes that mirror their internal state. Style with whichever system you prefer.</p>
+
+        <h3>Plain CSS</h3>
+        <pre class="code-block"><code class="language-css">.menu-item {
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    cursor: pointer;
+}
+
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }</code></pre>
+
+        <h3>Tailwind</h3>
+        <p>Register custom data-attribute variants once in your input file, then use them like any other Tailwind utility:</p>
+        <pre class="code-block"><code class="language-css">@import "tailwindcss";
+
+@custom-variant data-active (&amp;[data-active]);
+@custom-variant data-disabled (&amp;[data-disabled]);
+@custom-variant data-state-open (&amp;[data-state="open"]);
+@custom-variant data-state-checked (&amp;[data-state="checked"]);
+
+@layer utilities {
+    [hidden] { display: none !important; }
+}</code></pre>
+
+        <pre class="code-block"><code class="language-markup">&lt;BhMenuItem class="rounded-md px-3 py-2 cursor-pointer
+                    data-active:bg-blue-50 data-active:text-blue-700
+                    data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;
+    Edit
+&lt;/BhMenuItem&gt;</code></pre>
+
+        <h2 id="display-hidden">A note on <code>display</code> and <code>hidden</code></h2>
+        <p>When your panel CSS sets an explicit <code>display</code> value (for example <code>display: flex</code>), add a <code>[hidden]</code> override so the <code>hidden</code> attribute keeps working:</p>
+        <pre class="code-block"><code class="language-css">.my-panel        { display: flex; }
+.my-panel[hidden]{ display: none;  }</code></pre>
+
+        <h2 id="next-steps">Next steps</h2>
+        <ul>
+            <li>Browse the <a href="components/accordion.html">component reference</a> for live examples and code snippets in both CSS and Tailwind.</li>
+            <li>Learn about the <a href="components/menu.html#anchor-positioning">anchor positioning</a> system used by dropdowns and popovers.</li>
+            <li>Read the source on <a href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>.</li>
+        </ul>
+        <nav class="pager">
+            <a class="prev" href="index.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Overview</span>
+        </a>
+            <a class="next" href="components/accordion.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Accordion</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

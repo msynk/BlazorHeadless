@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Switch — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html" class="active">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Switch</h1>
+        <p class="lead">An accessible on/off toggle with full keyboard support and zero visual opinion.</p>
+        <h2 id="basic-switch-uncontrolled">Basic Switch (Uncontrolled)</h2>
+        <p>Renders a native <code>&lt;button&gt;</code> with <code>role="switch"</code> and <code>aria-checked</code>. Click or press Space/Enter to toggle. <code>DefaultChecked</code> seeds the initial state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false" class="switch" Context="s"&gt;
+    &lt;span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+          Context="s"&gt;
+    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;
+
+&lt;BhSwitch DefaultChecked="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+          Context="s"&gt;
+    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive the state externally with <code>Checked</code> + <code>OnCheckedChange</code>. Clicking either control updates the same state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch Checked="@notificationsOn"
+         OnCheckedChange="v =&gt; notificationsOn = v"
+         class="switch" Context="s"&gt;
+    &lt;span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;
+
+@code {
+    private bool notificationsOn = true;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .switch / .switch-thumb styles from the Basic demo.
+   Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Checked value you bind to. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex items-center gap-4"&gt;
+    &lt;BhSwitch Checked="@notificationsOn" OnCheckedChange="v =&gt; notificationsOn = v"
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+              Context="s"&gt;
+        &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+    &lt;/BhSwitch&gt;
+    &lt;span class="text-sm text-zinc-500"&gt;
+        Notifications: &lt;strong class="text-zinc-900"&gt;@(notificationsOn ? "on" : "off")&lt;/strong&gt;
+    &lt;/span&gt;
+    &lt;BhButton OnClick="() =&gt; notificationsOn = !notificationsOn"
+              class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+        Toggle from outside
+    &lt;/BhButton&gt;
+&lt;/div&gt;
+
+@code {
+    private bool notificationsOn = true;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled">Disabled</h2>
+        <p>Set <code>Disabled="true"</code> to block interaction. The button receives the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s"&gt;
+    &lt;span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" */
+.switch[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* The disabled state still respects the checked appearance, so the thumb
+   stays in the "on" position on a disabled-checked switch. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+          Context="s"&gt;
+    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;
+
+&lt;BhSwitch DefaultChecked="true" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+          Context="s"&gt;
+    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-label">With label</h2>
+        <p>Wrap the switch in a <code>&lt;label&gt;</code> to make the label clickable. Clicking the label text toggles the switch — standard HTML behaviour.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;label class="switch-label"&gt;
+    &lt;BhSwitch DefaultChecked="true" class="switch" Context="s"&gt;
+        &lt;span class="switch-thumb"
+              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+    &lt;/BhSwitch&gt;
+    &lt;span&gt;Email me about updates&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Wrapper that aligns the switch with its text label */
+.switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+    &lt;BhSwitch DefaultChecked="true"
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+              Context="s"&gt;
+        &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+    &lt;/BhSwitch&gt;
+    &lt;span&gt;Email me about updates&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="as-a-non-native-element">As a non-native element</h2>
+        <p>Set <code>As="div"</code> to render as a div. The component automatically adds <code>role="switch"</code>, <code>tabindex="0"</code>, and Space/Enter keyboard handling so the switch remains fully accessible.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch As="div" DefaultChecked="false" class="switch" Context="s"&gt;
+    &lt;span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .switch / .switch-thumb styles from the Basic demo.
+   When rendered with As="div" (or any non-native element) BhSwitch automatically
+   adds tabindex="0" and a Space/Enter keydown handler — the focus ring still
+   needs your :focus-visible rule to appear. */
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch As="div" DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+          Context="s"&gt;
+    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;/BhSwitch&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="form-submission">Form Submission</h2>
+        <p>Set <code>Name</code> to render an adjacent <code>&lt;input type="hidden"&gt;</code> so the switch participates in plain form posts. The hidden input is only present when the switch is checked, mirroring native checkbox behaviour.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form method="post"&gt;
+    &lt;label class="switch-label"&gt;
+        &lt;BhSwitch Name="newsletter" Value="yes"
+                 DefaultChecked="false"
+                 class="switch" Context="s"&gt;
+            &lt;span class="switch-thumb"
+                  data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+        &lt;/BhSwitch&gt;
+        &lt;span&gt;Subscribe to newsletter&lt;/span&gt;
+    &lt;/label&gt;
+
+    &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+
+@* When checked, posts:  newsletter=yes *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the .switch / .switch-label styles from the earlier demos.
+   No additional CSS is needed — when Name is set BhSwitch renders an
+   &lt;input type="hidden"&gt; sibling that is always invisible by default. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true"
+      class="flex flex-wrap items-center gap-4"&gt;
+    &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
+        &lt;BhSwitch Name="newsletter" Value="yes" DefaultChecked="false"
+                  class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
+                  Context="s"&gt;
+            &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
+                  data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+        &lt;/BhSwitch&gt;
+        &lt;span&gt;Subscribe to newsletter&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;button type="submit"
+            class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        Submit
+    &lt;/button&gt;
+    @if (lastSubmittedValue is not null)
+    {
+        &lt;span class="text-sm text-zinc-500"&gt;Posted value: &lt;code&gt;@lastSubmittedValue&lt;/code&gt;&lt;/span&gt;
+    }
+&lt;/form&gt;
+
+@code {
+    private string? lastSubmittedValue;
+
+    private void HandleFormSubmit() =&gt;
+        lastSubmittedValue = "(submitted — check the network tab in a real form)";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="radiogroup.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Radio Group</span>
+        </a>
+            <a class="next" href="tabs.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Tabs</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

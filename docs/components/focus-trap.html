@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FocusTrap — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html" class="active">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>FocusTrap</h1>
+        <p class="lead">A low-level component that traps keyboard focus within a container. Used internally by Dialog but also useful standalone for custom modal-like patterns.</p>
+        <h2 id="basic-focus-trap">Basic Focus Trap</h2>
+        <p>Toggle the trap on and off. While active, pressing Tab and Shift+Tab cycles through the focusable elements inside the container without escaping to the rest of the page. Focus is automatically moved to the first focusable element when the trap activates, and restored to the previously-focused element when it deactivates.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; enabled = !enabled"
+          class="btn @(enabled ? "btn-primary" : "")"&gt;
+    @(enabled ? "Deactivate trap" : "Activate trap")
+&lt;/BhButton&gt;
+
+&lt;BhFocusTrap Enabled="enabled" class="focus-trap-container"&gt;
+    &lt;p&gt;Focus is @(enabled ? "trapped" : "free") inside this box.&lt;/p&gt;
+    &lt;input type="text" placeholder="First input" /&gt;
+    &lt;input type="text" placeholder="Second input" /&gt;
+    &lt;button class="btn" @onclick="() =&gt; enabled = false"&gt;Close&lt;/button&gt;
+&lt;/BhFocusTrap&gt;
+
+@code {
+    private bool enabled;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.focus-trap-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border: 2px dashed #d4d4d8;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Active state via data-state attribute emitted by BhFocusTrap */
+.focus-trap-container[data-state="active"] {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.focus-trap-input {
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; basicEnabled = !basicEnabled"
+              class="@(basicEnabled
+                  ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                  : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+        @(basicEnabled ? "Deactivate trap" : "Activate trap")
+    &lt;/BhButton&gt;
+    &lt;BhFocusTrap Enabled="basicEnabled"
+                 class="flex flex-col gap-3 rounded-lg border-2 border-dashed border-zinc-300 p-5 mt-2 transition-colors data-state-active:border-blue-600 data-state-active:bg-blue-50"&gt;
+        &lt;p class="text-sm text-zinc-500"&gt;
+            Focus is @(basicEnabled ? "trapped" : "free") inside this box.
+        &lt;/p&gt;
+        &lt;input type="text" placeholder="First input"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;input type="text" placeholder="Second input"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;button class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"
+                @onclick="() =&gt; basicEnabled = false"&gt;Close&lt;/button&gt;
+    &lt;/BhFocusTrap&gt;
+&lt;/div&gt;
+
+@code {
+    private bool basicEnabled;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="slide-over-panel">Slide-over panel</h2>
+        <p>A common use case: a slide-over panel that traps focus while visible. The trap activates when the panel opens and deactivates when it closes, returning focus to the trigger button.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; panelOpen = true" class="btn btn-primary"&gt;
+    Open panel
+&lt;/BhButton&gt;
+
+@if (panelOpen)
+{
+    &lt;div class="slide-over-backdrop" @onclick="() =&gt; panelOpen = false"&gt;&lt;/div&gt;
+    &lt;BhFocusTrap Enabled="panelOpen" class="slide-over-panel"&gt;
+        &lt;h3&gt;Settings&lt;/h3&gt;
+        &lt;p&gt;Focus is trapped inside this panel.&lt;/p&gt;
+
+        &lt;label&gt;
+            &lt;span&gt;Username&lt;/span&gt;
+            &lt;input type="text" value="alice" /&gt;
+        &lt;/label&gt;
+
+        &lt;label&gt;
+            &lt;span&gt;Email&lt;/span&gt;
+            &lt;input type="email" value="alice@example.com" /&gt;
+        &lt;/label&gt;
+
+        &lt;div class="slide-over-actions"&gt;
+            &lt;button @onclick="() =&gt; panelOpen = false"&gt;Cancel&lt;/button&gt;
+            &lt;button @onclick="() =&gt; panelOpen = false"&gt;Save&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/BhFocusTrap&gt;
+}
+
+@code {
+    private bool panelOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.slide-over-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 40;
+}
+
+.slide-over-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 22rem;
+    max-width: 90vw;
+    background: #fff;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    padding: 1.5rem;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; panelOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+    Open panel
+&lt;/BhButton&gt;
+@if (panelOpen)
+{
+    &lt;div class="fixed inset-0 z-40 bg-black/30" @onclick="() =&gt; panelOpen = false"&gt;&lt;/div&gt;
+    &lt;BhFocusTrap Enabled="panelOpen"
+                 class="fixed top-0 right-0 bottom-0 z-50 w-88 max-w-[90vw] bg-white p-6 shadow-2xl flex flex-col gap-4"&gt;
+        &lt;h3 class="text-lg font-semibold text-zinc-900"&gt;Settings&lt;/h3&gt;
+        &lt;p class="text-sm text-zinc-500"&gt;Focus is trapped inside this panel. Try Tab and Shift+Tab.&lt;/p&gt;
+        &lt;label class="flex flex-col gap-1.5 text-sm"&gt;
+            &lt;span&gt;Username&lt;/span&gt;
+            &lt;input type="text"
+                   class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
+                   value="alice" /&gt;
+        &lt;/label&gt;
+        &lt;label class="flex flex-col gap-1.5 text-sm"&gt;
+            &lt;span&gt;Email&lt;/span&gt;
+            &lt;input type="email"
+                   class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
+                   value="alice@example.com" /&gt;
+        &lt;/label&gt;
+        &lt;div class="flex justify-end gap-2 mt-auto"&gt;
+            &lt;button class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"
+                    @onclick="() =&gt; panelOpen = false"&gt;Cancel&lt;/button&gt;
+            &lt;button class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                    @onclick="() =&gt; panelOpen = false"&gt;Save&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/BhFocusTrap&gt;
+}
+
+@code {
+    private bool panelOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multiple-focusable-regions">Multiple focusable regions</h2>
+        <p>Demonstrates that only the active trap captures focus. Toggle between two regions — only the enabled one traps Tab navigation.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ActivateRegionA" class="btn"&gt;Trap Region A&lt;/BhButton&gt;
+&lt;BhButton OnClick="ActivateRegionB" class="btn"&gt;Trap Region B&lt;/BhButton&gt;
+&lt;BhButton OnClick="DeactivateAll" class="btn"&gt;Release all&lt;/BhButton&gt;
+
+&lt;BhFocusTrap Enabled="regionA" class="focus-trap-container"&gt;
+    &lt;strong&gt;Region A&lt;/strong&gt;
+    &lt;input type="text" placeholder="A — Field 1" /&gt;
+    &lt;input type="text" placeholder="A — Field 2" /&gt;
+    &lt;button class="btn"&gt;A — Action&lt;/button&gt;
+&lt;/BhFocusTrap&gt;
+
+&lt;BhFocusTrap Enabled="regionB" class="focus-trap-container"&gt;
+    &lt;strong&gt;Region B&lt;/strong&gt;
+    &lt;input type="text" placeholder="B — Field 1" /&gt;
+    &lt;input type="text" placeholder="B — Field 2" /&gt;
+    &lt;button class="btn"&gt;B — Action&lt;/button&gt;
+&lt;/BhFocusTrap&gt;
+
+@code {
+    private bool regionA;
+    private bool regionB;
+
+    private void ActivateRegionA() { regionA = true; regionB = false; }
+    private void ActivateRegionB() { regionA = false; regionB = true; }
+    private void DeactivateAll() { regionA = false; regionB = false; }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.multi-regions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Each region uses the same .focus-trap-container styles.
+   The active one gets highlighted via data-state="active". */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex gap-2 flex-wrap"&gt;
+    &lt;BhButton OnClick="ActivateRegionA"
+              class="@(regionA
+                  ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                  : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+        Trap Region A
+    &lt;/BhButton&gt;
+    &lt;BhButton OnClick="ActivateRegionB"
+              class="@(regionB
+                  ? "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"
+                  : "inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100")"&gt;
+        Trap Region B
+    &lt;/BhButton&gt;
+    &lt;BhButton OnClick="DeactivateAll"
+              class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+        Release all
+    &lt;/BhButton&gt;
+&lt;/div&gt;
+&lt;div class="grid grid-cols-2 gap-4 mt-4 w-full"&gt;
+    &lt;BhFocusTrap Enabled="regionA"
+                 class="flex flex-col gap-3 rounded-lg border-2 border-dashed border-zinc-300 p-5 mt-2 transition-colors data-state-active:border-blue-600 data-state-active:bg-blue-50"&gt;
+        &lt;strong&gt;Region A&lt;/strong&gt;
+        &lt;input type="text" placeholder="A — Field 1"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;input type="text" placeholder="A — Field 2"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;button class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;A — Action&lt;/button&gt;
+    &lt;/BhFocusTrap&gt;
+    &lt;BhFocusTrap Enabled="regionB"
+                 class="flex flex-col gap-3 rounded-lg border-2 border-dashed border-zinc-300 p-5 mt-2 transition-colors data-state-active:border-blue-600 data-state-active:bg-blue-50"&gt;
+        &lt;strong&gt;Region B&lt;/strong&gt;
+        &lt;input type="text" placeholder="B — Field 1"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;input type="text" placeholder="B — Field 2"
+               class="rounded-md border border-zinc-300 px-2.5 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600" /&gt;
+        &lt;button class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;B — Action&lt;/button&gt;
+    &lt;/BhFocusTrap&gt;
+&lt;/div&gt;
+
+@code {
+    private bool regionA;
+    private bool regionB;
+
+    private void ActivateRegionA() { regionA = true; regionB = false; }
+    private void ActivateRegionB() { regionA = false; regionB = true; }
+    private void DeactivateAll()   { regionA = false; regionB = false; }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="fieldset.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Fieldset</span>
+        </a>
+            <a class="next" href="listbox.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Listbox</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

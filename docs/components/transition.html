@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transition — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/transition.html" class="active">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Transition</h1>
+        <p class="lead">CSS class-based enter/leave animations with automatic lifecycle management.</p>
+        <h2 id="fade">Fade</h2>
+        <p>Toggle the panel. On enter: <code>opacity-0</code> → <code>opacity-100</code>. On leave: <code>opacity-100</code> → <code>opacity-0</code>. The element is unmounted after the leave animation completes.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTransition Show="@isOpen"
+             Enter="transition-opacity duration-300"
+             EnterFrom="opacity-0"
+             EnterTo="opacity-100"
+             Leave="transition-opacity duration-200"
+             LeaveFrom="opacity-100"
+             LeaveTo="opacity-0"&gt;
+    &lt;div class="panel"&gt;I fade in and out.&lt;/div&gt;
+&lt;/BhTransition&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Utility classes — you can use Tailwind or write your own */
+.transition-opacity { transition-property: opacity; }
+.duration-300       { transition-duration: 300ms; }
+.duration-200       { transition-duration: 200ms; }
+.opacity-0          { opacity: 0; }
+.opacity-100        { opacity: 1; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; showFade = !showFade"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        @(showFade ? "Hide" : "Show")
+    &lt;/BhButton&gt;
+    &lt;BhTransition Show="showFade"
+                  Enter="transition-opacity duration-300"
+                  EnterFrom="opacity-0"
+                  EnterTo="opacity-100"
+                  Leave="transition-opacity duration-200"
+                  LeaveFrom="opacity-100"
+                  LeaveTo="opacity-0"
+                  class="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-900 inline-block"&gt;
+        &lt;p&gt;I fade in and out.&lt;/p&gt;
+    &lt;/BhTransition&gt;
+&lt;/div&gt;
+
+@code {
+    private bool showFade;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="scale-fade">Scale + Fade</h2>
+        <p>Combine opacity and transform for a more dynamic entrance. The <code>Enter</code> / <code>Leave</code> classes set the transition properties and duration; <code>From</code> / <code>To</code> set the start and end states.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTransition Show="@isOpen"
+             Enter="transition-all duration-300 ease-out"
+             EnterFrom="opacity-0 scale-95"
+             EnterTo="opacity-100 scale-100"
+             Leave="transition-all duration-200 ease-in"
+             LeaveFrom="opacity-100 scale-100"
+             LeaveTo="opacity-0 scale-95"&gt;
+    &lt;div class="panel"&gt;I scale and fade.&lt;/div&gt;
+&lt;/BhTransition&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.transition-all { transition-property: all; }
+.ease-out       { transition-timing-function: ease-out; }
+.ease-in        { transition-timing-function: ease-in; }
+.scale-95       { transform: scale(0.95); }
+.scale-100      { transform: scale(1); }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; showScale = !showScale"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        @(showScale ? "Hide" : "Show")
+    &lt;/BhButton&gt;
+    &lt;BhTransition Show="showScale"
+                  Enter="transition-all duration-300 ease-out"
+                  EnterFrom="opacity-0 scale-95"
+                  EnterTo="opacity-100 scale-100"
+                  Leave="transition-all duration-200 ease-in"
+                  LeaveFrom="opacity-100 scale-100"
+                  LeaveTo="opacity-0 scale-95"
+                  class="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-900 inline-block"&gt;
+        &lt;p&gt;I scale and fade.&lt;/p&gt;
+    &lt;/BhTransition&gt;
+&lt;/div&gt;
+
+@code {
+    private bool showScale;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="slide-down">Slide Down</h2>
+        <p>A slide-down reveal using <code>max-height</code> and <code>overflow: hidden</code>. Useful for accordion-style content reveals.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTransition Show="@isOpen"
+             Enter="slide-enter"
+             EnterFrom="slide-enter-from"
+             EnterTo="slide-enter-to"
+             Leave="slide-leave"
+             LeaveFrom="slide-leave-from"
+             LeaveTo="slide-leave-to"&gt;
+    &lt;div class="panel"&gt;I slide down.&lt;/div&gt;
+&lt;/BhTransition&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Slide-down using max-height */
+.slide-box          { overflow: hidden; }
+.slide-enter        { transition: max-height 300ms ease-out, opacity 300ms ease-out; }
+.slide-enter-from   { max-height: 0; opacity: 0; }
+.slide-enter-to     { max-height: 10rem; opacity: 1; }
+.slide-leave        { transition: max-height 200ms ease-in, opacity 200ms ease-in; }
+.slide-leave-from   { max-height: 10rem; opacity: 1; }
+.slide-leave-to     { max-height: 0; opacity: 0; }</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-appear">With Appear</h2>
+        <p>Set <code>Appear="true"</code> to run the enter transition on initial mount. Without it, elements that start with <code>Show="true"</code> appear instantly.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTransition Show="@isOpen"
+             Appear="true"
+             Enter="transition-all duration-500 ease-out"
+             EnterFrom="opacity-0 translate-y-4"
+             EnterTo="opacity-100 translate-y-0"
+             Leave="transition-all duration-300 ease-in"
+             LeaveFrom="opacity-100 translate-y-0"
+             LeaveTo="opacity-0 translate-y-4"&gt;
+    &lt;div class="panel"&gt;I animate on first mount too.&lt;/div&gt;
+&lt;/BhTransition&gt;
+
+@* Without Appear="true", elements that start with Show="true" appear instantly. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.translate-y-4  { transform: translateY(1rem); }
+.translate-y-0  { transform: translateY(0); }
+.duration-500   { transition-duration: 500ms; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; showAppear = !showAppear"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        @(showAppear ? "Hide" : "Show")
+    &lt;/BhButton&gt;
+    &lt;BhTransition Show="showAppear" Appear="true"
+                  Enter="transition-all duration-500 ease-out"
+                  EnterFrom="opacity-0 translate-y-4"
+                  EnterTo="opacity-100 translate-y-0"
+                  Leave="transition-all duration-300 ease-in"
+                  LeaveFrom="opacity-100 translate-y-0"
+                  LeaveTo="opacity-0 translate-y-4"
+                  class="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-900 inline-block"&gt;
+        &lt;p&gt;I animate on first mount too.&lt;/p&gt;
+    &lt;/BhTransition&gt;
+&lt;/div&gt;
+
+@code {
+    private bool showAppear = true;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="lifecycle-callbacks">Lifecycle Callbacks</h2>
+        <p>Use <code>BeforeEnter</code>, <code>AfterEnter</code>, <code>BeforeLeave</code>, <code>AfterLeave</code> to run logic at each phase of the transition.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTransition Show="@isOpen"
+             Enter="transition-opacity duration-300"
+             EnterFrom="opacity-0"
+             EnterTo="opacity-100"
+             Leave="transition-opacity duration-200"
+             LeaveFrom="opacity-100"
+             LeaveTo="opacity-0"
+             BeforeEnter="() =&gt; Log(\"BeforeEnter\")"
+             AfterEnter="() =&gt; Log(\"AfterEnter\")"
+             BeforeLeave="() =&gt; Log(\"BeforeLeave\")"
+             AfterLeave="() =&gt; Log(\"AfterLeave\")"&gt;
+    &lt;div class="panel"&gt;Check the log.&lt;/div&gt;
+&lt;/BhTransition&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Same fade classes as the first demo — no extra CSS needed for callbacks. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; showCallbacks = !showCallbacks"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        @(showCallbacks ? "Hide" : "Show")
+    &lt;/BhButton&gt;
+    &lt;BhTransition Show="showCallbacks"
+                  Enter="transition-opacity duration-300" EnterFrom="opacity-0" EnterTo="opacity-100"
+                  Leave="transition-opacity duration-200" LeaveFrom="opacity-100" LeaveTo="opacity-0"
+                  BeforeEnter='@(() =&gt; Log("BeforeEnter"))'
+                  AfterEnter='@(() =&gt; Log("AfterEnter"))'
+                  BeforeLeave='@(() =&gt; Log("BeforeLeave"))'
+                  AfterLeave='@(() =&gt; Log("AfterLeave"))'
+                  class="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-900 inline-block"&gt;
+        &lt;p&gt;Check the log below.&lt;/p&gt;
+    &lt;/BhTransition&gt;
+    &lt;pre class="text-xs text-zinc-500 whitespace-pre-wrap"&gt;@callbackLog&lt;/pre&gt;
+&lt;/div&gt;
+
+@code {
+    private bool showCallbacks;
+    private string callbackLog = "";
+
+    private void Log(string msg) =&gt; callbackLog += msg + "\n";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="tabs.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Tabs</span>
+        </a>
+            
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>
