@@ -1,12 +1,12 @@
 # BlazorHeadless
 
-A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Style it your way with CSS, Tailwind, or any design system.
+A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Style it your way with plain CSS, Tailwind, or any design system.
 
 Inspired by [Headless UI](https://headlessui.com/), [Radix UI](https://www.radix-ui.com/), and [Ark UI](https://ark-ui.com/) patterns, ported natively to Blazor.
 
 ## Why headless?
 
-- **Zero visual opinion** — no CSS, no styles, only semantic HTML and `data-*` hooks.
+- **Zero visual opinion** — the library ships no CSS, only semantic HTML and `data-*` hooks.
 - **Accessibility built in** — ARIA roles, states, and keyboard interactions are handled for you.
 - **Polymorphic rendering** — every component renders as any HTML element via the `As` parameter.
 - **Styling hooks via data attributes** — `[data-state]`, `[data-disabled]`, `[data-active]`, and friends.
@@ -27,39 +27,50 @@ Inspired by [Headless UI](https://headlessui.com/), [Radix UI](https://www.radix
 builder.Services.AddBlazorHeadless();
 ```
 
-This registers the JS interop service used by Dialog, Popover, Transition, and anchor positioning.
+This registers the JS interop service used by Dialog, Popover, Transition, Portal, FocusTrap, and anchor positioning.
+
+If you use `BhPortal`, also add a portal outlet to your root layout:
+
+```razor
+<BhPortalOutlet />
+```
 
 ## Components
 
 | Component | Description |
 | --- | --- |
-| **Menu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
-| **Listbox** | Custom select with single/multi-select, typeahead, and form integration |
-| **Combobox** | Typeable autocomplete with consumer-driven filtering |
-| **Dialog** | Modal with focus trap, scroll lock, and inert background |
-| **Popover** | Non-modal floating panel with focus management and group coordination |
-| **Disclosure** | Single show/hide region |
-| **Accordion** | Single or multiple expandable sections |
-| **Tabs** | Tabbed interface with keyboard navigation |
-| **Switch** | Two-state toggle with optional hidden form input |
-| **Checkbox** | Custom checkbox with indeterminate state support |
-| **Radio Group** | Single-select radio group |
-| **Button** | Polymorphic button with disabled and loading states |
-| **Field** | Form field grouping with Label, Description, Input, Select, Textarea |
-| **Transition** | CSS class-based enter/leave animations |
+| **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
+| **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
+| **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
+| **BhDialog** | Modal with focus trap, scroll lock, and inert background |
+| **BhPopover** | Non-modal floating panel with focus management and group coordination |
+| **BhDisclosure** | Single show/hide region |
+| **BhAccordion** | Single or multiple expandable sections |
+| **BhTabGroup** | Tabbed interface with keyboard navigation |
+| **BhSwitch** | Two-state toggle with optional hidden form input |
+| **BhCheckbox** | Custom checkbox with indeterminate state support |
+| **BhRadioGroup** | Single-select radio group |
+| **BhButton** | Polymorphic button with disabled and loading states |
+| **BhCloseButton** | Pre-wired button that closes the nearest Dialog, Popover, or Disclosure |
+| **BhField** | Form field grouping with `BhLabel`, `BhDescription`, `BhInput`, `BhSelect`, `BhTextarea` |
+| **BhFieldset** | Group form controls under a `BhLegend`, with cascading disabled state |
+| **BhTransition** | CSS class-based enter/leave animations with lifecycle callbacks |
+| **BhPortal** | Render children into a different part of the DOM tree |
+| **BhFocusTrap** | Trap keyboard focus inside a container |
+| **BhDataInteractive** | Forward `data-hover` / `data-active` / `data-focus` attributes for unified state styling |
 
 ## Anchor Positioning
 
-Dropdown panels (`HMenuItems`, `HListboxOptions`, `HComboboxOptions`, `HPopoverPanel`) support automatic positioning relative to their trigger via the `Anchor` parameter:
+Dropdown panels (`BhMenuItems`, `BhListboxOptions`, `BhComboboxOptions`, `BhPopoverPanel`) support automatic positioning relative to their trigger via the `Anchor` parameter:
 
 ```razor
-<HMenu>
-    <HMenuButton>Options ▾</HMenuButton>
-    <HMenuItems Anchor="@(new AnchorOptions { To = "bottom start", Gap = 4 })">
-        <HMenuItem OnClick="Edit">Edit</HMenuItem>
-        <HMenuItem OnClick="Delete">Delete</HMenuItem>
-    </HMenuItems>
-</HMenu>
+<BhMenu>
+    <BhMenuButton>Options ▾</BhMenuButton>
+    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })">
+        <BhMenuItem OnClick="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick="Delete">Delete</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 ```
 
 ### Placement options
@@ -73,7 +84,7 @@ right start  |  right   |  right end
 bottom start |  bottom  |  bottom end
 ```
 
-### AnchorOptions
+### BhAnchorOptions
 
 | Property | Default | Description |
 | --- | --- | --- |
@@ -103,105 +114,121 @@ bottom start |  bottom  |  bottom end
 ### Menu
 
 ```razor
-<HMenu>
-    <HMenuButton class="btn" Context="b">
+<BhMenu>
+    <BhMenuButton class="btn" Context="b">
         Options
         <span class="chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </HMenuButton>
-    <HMenuItems class="dropdown">
-        <HMenuItem OnClick="Edit" Label="Edit">Edit</HMenuItem>
-        <HMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</HMenuItem>
-    </HMenuItems>
-</HMenu>
+    </BhMenuButton>
+    <BhMenuItems class="dropdown">
+        <BhMenuItem OnClick="Edit"   Label="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
 ```
 
 ### Listbox
 
 ```razor
-<HListbox TValue="string" Value="@person" OnValueChange="v => person = v">
-    <HListboxButton TValue="string" Context="b">
+<BhListbox TValue="string" Value="@person" OnValueChange="v => person = v">
+    <BhListboxButton TValue="string" Context="b">
         @(b.Value ?? "Select…")
-    </HListboxButton>
-    <HListboxOptions TValue="string">
-        <HListboxOption TValue="string" Value="alice">Alice</HListboxOption>
-        <HListboxOption TValue="string" Value="bob">Bob</HListboxOption>
-    </HListboxOptions>
-</HListbox>
+    </BhListboxButton>
+    <BhListboxOptions TValue="string">
+        <BhListboxOption TValue="string" Value="@("alice")">Alice</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("bob")">Bob</BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
 ```
 
 ### Combobox
 
 ```razor
-<HCombobox TValue="string" Value="@fruit" OnValueChange="v => fruit = v"
-           OnQueryChange="Filter" DisplayValue="v => v ?? string.Empty">
-    <HComboboxInput TValue="string" Placeholder="Search…" />
-    <HComboboxOptions TValue="string">
+<BhCombobox TValue="string" Value="@fruit" OnValueChange="v => fruit = v"
+            OnQueryChange="Filter" DisplayValue="v => v ?? string.Empty">
+    <BhComboboxInput TValue="string" Placeholder="Search…" />
+    <BhComboboxOptions TValue="string">
         @foreach (var f in filtered)
         {
-            <HComboboxOption TValue="string" Value="@f">@f</HComboboxOption>
+            <BhComboboxOption TValue="string" Value="@f">@f</BhComboboxOption>
         }
-    </HComboboxOptions>
-</HCombobox>
+    </BhComboboxOptions>
+</BhCombobox>
 ```
 
 ### Popover
 
 ```razor
-<HPopover>
-    <HPopoverButton Context="b">Info ▾</HPopoverButton>
-    <HPopoverPanel Context="p">
+<BhPopover>
+    <BhPopoverButton Context="b">Info ▾</BhPopoverButton>
+    <BhPopoverPanel>
         <p>Panel content here.</p>
-        <HPopoverButton>Close</HPopoverButton>
-    </HPopoverPanel>
-</HPopover>
+        <BhPopoverButton Context="closeBtn">Close</BhPopoverButton>
+    </BhPopoverPanel>
+</BhPopover>
 ```
 
 ### Dialog
 
 ```razor
-<HDialog Open="showDialog" OnOpenChange="v => showDialog = v">
-    <HDialogBackdrop class="backdrop" />
-    <HDialogPanel class="dialog-panel">
-        <HDialogTitle>Confirm</HDialogTitle>
-        <HDialogDescription>Are you sure?</HDialogDescription>
-        <button @onclick="() => showDialog = false">OK</button>
-    </HDialogPanel>
-</HDialog>
+<BhDialog Open="@showDialog" OnClose="() => showDialog = false">
+    <BhDialogBackdrop class="backdrop" />
+    <BhDialogPanel class="dialog-panel">
+        <BhDialogTitle>Confirm</BhDialogTitle>
+        <BhDialogDescription>Are you sure?</BhDialogDescription>
+        <BhCloseButton>OK</BhCloseButton>
+    </BhDialogPanel>
+</BhDialog>
 ```
 
 ### Switch
 
 ```razor
-<HSwitch Checked="@enabled" OnCheckedChange="v => enabled = v" class="switch" Context="s">
-    <span class="switch-thumb"></span>
-</HSwitch>
+<BhSwitch Checked="@enabled" OnCheckedChange="v => enabled = v" class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</BhSwitch>
 ```
 
 ### Disclosure
 
 ```razor
-<HDisclosure>
-    <HDisclosureButton Context="d">@(d.IsOpen ? "Hide" : "Show") details</HDisclosureButton>
-    <HDisclosurePanel>Hidden content here.</HDisclosurePanel>
-</HDisclosure>
+<BhDisclosure>
+    <BhDisclosureButton Context="d">@(d.IsOpen ? "Hide" : "Show") details</BhDisclosureButton>
+    <BhDisclosurePanel>Hidden content here.</BhDisclosurePanel>
+</BhDisclosure>
 ```
 
 ### Accordion
 
 ```razor
-<HAccordion DefaultValue="item-1">
-    <HAccordionItem Value="item-1">
-        <HAccordionTrigger Context="t">
+<BhAccordion DefaultValue="item-1">
+    <BhAccordionItem Value="item-1">
+        <BhAccordionTrigger Context="t">
             Section 1 <span>@(t.IsOpen ? "−" : "+")</span>
-        </HAccordionTrigger>
-        <HAccordionContent>Content for section 1.</HAccordionContent>
-    </HAccordionItem>
-</HAccordion>
+        </BhAccordionTrigger>
+        <BhAccordionContent>Content for section 1.</BhAccordionContent>
+    </BhAccordionItem>
+</BhAccordion>
+```
+
+### Tabs
+
+```razor
+<BhTabGroup>
+    <BhTabList>
+        <BhTab>Account</BhTab>
+        <BhTab>Profile</BhTab>
+    </BhTabList>
+    <BhTabPanels>
+        <BhTabPanel>Account settings</BhTabPanel>
+        <BhTabPanel>Profile settings</BhTabPanel>
+    </BhTabPanels>
+</BhTabGroup>
 ```
 
 ## Common parameters
 
-Every component inherits from `HeadlessComponentBase` and supports:
+Every component inherits from `BhComponentBase` and supports:
 
 | Parameter | Purpose |
 | --- | --- |
@@ -215,14 +242,18 @@ Every component inherits from `HeadlessComponentBase` and supports:
 Components emit data attributes that mirror their state:
 
 ```css
-[data-state="open"]      { /* expanded / open */ }
-[data-state="closed"]    { /* collapsed / closed */ }
-[data-state="checked"]   { /* switch/checkbox on */ }
-[data-state="unchecked"] { /* switch/checkbox off */ }
-[data-active]            { background: #eff6ff; }
-[data-selected]          { font-weight: 600; }
-[data-disabled]          { opacity: 0.5; pointer-events: none; }
-[data-loading]           { cursor: progress; }
+[data-state="open"]          { /* expanded / open */ }
+[data-state="closed"]        { /* collapsed / closed */ }
+[data-state="checked"]       { /* switch/checkbox on */ }
+[data-state="unchecked"]     { /* switch/checkbox off */ }
+[data-state="indeterminate"] { /* checkbox mixed state */ }
+[data-state="active"]        { /* selected tab */ }
+[data-active]                { background: #eff6ff; }   /* highlighted menu/listbox option */
+[data-selected]              { font-weight: 600; }      /* selected listbox/combobox option */
+[data-disabled]              { opacity: 0.5; pointer-events: none; }
+[data-loading]               { cursor: progress; }
+[data-orientation="horizontal"] { /* tablists, radio groups */ }
+[data-orientation="vertical"]   { /* tablists, radio groups */ }
 ```
 
 ## Important CSS note
@@ -239,6 +270,40 @@ When your panel CSS sets an explicit `display` value (e.g. `display: flex`), you
     display: none;
 }
 ```
+
+Tailwind users can register a single global rule once in their input file:
+
+```css
+@layer utilities {
+    [hidden] { display: none !important; }
+}
+```
+
+## Sample app
+
+The repo ships with a sample project that demonstrates every component twice — once with hand-written CSS and once with Tailwind utilities, side by side. Both versions render the same headless components; only the styling layer changes.
+
+```
+src/BlazorHeadless.Samples/
+├── Components/Pages/Css/        # Plain CSS demos     (routes: /<slug>)
+├── Components/Pages/Tailwind/   # Tailwind v4 demos   (routes: /tw/<slug>)
+├── tailwind/input.css           # Tailwind entry point + custom data-* variants
+└── wwwroot/app.css              # Hand-written CSS for the CSS section
+```
+
+Run it with:
+
+```bash
+dotnet run --project src/BlazorHeadless.Samples
+```
+
+The Tailwind section uses Tailwind v4's standalone CLI, downloaded automatically on first build by an MSBuild target — no Node.js required. Custom data-attribute variants (`data-state-open:`, `data-state-checked:`, `data-active:`, `data-disabled:`, etc.) are registered in `tailwind/input.css` so you can style states the Tailwind way:
+
+```html
+<button class="bg-white data-state-open:bg-zinc-100 data-disabled:opacity-50">…</button>
+```
+
+A header switcher on every demo page lets you flip between the CSS and Tailwind implementations of the same component.
 
 ## Project status
 
