@@ -39,26 +39,26 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 
 | Component | Description |
 | --- | --- |
-| **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
-| **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
-| **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
-| **BhDialog** | Modal with focus trap, scroll lock, and inert background |
-| **BhPopover** | Non-modal floating panel with focus management and group coordination |
-| **BhTooltip** | Pop-up label that appears on hover or focus, with delay coordination via provider |
-| **BhDisclosure** | Single show/hide region |
 | **BhAccordion** | Single or multiple expandable sections |
-| **BhTabGroup** | Tabbed interface with keyboard navigation |
-| **BhSwitch** | Two-state toggle with optional hidden form input |
-| **BhCheckbox** | Custom checkbox with indeterminate state support |
-| **BhRadioGroup** | Single-select radio group |
 | **BhButton** | Polymorphic button with disabled and loading states |
+| **BhCheckbox** | Custom checkbox with indeterminate state support |
 | **BhCloseButton** | Pre-wired button that closes the nearest Dialog, Popover, or Disclosure |
+| **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
+| **BhDataInteractive** | Forward `data-hover` / `data-active` / `data-focus` attributes for unified state styling |
+| **BhDialog** | Modal with focus trap, scroll lock, and inert background |
+| **BhDisclosure** | Single show/hide region |
 | **BhField** | Form field grouping with `BhLabel`, `BhDescription`, `BhInput`, `BhSelect`, `BhTextarea` |
 | **BhFieldset** | Group form controls under a `BhLegend`, with cascading disabled state |
-| **BhTransition** | CSS class-based enter/leave animations with lifecycle callbacks |
-| **BhPortal** | Render children into a different part of the DOM tree |
 | **BhFocusTrap** | Trap keyboard focus inside a container |
-| **BhDataInteractive** | Forward `data-hover` / `data-active` / `data-focus` attributes for unified state styling |
+| **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
+| **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
+| **BhPopover** | Non-modal floating panel with focus management and group coordination |
+| **BhPortal** | Render children into a different part of the DOM tree |
+| **BhRadioGroup** | Single-select radio group |
+| **BhSwitch** | Two-state toggle with optional hidden form input |
+| **BhTabGroup** | Tabbed interface with keyboard navigation |
+| **BhTooltip** | Pop-up label that appears on hover or focus, with delay coordination via provider |
+| **BhTransition** | CSS class-based enter/leave animations with lifecycle callbacks |
 
 ## Anchor Positioning
 
@@ -112,33 +112,17 @@ bottom start |  bottom  |  bottom end
 
 ## Quick examples
 
-### Menu
+### Accordion
 
 ```razor
-<BhMenu>
-    <BhMenuButton class="btn" Context="b">
-        Options
-        <span class="chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </BhMenuButton>
-    <BhMenuItems class="dropdown">
-        <BhMenuItem OnClick="Edit"   Label="Edit">Edit</BhMenuItem>
-        <BhMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</BhMenuItem>
-    </BhMenuItems>
-</BhMenu>
-```
-
-### Listbox
-
-```razor
-<BhListbox TValue="string" Value="@person" OnValueChange="v => person = v">
-    <BhListboxButton TValue="string" Context="b">
-        @(b.Value ?? "Select…")
-    </BhListboxButton>
-    <BhListboxOptions TValue="string">
-        <BhListboxOption TValue="string" Value="@("alice")">Alice</BhListboxOption>
-        <BhListboxOption TValue="string" Value="@("bob")">Bob</BhListboxOption>
-    </BhListboxOptions>
-</BhListbox>
+<BhAccordion DefaultValue="item-1">
+    <BhAccordionItem Value="item-1">
+        <BhAccordionTrigger Context="t">
+            Section 1 <span>@(t.IsOpen ? "−" : "+")</span>
+        </BhAccordionTrigger>
+        <BhAccordionContent>Content for section 1.</BhAccordionContent>
+    </BhAccordionItem>
+</BhAccordion>
 ```
 
 ### Combobox
@@ -156,18 +140,6 @@ bottom start |  bottom  |  bottom end
 </BhCombobox>
 ```
 
-### Popover
-
-```razor
-<BhPopover>
-    <BhPopoverButton Context="b">Info ▾</BhPopoverButton>
-    <BhPopoverPanel>
-        <p>Panel content here.</p>
-        <BhPopoverButton Context="closeBtn">Close</BhPopoverButton>
-    </BhPopoverPanel>
-</BhPopover>
-```
-
 ### Dialog
 
 ```razor
@@ -181,15 +153,6 @@ bottom start |  bottom  |  bottom end
 </BhDialog>
 ```
 
-### Switch
-
-```razor
-<BhSwitch Checked="@enabled" OnCheckedChange="v => enabled = v" class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</BhSwitch>
-```
-
 ### Disclosure
 
 ```razor
@@ -199,17 +162,54 @@ bottom start |  bottom  |  bottom end
 </BhDisclosure>
 ```
 
-### Accordion
+### Listbox
 
 ```razor
-<BhAccordion DefaultValue="item-1">
-    <BhAccordionItem Value="item-1">
-        <BhAccordionTrigger Context="t">
-            Section 1 <span>@(t.IsOpen ? "−" : "+")</span>
-        </BhAccordionTrigger>
-        <BhAccordionContent>Content for section 1.</BhAccordionContent>
-    </BhAccordionItem>
-</BhAccordion>
+<BhListbox TValue="string" Value="@person" OnValueChange="v => person = v">
+    <BhListboxButton TValue="string" Context="b">
+        @(b.Value ?? "Select…")
+    </BhListboxButton>
+    <BhListboxOptions TValue="string">
+        <BhListboxOption TValue="string" Value="@("alice")">Alice</BhListboxOption>
+        <BhListboxOption TValue="string" Value="@("bob")">Bob</BhListboxOption>
+    </BhListboxOptions>
+</BhListbox>
+```
+
+### Menu
+
+```razor
+<BhMenu>
+    <BhMenuButton class="btn" Context="b">
+        Options
+        <span class="chevron @(b.IsOpen ? "open" : "")">▾</span>
+    </BhMenuButton>
+    <BhMenuItems class="dropdown">
+        <BhMenuItem OnClick="Edit"   Label="Edit">Edit</BhMenuItem>
+        <BhMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</BhMenuItem>
+    </BhMenuItems>
+</BhMenu>
+```
+
+### Popover
+
+```razor
+<BhPopover>
+    <BhPopoverButton Context="b">Info ▾</BhPopoverButton>
+    <BhPopoverPanel>
+        <p>Panel content here.</p>
+        <BhPopoverButton Context="closeBtn">Close</BhPopoverButton>
+    </BhPopoverPanel>
+</BhPopover>
+```
+
+### Switch
+
+```razor
+<BhSwitch Checked="@enabled" OnCheckedChange="v => enabled = v" class="switch" Context="s">
+    <span class="switch-thumb"
+          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+</BhSwitch>
 ```
 
 ### Tabs
