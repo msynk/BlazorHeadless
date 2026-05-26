@@ -42,6 +42,7 @@ const components = [
     { slug: 'radiogroup',       cls: 'RadioGroupPage',      label: 'Radio Group' },
     { slug: 'switch',           cls: 'SwitchPage',          label: 'Switch' },
     { slug: 'tabs',             cls: 'TabsPage',            label: 'Tabs' },
+    { slug: 'tooltip',          cls: 'TooltipPage',         label: 'Tooltip' },
     { slug: 'transition',       cls: 'TransitionPage',      label: 'Transition' },
 ];
 
@@ -352,7 +353,7 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
             </a>
             <a class="hero-card" href="components/menu.html">
                 <strong>Browse components →</strong>
-                <span>19 unstyled, accessible primitives ready to wire into any design.</span>
+                <span>20 unstyled, accessible primitives ready to wire into any design.</span>
             </a>
             <a class="hero-card" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">
                 <strong>GitHub →</strong>
@@ -373,7 +374,7 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
         </ul>
 
         <h2 id="components">Components</h2>
-        <p>BlazorHeadless ships 19 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
+        <p>BlazorHeadless ships 20 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
 
         <div class="component-grid">
 ${components

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tooltip — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/tooltip.html" class="active">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Tooltip</h1>
+        <p class="lead">A small popup that surfaces information about a control on hover or focus.</p>
+        <h2 id="basic-tooltip">Basic Tooltip</h2>
+        <p>Hover or focus the trigger to open the tooltip. Pointer leave, blur, or pressing Escape closes it. <code>aria-describedby</code> wires the content to the trigger automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="200"&gt;
+    &lt;BhTooltip class="tooltip"&gt;
+        &lt;BhTooltipTrigger class="tooltip-trigger"&gt;+ Add to library&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                          class="tooltip-content"&gt;
+            Adds the item to your library
+            &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="200"&gt;
+    &lt;BhTooltip class="inline-block"&gt;
+        &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;
+            + Add to library
+        &lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+            Adds the item to your library
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="provider-configuration">Provider configuration</h2>
+        <p>Use <code>BhTooltipProvider</code> to set <code>DelayDuration</code> and <code>SkipDelayDuration</code> globally. Hover one trigger then move quickly to the next — the second tooltip opens instantly because the recently-closed window is still active.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="500" SkipDelayDuration="500"&gt;
+    &lt;div class="tooltip-row"&gt;
+        &lt;BhTooltip class="tooltip"&gt;
+            &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Save&lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content"&gt;
+                Save changes
+                &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+        &lt;BhTooltip class="tooltip"&gt;
+            &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Edit&lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content"&gt;
+                Edit this item
+                &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+        &lt;BhTooltip class="tooltip"&gt;
+            &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Delete&lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content"&gt;
+                Permanently delete
+                &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+    &lt;/div&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="500" SkipDelayDuration="500"&gt;
+    &lt;div class="flex items-center gap-2"&gt;
+        &lt;BhTooltip class="inline-block"&gt;
+            &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400"&gt;
+                Save
+            &lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+                Save changes
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+        &lt;BhTooltip class="inline-block"&gt;
+            &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400"&gt;
+                Edit
+            &lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+                Edit this item
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+        &lt;BhTooltip class="inline-block"&gt;
+            &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400"&gt;
+                Delete
+            &lt;/BhTooltipTrigger&gt;
+            &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+                Permanently delete
+            &lt;/BhTooltipContent&gt;
+        &lt;/BhTooltip&gt;
+    &lt;/div&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="show-instantly">Show instantly</h2>
+        <p>Set <code>DelayDuration="0"</code> on a tooltip to have it open immediately on hover or focus.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltip DelayDuration="0" class="inline-block"&gt;
+    &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400"&gt;
+        No delay
+    &lt;/BhTooltipTrigger&gt;
+    &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+        I open instantly
+    &lt;/BhTooltipContent&gt;
+&lt;/BhTooltip&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="anchor-sides-and-alignment">Anchor sides and alignment</h2>
+        <p>The <code>Anchor</code> on <code>BhTooltipContent</code> supports <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code> with optional <code>start</code> / <code>end</code> alignment. The engine flips and shifts to keep the tooltip in view.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="200"&gt;
+    &lt;BhTooltip class="inline-block"&gt;
+        &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer"&gt;Top&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;Top&lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="inline-block"&gt;
+        &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer"&gt;Right&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;Right&lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="inline-block"&gt;
+        &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer"&gt;Bottom&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;Bottom&lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="inline-block"&gt;
+        &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer"&gt;Left&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;Left&lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled">Controlled</h2>
+        <p>Drive the open state externally with <code>Open</code> and <code>OnOpenChange</code>. Useful for guided tours or programmatic highlighting.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ToggleControlled"
+          class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"&gt;
+    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+&lt;/BhButton&gt;
+
+&lt;BhTooltip Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v" class="inline-block"&gt;
+    &lt;BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer"&gt;
+        Target
+    &lt;/BhTooltipTrigger&gt;
+    &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md"&gt;
+        Driven from outside
+    &lt;/BhTooltipContent&gt;
+&lt;/BhTooltip&gt;
+
+@code {
+    private bool controlledOpen;
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="tabs.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Tabs</span>
+        </a>
+            <a class="next" href="transition.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Transition</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

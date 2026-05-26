@@ -1,0 +1,323 @@
+@page "/tooltip"
+@rendermode InteractiveServer
+
+<PageTitle>Tooltip — BlazorHeadless</PageTitle>
+
+<div class="demo-page">
+    <header class="demo-header">
+        <h1>Tooltip</h1>
+        <p>A small popup that surfaces information about a control on hover or focus.</p>
+        <SectionSwitcher Slug="tooltip" />
+    </header>
+
+    <DemoBlock Title="Basic Tooltip"
+               Code="@_basicCode"
+               Css="@_tooltipCss">
+        <Description>
+            Hover or focus the trigger to open the tooltip. Pointer leave, blur,
+            or pressing Escape closes it. <code>aria-describedby</code> wires the
+            content to the trigger automatically.
+        </Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="200">
+                <BhTooltip class="tooltip">
+                    <BhTooltipTrigger class="tooltip-trigger">+ Add to library</BhTooltipTrigger>
+                    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                      class="tooltip-content">
+                        Adds the item to your library
+                        <BhTooltipArrow class="tooltip-arrow" />
+                    </BhTooltipContent>
+                </BhTooltip>
+            </BhTooltipProvider>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Provider configuration"
+               Code="@_providerCode"
+               Css="@_providerCss">
+        <Description>
+            Use <code>BhTooltipProvider</code> to set <code>DelayDuration</code> and
+            <code>SkipDelayDuration</code> globally. Hover one trigger then move
+            quickly to the next — the second tooltip opens instantly because
+            the recently-closed window is still active.
+        </Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="500" SkipDelayDuration="500">
+                <div class="tooltip-row">
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Save</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="tooltip-content">
+                            Save changes
+                            <BhTooltipArrow class="tooltip-arrow" />
+                        </BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Edit</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="tooltip-content">
+                            Edit this item
+                            <BhTooltipArrow class="tooltip-arrow" />
+                        </BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Delete</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="tooltip-content">
+                            Permanently delete
+                            <BhTooltipArrow class="tooltip-arrow" />
+                        </BhTooltipContent>
+                    </BhTooltip>
+                </div>
+            </BhTooltipProvider>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Show instantly"
+               Code="@_instantCode">
+        <Description>
+            Set <code>DelayDuration="0"</code> on a tooltip to have it open
+            immediately on hover or focus.
+        </Description>
+        <LiveContent>
+            <BhTooltip DelayDuration="0" class="tooltip">
+                <BhTooltipTrigger class="tooltip-trigger">No delay</BhTooltipTrigger>
+                <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                  class="tooltip-content">
+                    I open instantly
+                    <BhTooltipArrow class="tooltip-arrow" />
+                </BhTooltipContent>
+            </BhTooltip>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Anchor sides and alignment"
+               Code="@_sidesCode">
+        <Description>
+            The <code>Anchor</code> on <code>BhTooltipContent</code> supports
+            <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>
+            with optional <code>start</code> / <code>end</code> alignment. The
+            engine flips and shifts to keep the tooltip in view.
+        </Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="200">
+                <div class="tooltip-row">
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Top</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="tooltip-content">Top
+                            <BhTooltipArrow class="tooltip-arrow" /></BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Right</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })"
+                                          class="tooltip-content">Right
+                            <BhTooltipArrow class="tooltip-arrow" /></BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Bottom</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })"
+                                          class="tooltip-content">Bottom
+                            <BhTooltipArrow class="tooltip-arrow" /></BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="tooltip">
+                        <BhTooltipTrigger class="tooltip-trigger">Left</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })"
+                                          class="tooltip-content">Left
+                            <BhTooltipArrow class="tooltip-arrow" /></BhTooltipContent>
+                    </BhTooltip>
+                </div>
+            </BhTooltipProvider>
+        </LiveContent>
+    </DemoBlock>
+
+    <DemoBlock Title="Controlled"
+               Code="@_controlledCode">
+        <Description>
+            Drive the open state externally with <code>Open</code> and
+            <code>OnOpenChange</code>. Useful for guided tours or programmatic
+            highlighting.
+        </Description>
+        <LiveContent>
+            <div class="tooltip-row">
+                <BhButton OnClick="ToggleControlled" class="btn">
+                    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+                </BhButton>
+                <BhTooltip Open="controlledOpen"
+                           OnOpenChange="v => controlledOpen = v"
+                           class="tooltip">
+                    <BhTooltipTrigger class="tooltip-trigger">Target</BhTooltipTrigger>
+                    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                      class="tooltip-content">
+                        Driven from outside
+                        <BhTooltipArrow class="tooltip-arrow" />
+                    </BhTooltipContent>
+                </BhTooltip>
+            </div>
+        </LiveContent>
+    </DemoBlock>
+</div>
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() => controlledOpen = !controlledOpen;
+
+    private const string _basicCode = """
+<BhTooltipProvider DelayDuration="200">
+    <BhTooltip class="tooltip">
+        <BhTooltipTrigger class="tooltip-trigger">+ Add to library</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                          class="tooltip-content">
+            Adds the item to your library
+            <BhTooltipArrow class="tooltip-arrow" />
+        </BhTooltipContent>
+    </BhTooltip>
+</BhTooltipProvider>
+""";
+
+    private const string _providerCode = """
+<BhTooltipProvider DelayDuration="500" SkipDelayDuration="500">
+    <div class="tooltip-row">
+        <BhTooltip class="tooltip">
+            <BhTooltipTrigger class="tooltip-trigger">Save</BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content">
+                Save changes
+                <BhTooltipArrow class="tooltip-arrow" />
+            </BhTooltipContent>
+        </BhTooltip>
+        <BhTooltip class="tooltip">
+            <BhTooltipTrigger class="tooltip-trigger">Edit</BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content">
+                Edit this item
+                <BhTooltipArrow class="tooltip-arrow" />
+            </BhTooltipContent>
+        </BhTooltip>
+        <BhTooltip class="tooltip">
+            <BhTooltipTrigger class="tooltip-trigger">Delete</BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="tooltip-content">
+                Permanently delete
+                <BhTooltipArrow class="tooltip-arrow" />
+            </BhTooltipContent>
+        </BhTooltip>
+    </div>
+</BhTooltipProvider>
+""";
+
+    private const string _instantCode = """
+<BhTooltip DelayDuration="0" class="tooltip">
+    <BhTooltipTrigger class="tooltip-trigger">No delay</BhTooltipTrigger>
+    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="tooltip-content">
+        I open instantly
+        <BhTooltipArrow class="tooltip-arrow" />
+    </BhTooltipContent>
+</BhTooltip>
+""";
+
+    private const string _sidesCode = """
+<BhTooltipProvider DelayDuration="200">
+    <BhTooltip class="tooltip">
+        <BhTooltipTrigger class="tooltip-trigger">Top</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })" class="tooltip-content">
+            Top<BhTooltipArrow class="tooltip-arrow" />
+        </BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="tooltip">
+        <BhTooltipTrigger class="tooltip-trigger">Right</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })" class="tooltip-content">
+            Right<BhTooltipArrow class="tooltip-arrow" />
+        </BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="tooltip">
+        <BhTooltipTrigger class="tooltip-trigger">Bottom</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })" class="tooltip-content">
+            Bottom<BhTooltipArrow class="tooltip-arrow" />
+        </BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="tooltip">
+        <BhTooltipTrigger class="tooltip-trigger">Left</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })" class="tooltip-content">
+            Left<BhTooltipArrow class="tooltip-arrow" />
+        </BhTooltipContent>
+    </BhTooltip>
+</BhTooltipProvider>
+""";
+
+    private const string _controlledCode = """
+<BhButton OnClick="ToggleControlled" class="btn">
+    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+</BhButton>
+
+<BhTooltip Open="controlledOpen"
+           OnOpenChange="v => controlledOpen = v"
+           class="tooltip">
+    <BhTooltipTrigger class="tooltip-trigger">Target</BhTooltipTrigger>
+    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="tooltip-content">
+        Driven from outside
+        <BhTooltipArrow class="tooltip-arrow" />
+    </BhTooltipContent>
+</BhTooltip>
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() => controlledOpen = !controlledOpen;
+}
+""";
+
+    private const string _tooltipCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+""";
+
+    private const string _providerCss = """
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }
+""";
+}

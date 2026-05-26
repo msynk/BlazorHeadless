@@ -18,9 +18,9 @@
     <Company>msynk</Company>
     <Product>BlazorHeadless</Product>
     <Title>BlazorHeadless</Title>
-    <Description>A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Includes Menu, Listbox, Combobox, Dialog, Popover, Disclosure, Accordion, Tabs, Switch, Checkbox, RadioGroup, Field, Transition, Portal, FocusTrap and more. Style it your way with plain CSS, Tailwind, or any design system.</Description>
+    <Description>A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Includes Menu, Listbox, Combobox, Dialog, Popover, Tooltip, Disclosure, Accordion, Tabs, Switch, Checkbox, RadioGroup, Field, Transition, Portal, FocusTrap and more. Style it your way with plain CSS, Tailwind, or any design system.</Description>
     <Copyright>Copyright (c) 2026 Saleh Yusefnejad</Copyright>
-    <PackageTags>blazor;headless;ui;components;razor;accessibility;aria;tailwind;dialog;menu;listbox;combobox;popover;disclosure;accordion;tabs;switch;checkbox;radiogroup</PackageTags>
+    <PackageTags>blazor;headless;ui;components;razor;accessibility;aria;tailwind;dialog;menu;listbox;combobox;popover;tooltip;disclosure;accordion;tabs;switch;checkbox;radiogroup</PackageTags>
     <PackageProjectUrl>https://github.com/msynk/BlazorHeadless</PackageProjectUrl>
     <RepositoryUrl>https://github.com/msynk/BlazorHeadless.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

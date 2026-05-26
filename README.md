@@ -44,6 +44,7 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 | **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
 | **BhDialog** | Modal with focus trap, scroll lock, and inert background |
 | **BhPopover** | Non-modal floating panel with focus management and group coordination |
+| **BhTooltip** | Pop-up label that appears on hover or focus, with delay coordination via provider |
 | **BhDisclosure** | Single show/hide region |
 | **BhAccordion** | Single or multiple expandable sections |
 | **BhTabGroup** | Tabbed interface with keyboard navigation |

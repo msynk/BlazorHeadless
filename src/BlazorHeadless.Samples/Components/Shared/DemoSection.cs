@@ -40,6 +40,7 @@ public static class DemoCatalog
         new("radiogroup",       "Radio Group"),
         new("switch",           "Switch"),
         new("tabs",             "Tabs"),
+        new("tooltip",          "Tooltip"),
         new("transition",       "Transition"),
     ];
 

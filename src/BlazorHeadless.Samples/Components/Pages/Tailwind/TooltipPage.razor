@@ -1,0 +1,247 @@
+@page "/tw/tooltip"
+@rendermode InteractiveServer
+
+<PageTitle>Tooltip — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Tooltip</h1>
+        <p class="mt-2 text-zinc-500">A small popup that surfaces information about a control on hover or focus.</p>
+        <TwSectionSwitcher Slug="tooltip" />
+    </header>
+
+    <TwDemoBlock Title="Basic Tooltip" Code="@_basicCode">
+        <Description>Hover or focus the trigger to open. Escape, blur, or pointer leave closes.</Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="200">
+                <BhTooltip class="inline-block">
+                    <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        + Add to library
+                    </BhTooltipTrigger>
+                    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md relative">
+                        Adds the item to your library
+                        <BhTooltipArrow class="fill-zinc-900 absolute left-1/2 -translate-x-1/2 -bottom-1 data-anchor-bottom:rotate-180 data-anchor-bottom:top-[-4px] data-anchor-bottom:bottom-auto" />
+                    </BhTooltipContent>
+                </BhTooltip>
+            </BhTooltipProvider>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Provider configuration" Code="@_providerCode">
+        <Description>
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhTooltipProvider</code> sets <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">DelayDuration</code> and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">SkipDelayDuration</code>. Move quickly between triggers — the next one opens instantly.
+        </Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="500" SkipDelayDuration="500">
+                <div class="flex items-center gap-2">
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            Save
+                        </BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                            Save changes
+                        </BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            Edit
+                        </BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                            Edit this item
+                        </BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            Delete
+                        </BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                            Permanently delete
+                        </BhTooltipContent>
+                    </BhTooltip>
+                </div>
+            </BhTooltipProvider>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Show instantly" Code="@_instantCode">
+        <Description><code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">DelayDuration="0"</code> opens immediately.</Description>
+        <LiveContent>
+            <BhTooltip DelayDuration="0" class="inline-block">
+                <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    No delay
+                </BhTooltipTrigger>
+                <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                  class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                    I open instantly
+                </BhTooltipContent>
+            </BhTooltip>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Anchor sides and alignment" Code="@_sidesCode">
+        <Description>The engine flips and shifts to keep the tooltip in view.</Description>
+        <LiveContent>
+            <BhTooltipProvider DelayDuration="200">
+                <div class="flex items-center gap-2">
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">Top</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Top</BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">Right</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Right</BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">Bottom</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Bottom</BhTooltipContent>
+                    </BhTooltip>
+                    <BhTooltip class="inline-block">
+                        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">Left</BhTooltipTrigger>
+                        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })"
+                                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Left</BhTooltipContent>
+                    </BhTooltip>
+                </div>
+            </BhTooltipProvider>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Controlled" Code="@_controlledCode">
+        <Description>External <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Open</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OnOpenChange</code>.</Description>
+        <LiveContent>
+            <div class="flex items-center gap-2">
+                <BhButton OnClick="ToggleControlled"
+                          class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100">
+                    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+                </BhButton>
+                <BhTooltip Open="controlledOpen" OnOpenChange="v => controlledOpen = v" class="inline-block">
+                    <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">
+                        Target
+                    </BhTooltipTrigger>
+                    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                        Driven from outside
+                    </BhTooltipContent>
+                </BhTooltip>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() => controlledOpen = !controlledOpen;
+
+    private const string _basicCode = """
+<BhTooltipProvider DelayDuration="200">
+    <BhTooltip class="inline-block">
+        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+            + Add to library
+        </BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                          class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+            Adds the item to your library
+        </BhTooltipContent>
+    </BhTooltip>
+</BhTooltipProvider>
+""";
+
+    private const string _providerCode = """
+<BhTooltipProvider DelayDuration="500" SkipDelayDuration="500">
+    <div class="flex items-center gap-2">
+        <BhTooltip class="inline-block">
+            <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">
+                Save
+            </BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                Save changes
+            </BhTooltipContent>
+        </BhTooltip>
+        <BhTooltip class="inline-block">
+            <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">
+                Edit
+            </BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                Edit this item
+            </BhTooltipContent>
+        </BhTooltip>
+        <BhTooltip class="inline-block">
+            <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">
+                Delete
+            </BhTooltipTrigger>
+            <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                              class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+                Permanently delete
+            </BhTooltipContent>
+        </BhTooltip>
+    </div>
+</BhTooltipProvider>
+""";
+
+    private const string _instantCode = """
+<BhTooltip DelayDuration="0" class="inline-block">
+    <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400">
+        No delay
+    </BhTooltipTrigger>
+    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+        I open instantly
+    </BhTooltipContent>
+</BhTooltip>
+""";
+
+    private const string _sidesCode = """
+<BhTooltipProvider DelayDuration="200">
+    <BhTooltip class="inline-block">
+        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer">Top</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Top</BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="inline-block">
+        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer">Right</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Right</BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="inline-block">
+        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer">Bottom</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Bottom</BhTooltipContent>
+    </BhTooltip>
+
+    <BhTooltip class="inline-block">
+        <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer">Left</BhTooltipTrigger>
+        <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })" class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">Left</BhTooltipContent>
+    </BhTooltip>
+</BhTooltipProvider>
+""";
+
+    private const string _controlledCode = """
+<BhButton OnClick="ToggleControlled"
+          class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100">
+    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+</BhButton>
+
+<BhTooltip Open="controlledOpen" OnOpenChange="v => controlledOpen = v" class="inline-block">
+    <BhTooltipTrigger class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer">
+        Target
+    </BhTooltipTrigger>
+    <BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="z-50 rounded-md bg-zinc-900 px-2.5 py-1 text-xs text-zinc-50 shadow-md">
+        Driven from outside
+    </BhTooltipContent>
+</BhTooltip>
+
+@code {
+    private bool controlledOpen;
+    private void ToggleControlled() => controlledOpen = !controlledOpen;
+}
+""";
+}
