@@ -23,6 +23,7 @@ public static class DemoCatalog
     public static readonly IReadOnlyList<Entry> Components =
     [
         new("accordion",        "Accordion"),
+        new("aspect-ratio",     "Aspect Ratio"),
         new("button",           "Button"),
         new("checkbox",         "Checkbox"),
         new("close-button",     "CloseButton"),

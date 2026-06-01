@@ -40,6 +40,7 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 | Component | Description |
 | --- | --- |
 | **BhAccordion** | Single or multiple expandable sections |
+| **BhAspectRatio** | Constrain content to a desired width-to-height ratio |
 | **BhButton** | Polymorphic button with disabled and loading states |
 | **BhCheckbox** | Custom checkbox with indeterminate state support |
 | **BhCloseButton** | Pre-wired button that closes the nearest Dialog, Popover, or Disclosure |

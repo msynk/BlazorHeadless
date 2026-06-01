@@ -25,6 +25,7 @@ const outComponents = join(__dirname, 'components');
 // ---------------------------------------------------------------------------
 const components = [
     { slug: 'accordion',        cls: 'AccordionPage',       label: 'Accordion' },
+    { slug: 'aspect-ratio',     cls: 'AspectRatioPage',     label: 'Aspect Ratio' },
     { slug: 'button',           cls: 'ButtonPage',          label: 'Button' },
     { slug: 'checkbox',         cls: 'CheckboxPage',        label: 'Checkbox' },
     { slug: 'close-button',     cls: 'CloseButtonPage',     label: 'CloseButton' },
@@ -353,7 +354,7 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
             </a>
             <a class="hero-card" href="components/menu.html">
                 <strong>Browse components →</strong>
-                <span>20 unstyled, accessible primitives ready to wire into any design.</span>
+                <span>21 unstyled, accessible primitives ready to wire into any design.</span>
             </a>
             <a class="hero-card" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">
                 <strong>GitHub →</strong>
@@ -374,7 +375,7 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
         </ul>
 
         <h2 id="components">Components</h2>
-        <p>BlazorHeadless ships 20 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
+        <p>BlazorHeadless ships 21 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
 
         <div class="component-grid">
 ${components

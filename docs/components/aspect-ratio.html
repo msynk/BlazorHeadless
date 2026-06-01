@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aspect Ratio — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/aspect-ratio.html" class="active">Aspect Ratio</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Aspect Ratio</h1>
+        <p class="lead">Displays content within a desired ratio, regardless of the content's intrinsic size.</p>
+        <h2 id="basic-16-9">Basic (16 / 9)</h2>
+        <p>Wrap any content in <code>BhAspectRatio</code> and set <code>Ratio</code> to the desired <code>width / height</code>. The image fills the box at a constant 16:9 ratio no matter how wide the column gets.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="ratio-frame"&gt;
+    &lt;BhAspectRatio Ratio="16d / 9d" class="ratio-box"&gt;
+        &lt;img class="ratio-media" src="/landscape.jpg" alt="Landscape" /&gt;
+    &lt;/BhAspectRatio&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The library ships zero CSS — these styles are consumer-authored. */
+.ratio-frame {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.ratio-box {
+    overflow: hidden;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Make the media fill the ratio box */
+.ratio-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="w-full max-w-md"&gt;
+    &lt;BhAspectRatio Ratio="16d / 9d" class="overflow-hidden rounded-xl shadow-md"&gt;
+        &lt;img class="h-full w-full object-cover" src="/landscape.jpg" alt="Landscape" /&gt;
+    &lt;/BhAspectRatio&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="square-1-1">Square (1 / 1)</h2>
+        <p>The default ratio is <code>1</code> — a perfect square. Useful for avatars and thumbnails. You can omit the <code>Ratio</code> parameter entirely.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Ratio defaults to 1 (square) — the parameter is optional *@
+&lt;BhAspectRatio class="ratio-box"&gt;
+    &lt;img class="ratio-media" src="/avatar.jpg" alt="Avatar" /&gt;
+&lt;/BhAspectRatio&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .ratio-box / .ratio-media from the basic demo. */
+.ratio-frame-sm {
+    max-width: 12rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Ratio defaults to 1 (square) — the parameter is optional *@
+&lt;div class="w-48"&gt;
+    &lt;BhAspectRatio class="overflow-hidden rounded-xl shadow-md"&gt;
+        &lt;img class="h-full w-full object-cover" src="/avatar.jpg" alt="Avatar" /&gt;
+    &lt;/BhAspectRatio&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="portrait-3-4">Portrait (3 / 4)</h2>
+        <p>Ratios smaller than <code>1</code> produce taller-than-wide boxes. Here <code>3 / 4</code> creates a portrait frame.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAspectRatio Ratio="3d / 4d" class="ratio-box"&gt;
+    &lt;img class="ratio-media" src="/portrait.jpg" alt="Portrait" /&gt;
+&lt;/BhAspectRatio&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .ratio-box / .ratio-media / .ratio-frame-sm from earlier demos.
+   A ratio below 1 yields a box taller than it is wide. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="w-48"&gt;
+    &lt;BhAspectRatio Ratio="3d / 4d" class="overflow-hidden rounded-xl shadow-md"&gt;
+        &lt;img class="h-full w-full object-cover" src="/portrait.jpg" alt="Portrait" /&gt;
+    &lt;/BhAspectRatio&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="non-image-content">Non-image content</h2>
+        <p>The ratio box isn't limited to images — drop in any content. The inner element is absolutely positioned to fill the reserved space, so flex centring works as expected.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAspectRatio Ratio="2d / 1d" class="ratio-box ratio-card"&gt;
+    &lt;span&gt;2 : 1&lt;/span&gt;
+&lt;/BhAspectRatio&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The inner element fills the ratio box, so flex centring works directly. */
+.ratio-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAspectRatio Ratio="2d / 1d"
+               class="flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-2xl font-bold tracking-widest text-white"&gt;
+    &lt;span&gt;2 : 1&lt;/span&gt;
+&lt;/BhAspectRatio&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="accordion.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Accordion</span>
+        </a>
+            <a class="next" href="button.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Button</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>
