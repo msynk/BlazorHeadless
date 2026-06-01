@@ -2930,6 +2930,33 @@ body {
     color: #fff;
     background: var(--color-primary-hover);
 }
+
+/* ---- Sticky behaviour ----
+   Keep the implementation toggle reachable while scrolling long demo pages.
+   The page header is collapsed with display:contents (only when it actually
+   holds a switcher) so the sticky element's containing block becomes the
+   full-height page wrapper instead of the short header — otherwise it would
+   unstick the moment the title scrolled out of view. */
+.demo-header:has(.section-switcher-sticky),
+header:has(.section-switcher-sticky) {
+    display: contents;
+}
+
+.section-switcher-sticky {
+    position: sticky;
+    top: 0.75rem;
+    z-index: 20;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+    /* Sit just below the sticky mobile header. */
+    .section-switcher-sticky {
+        top: 4rem;
+    }
+}
+
 /* ============================================================
    Tooltip demo styles
    ============================================================ */
