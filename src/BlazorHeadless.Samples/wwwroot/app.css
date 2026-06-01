@@ -1598,6 +1598,90 @@ body {
 }
 
 /* ============================================================
+   Context Menu styles — purely consumer-defined
+   ============================================================ */
+
+.cm-trigger {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 9rem;
+    padding: 2rem;
+    border: 2px dashed #d4d4d8;
+    border-radius: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    user-select: none;
+    cursor: context-menu;
+    transition: border-color 120ms ease, color 120ms ease;
+}
+
+.cm-trigger[data-state="open"] {
+    border-color: var(--color-primary);
+    color: #1d4ed8;
+}
+
+.cm-trigger-disabled { cursor: default; }
+
+/* The content panel is positioned at the pointer with fixed positioning by the
+   JS engine, so it needs a high z-index and no manual top/left. */
+.cm-content {
+    z-index: 9999;
+    min-width: 11rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cm-content:focus-visible { outline: none; }
+.cm-content[hidden] { display: none; }
+
+.cm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+/* Hooks emitted by BhContextMenuItem */
+.cm-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.cm-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.cm-label {
+    padding: 0.35rem 0.65rem 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted);
+    list-style: none;
+}
+
+.cm-group { list-style: none; }
+
+.cm-separator {
+    display: block;
+    height: 1px;
+    background: var(--color-border);
+    margin: 0.25rem 0;
+    list-style: none;
+}
+
+.cm-shortcut { margin-left: auto; font-size: 0.75rem; color: var(--color-muted); }
+
+.cm-item-danger { color: #dc2626; }
+.cm-item-danger[data-active] { background: #fef2f2; color: #b91c1c; }
+
+/* ============================================================
    Popover styles — purely consumer-defined
    ============================================================ */
 

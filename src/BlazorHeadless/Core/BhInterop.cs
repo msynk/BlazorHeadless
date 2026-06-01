@@ -171,6 +171,38 @@ public sealed class BhInterop : IAsyncDisposable
         await module.InvokeVoidAsync("anchor.update", handle);
     }
 
+    // ── Context Menu / point positioning ────────────────────────────────────
+
+    /// <summary>
+    /// Positions the floating element identified by <paramref name="floatingId"/>
+    /// at the viewport coordinates (<paramref name="x"/>, <paramref name="y"/>) with
+    /// collision handling so it stays inside the viewport. Sets <c>data-side</c>
+    /// and <c>data-align</c> on the element to reflect the resolved placement.
+    /// </summary>
+    /// <param name="floatingId">The id of the floating panel element to position.</param>
+    /// <param name="x">Viewport X coordinate (px), e.g. the pointer's clientX.</param>
+    /// <param name="y">Viewport Y coordinate (px), e.g. the pointer's clientY.</param>
+    /// <param name="padding">Minimum space (px) from the viewport edges.</param>
+    public async ValueTask ContextMenuPositionAsync(string floatingId, double x, double y, int padding = 8)
+    {
+        var module = await _module.Value;
+        await module.InvokeVoidAsync("contextMenu.position", floatingId, x, y, new { padding });
+    }
+
+    /// <summary>
+    /// Clears the inline positioning styles applied by
+    /// <see cref="ContextMenuPositionAsync"/> for the given element id.
+    /// </summary>
+    public async ValueTask ContextMenuResetAsync(string floatingId)
+    {
+        try
+        {
+            var module = await _module.Value;
+            await module.InvokeVoidAsync("contextMenu.reset", floatingId);
+        }
+        catch (JSDisconnectedException) { /* circuit gone */ }
+    }
+
     // ── Portal ─────────────────────────────────────────────────────────────────
 
     /// <summary>

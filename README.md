@@ -54,6 +54,7 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 | **BhFocusTrap** | Trap keyboard focus inside a container |
 | **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
 | **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
+| **BhContextMenu** | Right-click menu opened at the pointer, with keyboard nav and typeahead |
 | **BhPopover** | Non-modal floating panel with focus management and group coordination |
 | **BhPortal** | Render children into a different part of the DOM tree |
 | **BhRadioGroup** | Single-select radio group |
@@ -191,6 +192,21 @@ bottom start |  bottom  |  bottom end
         <BhMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</BhMenuItem>
     </BhMenuItems>
 </BhMenu>
+```
+
+### Context Menu
+
+```razor
+<BhContextMenu>
+    <BhContextMenuTrigger class="trigger">Right-click here</BhContextMenuTrigger>
+    <BhContextMenuContent class="menu">
+        <BhContextMenuItem OnClick="Back"    Label="Back">Back</BhContextMenuItem>
+        <BhContextMenuItem OnClick="Forward" Label="Forward" Disabled="true">Forward</BhContextMenuItem>
+        <BhContextMenuSeparator />
+        <BhContextMenuLabel>Danger zone</BhContextMenuLabel>
+        <BhContextMenuItem OnClick="Delete"  Label="Delete">Delete</BhContextMenuItem>
+    </BhContextMenuContent>
+</BhContextMenu>
 ```
 
 ### Popover

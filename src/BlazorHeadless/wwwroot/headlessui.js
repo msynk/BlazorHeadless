@@ -286,6 +286,92 @@ function getScrollParents(element) {
     return parents;
 }
 
+// ─── Context Menu: point-anchored positioning ──────────────────────────────
+//
+// Positions a floating element at an arbitrary viewport point (the pointer
+// location of a right-click) with collision handling that flips/clamps the
+// element so it stays fully within the viewport. Sets [data-side]/[data-align]
+// to reflect the resolved placement for collision-aware animations.
+
+export const contextMenu = {
+    /**
+     * Positions the floating element at viewport coordinates (x, y).
+     * Returns { side, align } describing the resolved placement.
+     *
+     * floating: an Element or element ID string
+     * x, y: viewport coordinates (clientX/clientY of the contextmenu event)
+     * options: { padding } minimum gap from the viewport edges (default 8)
+     */
+    position(floating, x, y, options) {
+        if (typeof floating === 'string') floating = document.getElementById(floating);
+        if (!floating) return null;
+        options = options || {};
+        const padding = typeof options.padding === 'number' ? options.padding : 8;
+
+        if (floating.hasAttribute('hidden')) {
+            floating.removeAttribute('hidden');
+        }
+
+        // Make measurable without flashing at the wrong spot.
+        floating.style.position = 'fixed';
+        floating.style.top = '0';
+        floating.style.left = '0';
+        floating.style.willChange = 'transform';
+
+        // Force layout so we can measure the rendered size.
+        floating.offsetHeight; // eslint-disable-line no-unused-expressions
+
+        const rect = floating.getBoundingClientRect();
+        const viewport = {
+            width: window.innerWidth || document.documentElement.clientWidth,
+            height: window.innerHeight || document.documentElement.clientHeight,
+        };
+
+        // Horizontal: prefer opening to the right of the cursor (align start).
+        // Flip to the left when it would overflow the right edge.
+        let left = x;
+        let align = 'start';
+        if (left + rect.width > viewport.width - padding) {
+            left = x - rect.width;
+            align = 'end';
+            if (left < padding) left = viewport.width - rect.width - padding;
+        }
+        left = Math.max(padding, left);
+
+        // Vertical: prefer opening below the cursor (side bottom).
+        // Flip above when it would overflow the bottom edge.
+        let top = y;
+        let side = 'bottom';
+        if (top + rect.height > viewport.height - padding) {
+            top = y - rect.height;
+            side = 'top';
+            if (top < padding) top = viewport.height - rect.height - padding;
+        }
+        top = Math.max(padding, top);
+
+        floating.style.transform = `translate(${Math.round(left)}px, ${Math.round(top)}px)`;
+        floating.setAttribute('data-side', side);
+        floating.setAttribute('data-align', align);
+
+        return { side, align };
+    },
+
+    /**
+     * Resets the inline styles applied by position(...) and re-hides the element.
+     */
+    reset(floating) {
+        if (typeof floating === 'string') floating = document.getElementById(floating);
+        if (!floating) return;
+        floating.style.position = '';
+        floating.style.top = '';
+        floating.style.left = '';
+        floating.style.transform = '';
+        floating.style.willChange = '';
+        floating.removeAttribute('data-side');
+        floating.removeAttribute('data-align');
+    }
+};
+
 // ─── Portal: DOM teleportation ──────────────────────────────────────────────
 
 const portalHandles = new Map();
