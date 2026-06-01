@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avatar — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html" class="active">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Avatar</h1>
+        <p class="lead">An image element with a graceful fallback for representing a user or entity.</p>
+        <h2 id="basic">Basic</h2>
+        <p>Compose <code>BhAvatarImage</code> with a <code>BhAvatarFallback</code> inside <code>BhAvatar</code>. The image is only shown once it loads successfully — until then the fallback initials are displayed.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAvatar class="avatar"&gt;
+    &lt;BhAvatarImage class="avatar-image" Src="/colm.jpg" Alt="Colm Tuite" /&gt;
+    &lt;BhAvatarFallback class="avatar-fallback"&gt;CT&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The library ships zero CSS — these styles are consumer-authored. */
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    overflow: hidden;
+    user-select: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #e4e4e7;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3f3f46;
+    background: #e4e4e7;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAvatar class="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-zinc-200 align-middle select-none"&gt;
+    &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/colm.jpg" Alt="Colm Tuite" /&gt;
+    &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center bg-zinc-200 text-sm font-semibold text-zinc-700"&gt;CT&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="fallback-broken-image">Fallback (broken image)</h2>
+        <p>When the image fails to load (or no <code>Src</code> is given), the fallback is shown instead of a broken-image icon. Here the source is intentionally invalid.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Broken / missing image → the fallback shows automatically *@
+&lt;BhAvatar class="avatar"&gt;
+    &lt;BhAvatarImage class="avatar-image" Src="/does-not-exist.jpg" Alt="Jane Doe" /&gt;
+    &lt;BhAvatarFallback class="avatar-fallback"&gt;JD&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;
+
+@* Fallback with no image at all — e.g. a generic user icon *@
+&lt;BhAvatar class="avatar"&gt;
+    &lt;BhAvatarFallback class="avatar-fallback avatar-fallback-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" width="22" height="22" ...&gt;...&lt;/svg&gt;
+    &lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses .avatar / .avatar-image / .avatar-fallback from the Basic demo. */
+.avatar-fallback-icon {
+    color: #71717a;
+    background: #f4f4f5;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@* Broken / missing image → the fallback shows automatically *@
+&lt;BhAvatar class="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-zinc-200 align-middle select-none"&gt;
+    &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/does-not-exist.jpg" Alt="Jane Doe" /&gt;
+    &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center bg-zinc-200 text-sm font-semibold text-zinc-700"&gt;JD&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;
+
+@* Fallback with no image — a generic user icon *@
+&lt;BhAvatar class="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-zinc-100 align-middle select-none"&gt;
+    &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center text-zinc-500"&gt;
+        &lt;svg viewBox="0 0 24 24" width="22" height="22" ...&gt;...&lt;/svg&gt;
+    &lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="delayed-fallback">Delayed fallback</h2>
+        <p>Set <code>DelayMs</code> on the fallback to wait before showing it. This avoids a flash of initials for images that load quickly. The fallback only appears if the image hasn't loaded by the time the delay elapses.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAvatar class="avatar"&gt;
+    &lt;BhAvatarImage class="avatar-image" Src="/pedro.jpg" Alt="Pedro Duarte" /&gt;
+    &lt;BhAvatarFallback class="avatar-fallback" DelayMs="600"&gt;PD&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the styles from the Basic demo. DelayMs only affects timing,
+   not appearance — there are no extra CSS hooks needed. */</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAvatar class="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-zinc-200 align-middle select-none"&gt;
+    &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/pedro.jpg" Alt="Pedro Duarte" /&gt;
+    &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center bg-zinc-200 text-sm font-semibold text-zinc-700" DelayMs="600"&gt;PD&lt;/BhAvatarFallback&gt;
+&lt;/BhAvatar&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="sizes-and-shapes">Sizes and shapes</h2>
+        <p>The library ships zero styling, so size and shape are entirely up to your CSS. Override <code>class</code> per avatar for circles, squares, or stacked groups.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="avatar-row"&gt;
+    &lt;BhAvatar class="avatar avatar-sm"&gt;
+        &lt;BhAvatarImage class="avatar-image" Src="/a.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="avatar-fallback"&gt;AB&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+
+    &lt;BhAvatar class="avatar"&gt;
+        &lt;BhAvatarImage class="avatar-image" Src="/b.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="avatar-fallback"&gt;CD&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+
+    &lt;BhAvatar class="avatar avatar-lg avatar-square"&gt;
+        &lt;BhAvatarImage class="avatar-image" Src="/c.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="avatar-fallback"&gt;EF&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Reuses the base styles; these modifiers tweak size and shape. */
+.avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar-sm { width: 2.25rem; height: 2.25rem; font-size: 0.8rem; }
+.avatar-lg { width: 4rem;    height: 4rem;    font-size: 1.1rem; }
+
+.avatar-square { border-radius: 0.6rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex items-center gap-4"&gt;
+    &lt;BhAvatar class="inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-zinc-200 align-middle text-xs font-semibold text-zinc-700 select-none"&gt;
+        &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/a.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center"&gt;AB&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+
+    &lt;BhAvatar class="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-zinc-200 align-middle text-sm font-semibold text-zinc-700 select-none"&gt;
+        &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/b.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center"&gt;CD&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+
+    &lt;BhAvatar class="inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-zinc-200 align-middle text-base font-semibold text-zinc-700 select-none"&gt;
+        &lt;BhAvatarImage class="h-full w-full rounded-[inherit] object-cover" Src="/c.jpg" Alt="" /&gt;
+        &lt;BhAvatarFallback class="flex h-full w-full items-center justify-center"&gt;EF&lt;/BhAvatarFallback&gt;
+    &lt;/BhAvatar&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="aspect-ratio.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Aspect Ratio</span>
+        </a>
+            <a class="next" href="button.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Button</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

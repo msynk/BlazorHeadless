@@ -24,6 +24,7 @@ public static class DemoCatalog
     [
         new("accordion",        "Accordion"),
         new("aspect-ratio",     "Aspect Ratio"),
+        new("avatar",           "Avatar"),
         new("button",           "Button"),
         new("checkbox",         "Checkbox"),
         new("close-button",     "CloseButton"),
