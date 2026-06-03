@@ -1,0 +1,181 @@
+@page "/tw/hover-card"
+@rendermode InteractiveServer
+
+<PageTitle>Hover Card — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Hover Card</h1>
+        <p class="mt-2 text-zinc-500">Preview content behind a link on hover or focus, styled with Tailwind utilities.</p>
+        <TwSectionSwitcher Slug="hover-card" />
+    </header>
+
+    <TwDemoBlock Title="Basic" Code="@_basicCode">
+        <Description>
+            Hover or focus the link to open the card after a short delay. The content is
+            hoverable, so moving into it keeps the card open.
+        </Description>
+        <LiveContent>
+            <BhHoverCard class="inline-block">
+                <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                    href="https://github.com/radix-ui" target="_blank" rel="noreferrer">
+                    @@radix-ui
+                </BhHoverCardTrigger>
+                <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                                    class="relative z-50 w-80 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-white p-4 shadow-xl">
+                    <div class="flex gap-3.5">
+                        <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-zinc-900 font-bold text-white">R</div>
+                        <div>
+                            <div class="font-bold text-zinc-900">Radix</div>
+                            <div class="mb-1.5 text-sm text-zinc-500">@@radix-ui</div>
+                            <p class="mb-2 text-sm leading-relaxed text-zinc-700">Components, icons, colors, and templates for building high-quality, accessible UI.</p>
+                            <div class="flex gap-4 text-xs text-zinc-600">
+                                <span><strong class="text-zinc-900">0</strong> Following</span>
+                                <span><strong class="text-zinc-900">2,900</strong> Followers</span>
+                            </div>
+                        </div>
+                    </div>
+                    <BhHoverCardArrow class="fill-white drop-shadow-[0_-1px_0_theme(colors.zinc.200)] absolute left-1/2 -translate-x-1/2 -top-[5px] rotate-180 data-anchor-top:top-auto data-anchor-top:-bottom-[5px] data-anchor-top:rotate-0" />
+                </BhHoverCardContent>
+            </BhHoverCard>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Custom delays" Code="@_delayCode">
+        <Description>
+            Tune <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OpenDelay</code> and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">CloseDelay</code> (ms). This one opens instantly and lingers a second.
+        </Description>
+        <LiveContent>
+            <BhHoverCard OpenDelay="0" CloseDelay="1000" class="inline-block">
+                <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                    href="#" @onclick:preventDefault>
+                    Quick open, slow close
+                </BhHoverCardTrigger>
+                <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                                    class="relative z-50 w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-relaxed text-zinc-700 shadow-xl">
+                    Opens with no delay and stays for a full second after the pointer leaves.
+                </BhHoverCardContent>
+            </BhHoverCard>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Placement" Code="@_sidesCode">
+        <Description>The engine flips and shifts to keep the card in view.</Description>
+        <LiveContent>
+            <div class="flex flex-wrap items-center gap-5">
+                <BhHoverCard class="inline-block">
+                    <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Top</BhHoverCardTrigger>
+                    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 8 })"
+                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the top.</BhHoverCardContent>
+                </BhHoverCard>
+
+                <BhHoverCard class="inline-block">
+                    <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Right</BhHoverCardTrigger>
+                    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 8 })"
+                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the right.</BhHoverCardContent>
+                </BhHoverCard>
+
+                <BhHoverCard class="inline-block">
+                    <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Bottom</BhHoverCardTrigger>
+                    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the bottom.</BhHoverCardContent>
+                </BhHoverCard>
+
+                <BhHoverCard class="inline-block">
+                    <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Left</BhHoverCardTrigger>
+                    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 8 })"
+                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the left.</BhHoverCardContent>
+                </BhHoverCard>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Controlled" Code="@_controlledCode">
+        <Description>
+            Drive the open state with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Open</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OnOpenChange</code>.
+        </Description>
+        <LiveContent>
+            <div class="flex flex-wrap items-center gap-5">
+                <BhButton OnClick="() => cardOpen = !cardOpen"
+                          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100">
+                    @(cardOpen ? "Hide card" : "Show card")
+                </BhButton>
+                <BhHoverCard Open="cardOpen" OnOpenChange="v => cardOpen = v" class="inline-block">
+                    <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Target</BhHoverCardTrigger>
+                    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                                        class="z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        Driven from outside via the Open parameter.
+                    </BhHoverCardContent>
+                </BhHoverCard>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private bool cardOpen;
+
+    private const string _basicCode = """
+<BhHoverCard class="inline-block">
+    <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline"
+                        href="https://github.com/radix-ui" target="_blank" rel="noreferrer">
+        @@radix-ui
+    </BhHoverCardTrigger>
+    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                        class="relative z-50 w-80 rounded-xl border border-zinc-200 bg-white p-4 shadow-xl">
+        <div class="flex gap-3.5">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 font-bold text-white">R</div>
+            <div>
+                <div class="font-bold text-zinc-900">Radix</div>
+                <div class="mb-1.5 text-sm text-zinc-500">@@radix-ui</div>
+                <p class="text-sm leading-relaxed text-zinc-700">Components, icons, colors...</p>
+            </div>
+        </div>
+        <BhHoverCardArrow class="fill-white absolute left-1/2 -translate-x-1/2 -top-[5px] rotate-180
+                                 data-anchor-top:top-auto data-anchor-top:-bottom-[5px] data-anchor-top:rotate-0" />
+    </BhHoverCardContent>
+</BhHoverCard>
+""";
+
+    private const string _delayCode = """
+<BhHoverCard OpenDelay="0" CloseDelay="1000" class="inline-block">
+    <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline" href="#">
+        Quick open, slow close
+    </BhHoverCardTrigger>
+    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                        class="relative z-50 w-72 rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-relaxed text-zinc-700 shadow-xl">
+        Opens with no delay and stays for a full second after the pointer leaves.
+    </BhHoverCardContent>
+</BhHoverCard>
+""";
+
+    private const string _sidesCode = """
+<BhHoverCard class="inline-block">
+    <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline" href="#">Top</BhHoverCardTrigger>
+    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 8 })"
+                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+        Anchored to the top.
+    </BhHoverCardContent>
+</BhHoverCard>
+
+@* ...repeat with To = "right" | "bottom" | "left" *@
+""";
+
+    private const string _controlledCode = """
+<BhButton OnClick="() => cardOpen = !cardOpen" class="...">
+    @(cardOpen ? "Hide card" : "Show card")
+</BhButton>
+
+<BhHoverCard Open="cardOpen" OnOpenChange="v => cardOpen = v" class="inline-block">
+    <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline" href="#">Target</BhHoverCardTrigger>
+    <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
+                        class="z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+        Driven from outside via the Open parameter.
+    </BhHoverCardContent>
+</BhHoverCard>
+
+@code {
+    private bool cardOpen;
+}
+""";
+}

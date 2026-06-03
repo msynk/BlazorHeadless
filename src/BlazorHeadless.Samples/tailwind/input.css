@@ -33,6 +33,12 @@
 @custom-variant data-orientation-horizontal (&[data-orientation="horizontal"]);
 @custom-variant data-orientation-vertical   (&[data-orientation="vertical"]);
 
+/* Resolved anchor-placement side (set by the anchor positioning engine). */
+@custom-variant data-anchor-top    (&[data-anchor^="top"]);
+@custom-variant data-anchor-right  (&[data-anchor^="right"]);
+@custom-variant data-anchor-bottom (&[data-anchor^="bottom"]);
+@custom-variant data-anchor-left   (&[data-anchor^="left"]);
+
 /* Make the [hidden] attribute beat utility display values. */
 @layer utilities {
     [hidden] { display: none !important; }

@@ -52,6 +52,7 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 | **BhField** | Form field grouping with `BhLabel`, `BhDescription`, `BhInput`, `BhSelect`, `BhTextarea` |
 | **BhFieldset** | Group form controls under a `BhLegend`, with cascading disabled state |
 | **BhFocusTrap** | Trap keyboard focus inside a container |
+| **BhHoverCard** | Preview content behind a link on hover or focus |
 | **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
 | **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
 | **BhContextMenu** | Right-click menu opened at the pointer, with keyboard nav and typeahead |

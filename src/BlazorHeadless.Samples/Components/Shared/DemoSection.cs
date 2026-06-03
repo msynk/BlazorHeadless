@@ -36,6 +36,7 @@ public static class DemoCatalog
         new("field",            "Field / Input"),
         new("fieldset",         "Fieldset"),
         new("focus-trap",       "FocusTrap"),
+        new("hover-card",       "Hover Card"),
         new("listbox",          "Listbox"),
         new("menu",             "Menu"),
         new("popover",          "Popover"),
