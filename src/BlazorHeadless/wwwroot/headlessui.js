@@ -145,11 +145,15 @@ function applyPosition(floating, reference, options) {
 
     const pos = computePosition(reference, floating, options);
 
-    // Apply positioning styles
+    // Apply positioning styles. We position with top/left (not transform) so the
+    // `transform` property is left free for consumer-authored open/close
+    // animations (e.g. a translateY fade). Using transform here would be
+    // overridden by any running CSS animation that touches transform, causing
+    // the panel to flash at the viewport's top-left corner until the animation
+    // finished.
     floating.style.position = 'fixed';
-    floating.style.top = '0';
-    floating.style.left = '0';
-    floating.style.transform = `translate(${Math.round(pos.x)}px, ${Math.round(pos.y)}px)`;
+    floating.style.left = Math.round(pos.x) + 'px';
+    floating.style.top = Math.round(pos.y) + 'px';
     floating.style.willChange = 'transform';
 
     // Set data attributes for the resolved placement
@@ -349,7 +353,12 @@ export const contextMenu = {
         }
         top = Math.max(padding, top);
 
-        floating.style.transform = `translate(${Math.round(left)}px, ${Math.round(top)}px)`;
+        // Position with top/left (not transform) so the `transform` property is
+        // free for consumer open/close animations. Using transform here would be
+        // clobbered by any running CSS animation that animates transform, making
+        // the menu flash at the viewport's top-left corner.
+        floating.style.left = Math.round(left) + 'px';
+        floating.style.top = Math.round(top) + 'px';
         floating.setAttribute('data-side', side);
         floating.setAttribute('data-align', align);
 

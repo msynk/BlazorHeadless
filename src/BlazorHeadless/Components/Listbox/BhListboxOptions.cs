@@ -42,6 +42,7 @@ public class BhListboxOptions<TValue> : BhComponentBase, IAsyncDisposable
     private ElementReference _elementRef;
     private int _anchorHandle;
     private bool _wasOpen;
+    private bool _positioned;
 
     protected override string DefaultTag => "ul";
 
@@ -53,7 +54,10 @@ public class BhListboxOptions<TValue> : BhComponentBase, IAsyncDisposable
         builder.AddAttribute(10, "id", BhListboxContext?.OptionsId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
 
-        if (!IsOpen)
+        // Keep the panel hidden while it's open but not yet positioned by the
+        // anchor engine. This prevents a flash at the unpositioned location
+        // before OnAfterRenderAsync runs the JS positioning.
+        if (!IsOpen || (Anchor is not null && !_positioned))
             builder.AddAttribute(30, "hidden", true);
 
         // Per ARIA, keyboard nav happens on the listbox panel itself when it has focus.
@@ -100,12 +104,17 @@ public class BhListboxOptions<TValue> : BhComponentBase, IAsyncDisposable
             var panelId = BhListboxContext.OptionsId;
             _anchorHandle = await Interop.AnchorStartByIdAsync(buttonId, panelId, Anchor);
             _wasOpen = true;
+            // JS has positioned and revealed the panel; reflect that in the
+            // render so a subsequent render won't re-add the hidden attribute.
+            _positioned = true;
+            StateHasChanged();
         }
         else if (!IsOpen && _wasOpen)
         {
             await Interop.AnchorStopAsync(_anchorHandle);
             _anchorHandle = 0;
             _wasOpen = false;
+            _positioned = false;
         }
     }
 
