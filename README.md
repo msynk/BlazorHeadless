@@ -45,6 +45,7 @@ If you use `BhPortal`, also add a portal outlet to your root layout:
 | **BhButton** | Polymorphic button with disabled and loading states |
 | **BhCheckbox** | Custom checkbox with indeterminate state support |
 | **BhCloseButton** | Pre-wired button that closes the nearest Dialog, Popover, or Disclosure |
+| **BhCollapsible** | Interactive region that expands and collapses a panel via a trigger |
 | **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
 | **BhDataInteractive** | Forward `data-hover` / `data-active` / `data-focus` attributes for unified state styling |
 | **BhDialog** | Modal with focus trap, scroll lock, and inert background |
@@ -142,6 +143,15 @@ bottom start |  bottom  |  bottom end
         }
     </BhComboboxOptions>
 </BhCombobox>
+```
+
+### Collapsible
+
+```razor
+<BhCollapsible>
+    <BhCollapsibleTrigger Context="c">@(c.IsOpen ? "Hide" : "Show")</BhCollapsibleTrigger>
+    <BhCollapsibleContent>Expandable content here.</BhCollapsibleContent>
+</BhCollapsible>
 ```
 
 ### Dialog

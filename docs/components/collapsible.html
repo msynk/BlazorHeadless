@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Disclosure — BlazorHeadless</title>
+    <title>Collapsible — BlazorHeadless</title>
     <link rel="stylesheet" href="../assets/main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
 </head>
@@ -32,11 +32,11 @@
             <li><a href="../components/button.html">Button</a></li>
             <li><a href="../components/checkbox.html">Checkbox</a></li>
             <li><a href="../components/close-button.html">CloseButton</a></li>
-            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/collapsible.html" class="active">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
-            <li><a href="../components/disclosure.html" class="active">Disclosure</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
@@ -53,10 +53,10 @@
             </ul>
         </aside>
         <main class="content">
-        <h1>Disclosure</h1>
-        <p class="lead">A single show/hide region toggled by a button — the simplest collapsible primitive.</p>
-        <h2 id="basic-disclosure">Basic Disclosure</h2>
-        <p>Renders a button and a panel. Clicking the button toggles the panel. <code>aria-expanded</code>, <code>aria-controls</code>, and <code>aria-labelledby</code> are wired automatically.</p>
+        <h1>Collapsible</h1>
+        <p class="lead">An interactive component which expands and collapses a panel.</p>
+        <h2 id="basic-collapsible">Basic Collapsible</h2>
+        <p>A <code>BhCollapsibleTrigger</code> toggles a <code>BhCollapsibleContent</code> panel. <code>aria-expanded</code>, <code>aria-controls</code>, and <code>aria-labelledby</code> are wired automatically.</p>
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
@@ -66,23 +66,23 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="disclosure"&gt;
-    &lt;BhDisclosureButton class="disclosure-button"&gt;
-        Show details
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
-        &lt;div class="disclosure-body"&gt;
-            Disclosure is the simpler sibling of Accordion: one trigger, one panel,
-            zero coordination across siblings.
-        &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible class="collapsible"&gt;
+    &lt;div class="collapsible-header"&gt;
+        &lt;span&gt;@peduarte starred 3 repositories&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="collapsible-trigger"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;div class="collapsible-row"&gt;@radix-ui/primitives&lt;/div&gt;
+    &lt;BhCollapsibleContent class="collapsible-content"&gt;
+        &lt;div class="collapsible-row"&gt;@radix-ui/colors&lt;/div&gt;
+        &lt;div class="collapsible-row"&gt;@radix-ui/themes&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
-.disclosure {
+.collapsible {
     width: 100%;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -90,25 +90,32 @@
     background: #fff;
 }
 
-.disclosure-button {
-    all: unset;
+.collapsible-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     padding: 0.875rem 1.125rem;
     font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.disclosure-button:hover                { background: #f4f4f5; }
-.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
-.disclosure-button[data-state="open"]   { background: #f4f4f5; }
-.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: #71717a;
+}
 
-.disclosure-body {
-    padding: 0.875rem 1.125rem 1rem;
+.collapsible-trigger:hover         { background: #f4f4f5; }
+.collapsible-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.collapsible-trigger[data-disabled]{ opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
     color: #71717a;
     border-top: 1px solid #e4e4e7;
 }</code></pre>
@@ -118,16 +125,17 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
-    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
-        Show details
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel&gt;
-        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
-            Disclosure is the simpler sibling of Accordion: one trigger, one panel, zero coordination.
-        &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;div class="flex items-center justify-between px-5 py-3.5 font-medium"&gt;
+        &lt;span&gt;@peduarte starred 3 repositories&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;@radix-ui/primitives&lt;/div&gt;
+    &lt;BhCollapsibleContent&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;@radix-ui/colors&lt;/div&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;@radix-ui/themes&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
             </div>
         </div>
@@ -142,22 +150,21 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="disclosure"&gt;
-    &lt;BhDisclosureButton class="disclosure-button"&gt;
-        Already open
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
-        &lt;div class="disclosure-body"&gt;
-            I'm open by default. Click the button to close me.
-        &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible DefaultOpen="true" class="collapsible"&gt;
+    &lt;div class="collapsible-header"&gt;
+        &lt;span&gt;Already open&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="collapsible-trigger"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent class="collapsible-content"&gt;
+        &lt;div class="collapsible-row"&gt;I'm open by default. Click the trigger to close me.&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
-.disclosure {
+.collapsible {
     width: 100%;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -165,25 +172,32 @@
     background: #fff;
 }
 
-.disclosure-button {
-    all: unset;
+.collapsible-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     padding: 0.875rem 1.125rem;
     font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.disclosure-button:hover                { background: #f4f4f5; }
-.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
-.disclosure-button[data-state="open"]   { background: #f4f4f5; }
-.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: #71717a;
+}
 
-.disclosure-body {
-    padding: 0.875rem 1.125rem 1rem;
+.collapsible-trigger:hover         { background: #f4f4f5; }
+.collapsible-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.collapsible-trigger[data-disabled]{ opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
     color: #71717a;
     border-top: 1px solid #e4e4e7;
 }</code></pre>
@@ -193,21 +207,20 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure DefaultOpen="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
-    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
-        Already open
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel&gt;
-        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
-            I'm open by default. Click the button to close me.
-        &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible DefaultOpen="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;div class="flex items-center justify-between px-5 py-3.5 font-medium"&gt;
+        &lt;span&gt;Already open&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;I'm open by default. Click the trigger to close me.&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
             </div>
         </div>
         <h2 id="render-context-rotating-chevron-close">Render Context (rotating chevron + Close)</h2>
-        <p><code>BhDisclosure</code>, <code>BhDisclosureButton</code>, and <code>BhDisclosurePanel</code> all expose a <code>BhDisclosureRenderContext</code> via <code>Context="d"</code>. Use it to drive UI from the open state and to call <code>d.Close()</code> from anywhere inside.</p>
+        <p><code>BhCollapsibleTrigger</code> and <code>BhCollapsibleContent</code> expose a <code>BhCollapsibleRenderContext</code> via <code>Context="c"</code>. Use it to drive UI from the open state and to call <code>c.Close()</code> from anywhere inside.</p>
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
@@ -217,24 +230,26 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="disclosure"&gt;
-    &lt;BhDisclosureButton class="disclosure-button" Context="d"&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible class="collapsible"&gt;
+    &lt;div class="collapsible-header"&gt;
         &lt;span&gt;What's inside?&lt;/span&gt;
-        &lt;span class="disclosure-chevron @(d.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel class="disclosure-panel" Context="d"&gt;
-        &lt;div class="disclosure-body"&gt;
-            &lt;p&gt;You can close me from inside the panel:&lt;/p&gt;
-            &lt;button class="btn" @onclick="d.Close"&gt;Close panel&lt;/button&gt;
+        &lt;BhCollapsibleTrigger class="collapsible-trigger" Context="c"&gt;
+            &lt;span class="collapsible-chevron @(c.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent class="collapsible-content" Context="c"&gt;
+        &lt;div class="collapsible-row"&gt;
+            &lt;p&gt;You can close me from inside the content:&lt;/p&gt;
+            &lt;button class="btn" @onclick="c.Close"&gt;Close panel&lt;/button&gt;
         &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
-.disclosure {
+.collapsible {
     width: 100%;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -242,38 +257,45 @@
     background: #fff;
 }
 
-.disclosure-button {
-    all: unset;
+.collapsible-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     padding: 0.875rem 1.125rem;
     font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.disclosure-button:hover                { background: #f4f4f5; }
-.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
-.disclosure-button[data-state="open"]   { background: #f4f4f5; }
-.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: #71717a;
+}
 
-.disclosure-body {
-    padding: 0.875rem 1.125rem 1rem;
+.collapsible-trigger:hover         { background: #f4f4f5; }
+.collapsible-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
     color: #71717a;
     border-top: 1px solid #e4e4e7;
 }
 
-/* Rotating chevron driven by BhDisclosureRenderContext.IsOpen */
-.disclosure-chevron      { transition: transform 200ms ease; color: #71717a; }
-.disclosure-chevron.open { transform: rotate(180deg); }
+/* Rotating chevron driven by BhCollapsibleRenderContext.IsOpen */
+.collapsible-chevron      { display: inline-block; transition: transform 200ms ease; }
+.collapsible-chevron.open { transform: rotate(180deg); }
 
-/* "Close panel" button rendered inside the panel */
+/* "Close panel" button rendered inside the content */
 .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    margin-top: 0.5rem;
     padding: 0.45rem 0.85rem;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -289,24 +311,26 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
-    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                        Context="d"&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;div class="flex items-center justify-between px-5 py-3.5 font-medium"&gt;
         &lt;span&gt;What's inside?&lt;/span&gt;
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(d.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel Context="d"&gt;
-        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
-            &lt;p&gt;You can close me from inside the panel:&lt;/p&gt;
-            &lt;button class="mt-3 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100" @onclick="d.Close"&gt;Close panel&lt;/button&gt;
+        &lt;BhCollapsibleTrigger class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                              Context="c"&gt;
+            &lt;span class="@($"inline-block transition-transform duration-200 {(c.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent Context="c"&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;
+            &lt;p&gt;You can close me from inside the content:&lt;/p&gt;
+            &lt;button class="mt-3 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100" @onclick="c.Close"&gt;Close panel&lt;/button&gt;
         &lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
             </div>
         </div>
         <h2 id="disabled">Disabled</h2>
-        <p>Set <code>Disabled="true"</code> on the root to block interaction. The button receives both the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.</p>
+        <p>Set <code>Disabled="true"</code> on the root to block interaction. The trigger receives both the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.</p>
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
@@ -316,18 +340,21 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure Disabled="true" class="disclosure"&gt;
-    &lt;BhDisclosureButton class="disclosure-button"&gt;Can't toggle me&lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel class="disclosure-panel"&gt;
-        &lt;div class="disclosure-body"&gt;You'll never see this content.&lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible Disabled="true" class="collapsible"&gt;
+    &lt;div class="collapsible-header"&gt;
+        &lt;span&gt;Can't toggle me&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="collapsible-trigger"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent class="collapsible-content"&gt;
+        &lt;div class="collapsible-row"&gt;You'll never see this content.&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
-.disclosure {
+.collapsible {
     width: 100%;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -335,32 +362,39 @@
     background: #fff;
 }
 
-.disclosure-button {
-    all: unset;
+.collapsible-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     padding: 0.875rem 1.125rem;
     font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.disclosure-button:hover                { background: #f4f4f5; }
-.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
-.disclosure-button[data-state="open"]   { background: #f4f4f5; }
-.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: #71717a;
+}
 
-.disclosure-body {
-    padding: 0.875rem 1.125rem 1rem;
+.collapsible-trigger:hover          { background: #f4f4f5; }
+.collapsible-trigger:focus-visible  { outline: 2px solid #2563eb; outline-offset: 2px; }
+.collapsible-trigger[data-disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
     color: #71717a;
     border-top: 1px solid #e4e4e7;
 }
 
-/* The root &lt;BhDisclosure&gt; element also receives data-disabled — useful for
+/* The root &lt;BhCollapsible&gt; element also receives data-disabled — useful for
    dimming the entire region. */
-.disclosure[data-disabled] {
+.collapsible[data-disabled] {
     background: #fafafa;
 }</code></pre>
                 </div>
@@ -369,19 +403,20 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDisclosure Disabled="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
-    &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
-        Can't toggle me
-    &lt;/BhDisclosureButton&gt;
-    &lt;BhDisclosurePanel&gt;
-        &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;You'll never see this content.&lt;/div&gt;
-    &lt;/BhDisclosurePanel&gt;
-&lt;/BhDisclosure&gt;</code></pre>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCollapsible Disabled="true" class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+    &lt;div class="flex items-center justify-between px-5 py-3.5 font-medium"&gt;
+        &lt;span&gt;Can't toggle me&lt;/span&gt;
+        &lt;BhCollapsibleTrigger class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+    &lt;/div&gt;
+    &lt;BhCollapsibleContent&gt;
+        &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;You'll never see this content.&lt;/div&gt;
+    &lt;/BhCollapsibleContent&gt;
+&lt;/BhCollapsible&gt;</code></pre>
                 </div>
             </div>
         </div>
         <h2 id="controlled">Controlled</h2>
-        <p>Drive the open state externally with <code>Open</code> + <code>OnOpenChange</code>. The button below opens or closes the disclosure programmatically.</p>
+        <p>Drive the open state externally with <code>Open</code> + <code>OnOpenChange</code>. The button below opens or closes the collapsible programmatically.</p>
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
@@ -399,18 +434,19 @@
         &lt;span class="demo-output"&gt;Open: @controlledOpen.ToString().ToLowerInvariant()&lt;/span&gt;
     &lt;/div&gt;
 
-    &lt;BhDisclosure Open="controlledOpen"
-                 OnOpenChange="v =&gt; controlledOpen = v"
-                 class="disclosure"&gt;
-        &lt;BhDisclosureButton class="disclosure-button"&gt;
-            Internal trigger
-        &lt;/BhDisclosureButton&gt;
-        &lt;BhDisclosurePanel class="disclosure-panel"&gt;
-            &lt;div class="disclosure-body"&gt;
+    &lt;BhCollapsible Open="controlledOpen"
+                   OnOpenChange="v =&gt; controlledOpen = v"
+                   class="collapsible"&gt;
+        &lt;div class="collapsible-header"&gt;
+            &lt;span&gt;Internal trigger&lt;/span&gt;
+            &lt;BhCollapsibleTrigger class="collapsible-trigger"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+        &lt;/div&gt;
+        &lt;BhCollapsibleContent class="collapsible-content"&gt;
+            &lt;div class="collapsible-row"&gt;
                 Either trigger updates the same state — fully controlled.
             &lt;/div&gt;
-        &lt;/BhDisclosurePanel&gt;
-    &lt;/BhDisclosure&gt;
+        &lt;/BhCollapsibleContent&gt;
+    &lt;/BhCollapsible&gt;
 &lt;/div&gt;
 
 @code {
@@ -423,7 +459,7 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
-.disclosure {
+.collapsible {
     width: 100%;
     border: 1px solid #e4e4e7;
     border-radius: 0.5rem;
@@ -431,25 +467,31 @@
     background: #fff;
 }
 
-.disclosure-button {
-    all: unset;
+.collapsible-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
     padding: 0.875rem 1.125rem;
     font-weight: 500;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.disclosure-button:hover                { background: #f4f4f5; }
-.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
-.disclosure-button[data-state="open"]   { background: #f4f4f5; }
-.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    color: #71717a;
+}
 
-.disclosure-body {
-    padding: 0.875rem 1.125rem 1rem;
+.collapsible-trigger:hover         { background: #f4f4f5; }
+.collapsible-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
     color: #71717a;
     border-top: 1px solid #e4e4e7;
 }
@@ -495,15 +537,16 @@
         &lt;span class="text-sm text-zinc-500"&gt;Open: @controlledOpen.ToString().ToLowerInvariant()&lt;/span&gt;
     &lt;/div&gt;
 
-    &lt;BhDisclosure Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v"
-                  class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
-        &lt;BhDisclosureButton class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-3.5 text-base font-medium outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
-            Internal trigger
-        &lt;/BhDisclosureButton&gt;
-        &lt;BhDisclosurePanel&gt;
-            &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Either trigger updates the same state.&lt;/div&gt;
-        &lt;/BhDisclosurePanel&gt;
-    &lt;/BhDisclosure&gt;
+    &lt;BhCollapsible Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v"
+                   class="w-full overflow-hidden rounded-lg border border-zinc-200 bg-white data-disabled:bg-zinc-50"&gt;
+        &lt;div class="flex items-center justify-between px-5 py-3.5 font-medium"&gt;
+            &lt;span&gt;Internal trigger&lt;/span&gt;
+            &lt;BhCollapsibleTrigger class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;▾&lt;/BhCollapsibleTrigger&gt;
+        &lt;/div&gt;
+        &lt;BhCollapsibleContent&gt;
+            &lt;div class="border-t border-zinc-200 px-5 py-3 text-sm text-zinc-500"&gt;Either trigger updates the same state.&lt;/div&gt;
+        &lt;/BhCollapsibleContent&gt;
+    &lt;/BhCollapsible&gt;
 &lt;/div&gt;
 
 @code {
@@ -514,13 +557,13 @@
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="dialog.html">
+            <a class="prev" href="close-button.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Dialog</span>
+            <span class="pager-title">CloseButton</span>
         </a>
-            <a class="next" href="field.html">
+            <a class="next" href="combobox.html">
             <span class="pager-label">Next →</span>
-            <span class="pager-title">Field / Input</span>
+            <span class="pager-title">Combobox</span>
         </a>
         </nav>
         </main>

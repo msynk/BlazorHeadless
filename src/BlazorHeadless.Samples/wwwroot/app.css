@@ -569,6 +569,84 @@ body {
 }
 
 /* ============================================================
+   Collapsible styles — purely consumer-defined
+   ============================================================ */
+
+.collapsible {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.collapsible[data-disabled] {
+    background: #fafafa;
+}
+
+.collapsible-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.collapsible-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: background 150ms ease;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.collapsible-trigger:hover {
+    background: #f4f4f5;
+}
+
+.collapsible-trigger:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.collapsible-trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.collapsible-chevron {
+    display: inline-block;
+    font-size: 1.05rem;
+    transition: transform 200ms ease;
+}
+
+.collapsible-chevron.open {
+    transform: rotate(180deg);
+}
+
+.collapsible-row {
+    padding: 0.75rem 1.125rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+/* ============================================================
    Code-block labelling (Razor / CSS) inside DemoBlock
    ============================================================ */
 

@@ -29,6 +29,7 @@ public static class DemoCatalog
         new("button",           "Button"),
         new("checkbox",         "Checkbox"),
         new("close-button",     "CloseButton"),
+        new("collapsible",      "Collapsible"),
         new("combobox",         "Combobox"),
         new("context-menu",     "Context Menu"),
         new("data-interactive", "DataInteractive"),
