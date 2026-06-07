@@ -35,7 +35,7 @@
                             </div>
                         </div>
                     </div>
-                    <BhHoverCardArrow class="fill-white drop-shadow-[0_-1px_0_theme(colors.zinc.200)] absolute left-1/2 -translate-x-1/2 -top-[6px] rotate-180 data-anchor-top:top-auto data-anchor-top:-bottom-[6px] data-anchor-top:rotate-0" />
+                    <BhHoverCardArrow class="@_arrowClass" />
                 </BhHoverCardContent>
             </BhHoverCard>
         </LiveContent>
@@ -54,6 +54,7 @@
                 <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
                                     class="relative z-50 w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-relaxed text-zinc-700 shadow-xl">
                     Opens with no delay and stays for a full second after the pointer leaves.
+                    <BhHoverCardArrow class="@_arrowClass" />
                 </BhHoverCardContent>
             </BhHoverCard>
         </LiveContent>
@@ -66,25 +67,33 @@
                 <BhHoverCard class="inline-block">
                     <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Top</BhHoverCardTrigger>
                     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 8 })"
-                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the top.</BhHoverCardContent>
+                                        class="relative z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        Anchored to the top.
+                        <BhHoverCardArrow class="@_arrowClass" /></BhHoverCardContent>
                 </BhHoverCard>
 
                 <BhHoverCard class="inline-block">
                     <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Right</BhHoverCardTrigger>
                     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 8 })"
-                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the right.</BhHoverCardContent>
+                                        class="relative z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        Anchored to the right.
+                        <BhHoverCardArrow class="@_arrowClass" /></BhHoverCardContent>
                 </BhHoverCard>
 
                 <BhHoverCard class="inline-block">
                     <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Bottom</BhHoverCardTrigger>
                     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
-                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the bottom.</BhHoverCardContent>
+                                        class="relative z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        Anchored to the bottom.
+                        <BhHoverCardArrow class="@_arrowClass" /></BhHoverCardContent>
                 </BhHoverCard>
 
                 <BhHoverCard class="inline-block">
                     <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Left</BhHoverCardTrigger>
                     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 8 })"
-                                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">Anchored to the left.</BhHoverCardContent>
+                                        class="relative z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        Anchored to the left.
+                        <BhHoverCardArrow class="@_arrowClass" /></BhHoverCardContent>
                 </BhHoverCard>
             </div>
         </LiveContent>
@@ -103,8 +112,9 @@
                 <BhHoverCard Open="cardOpen" OnOpenChange="v => cardOpen = v" class="inline-block">
                     <BhHoverCardTrigger class="font-semibold text-blue-600 cursor-pointer rounded hover:underline" href="#" @onclick:preventDefault>Target</BhHoverCardTrigger>
                     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
-                                        class="z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                                        class="relative z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
                         Driven from outside via the Open parameter.
+                        <BhHoverCardArrow class="@_arrowClass" />
                     </BhHoverCardContent>
                 </BhHoverCard>
             </div>
@@ -114,6 +124,16 @@
 
 @code {
     private bool cardOpen;
+
+    // Universal arrow placement. The floating content element carries the
+    // resolved `data-anchor` attribute; the arrow is a descendant, so it reacts
+    // to its ancestor via the `anchored-*` variants. Exactly one side matches.
+    private const string _arrowClass =
+        "fill-zinc-200 drop-shadow-[0_0_1.5px_#00000040] absolute " +
+        "anchored-top:bottom-[-6px] anchored-top:left-1/2 anchored-top:-translate-x-1/2 " +
+        "anchored-bottom:top-[-6px] anchored-bottom:left-1/2 anchored-bottom:-translate-x-1/2 anchored-bottom:rotate-180 " +
+        "anchored-left:right-[-9px] anchored-left:top-1/2 anchored-left:-translate-y-1/2 anchored-left:rotate-[-90deg] " +
+        "anchored-right:left-[-9px] anchored-right:top-1/2 anchored-right:-translate-y-1/2 anchored-right:rotate-90";
 
     private const string _basicCode = """
 <BhHoverCard class="inline-block">
@@ -131,8 +151,9 @@
                 <p class="text-sm leading-relaxed text-zinc-700">Components, icons, colors...</p>
             </div>
         </div>
-        <BhHoverCardArrow class="fill-white absolute left-1/2 -translate-x-1/2 -top-[6px] rotate-180
-                                 data-anchor-top:top-auto data-anchor-top:-bottom-[6px] data-anchor-top:rotate-0" />
+        <BhHoverCardArrow class="fill-zinc-200 drop-shadow-[0_0_1.5px_#00000040] absolute
+                                 anchored-top:bottom-[-6px] anchored-top:left-1/2 anchored-top:-translate-x-1/2
+                                 anchored-bottom:top-[-6px] anchored-bottom:left-1/2 anchored-bottom:-translate-x-1/2 anchored-bottom:rotate-180" />
     </BhHoverCardContent>
 </BhHoverCard>
 """;
@@ -145,6 +166,10 @@
     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
                         class="relative z-50 w-72 rounded-xl border border-zinc-200 bg-white p-4 text-sm leading-relaxed text-zinc-700 shadow-xl">
         Opens with no delay and stays for a full second after the pointer leaves.
+        @* The floating content carries data-anchor; the arrow reacts via anchored-* variants. *@
+        <BhHoverCardArrow class="fill-zinc-200 drop-shadow-[0_0_1.5px_#00000040] absolute
+                                 anchored-top:bottom-[-6px] anchored-top:left-1/2 anchored-top:-translate-x-1/2
+                                 anchored-bottom:top-[-6px] anchored-bottom:left-1/2 anchored-bottom:-translate-x-1/2 anchored-bottom:rotate-180" />
     </BhHoverCardContent>
 </BhHoverCard>
 """;
@@ -153,8 +178,15 @@
 <BhHoverCard class="inline-block">
     <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline" href="#">Top</BhHoverCardTrigger>
     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 8 })"
-                        class="z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        class="relative z-50 w-56 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
         Anchored to the top.
+        @* One arrow handles every side. The floating content carries data-anchor;
+           the arrow reacts to its ancestor via the anchored-* variants. *@
+        <BhHoverCardArrow class="fill-zinc-200 drop-shadow-[0_0_1.5px_#00000040] absolute
+                                 anchored-top:bottom-[-6px] anchored-top:left-1/2 anchored-top:-translate-x-1/2
+                                 anchored-bottom:top-[-6px] anchored-bottom:left-1/2 anchored-bottom:-translate-x-1/2 anchored-bottom:rotate-180
+                                 anchored-left:right-[-9px] anchored-left:top-1/2 anchored-left:-translate-y-1/2 anchored-left:rotate-[-90deg]
+                                 anchored-right:left-[-9px] anchored-right:top-1/2 anchored-right:-translate-y-1/2 anchored-right:rotate-90" />
     </BhHoverCardContent>
 </BhHoverCard>
 
@@ -169,8 +201,11 @@
 <BhHoverCard Open="cardOpen" OnOpenChange="v => cardOpen = v" class="inline-block">
     <BhHoverCardTrigger class="font-semibold text-blue-600 hover:underline" href="#">Target</BhHoverCardTrigger>
     <BhHoverCardContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 8 })"
-                        class="z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
+                        class="relative z-50 w-64 rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-700 shadow-xl">
         Driven from outside via the Open parameter.
+        <BhHoverCardArrow class="fill-zinc-200 drop-shadow-[0_0_1.5px_#00000040] absolute
+                                 anchored-top:bottom-[-6px] anchored-top:left-1/2 anchored-top:-translate-x-1/2
+                                 anchored-bottom:top-[-6px] anchored-bottom:left-1/2 anchored-bottom:-translate-x-1/2 anchored-bottom:rotate-180" />
     </BhHoverCardContent>
 </BhHoverCard>
 

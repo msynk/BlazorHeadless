@@ -3461,8 +3461,8 @@ header:has(.section-switcher-sticky) {
 
 /* Arrow — positioned from the resolved data-anchor side */
 .hover-card-arrow {
-    fill: #fff;
-    filter: drop-shadow(0 -1px 0 #e4e4e7);
+    fill: #e4e4e7;
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
 }
 
 .hover-card-content[data-anchor^="top"] .hover-card-arrow {

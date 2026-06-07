@@ -39,6 +39,13 @@
 @custom-variant data-anchor-bottom (&[data-anchor^="bottom"]);
 @custom-variant data-anchor-left   (&[data-anchor^="left"]);
 
+/* Resolved anchor-placement side of an ANCESTOR (the floating element carries
+   the data-anchor attribute; descendants such as an arrow react to it). */
+@custom-variant anchored-top    (:where([data-anchor^="top"]) &);
+@custom-variant anchored-right  (:where([data-anchor^="right"]) &);
+@custom-variant anchored-bottom (:where([data-anchor^="bottom"]) &);
+@custom-variant anchored-left   (:where([data-anchor^="left"]) &);
+
 /* Make the [hidden] attribute beat utility display values. */
 @layer utilities {
     [hidden] { display: none !important; }
