@@ -275,7 +275,40 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">.interactive-btn[data-disabled] {
+                    <pre class="code-block"><code class="language-css">.interactive-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+/* Style via data attributes instead of :hover/:active/:focus */
+.interactive-btn[data-hover] {
+    background: #f0f9ff;
+    border-color: #7dd3fc;
+    color: #0369a1;
+}
+.interactive-btn[data-active] {
+    background: #0ea5e9;
+    border-color: #0ea5e9;
+    color: #fff;
+    transform: scale(0.97);
+}
+.interactive-btn[data-focus] {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* When disabled, interactive state tracking is suppressed and
+   data-disabled is emitted instead. */
+.interactive-btn[data-disabled] {
     opacity: 0.4;
     cursor: not-allowed;
     pointer-events: none;

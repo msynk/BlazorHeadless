@@ -212,10 +212,60 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* The group emits data-orientation="horizontal" when Vertical="false" */
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+/* The group emits data-orientation="horizontal" when Vertical="false" */
 .radio-group[data-orientation="horizontal"] {
     flex-direction: row;
     gap: 1.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+.radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
 }</code></pre>
                 </div>
             </div>
@@ -287,13 +337,66 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Hooks emitted when Disabled="true" on a radio (or the root group) */
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+
+/* Hooks emitted when Disabled="true" on a radio (or the root group).
+   Arrow-key navigation skips disabled radios automatically. */
 .radio[data-disabled] {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* Arrow-key navigation skips disabled radios automatically. */</code></pre>
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
+}</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -373,7 +476,42 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Card-style group: each label is the styled selectable surface,
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+.radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
+}
+
+/* Card-style group: each label is the styled selectable surface,
    driven by the data-state attribute on the inner radio. */
 .plan-group {
     display: flex;
@@ -499,9 +637,85 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the .radio / .radio-group styles from the Basic demo.
-   Controlled mode adds no new CSS hooks — data-state simply reflects whatever
-   Value you bind to. */</code></pre>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+.radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
+}
+
+/* Controlled mode adds no new CSS hooks — data-state simply reflects
+   whatever Value you bind to. Below are the external trigger controls. */
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -606,9 +820,88 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the .radio / .radio-group styles from earlier demos.
-   No additional CSS is needed — when Name is set BhRadioGroup renders an
-   &lt;input type="hidden"&gt; sibling with the current value. */</code></pre>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.radio-group[data-orientation="horizontal"] {
+    flex-direction: row;
+    gap: 1.25rem;
+}
+
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.radio {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Outer ring */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.radio:hover         { border-color: #a1a1af; }
+.radio:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhRadio */
+.radio[data-state="checked"] { border-color: #2563eb; }
+.radio[data-disabled]        { opacity: 0.5; cursor: not-allowed; }
+
+/* Inner dot */
+.radio-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: #2563eb;
+    border-radius: 999px;
+}
+
+/* When Name is set BhRadioGroup renders an &lt;input type="hidden"&gt; sibling
+   with the current value — no additional CSS is needed for that. */
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
+
+.btn-primary {
+    color: #fff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">

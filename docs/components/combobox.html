@@ -333,7 +333,90 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Builds on the .combobox styles from the Basic demo. Adds the chips. */
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.combobox          { position: relative; display: inline-block; min-width: 18rem; }
+
+.combobox-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.combobox-input-wrapper:focus-within { border-color: #2563eb; }
+
+.combobox-input {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.85rem;
+    border: 0;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    outline: none;
+}
+
+.combobox-button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.65rem;
+    cursor: pointer;
+    color: #71717a;
+}
+
+.combobox-chevron       { transition: transform 200ms ease; }
+.combobox-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.combobox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+.combobox-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhComboboxOption */
+.combobox-option[data-active]   { background: #eff6ff; }
+.combobox-option[data-selected] { font-weight: 600; }
+.combobox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.combobox-empty {
+    padding: 0.6rem 0.65rem;
+    font-size: 0.85rem;
+    color: #71717a;
+    font-style: italic;
+}
+
+.combobox-tick { color: #2563eb; font-weight: 700; }
+
+/* Multi-select chips */
 .combobox-input-wrapper-multi {
     flex-wrap: wrap;
     padding: 0.25rem 0.35rem;
@@ -526,7 +609,90 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Rich-content option for an object-typed combobox */
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.combobox          { position: relative; display: inline-block; min-width: 18rem; }
+
+.combobox-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.combobox-input-wrapper:focus-within { border-color: #2563eb; }
+
+.combobox-input {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.85rem;
+    border: 0;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    outline: none;
+}
+
+.combobox-button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.65rem;
+    cursor: pointer;
+    color: #71717a;
+}
+
+.combobox-chevron       { transition: transform 200ms ease; }
+.combobox-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.combobox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+.combobox-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhComboboxOption */
+.combobox-option[data-active]   { background: #eff6ff; }
+.combobox-option[data-selected] { font-weight: 600; }
+.combobox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.combobox-empty {
+    padding: 0.6rem 0.65rem;
+    font-size: 0.85rem;
+    color: #71717a;
+    font-style: italic;
+}
+
+.combobox-tick { color: #2563eb; font-weight: 700; }
+
+/* Rich-content option for an object-typed combobox */
 .person-row {
     display: flex;
     align-items: center;
@@ -683,7 +849,70 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* When using Anchor, the panel is position:fixed by the JS engine.
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.combobox-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.combobox-input-wrapper:focus-within { border-color: #2563eb; }
+
+.combobox-input {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.85rem;
+    border: 0;
+    background: transparent;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    outline: none;
+}
+
+.combobox-button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.65rem;
+    cursor: pointer;
+    color: #71717a;
+}
+
+.combobox-chevron       { transition: transform 200ms ease; }
+.combobox-chevron.open  { transform: rotate(180deg); }
+
+.combobox-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhComboboxOption */
+.combobox-option[data-active]   { background: #eff6ff; }
+.combobox-option[data-selected] { font-weight: 600; }
+.combobox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.combobox-empty {
+    padding: 0.6rem 0.65rem;
+    font-size: 0.85rem;
+    color: #71717a;
+    font-style: italic;
+}
+
+.combobox-tick { color: #2563eb; font-weight: 700; }
+
+/* When using Anchor, the panel is position:fixed by the JS engine.
    No position:relative on parent needed. */
 .combobox-anchored { display: inline-block; min-width: 18rem; }
 

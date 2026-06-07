@@ -199,6 +199,55 @@
 """;
 
     private const string _structuredCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.cm-trigger {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 9rem;
+    padding: 2rem;
+    border: 2px dashed #d4d4d8;
+    border-radius: 0.75rem;
+    color: #71717a;
+    font-size: 0.95rem;
+    user-select: none;
+    cursor: context-menu;
+}
+
+.cm-trigger[data-state="open"] { border-color: #2563eb; color: #1d4ed8; }
+
+/* The content panel is positioned at the pointer with fixed positioning by the
+   JS engine, so it needs a high z-index and no manual top/left. */
+.cm-content {
+    z-index: 9999;
+    min-width: 11rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cm-content:focus-visible { outline: none; }
+
+.cm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+/* Hooks emitted by BhContextMenuItem */
+.cm-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.cm-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
 .cm-label {
     padding: 0.35rem 0.65rem 0.15rem;
     font-size: 0.7rem;
@@ -226,6 +275,55 @@
 """;
 
     private const string _disabledCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.cm-trigger {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 9rem;
+    padding: 2rem;
+    border: 2px dashed #d4d4d8;
+    border-radius: 0.75rem;
+    color: #71717a;
+    font-size: 0.95rem;
+    user-select: none;
+    cursor: context-menu;
+}
+
+.cm-trigger[data-state="open"] { border-color: #2563eb; color: #1d4ed8; }
+
+/* The content panel is positioned at the pointer with fixed positioning by the
+   JS engine, so it needs a high z-index and no manual top/left. */
+.cm-content {
+    z-index: 9999;
+    min-width: 11rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cm-content:focus-visible { outline: none; }
+
+.cm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+}
+
+/* Hooks emitted by BhContextMenuItem */
+.cm-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.cm-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
 /* A disabled context menu lets the native browser menu through, so the
    trigger keeps the default cursor as a hint. */
 .cm-trigger-disabled { cursor: default; }

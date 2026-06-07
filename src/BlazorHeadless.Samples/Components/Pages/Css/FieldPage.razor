@@ -262,37 +262,243 @@
 """;
 
     private const string _textareaCss = """
-/* Reuses the .field / .field-input styles from the Basic demo.
-   The textarea just needs a resize rule. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }
+
+/* The textarea just needs a resize rule. */
 .field-textarea { resize: vertical; min-height: 4rem; }
 """;
 
     private const string _selectCss = """
-/* Reuses the .field / .field-input styles from the Basic demo.
-   The select needs a small appearance override. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }
+
+/* The select needs a small appearance override. */
 .field-select { appearance: none; padding-right: 2rem; }
 """;
 
     private const string _disabledCss = """
-/* Hooks emitted when Disabled="true" on the field */
-.field[data-disabled]       { opacity: 0.6; }
-.field-input[data-disabled] { cursor: not-allowed; background: #fafafa; }
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }
+
+/* The whole field dims when Disabled="true" is set on BhField */
+.field[data-disabled] { opacity: 0.6; }
 """;
 
     private const string _invalidCss = """
-/* Hooks emitted when Invalid="true" on the field */
-.field-input[data-invalid] {
-    border-color: #dc2626;
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
 }
 
-.field-input[data-invalid]:focus-visible {
-    outline-color: #dc2626;
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
 }
 
 .field-error { color: #dc2626; }
 """;
 
     private const string _formCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 24rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #18181b;
+}
+
+.field-label[data-disabled] { opacity: 0.5; }
+
+.field-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #18181b;
+    background: #fff;
+    transition: border-color 120ms ease;
+}
+
+.field-input:hover         { border-color: #a1a1af; }
+.field-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* Hooks emitted by BhInput / BhTextarea / BhSelect */
+.field-input[data-disabled] { opacity: 0.5; cursor: not-allowed; background: #fafafa; }
+.field-input[data-invalid]  { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+.field-description {
+    font-size: 0.8rem;
+    color: #71717a;
+    margin: 0;
+}
+
+.field-error { color: #dc2626; }
+
 /* Simple vertical form layout */
 .field-form {
     display: flex;
@@ -301,5 +507,27 @@
     width: 100%;
     max-width: 24rem;
 }
+
+/* Submit button */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
+
+.btn-primary {
+    color: #fff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+.btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 """;
 }

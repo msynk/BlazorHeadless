@@ -246,9 +246,14 @@
 """;
 
     private const string _scaleCss = """
+/* Utility classes — you can use Tailwind or write your own */
 .transition-all { transition-property: all; }
+.duration-300   { transition-duration: 300ms; }
+.duration-200   { transition-duration: 200ms; }
 .ease-out       { transition-timing-function: ease-out; }
 .ease-in        { transition-timing-function: ease-in; }
+.opacity-0      { opacity: 0; }
+.opacity-100    { opacity: 1; }
 .scale-95       { transform: scale(0.95); }
 .scale-100      { transform: scale(1); }
 """;
@@ -265,12 +270,26 @@
 """;
 
     private const string _appearCss = """
+/* Utility classes — you can use Tailwind or write your own */
+.transition-all { transition-property: all; }
+.duration-500   { transition-duration: 500ms; }
+.duration-300   { transition-duration: 300ms; }
+.ease-out       { transition-timing-function: ease-out; }
+.ease-in        { transition-timing-function: ease-in; }
+.opacity-0      { opacity: 0; }
+.opacity-100    { opacity: 1; }
 .translate-y-4  { transform: translateY(1rem); }
 .translate-y-0  { transform: translateY(0); }
-.duration-500   { transition-duration: 500ms; }
 """;
 
     private const string _callbackCss = """
-/* Same fade classes as the first demo — no extra CSS needed for callbacks. */
+/* Utility classes — you can use Tailwind or write your own.
+   The callback demo reuses the same fade classes as the first demo;
+   BeforeEnter / AfterEnter / BeforeLeave / AfterLeave add no CSS hooks. */
+.transition-opacity { transition-property: opacity; }
+.duration-300       { transition-duration: 300ms; }
+.duration-200       { transition-duration: 200ms; }
+.opacity-0          { opacity: 0; }
+.opacity-100        { opacity: 1; }
 """;
 }

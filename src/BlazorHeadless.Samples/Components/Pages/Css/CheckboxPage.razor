@@ -328,12 +328,106 @@
 """;
 
     private const string _controlledCss = """
-/* Reuses the .checkbox styles from the Basic demo.
-   Controlled mode adds no special CSS hooks — data-state simply reflects
-   whatever Checked value you bind to. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* Status text + external toggle button used to drive the controlled checkbox */
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
 """;
 
     private const string _disabledCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
 /* Hooks emitted when Disabled="true" */
 .checkbox[data-disabled] {
     opacity: 0.5;
@@ -342,10 +436,51 @@
 """;
 
     private const string _indeterminateCss = """
-/* Hooks emitted when Indeterminate="true" */
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
 .checkbox[data-state="indeterminate"] {
     background: #2563eb;
     border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* Wrapper that aligns each checkbox with its text label */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
 }
 
 /* The dash glyph rendered inside the box for the mixed state */
@@ -357,6 +492,43 @@
 """;
 
     private const string _labelCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
 /* Wrapper that aligns the checkbox with its text label */
 .checkbox-label {
     display: inline-flex;
@@ -369,8 +541,86 @@
 """;
 
     private const string _formCss = """
-/* Reuses the .checkbox / .checkbox-label styles from earlier demos.
-   No additional CSS is needed — when Name is set BhCheckbox renders an
-   <input type="hidden"> sibling that is invisible by default. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Box */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover                 { border-color: #a1a1af; }
+.checkbox:focus-visible         { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox[data-state="checked"],
+.checkbox[data-state="indeterminate"] {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.checkbox-tick,
+.checkbox-dash {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* Wrapper that aligns the checkbox with its text label */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+/* Submit button for the form post */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
+.btn-primary {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}
 """;
 }

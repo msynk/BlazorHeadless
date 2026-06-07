@@ -94,7 +94,12 @@
 
 .btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
 .btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-.btn:active        { background: #e4e4e7; }</code></pre>
+.btn:active        { background: #e4e4e7; }
+
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -138,7 +143,25 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Hooks emitted by BhButton when Disabled="true" */
+                    <pre class="code-block"><code class="language-css">.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
+/* Hooks emitted by BhButton when Disabled="true" */
 .btn[data-disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -194,7 +217,25 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Hooks emitted by BhButton when Loading="true" */
+                    <pre class="code-block"><code class="language-css">.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
+/* Hooks emitted by BhButton when Loading="true" */
 .btn[data-loading] {
     opacity: 0.7;
     cursor: wait;
@@ -271,7 +312,25 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Anchor variant of BhButton (As="a") */
+                    <pre class="code-block"><code class="language-css">.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
+/* Anchor variant of BhButton (As="a") */
 .btn-link {
     background: transparent;
     border-color: transparent;
@@ -332,7 +391,25 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Toggle button — driven by your own aria-pressed state */
+                    <pre class="code-block"><code class="language-css">.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
+/* Toggle button — driven by your own aria-pressed state */
 .btn-toggle {
     min-width: 4rem;
     justify-content: center;

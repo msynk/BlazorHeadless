@@ -74,7 +74,8 @@
     </DemoBlock>
 
     <DemoBlock Title="Show instantly"
-               Code="@_instantCode">
+               Code="@_instantCode"
+               Css="@_instantCss">
         <Description>
             Set <code>DelayDuration="0"</code> on a tooltip to have it open
             immediately on hover or focus.
@@ -92,7 +93,8 @@
     </DemoBlock>
 
     <DemoBlock Title="Anchor sides and alignment"
-               Code="@_sidesCode">
+               Code="@_sidesCode"
+               Css="@_sidesCss">
         <Description>
             The <code>Anchor</code> on <code>BhTooltipContent</code> supports
             <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>
@@ -132,7 +134,8 @@
     </DemoBlock>
 
     <DemoBlock Title="Controlled"
-               Code="@_controlledCode">
+               Code="@_controlledCode"
+               Css="@_controlledCss">
         <Description>
             Drive the open state externally with <code>Open</code> and
             <code>OnOpenChange</code>. Useful for guided tours or programmatic
@@ -318,6 +321,201 @@
 """;
 
     private const string _providerCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Lay the three triggers out in a row */
 .tooltip-row { display: flex; gap: 0.5rem; align-items: center; }
+""";
+
+    private const string _instantCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+""";
+
+    private const string _sidesCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Lay the four triggers out in a row */
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }
+""";
+
+    private const string _controlledCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Trigger button + tooltip laid out in a row */
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
 """;
 }

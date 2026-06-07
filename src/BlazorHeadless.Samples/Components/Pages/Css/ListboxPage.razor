@@ -466,11 +466,72 @@
 .listbox-option[data-active]   { background: #eff6ff; }
 .listbox-option[data-selected] { font-weight: 600; }
 .listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* Selected-value readout shown beside the listbox */
+.demo-output { font-size: 0.875rem; color: #71717a; }
 """;
 
     private const string _multiCss = """
-/* Reuses the .listbox / .listbox-option styles from the Basic demo.
-   The check-mark glyph is shown for selected options. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox          { position: relative; display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 31). */
+.listbox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+/* The check-mark glyph is shown for selected options in multi-select mode. */
 .check-mark {
     display: inline-block;
     width: 1rem;
@@ -480,17 +541,126 @@
 """;
 
     private const string _disabledCss = """
-/* Hooks emitted when an option is disabled */
-.listbox-option[data-disabled] {
-    opacity: 0.4;
-    cursor: not-allowed;
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox          { position: relative; display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
-/* Arrow-key navigation and typeahead skip disabled options. */
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 31). */
+.listbox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption. Arrow-key navigation and typeahead skip
+   options marked with data-disabled. */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 """;
 
     private const string _customCss = """
-/* Rich option layout: flag + name + code */
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox          { position: relative; display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 31). */
+.listbox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* Rich option layout: flag + name + code.
+   Provide Label="@c.Name" on each option so typeahead matches the visible
+   country name rather than the country code stored as the value. */
 .country-flag { font-size: 1.05rem; }
 .country-name { flex: 1 1 auto; }
 .country-code {
@@ -499,15 +669,90 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
-
-/* Provide Label="@c.Name" on each option so typeahead matches the visible
-   country name rather than the country code stored as the value. */
 """;
 
     private const string _formCss = """
-/* Reuses the .listbox styles from earlier demos.
-   When Name is set, BhListbox renders <input type="hidden"> sibling(s) — one for
-   single-select, or one per value for multi-select. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox          { position: relative; display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 31). */
+.listbox-options {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    z-index: 31;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+/* Submit button. When Name is set, BhListbox renders <input type="hidden">
+   sibling(s) — one for single-select, or one per value for multi-select. */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
+
+.btn-primary {
+    color: #fff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+.btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 """;
 
     private const string _anchorCode = """
@@ -544,6 +789,45 @@
 """;
 
     private const string _anchorCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.listbox-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"]  { border-color: #2563eb; }
+.listbox-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.listbox-chevron        { transition: transform 200ms ease; color: #71717a; }
+.listbox-chevron.open   { transform: rotate(180deg); }
+
+.listbox-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+}
+
+/* Hooks emitted by BhListboxOption */
+.listbox-option[data-active]   { background: #eff6ff; }
+.listbox-option[data-selected] { font-weight: 600; }
+.listbox-option[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
 /* When using Anchor, the panel is position:fixed by the JS engine.
    No position:relative on parent needed. */
 .listbox-anchored { display: inline-block; min-width: 14rem; }

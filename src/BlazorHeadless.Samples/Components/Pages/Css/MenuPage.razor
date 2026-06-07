@@ -408,6 +408,31 @@
 """;
 
     private const string _anchorCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
 /* When using Anchor, the panel is position:fixed by the JS engine.
    No need for position:relative on the parent or position:absolute on the panel.
    Use a high z-index to ensure the panel renders above all other page content. */
@@ -444,6 +469,8 @@
 
 .menu-items-anchored .menu-item[data-active] { background: #eff6ff; color: #1d4ed8; }
 .menu-items-anchored .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
 """;
 
     private const string _menuCss = """
@@ -504,19 +531,134 @@
 /* Hooks emitted by BhMenuItem */
 .menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
 .menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
 """;
 
     private const string _disabledCss = """
-/* Hooks emitted when Disabled="true" on an item */
-.menu-item[data-disabled] {
-    opacity: 0.4;
-    cursor: not-allowed;
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
 }
 
-/* Arrow-key navigation and typeahead skip disabled items automatically. */
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by BhMenuItem. Arrow-key navigation and typeahead skip items
+   marked with data-disabled automatically. */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
 """;
 
     private const string _richCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by BhMenuItem */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
 /* Rich item layout: icon + body (title + description) + shortcut */
 .menu-items-wide { min-width: 16rem; }
 
@@ -538,6 +680,66 @@
 """;
 
     private const string _sectionsCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by BhMenuItem */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
 /* Section label — not an interactive item, just a visual grouping header */
 .menu-section-label {
     padding: 0.35rem 0.65rem 0.15rem;
@@ -559,11 +761,65 @@
 """;
 
     private const string _polymorphicCss = """
-/* When As="a" the item renders as an anchor. The same .menu-item styles apply
-   because the data-active / data-disabled hooks are emitted regardless of tag. */
-.menu-item[data-active] {
-    background: #eff6ff;
-    color: #1d4ed8;
+/* All styles are consumer-authored — the library ships zero CSS */
+.menu          { position: relative; display: inline-block; }
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
 }
+
+.menu-button:hover               { border-color: #a1a1af; }
+.menu-button:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.menu-button[data-state="open"]  { border-color: #2563eb; }
+.menu-button[data-disabled]      { opacity: 0.5; cursor: not-allowed; }
+
+.menu-chevron       { transition: transform 200ms ease; color: #71717a; }
+.menu-chevron.open  { transform: rotate(180deg); }
+
+/* Options panel — sits above the click-outside overlay (z-index: 30 inline) */
+.menu-items {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    z-index: 31;
+    min-width: 10rem;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* When As="a" the item renders as an anchor. The same .menu-item styles apply
+   because the data-active / data-disabled hooks are emitted regardless of tag.
+   text-decoration:none keeps the anchor looking like a regular menu item. */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #18181b;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Hooks emitted by BhMenuItem */
+.menu-item[data-active]   { background: #eff6ff; color: #1d4ed8; }
+.menu-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 """;
 }

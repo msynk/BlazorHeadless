@@ -144,7 +144,40 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses .avatar / .avatar-image / .avatar-fallback from the Basic demo. */
+                    <pre class="code-block"><code class="language-css">/* The library ships zero CSS — these styles are consumer-authored. */
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    overflow: hidden;
+    user-select: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #e4e4e7;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3f3f46;
+    background: #e4e4e7;
+}
+
+/* A muted icon-style fallback for when there is no image at all */
 .avatar-fallback-icon {
     color: #71717a;
     background: #f4f4f5;
@@ -189,8 +222,38 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the styles from the Basic demo. DelayMs only affects timing,
-   not appearance — there are no extra CSS hooks needed. */</code></pre>
+                    <pre class="code-block"><code class="language-css">/* The library ships zero CSS — these styles are consumer-authored. */
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    overflow: hidden;
+    user-select: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #e4e4e7;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3f3f46;
+    background: #e4e4e7;
+}</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -235,7 +298,40 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the base styles; these modifiers tweak size and shape. */
+                    <pre class="code-block"><code class="language-css">/* The library ships zero CSS — these styles are consumer-authored. */
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    overflow: hidden;
+    user-select: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #e4e4e7;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3f3f46;
+    background: #e4e4e7;
+}
+
+/* Lay the avatars out in a row; modifiers tweak size and shape */
 .avatar-row {
     display: flex;
     align-items: center;

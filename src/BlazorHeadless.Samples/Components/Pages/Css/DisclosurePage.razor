@@ -252,28 +252,123 @@
 """;
 
     private const string _chevronCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover                { background: #f4f4f5; }
+.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
+.disclosure-button[data-state="open"]   { background: #f4f4f5; }
+.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}
+
 /* Rotating chevron driven by BhDisclosureRenderContext.IsOpen */
 .disclosure-chevron      { transition: transform 200ms ease; color: #71717a; }
 .disclosure-chevron.open { transform: rotate(180deg); }
+
+/* "Close panel" button rendered inside the panel */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
 """;
 
-    // The "Default Open", "Disabled", and "Controlled" demos all reuse the styles
-    // from the basic demo above. The snippets below highlight only the demo-specific
-    // selectors so it's clear which hooks drive each scenario.
-
     private const string _defaultOpenCss = """
-/* Reuses the .disclosure / .disclosure-button styles from the Basic demo.
-   When DefaultOpen="true" the button is rendered with data-state="open" on
-   first paint so the open-state styles apply immediately. */
-.disclosure-button[data-state="open"] { background: #f4f4f5; }
+/* All styles are consumer-authored — the library ships zero CSS */
+.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover                { background: #f4f4f5; }
+.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
+.disclosure-button[data-state="open"]   { background: #f4f4f5; }
+.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}
 """;
 
     private const string _disabledCss = """
-/* Hooks emitted when Disabled="true" */
-.disclosure-button[data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
+/* All styles are consumer-authored — the library ships zero CSS */
+.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover                { background: #f4f4f5; }
+.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
+.disclosure-button[data-state="open"]   { background: #f4f4f5; }
+.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
 }
 
 /* The root <BhDisclosure> element also receives data-disabled — useful for
@@ -284,8 +379,63 @@
 """;
 
     private const string _controlledCss = """
-/* Reuses the .disclosure / .disclosure-button styles from the Basic demo.
-   Controlled mode adds no special CSS hooks — data-state simply reflects
-   whatever Open value you bind to. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.disclosure {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.disclosure-button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.disclosure-button:hover                { background: #f4f4f5; }
+.disclosure-button:focus-visible        { outline: 2px solid #2563eb; outline-offset: -2px; }
+.disclosure-button[data-state="open"]   { background: #f4f4f5; }
+.disclosure-button[data-disabled]       { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+.disclosure-body {
+    padding: 0.875rem 1.125rem 1rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}
+
+/* External trigger row + state readout */
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
 """;
 }

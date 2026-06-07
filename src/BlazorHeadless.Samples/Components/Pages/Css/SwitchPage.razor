@@ -262,6 +262,52 @@
 """;
 
     private const string _labelCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
+
 /* Wrapper that aligns the switch with its text label */
 .switch-label {
     display: inline-flex;
@@ -273,40 +319,258 @@
 }
 """;
 
-    // The "Controlled", "Disabled", "Polymorphic", and "Form Submission" demos all
-    // reuse the styles shown in the basic demo above. The snippets below highlight
-    // only the demo-specific selectors so it's clear which hooks drive each scenario.
-
     private const string _controlledCss = """
-/* Reuses the .switch / .switch-thumb styles from the Basic demo.
-   Controlled mode adds no special CSS hooks — data-state simply reflects
-   whatever Checked value you bind to. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
+
+/* Controlled mode adds no special CSS hooks — data-state simply reflects
+   whatever Checked value you bind to. Below are the external controls. */
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
 """;
 
     private const string _disabledCss = """
-/* Hooks emitted when Disabled="true" */
-.switch[data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
 }
 
-/* The disabled state still respects the checked appearance, so the thumb
-   stays in the "on" position on a disabled-checked switch. */
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+
+/* Hooks emitted when Disabled="true". The disabled state still respects the
+   checked appearance, so the thumb stays in the "on" position on a
+   disabled-checked switch. */
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
 """;
 
     private const string _polymorphicCss = """
-/* Reuses the .switch / .switch-thumb styles from the Basic demo.
-   When rendered with As="div" (or any non-native element) BhSwitch automatically
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+/* When rendered with As="div" (or any non-native element) BhSwitch automatically
    adds tabindex="0" and a Space/Enter keydown handler — the focus ring still
    needs your :focus-visible rule to appear. */
 .switch:focus-visible {
     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
 }
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
 """;
 
     private const string _formCss = """
-/* Reuses the .switch / .switch-label styles from the earlier demos.
-   No additional CSS is needed — when Name is set BhSwitch renders an
-   <input type="hidden"> sibling that is always invisible by default. */
+/* All styles are consumer-authored — the library ships zero CSS */
+.switch {
+    /* Reset native button */
+    all: unset;
+    box-sizing: border-box;
+
+    /* Track */
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #d4d4d8;
+    cursor: pointer;
+    transition: background 150ms ease;
+
+    /* Focus ring */
+    outline: none;
+}
+
+.switch:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb;
+}
+
+/* Hooks emitted by BhSwitch */
+.switch[data-state="checked"]   { background: #2563eb; }
+.switch[data-disabled]          { opacity: 0.5; cursor: not-allowed; }
+
+/* Thumb — driven by data-state on the inner element */
+.switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%);
+    transition: left 150ms ease;
+}
+
+.switch-thumb[data-state="checked"] {
+    left: calc(100% - 1.1rem - 0.15rem);
+}
+
+/* Wrapper that aligns the switch with its text label */
+.switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+/* When Name is set BhSwitch renders an <input type="hidden"> sibling that is
+   always invisible by default — no extra CSS needed for that. */
+.demo-output { font-size: 0.875rem; color: #71717a; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }
+
+.btn-primary {
+    color: #fff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
 """;
 }

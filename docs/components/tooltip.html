@@ -182,7 +182,50 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }</code></pre>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Lay the three triggers out in a row */
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -228,9 +271,68 @@
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
-                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
             </div>
-            <div class="example-panel active" data-tab="tw">
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltip DelayDuration="0" class="tooltip"&gt;
+    &lt;BhTooltipTrigger class="tooltip-trigger"&gt;No delay&lt;/BhTooltipTrigger&gt;
+    &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="tooltip-content"&gt;
+        I open instantly
+        &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+    &lt;/BhTooltipContent&gt;
+&lt;/BhTooltip&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
@@ -251,9 +353,92 @@
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
-                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
             </div>
-            <div class="example-panel active" data-tab="tw">
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTooltipProvider DelayDuration="200"&gt;
+    &lt;BhTooltip class="tooltip"&gt;
+        &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Top&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })" class="tooltip-content"&gt;
+            Top&lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="tooltip"&gt;
+        &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Right&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "right", Gap = 6 })" class="tooltip-content"&gt;
+            Right&lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="tooltip"&gt;
+        &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Bottom&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 6 })" class="tooltip-content"&gt;
+            Bottom&lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+
+    &lt;BhTooltip class="tooltip"&gt;
+        &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Left&lt;/BhTooltipTrigger&gt;
+        &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "left", Gap = 6 })" class="tooltip-content"&gt;
+            Left&lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+        &lt;/BhTooltipContent&gt;
+    &lt;/BhTooltip&gt;
+&lt;/BhTooltipProvider&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Lay the four triggers out in a row */
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
@@ -286,9 +471,97 @@
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
-                <div class="example-tabs"><button class="example-tab active" data-tab="tw">Tailwind</button></div>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
             </div>
-            <div class="example-panel active" data-tab="tw">
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ToggleControlled" class="btn"&gt;
+    @(controlledOpen ? "Hide tooltip" : "Show tooltip")
+&lt;/BhButton&gt;
+
+&lt;BhTooltip Open="controlledOpen"
+           OnOpenChange="v =&gt; controlledOpen = v"
+           class="tooltip"&gt;
+    &lt;BhTooltipTrigger class="tooltip-trigger"&gt;Target&lt;/BhTooltipTrigger&gt;
+    &lt;BhTooltipContent Anchor="@(new BhAnchorOptions { To = "top", Gap = 6 })"
+                      class="tooltip-content"&gt;
+        Driven from outside
+        &lt;BhTooltipArrow class="tooltip-arrow" /&gt;
+    &lt;/BhTooltipContent&gt;
+&lt;/BhTooltip&gt;
+
+@code {
+    private bool controlledOpen;
+
+    private void ToggleControlled() =&gt; controlledOpen = !controlledOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tooltip          { display: inline-block; }
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.tooltip-trigger:hover         { border-color: #a1a1af; }
+.tooltip-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.tooltip-content {
+    position: relative;
+    z-index: 50;
+    padding: 0.4rem 0.6rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    border-radius: 0.35rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+}
+
+.tooltip-content[hidden] { display: none; }
+
+.tooltip-arrow { fill: #18181b; }
+
+.tooltip-content[data-anchor^="top"]    .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); }
+.tooltip-content[data-anchor^="bottom"] .tooltip-arrow { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(180deg); }
+.tooltip-content[data-anchor^="left"]   .tooltip-arrow { position: absolute; right: -7px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.tooltip-content[data-anchor^="right"]  .tooltip-arrow { position: absolute; left: -7px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+/* Trigger button + tooltip laid out in a row */
+.tooltip-row { display: flex; gap: 0.5rem; align-items: center; }
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn:hover { background: #f4f4f5; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>

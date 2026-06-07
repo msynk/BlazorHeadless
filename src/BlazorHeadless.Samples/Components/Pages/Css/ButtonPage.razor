@@ -251,9 +251,32 @@
 .btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
 .btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 .btn:active        { background: #e4e4e7; }
+
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}
 """;
 
     private const string _btnDisabledCss = """
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
 /* Hooks emitted by BhButton when Disabled="true" */
 .btn[data-disabled] {
     opacity: 0.5;
@@ -263,6 +286,24 @@
 """;
 
     private const string _btnLoadingCss = """
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
 /* Hooks emitted by BhButton when Loading="true" */
 .btn[data-loading] {
     opacity: 0.7;
@@ -283,6 +324,24 @@
 """;
 
     private const string _btnLinkCss = """
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
 /* Anchor variant of BhButton (As="a") */
 .btn-link {
     background: transparent;
@@ -296,6 +355,24 @@
 """;
 
     private const string _btnToggleCss = """
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.btn:active        { background: #e4e4e7; }
+
 /* Toggle button — driven by your own aria-pressed state */
 .btn-toggle {
     min-width: 4rem;

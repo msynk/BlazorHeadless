@@ -235,10 +235,43 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
-   With Type="BhAccordionType.Multiple" any combination of items can be open;
-   the same data-state="open|closed" hook drives every panel independently. */
-.accordion-trigger[data-state="open"]  { background: #f4f4f5; }</code></pre>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.accordion {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-item            { border-bottom: 1px solid #e4e4e7; }
+.accordion-item:last-child { border-bottom: none; }
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover               { background: #f4f4f5; }
+.accordion-trigger:focus-visible       { outline: 2px solid #2563eb; outline-offset: -2px; }
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+.accordion-trigger[data-disabled]      { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Rotating chevron driven by BhAccordionTriggerContext.IsOpen */
+.accordion-chevron      { transition: transform 200ms ease; color: #71717a; }
+.accordion-chevron.open { transform: rotate(180deg); }
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -306,11 +339,42 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Hooks emitted when an item is disabled (or the entire accordion is) */
-.accordion-trigger[data-disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.accordion {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-item            { border-bottom: 1px solid #e4e4e7; }
+.accordion-item:last-child { border-bottom: none; }
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover               { background: #f4f4f5; }
+.accordion-trigger:focus-visible       { outline: 2px solid #2563eb; outline-offset: -2px; }
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+.accordion-trigger[data-disabled]      { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Rotating chevron driven by BhAccordionTriggerContext.IsOpen */
+.accordion-chevron      { transition: transform 200ms ease; color: #71717a; }
+.accordion-chevron.open { transform: rotate(180deg); }
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
 }
 
 /* BhAccordionItem itself also receives data-disabled — useful for striping
@@ -405,9 +469,76 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Reuses the .accordion / .accordion-trigger styles from the Basic demo.
-   Controlled mode adds no special CSS hooks — the data-state attribute
-   reflects whatever Value/Values you bind to. */</code></pre>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.accordion {
+    width: 100%;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-item            { border-bottom: 1px solid #e4e4e7; }
+.accordion-item:last-child { border-bottom: none; }
+
+.accordion-trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.accordion-trigger:hover               { background: #f4f4f5; }
+.accordion-trigger:focus-visible       { outline: 2px solid #2563eb; outline-offset: -2px; }
+.accordion-trigger[data-state="open"]  { background: #f4f4f5; }
+.accordion-trigger[data-disabled]      { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Rotating chevron driven by BhAccordionTriggerContext.IsOpen */
+.accordion-chevron      { transition: transform 200ms ease; color: #71717a; }
+.accordion-chevron.open { transform: rotate(180deg); }
+
+.accordion-body {
+    padding: 0.875rem 1.25rem 1.125rem;
+    color: #71717a;
+    border-top: 1px solid #e4e4e7;
+}
+
+/* Toggle button + status output used to drive the controlled accordion */
+.demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.demo-output {
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    line-height: 1.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #18181b;
+    cursor: pointer;
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.btn:hover         { background: #f4f4f5; border-color: #d4d4d8; }
+.btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">

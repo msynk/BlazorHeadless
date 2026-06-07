@@ -136,9 +136,14 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">.transition-all { transition-property: all; }
+                    <pre class="code-block"><code class="language-css">/* Utility classes — you can use Tailwind or write your own */
+.transition-all { transition-property: all; }
+.duration-300   { transition-duration: 300ms; }
+.duration-200   { transition-duration: 200ms; }
 .ease-out       { transition-timing-function: ease-out; }
 .ease-in        { transition-timing-function: ease-in; }
+.opacity-0      { opacity: 0; }
+.opacity-100    { opacity: 1; }
 .scale-95       { transform: scale(0.95); }
 .scale-100      { transform: scale(1); }</code></pre>
                 </div>
@@ -175,7 +180,7 @@
         <div class="example">
             <div class="example-header">
                 <span class="example-title">Example</span>
-                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button></div>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
             </div>
             <div class="example-panel active" data-tab="css">
                 <h4 class="panel-label">Razor</h4>
@@ -202,6 +207,32 @@
 .slide-leave        { transition: max-height 200ms ease-in, opacity 200ms ease-in; }
 .slide-leave-from   { max-height: 10rem; opacity: 1; }
 .slide-leave-to     { max-height: 0; opacity: 0; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-4 items-start"&gt;
+    &lt;BhButton OnClick="() =&gt; showSlide = !showSlide"
+              class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700"&gt;
+        @(showSlide ? "Hide" : "Show")
+    &lt;/BhButton&gt;
+    &lt;BhTransition Show="showSlide"
+                  Enter="transition-all duration-300 ease-out"
+                  EnterFrom="max-h-0 opacity-0"
+                  EnterTo="max-h-40 opacity-100"
+                  Leave="transition-all duration-200 ease-in"
+                  LeaveFrom="max-h-40 opacity-100"
+                  LeaveTo="max-h-0 opacity-0"
+                  class="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-900 inline-block overflow-hidden"&gt;
+        &lt;p&gt;I slide down from zero height.&lt;/p&gt;
+    &lt;/BhTransition&gt;
+&lt;/div&gt;
+
+@code {
+    private bool showSlide;
+}</code></pre>
                 </div>
             </div>
         </div>
@@ -232,9 +263,16 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">.translate-y-4  { transform: translateY(1rem); }
-.translate-y-0  { transform: translateY(0); }
-.duration-500   { transition-duration: 500ms; }</code></pre>
+                    <pre class="code-block"><code class="language-css">/* Utility classes — you can use Tailwind or write your own */
+.transition-all { transition-property: all; }
+.duration-500   { transition-duration: 500ms; }
+.duration-300   { transition-duration: 300ms; }
+.ease-out       { transition-timing-function: ease-out; }
+.ease-in        { transition-timing-function: ease-in; }
+.opacity-0      { opacity: 0; }
+.opacity-100    { opacity: 1; }
+.translate-y-4  { transform: translateY(1rem); }
+.translate-y-0  { transform: translateY(0); }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -292,7 +330,14 @@
                 <h4 class="panel-label">CSS</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-css">/* Same fade classes as the first demo — no extra CSS needed for callbacks. */</code></pre>
+                    <pre class="code-block"><code class="language-css">/* Utility classes — you can use Tailwind or write your own.
+   The callback demo reuses the same fade classes as the first demo;
+   BeforeEnter / AfterEnter / BeforeLeave / AfterLeave add no CSS hooks. */
+.transition-opacity { transition-property: opacity; }
+.duration-300       { transition-duration: 300ms; }
+.duration-200       { transition-duration: 200ms; }
+.opacity-0          { opacity: 0; }
+.opacity-100        { opacity: 1; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">

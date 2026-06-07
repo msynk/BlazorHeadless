@@ -237,8 +237,13 @@ function pager(currentIndex, fromKind) {
 // Component page rendering
 // ---------------------------------------------------------------------------
 function renderExample(block, blockIdx) {
-    const hasCss = block.css !== null && block.css.trim().length > 0;
+    // The CSS-variant Razor is always available, so the CSS tab is always
+    // shown. The per-block stylesheet is optional — the first example on a
+    // page usually carries the shared styles that the later ones reuse.
+    const hasCode = block.code !== undefined && block.code.trim().length > 0;
+    const hasCssStyles = block.css !== null && block.css.trim().length > 0;
     const hasTw = block.twCode !== undefined && block.twCode.trim().length > 0;
+    const hasCss = hasCode;
     const titleId = block.title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -266,11 +271,14 @@ function renderExample(block, blockIdx) {
 
     const panels = [];
     if (hasCss) {
+        const cssSection = hasCssStyles
+            ? `
+                <h4 class="panel-label">CSS</h4>
+                ${codeBlock(block.css, 'css')}`
+            : '';
         let panel = `<div class="example-panel${tabs[0].key === 'css' ? ' active' : ''}" data-tab="css">
                 <h4 class="panel-label">Razor</h4>
-                ${codeBlock(block.code, 'markup')}
-                <h4 class="panel-label">CSS</h4>
-                ${codeBlock(block.css, 'css')}
+                ${codeBlock(block.code, 'markup')}${cssSection}
             </div>`;
         panels.push(panel);
     }
