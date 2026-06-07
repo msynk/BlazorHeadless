@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alert Dialog — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html" class="active">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Alert Dialog</h1>
+        <p class="lead">A modal dialog that interrupts the user with an important message and expects a deliberate response.</p>
+        <h2 id="basic-alert-dialog">Basic Alert Dialog</h2>
+        <p>Click the trigger to open. Unlike a Dialog, clicking the overlay does <strong>not</strong> dismiss it — the user must choose <code>Cancel</code> or <code>Action</code>. Focus lands on the Cancel button (the safe choice), is trapped inside, and returns to the trigger on close. Escape closes.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAlertDialog&gt;
+    &lt;BhAlertDialogTrigger class="btn btn-danger"&gt;
+        Delete account
+    &lt;/BhAlertDialogTrigger&gt;
+
+    &lt;BhAlertDialogOverlay class="alert-overlay" /&gt;
+    &lt;BhAlertDialogContent class="alert-content"&gt;
+        &lt;BhAlertDialogTitle class="alert-title"&gt;Are you absolutely sure?&lt;/BhAlertDialogTitle&gt;
+        &lt;BhAlertDialogDescription class="alert-description"&gt;
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+        &lt;/BhAlertDialogDescription&gt;
+
+        &lt;div class="alert-actions"&gt;
+            &lt;BhAlertDialogCancel class="btn"&gt;Cancel&lt;/BhAlertDialogCancel&gt;
+            &lt;BhAlertDialogAction class="btn btn-danger" OnClick="HandleDelete"&gt;
+                Yes, delete account
+            &lt;/BhAlertDialogAction&gt;
+        &lt;/div&gt;
+    &lt;/BhAlertDialogContent&gt;
+&lt;/BhAlertDialog&gt;
+
+@code {
+    private void HandleDelete() { /* perform the destructive action */ }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The library applies minimal default positioning (position:fixed inset:0 on the
+   overlay) so consumers can layer the content inside it. Everything else is yours. */
+
+.alert-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.alert-content {
+    /* The library centres the content in the viewport by default (position:fixed).
+       These rules just give it a surface. */
+    width: calc(100vw - 2rem);
+    max-width: 28rem;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.alert-title       { font-size: 1.1rem; font-weight: 600; color: #18181b; }
+.alert-description { font-size: 0.9rem; color: #71717a; }
+
+.alert-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhAlertDialog&gt;
+    &lt;BhAlertDialogTrigger class="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-red-700"&gt;
+        Delete account
+    &lt;/BhAlertDialogTrigger&gt;
+    &lt;BhAlertDialogOverlay class="bg-black/50" /&gt;
+    &lt;BhAlertDialogContent class="w-[calc(100vw-2rem)] max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3"&gt;
+        &lt;BhAlertDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Are you absolutely sure?&lt;/BhAlertDialogTitle&gt;
+        &lt;BhAlertDialogDescription class="text-sm text-zinc-500"&gt;
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+        &lt;/BhAlertDialogDescription&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhAlertDialogCancel class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+                Cancel
+            &lt;/BhAlertDialogCancel&gt;
+            &lt;BhAlertDialogAction OnClick="HandleDelete"
+                                 class="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-red-700"&gt;
+                Yes, delete account
+            &lt;/BhAlertDialogAction&gt;
+        &lt;/div&gt;
+    &lt;/BhAlertDialogContent&gt;
+&lt;/BhAlertDialog&gt;
+
+@code {
+    private void HandleDelete() { /* perform the destructive action */ }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="controlled-state">Controlled state</h2>
+        <p>Drive the open state yourself with <code>Open</code> + <code>OnOpenChange</code>. Useful when an external event (e.g. an unsaved-changes guard) needs to open the alert.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true" class="btn"&gt;
+    Discard changes
+&lt;/BhButton&gt;
+
+&lt;BhAlertDialog Open="isOpen" OnOpenChange="v =&gt; isOpen = v"&gt;
+    &lt;BhAlertDialogOverlay class="alert-overlay" /&gt;
+    &lt;BhAlertDialogContent class="alert-content"&gt;
+        &lt;BhAlertDialogTitle class="alert-title"&gt;Discard changes?&lt;/BhAlertDialogTitle&gt;
+        &lt;BhAlertDialogDescription class="alert-description"&gt;
+            You have unsaved changes. If you leave now, they will be lost.
+        &lt;/BhAlertDialogDescription&gt;
+
+        &lt;div class="alert-actions"&gt;
+            &lt;BhAlertDialogCancel class="btn"&gt;Keep editing&lt;/BhAlertDialogCancel&gt;
+            &lt;BhAlertDialogAction class="btn btn-danger"&gt;Discard&lt;/BhAlertDialogAction&gt;
+        &lt;/div&gt;
+    &lt;/BhAlertDialogContent&gt;
+&lt;/BhAlertDialog&gt;
+
+@code {
+    private bool isOpen;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* The library applies minimal default positioning (position:fixed inset:0 on the
+   overlay) so consumers can layer the content inside it. Everything else is yours. */
+
+.alert-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.alert-content {
+    /* The library centres the content in the viewport by default (position:fixed).
+       These rules just give it a surface. */
+    width: calc(100vw - 2rem);
+    max-width: 28rem;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.alert-title       { font-size: 1.1rem; font-weight: 600; color: #18181b; }
+.alert-description { font-size: 0.9rem; color: #71717a; }
+
+.alert-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; isOpen = true"
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+    Discard changes
+&lt;/BhButton&gt;
+&lt;BhAlertDialog Open="isOpen" OnOpenChange="v =&gt; isOpen = v"&gt;
+    &lt;BhAlertDialogOverlay class="bg-black/50" /&gt;
+    &lt;BhAlertDialogContent class="w-[calc(100vw-2rem)] max-w-md rounded-xl bg-white p-6 shadow-2xl flex flex-col gap-3"&gt;
+        &lt;BhAlertDialogTitle class="text-lg font-semibold text-zinc-900"&gt;Discard changes?&lt;/BhAlertDialogTitle&gt;
+        &lt;BhAlertDialogDescription class="text-sm text-zinc-500"&gt;
+            You have unsaved changes. If you leave now, they will be lost.
+        &lt;/BhAlertDialogDescription&gt;
+        &lt;div class="mt-2 flex justify-end gap-2"&gt;
+            &lt;BhAlertDialogCancel class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100"&gt;
+                Keep editing
+            &lt;/BhAlertDialogCancel&gt;
+            &lt;BhAlertDialogAction class="inline-flex items-center gap-2 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-red-700"&gt;
+                Discard
+            &lt;/BhAlertDialogAction&gt;
+        &lt;/div&gt;
+    &lt;/BhAlertDialogContent&gt;
+&lt;/BhAlertDialog&gt;
+
+@code {
+    private bool isOpen;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="accordion.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Accordion</span>
+        </a>
+            <a class="next" href="aspect-ratio.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Aspect Ratio</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

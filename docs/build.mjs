@@ -25,6 +25,7 @@ const outComponents = join(__dirname, 'components');
 // ---------------------------------------------------------------------------
 const components = [
     { slug: 'accordion',        cls: 'AccordionPage',       label: 'Accordion' },
+    { slug: 'alert-dialog',     cls: 'AlertDialogPage',     label: 'Alert Dialog' },
     { slug: 'aspect-ratio',     cls: 'AspectRatioPage',     label: 'Aspect Ratio' },
     { slug: 'avatar',           cls: 'AvatarPage',          label: 'Avatar' },
     { slug: 'button',           cls: 'ButtonPage',          label: 'Button' },
