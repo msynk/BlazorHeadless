@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html" class="active">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -378,7 +389,7 @@
 .field-error { color: #dc2626; }
 
 /* The whole field dims when Disabled="true" is set on BhField */
-.field[data-disabled] { opacity: 0.6; }</code></pre>
+.field[data-disabled] .field-input { opacity: 0.6; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -614,6 +625,264 @@
         Submit
     &lt;/BhButton&gt;
 &lt;/form&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="editform-validation">EditForm validation</h2>
+        <p>Inside an <code>EditForm</code> with <code>DataAnnotationsValidator</code>, every control bound with <code>@@bind-Value</code> / <code>@@bind-Checked</code> reports its validation state to its <code>BhField</code>: the control gets <code>aria-invalid="true"</code> and <code>data-invalid</code>, and <code>BhErrorMessage</code> appears with the messages and is added to the control's <code>aria-describedby</code> — no ids to wire. Non-native controls work too: the radio group is named by its <code>BhLabel</code> via <code>aria-labelledby</code>, and clicking the label focuses the group. Because these components take plain child content, they nest inside <code>EditForm</code> without <code>Context</code> clashes. Submit empty to see it.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@using System.ComponentModel.DataAnnotations
+
+@* novalidate: let DataAnnotations (not the browser) report errors *@
+&lt;EditForm Model="signup" OnValidSubmit="HandleValidSubmit" novalidate="@true" class="field-form validation-form"&gt;
+    &lt;DataAnnotationsValidator /&gt;
+
+    &lt;BhField Required="true" class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Full name&lt;/BhLabel&gt;
+        &lt;BhInput @bind-Value="signup.Name" autocomplete="name" class="field-input" /&gt;
+        &lt;BhErrorMessage class="validation-message" /&gt;   @* only rendered while invalid *@
+    &lt;/BhField&gt;
+
+    &lt;BhField Required="true" class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Email&lt;/BhLabel&gt;
+        &lt;BhDescription class="field-description"&gt;We'll send the receipt here.&lt;/BhDescription&gt;
+        &lt;BhInput type="email" @bind-Value="signup.Email" autocomplete="email" class="field-input" /&gt;
+        &lt;BhErrorMessage class="validation-message" /&gt;
+    &lt;/BhField&gt;
+
+    @* Non-native control: labelled via aria-labelledby, focused by a label click *@
+    &lt;BhField Required="true" class="field"&gt;
+        &lt;BhLabel class="field-label"&gt;Plan&lt;/BhLabel&gt;
+        &lt;BhRadioGroup @bind-Value="signup.Plan" Vertical="false" class="validation-radios"&gt;
+            &lt;BhRadio Value="Free" class="validation-radio"&gt;&lt;span class="validation-radio-dot" aria-hidden="true"&gt;&lt;/span&gt;Free&lt;/BhRadio&gt;
+            &lt;BhRadio Value="Pro" class="validation-radio"&gt;&lt;span class="validation-radio-dot" aria-hidden="true"&gt;&lt;/span&gt;Pro&lt;/BhRadio&gt;
+            &lt;BhRadio Value="Team" class="validation-radio"&gt;&lt;span class="validation-radio-dot" aria-hidden="true"&gt;&lt;/span&gt;Team&lt;/BhRadio&gt;
+        &lt;/BhRadioGroup&gt;
+        &lt;BhErrorMessage class="validation-message" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="field"&gt;
+        &lt;div class="validation-check"&gt;
+            &lt;BhCheckbox @bind-Checked="signup.AcceptTerms" class="checkbox"&gt;
+                &lt;BhCheckboxIndicator class="checkbox-tick"&gt;✓&lt;/BhCheckboxIndicator&gt;
+            &lt;/BhCheckbox&gt;
+            &lt;BhLabel class="validation-check-label"&gt;I accept the terms of service&lt;/BhLabel&gt;
+        &lt;/div&gt;
+        &lt;BhErrorMessage class="validation-message" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;div class="validation-actions"&gt;
+        &lt;button type="submit" class="btn btn-primary"&gt;Create account&lt;/button&gt;
+        &lt;button type="button" class="btn" @onclick="ResetSignup"&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;BhLiveRegion class="validation-success"&gt;@signupResult&lt;/BhLiveRegion&gt;
+&lt;/EditForm&gt;
+
+@code {
+    private sealed class SignupModel
+    {
+        [Required(ErrorMessage = "Please enter your name.")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email.")]
+        [EmailAddress(ErrorMessage = "That doesn't look like an email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Pick a plan.")]
+        public string? Plan { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms.")]
+        public bool AcceptTerms { get; set; }
+    }
+
+    private SignupModel signup = new();
+    private string? signupResult;
+
+    private void HandleValidSubmit() =&gt;
+        signupResult = $"Welcome aboard, {signup.Name}! You're on the {signup.Plan} plan.";
+
+    private void ResetSignup()
+    {
+        signup = new();
+        signupResult = null;
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS.
+   Builds on .field / .field-label / .field-input / .field-description from
+   the "Basic Field" demo and .checkbox from the Checkbox page. */
+.validation-form { display: flex; flex-direction: column; gap: 1rem; max-width: 24rem; }
+
+/* BhLabel emits data-required / data-invalid from its field */
+.validation-form .field-label[data-required]::after { content: " *"; color: #dc2626; }
+.validation-form .field-label[data-invalid]         { color: #b91c1c; }
+
+/* BhInput: aria-invalid="true" + data-invalid */
+.field-input[data-invalid]               { border-color: #dc2626; }
+.field-input[data-invalid]:focus-visible { outline-color: #dc2626; }
+
+/* BhErrorMessage: rendered only while the field is invalid */
+.validation-message {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    color: #dc2626;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.validation-message::before {
+    content: "!";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.95rem;
+    height: 0.95rem;
+    border-radius: 999px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+/* Radio group as pills — the radio's text is its accessible name */
+.validation-radios { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.validation-radio {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+.validation-radio:focus-visible            { outline: 2px solid #2563eb; outline-offset: 2px; }
+.validation-radio[data-state="checked"]    { border-color: #2563eb; background: #eff6ff; }
+.validation-radios[aria-invalid="true"] .validation-radio { border-color: #fca5a5; }
+
+.validation-radio-dot {
+    width: 0.9rem;
+    height: 0.9rem;
+    box-sizing: border-box;
+    border: 1px solid #a1a1aa;
+    border-radius: 999px;
+    background: #fff;
+}
+.validation-radio[data-state="checked"] .validation-radio-dot { border: 4px solid #2563eb; }
+
+/* Checkbox + label row */
+.validation-check       { display: flex; align-items: center; gap: 0.55rem; }
+.validation-check-label { font-size: 0.875rem; cursor: pointer; }
+.validation-form .checkbox[data-invalid] { border-color: #dc2626; }
+
+.validation-actions { display: flex; gap: 0.5rem; }
+
+/* The live region stays rendered; style it only when it has content */
+.validation-success:not(:empty) {
+    padding: 0.6rem 0.85rem;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.5rem;
+    background: #f0fdf4;
+    color: #166534;
+    font-size: 0.875rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@using System.ComponentModel.DataAnnotations
+
+@* novalidate: let DataAnnotations (not the browser) report errors *@
+&lt;EditForm Model="signup" OnValidSubmit="HandleValidSubmit" novalidate="@true" class="flex w-full max-w-sm flex-col gap-4"&gt;
+    &lt;DataAnnotationsValidator /&gt;
+
+    &lt;BhField Required="true" class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="text-sm font-semibold text-zinc-900 data-invalid:text-red-700 data-required:after:ml-0.5 data-required:after:text-red-600 data-required:after:content-['*']"&gt;Full name&lt;/BhLabel&gt;
+        &lt;BhInput @bind-Value="signup.Name" autocomplete="name"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" /&gt;
+        @* Only rendered while invalid; referenced by the input's aria-describedby *@
+        &lt;BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField Required="true" class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="..."&gt;Email&lt;/BhLabel&gt;
+        &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;We'll send the receipt here.&lt;/BhDescription&gt;
+        &lt;BhInput type="email" @bind-Value="signup.Email" autocomplete="email" class="..." /&gt;
+        &lt;BhErrorMessage class="..." /&gt;
+    &lt;/BhField&gt;
+
+    @* Non-native control: labelled via aria-labelledby, focused by a label click *@
+    &lt;BhField Required="true" class="flex w-full flex-col gap-1.5"&gt;
+        &lt;BhLabel class="..."&gt;Plan&lt;/BhLabel&gt;
+        &lt;BhRadioGroup @bind-Value="signup.Plan" Vertical="false" class="group/radios flex flex-wrap gap-2"&gt;
+            &lt;BhRadio Value="Free"
+                     class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-1.5 text-sm group-aria-invalid/radios:border-red-300 data-state-checked:border-blue-600 data-state-checked:bg-blue-50"&gt;
+                &lt;span aria-hidden="true" class="size-3.5 rounded-full border border-zinc-400 bg-white group-data-state-checked:border-4 group-data-state-checked:border-blue-600"&gt;&lt;/span&gt;Free
+            &lt;/BhRadio&gt;
+            &lt;BhRadio Value="Pro" class="..."&gt;…Pro&lt;/BhRadio&gt;
+            &lt;BhRadio Value="Team" class="..."&gt;…Team&lt;/BhRadio&gt;
+        &lt;/BhRadioGroup&gt;
+        &lt;BhErrorMessage class="..." /&gt;
+    &lt;/BhField&gt;
+
+    &lt;BhField class="flex w-full flex-col gap-1.5"&gt;
+        &lt;div class="flex items-center gap-2"&gt;
+            &lt;BhCheckbox @bind-Checked="signup.AcceptTerms"
+                        class="inline-flex h-[1.15rem] w-[1.15rem] items-center justify-center rounded border border-zinc-300 bg-white text-white data-state-checked:border-blue-600 data-state-checked:bg-blue-600 aria-invalid:border-red-600"&gt;
+                &lt;BhCheckboxIndicator class="text-sm leading-none"&gt;✓&lt;/BhCheckboxIndicator&gt;
+            &lt;/BhCheckbox&gt;
+            &lt;BhLabel class="text-sm cursor-pointer"&gt;I accept the terms of service&lt;/BhLabel&gt;
+        &lt;/div&gt;
+        &lt;BhErrorMessage class="..." /&gt;
+    &lt;/BhField&gt;
+
+    &lt;button type="submit" class="..."&gt;Create account&lt;/button&gt;
+
+    &lt;BhLiveRegion class="text-sm text-green-800 not-empty:rounded-lg not-empty:border not-empty:border-green-200 not-empty:bg-green-50 not-empty:px-3.5 not-empty:py-2.5"&gt;@signupResult&lt;/BhLiveRegion&gt;
+&lt;/EditForm&gt;
+
+@code {
+    private sealed class SignupModel
+    {
+        [Required(ErrorMessage = "Please enter your name.")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email.")]
+        [EmailAddress(ErrorMessage = "That doesn't look like an email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Pick a plan.")]
+        public string? Plan { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms.")]
+        public bool AcceptTerms { get; set; }
+    }
+
+    private SignupModel signup = new();
+    private string? signupResult;
+
+    private void HandleValidSubmit() =&gt;
+        signupResult = $"Welcome aboard, {signup.Name}! You're on the {signup.Plan} plan.";
+}</code></pre>
                 </div>
             </div>
         </div>

@@ -19,12 +19,12 @@
             <code>DefaultChecked</code> seeds the initial state.
         </Description>
         <LiveContent>
-            <BhSwitch DefaultChecked="false" class="switch" Context="s">
-                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Wi-Fi" DefaultChecked="false" class="switch">
+                <BhSwitchThumb class="switch-thumb" />
             </BhSwitch>
 
-            <BhSwitch DefaultChecked="true" class="switch" Context="s">
-                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Bluetooth" DefaultChecked="true" class="switch">
+                <BhSwitchThumb class="switch-thumb" />
             </BhSwitch>
         </LiveContent>
     </DemoBlock>
@@ -38,10 +38,10 @@
         </Description>
         <LiveContent>
             <div style="display:flex; align-items:center; gap:1rem;">
-                <BhSwitch Checked="@notificationsOn"
+                <BhSwitch aria-label="Notifications" Checked="@notificationsOn"
                          OnCheckedChange="v => notificationsOn = v"
-                         class="switch" Context="s">
-                    <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                         class="switch">
+                    <BhSwitchThumb class="switch-thumb" />
                 </BhSwitch>
 
                 <span class="demo-output">
@@ -63,12 +63,12 @@
             the native <code>disabled</code> attribute and a <code>data-disabled</code> hook.
         </Description>
         <LiveContent>
-            <BhSwitch DefaultChecked="false" Disabled="true" class="switch" Context="s">
-                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Airplane mode" DefaultChecked="false" Disabled="true" class="switch">
+                <BhSwitchThumb class="switch-thumb" />
             </BhSwitch>
 
-            <BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
-                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true" class="switch">
+                <BhSwitchThumb class="switch-thumb" />
             </BhSwitch>
         </LiveContent>
     </DemoBlock>
@@ -82,8 +82,8 @@
         </Description>
         <LiveContent>
             <label class="switch-label">
-                <BhSwitch DefaultChecked="true" class="switch" Context="s">
-                    <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                <BhSwitch DefaultChecked="true" class="switch">
+                    <BhSwitchThumb class="switch-thumb" />
                 </BhSwitch>
                 <span>Email me about updates</span>
             </label>
@@ -99,8 +99,8 @@
             handling so the switch remains fully accessible.
         </Description>
         <LiveContent>
-            <BhSwitch As="div" DefaultChecked="false" class="switch" Context="s">
-                <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false" class="switch">
+                <BhSwitchThumb class="switch-thumb" />
             </BhSwitch>
         </LiveContent>
     </DemoBlock>
@@ -120,8 +120,8 @@
                 <label class="switch-label">
                     <BhSwitch Name="newsletter" Value="yes"
                              DefaultChecked="false"
-                             class="switch" Context="s">
-                        <span class="switch-thumb" data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                             class="switch">
+                        <BhSwitchThumb class="switch-thumb" />
                     </BhSwitch>
                     <span>Subscribe to newsletter</span>
                 </label>
@@ -152,18 +152,16 @@
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
     private const string _basicCode = """
-<BhSwitch DefaultChecked="false" class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Wi-Fi" DefaultChecked="false" class="switch">
+    <BhSwitchThumb class="switch-thumb" />
 </BhSwitch>
 """;
 
     private const string _controlledCode = """
-<BhSwitch Checked="@notificationsOn"
+<BhSwitch aria-label="Notifications" Checked="@notificationsOn"
          OnCheckedChange="v => notificationsOn = v"
-         class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+         class="switch">
+    <BhSwitchThumb class="switch-thumb" />
 </BhSwitch>
 
 @code {
@@ -172,26 +170,23 @@
 """;
 
     private const string _disabledCode = """
-<BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true" class="switch">
+    <BhSwitchThumb class="switch-thumb" />
 </BhSwitch>
 """;
 
     private const string _labelCode = """
 <label class="switch-label">
-    <BhSwitch DefaultChecked="true" class="switch" Context="s">
-        <span class="switch-thumb"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+    <BhSwitch DefaultChecked="true" class="switch">
+        <BhSwitchThumb class="switch-thumb" />
     </BhSwitch>
     <span>Email me about updates</span>
 </label>
 """;
 
     private const string _polymorphicCode = """
-<BhSwitch As="div" DefaultChecked="false" class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false" class="switch">
+    <BhSwitchThumb class="switch-thumb" />
 </BhSwitch>
 """;
 
@@ -200,9 +195,8 @@
     <label class="switch-label">
         <BhSwitch Name="newsletter" Value="yes"
                  DefaultChecked="false"
-                 class="switch" Context="s">
-            <span class="switch-thumb"
-                  data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                 class="switch">
+            <BhSwitchThumb class="switch-thumb" />
         </BhSwitch>
         <span>Subscribe to newsletter</span>
     </label>

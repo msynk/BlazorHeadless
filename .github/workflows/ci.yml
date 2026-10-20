@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-test:
+    name: Build, test and pack
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore src/BlazorHeadless.slnx
+
+      - name: Build
+        run: dotnet build src/BlazorHeadless.slnx --configuration Release --no-restore
+
+      - name: Test (components, keyboard and accessibility audits)
+        run: >
+          dotnet test src/BlazorHeadless.slnx --configuration Release --no-build
+          --logger "trx;LogFileName=results.trx"
+          --logger "console;verbosity=normal"
+          --results-directory TestResults
+
+      - name: Test summary
+        if: always()
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          total=0; passed=0; failed=0
+          for f in TestResults/**/*.trx; do
+            counters=$(grep -o '<Counters [^>]*>' "$f" | head -1)
+            t=$(sed -E 's/.* total="([0-9]+)".*/\1/' <<<"$counters")
+            p=$(sed -E 's/.* passed="([0-9]+)".*/\1/' <<<"$counters")
+            x=$(sed -E 's/.* failed="([0-9]+)".*/\1/' <<<"$counters")
+            total=$((total + t)); passed=$((passed + p)); failed=$((failed + x))
+          done
+          {
+            echo "### Tests"
+            echo ""
+            echo "| Total | Passed | Failed |"
+            echo "| ---: | ---: | ---: |"
+            echo "| $total | $passed | $failed |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+      - name: Pack
+        run: |
+          dotnet pack src/BlazorHeadless/BlazorHeadless.csproj --configuration Release --no-build --output artifacts
+          dotnet pack src/BlazorHeadless.Testing/BlazorHeadless.Testing.csproj --configuration Release --no-build --output artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/*
+
+  browser:
+    name: Browser accessibility & keyboard tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/e2e
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/e2e/package-lock.json
+
+      - name: Install test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Build the sample app
+        run: dotnet build ../../src/BlazorHeadless.Samples/BlazorHeadless.Samples.csproj --configuration Release
+
+      - name: axe-core on every demo page + keyboard flows
+        run: npx playwright test
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report
+
+  docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate the static docs from the sample pages
+        run: node docs/build.mjs
+
+      - name: Upload docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: docs

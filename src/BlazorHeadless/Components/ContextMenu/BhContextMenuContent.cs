@@ -1,121 +1,70 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// The panel that pops out when the context menu is open. Renders as
-/// <c>&lt;ul role="menu"&gt;</c> by default and is hidden via the HTML
-/// <c>hidden</c> attribute while the menu is closed.
+/// The menu panel of a <see cref="BhContextMenu"/> (<c>role="menu"</c>), positioned
+/// at the pointer with collision handling. Accepts the same children as
+/// <see cref="BhMenuItems"/>: items, checkbox / radio items, groups, labels,
+/// separators and submenus.
 ///
-/// <para>
-/// When open, the panel is positioned at the pointer coordinates captured by the
-/// <see cref="BhContextMenuTrigger"/> using fixed positioning, with viewport
-/// collision handling. It receives <c>data-side</c> and <c>data-align</c>
-/// attributes describing the resolved placement so consumers can drive
-/// direction-aware animations.
-/// </para>
+/// <para>Emits <c>data-side</c> / <c>data-align</c> describing the resolved placement.</para>
 /// </summary>
-public class BhContextMenuContent : BhComponentBase, IAsyncDisposable
+public class BhContextMenuContent : BhMenuContentBase, IBhPointAnchoredContent
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
-
     [CascadingParameter]
-    private BhContextMenuContext BhContextMenuContext { get; set; } = default!;
+    private BhContextMenuContext? MenuContext { get; set; }
 
-    /// <summary>
-    /// Child content. Should contain one or more <see cref="BhContextMenuItem"/>,
-    /// <see cref="BhContextMenuGroup"/>, <see cref="BhContextMenuLabel"/>, and
-    /// <see cref="BhContextMenuSeparator"/> components.
-    /// </summary>
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    /// <summary>
-    /// Minimum space (px) the panel keeps from the viewport edges when positioned.
-    /// Defaults to 8.
-    /// </summary>
+    /// <summary>Minimum distance (px) kept between the menu and the viewport edges. Default: 8.</summary>
     [Parameter]
     public int CollisionPadding { get; set; } = 8;
 
-    private bool _wasOpen;
-    private ElementReference _elementRef;
+    protected override bool IsOpen => MenuContext?.IsOpen ?? false;
 
-    protected override string DefaultTag => "ul";
+    protected override string ContentId => MenuContext?.ContentId ?? ComponentId;
 
-    private bool IsOpen => BhContextMenuContext?.IsOpen ?? false;
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    protected override BhAnchorOptions? EffectiveAnchor => Anchor ?? new BhAnchorOptions
     {
-        builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhContextMenuContext?.ContentId ?? ComponentId);
-        builder.AddMultipleAttributes(20, GetFinalAttributes());
+        To = "bottom start",
+        Padding = CollisionPadding,
+    };
 
-        if (!IsOpen)
-            builder.AddAttribute(30, "hidden", true);
-
-        builder.AddAttribute(31, "onkeydown",
-            EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            _elementRef = e;
-            Ref?.Invoke(e);
-        });
-
-        builder.AddContent(50, ChildContent);
-        builder.CloseElement();
+    protected override void OnInitialized()
+    {
+        if (MenuContext is not null) MenuContext.Menu.Content = this;
     }
 
-    protected override Dictionary<string, object> BuildComponentAttributes()
+    private protected override BhMenuLevel CreateLevel(Action refresh)
+        => new((IBhMenuRoot?)MenuContext?.Menu ?? DetachedMenuRoot.Instance, null, null, ContentId, Interop, refresh);
+
+    private protected override BhMenuFocus ConsumeFocusIntent() => MenuContext?.Menu.ConsumeFocusIntent() ?? BhMenuFocus.Container;
+
+    private protected override BhMenuFocus PeekFocusIntent() => MenuContext?.Menu.PeekFocusIntent() ?? BhMenuFocus.Container;
+
+    protected override BhFloatingRequest CreateFloatingRequest() => new()
     {
-        var attrs = base.BuildComponentAttributes();
-        attrs["role"] = "menu";
-        attrs["tabindex"] = -1;
-        attrs["aria-orientation"] = "vertical";
+        ContentId = ContentId,
+        Point = (MenuContext?.X ?? 0, MenuContext?.Y ?? 0),
+        Anchor = EffectiveAnchor,
+        ArrowId = ArrowId,
+        Portal = EffectivePortal,
+        PortalTarget = PortalTarget,
+        Layer = new BhLayerOptions { ParentHandle = ParentLayerHandle },
+        Focus = CreateFocusOptions(null),
+    };
 
-        if (BhContextMenuContext is not null && IsOpen && BhContextMenuContext.ActiveIndex >= 0)
-            attrs["aria-activedescendant"] = BhContextMenuContext.GetItemId(BhContextMenuContext.ActiveIndex);
+    protected override Task OnDismissAsync(BhDismissReason reason)
+        => MenuContext?.CloseAsync() ?? Task.CompletedTask;
 
-        SetDataState(attrs, IsOpen);
-        return attrs;
+    async Task IBhPointAnchoredContent.MoveToAsync(double x, double y)
+    {
+        Level.Reset();
+        await Floating.SetPointAsync(x, y);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    public override ValueTask DisposeAsync()
     {
-        if (BhContextMenuContext is null) return;
-
-        if (IsOpen && !_wasOpen)
-        {
-            _wasOpen = true;
-            await Interop.ContextMenuPositionAsync(
-                BhContextMenuContext.ContentId,
-                BhContextMenuContext.X,
-                BhContextMenuContext.Y,
-                CollisionPadding);
-
-            // Move focus to the panel so keyboard navigation works immediately.
-            try
-            {
-                await _elementRef.FocusAsync();
-            }
-            catch (JSException) { /* element may have been detached */ }
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            _wasOpen = false;
-            await Interop.ContextMenuResetAsync(BhContextMenuContext.ContentId);
-        }
-    }
-
-    private Task HandleKeyDown(KeyboardEventArgs args)
-        => BhContextMenuContext?.HandleContentKeyDownAsync(args) ?? Task.CompletedTask;
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_wasOpen && BhContextMenuContext is not null)
-            await Interop.ContextMenuResetAsync(BhContextMenuContext.ContentId);
+        if (MenuContext?.Menu.Content == this) MenuContext.Menu.Content = null;
+        return base.DisposeAsync();
     }
 }

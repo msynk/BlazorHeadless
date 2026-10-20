@@ -1,0 +1,16 @@
+{
+  "name": "blazorheadless-e2e",
+  "private": true,
+  "description": "Real-browser accessibility and keyboard tests for the BlazorHeadless sample app (Playwright + axe-core).",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:a11y": "playwright test a11y",
+    "test:keyboard": "playwright test keyboard",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0",
+    "axe-core": "4.10.3"
+  }
+}

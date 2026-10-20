@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -193,16 +204,18 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn"&gt;
-    @if (btn.Loading)
-    {
-        &lt;span class="spinner"&gt;&lt;/span&gt;
-        &lt;span&gt;Saving…&lt;/span&gt;
-    }
-    else
-    {
-        &lt;span&gt;Save Changes&lt;/span&gt;
-    }
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn"&gt;
+    &lt;Template Context="btn"&gt;
+        @if (btn.Loading)
+        {
+            &lt;span class="spinner"&gt;&lt;/span&gt;
+            &lt;span&gt;Saving…&lt;/span&gt;
+        }
+        else
+        {
+            &lt;span&gt;Save Changes&lt;/span&gt;
+        }
+    &lt;/Template&gt;
 &lt;/BhButton&gt;
 
 @code {
@@ -261,17 +274,18 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhButton Loading="@isLoading" OnClick="HandleLoadingClick"
-          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait"
-          Context="btn"&gt;
-    @if (btn.Loading)
-    {
-        &lt;span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"&gt;&lt;/span&gt;
-        &lt;span&gt;Saving…&lt;/span&gt;
-    }
-    else
-    {
-        &lt;span&gt;Save Changes&lt;/span&gt;
-    }
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait"&gt;
+    &lt;Template Context="btn"&gt;
+        @if (btn.Loading)
+        {
+            &lt;span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"&gt;&lt;/span&gt;
+            &lt;span&gt;Saving…&lt;/span&gt;
+        }
+        else
+        {
+            &lt;span&gt;Save Changes&lt;/span&gt;
+        }
+    &lt;/Template&gt;
 &lt;/BhButton&gt;
 
 @code {

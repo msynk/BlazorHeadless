@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-
 namespace BlazorHeadless;
 
 /// <summary>
@@ -13,29 +11,31 @@ public sealed class BhPopoverContext : IBhCloseContext
     private readonly Func<Task> _openAsync;
     private readonly Func<Task> _closeAsync;
     private readonly Func<Task> _toggleAsync;
-    private readonly Action<ElementReference> _registerPanel;
-    private readonly Action<ElementReference> _registerButton;
+    private readonly Func<BhDismissReason, Task> _dismissAsync;
 
     internal BhPopoverContext(
         bool isOpen,
+        bool modal,
         string baseId,
         Func<Task> openAsync,
         Func<Task> closeAsync,
         Func<Task> toggleAsync,
-        Action<ElementReference> registerPanel,
-        Action<ElementReference> registerButton)
+        Func<BhDismissReason, Task> dismissAsync)
     {
         IsOpen = isOpen;
+        Modal = modal;
         BaseId = baseId;
         _openAsync = openAsync;
         _closeAsync = closeAsync;
         _toggleAsync = toggleAsync;
-        _registerPanel = registerPanel;
-        _registerButton = registerButton;
+        _dismissAsync = dismissAsync;
     }
 
     /// <summary>Whether the popover panel is currently open.</summary>
     public bool IsOpen { get; }
+
+    /// <summary>Whether the popover is modal.</summary>
+    public bool Modal { get; }
 
     /// <summary>Base id used to derive button and panel ids.</summary>
     public string BaseId { get; }
@@ -55,14 +55,8 @@ public sealed class BhPopoverContext : IBhCloseContext
     /// <summary>Toggles the popover open or closed.</summary>
     public Task ToggleAsync() => _toggleAsync();
 
-    internal void RegisterPanel(ElementReference panel) => _registerPanel(panel);
-    internal void RegisterButton(ElementReference button) => _registerButton(button);
-
-    /// <summary>Gets the button element reference for anchor positioning.</summary>
-    internal ElementReference ButtonRef { get; private set; }
-
-    /// <summary>Sets the button element reference.</summary>
-    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
+    /// <summary>Requests dismissal (respects <c>OnDismissRequest</c>).</summary>
+    public Task DismissAsync(BhDismissReason reason) => _dismissAsync(reason);
 }
 
 /// <summary>

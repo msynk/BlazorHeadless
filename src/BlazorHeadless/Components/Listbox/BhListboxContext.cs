@@ -1,63 +1,50 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-
 namespace BlazorHeadless;
 
 /// <summary>
-/// Cascading context provided by <see cref="BhListbox{TValue}"/> to its descendant
-/// listbox parts (<see cref="BhListboxButton{TValue}"/>, <see cref="BhListboxOptions{TValue}"/>,
-/// <see cref="BhListboxOption{TValue}"/>). Carries open state, selection, the
-/// "active" (highlighted) option index, and the registration / keyboard delegates
-/// the parts use to coordinate.
+/// Cascading context provided by <see cref="BhListbox{TValue}"/> to its button,
+/// options panel and options. Carries open state, the selection and ARIA ids.
 /// </summary>
 /// <typeparam name="TValue">The option value type.</typeparam>
-public sealed class BhListboxContext<TValue>
+public sealed class BhListboxContext<TValue> : IBhCloseContext
 {
-    private readonly Func<BhListboxOption<TValue>, int> _registerOption;
-    private readonly Action<BhListboxOption<TValue>> _unregisterOption;
-    private readonly Func<TValue, Task> _selectAsync;
-    private readonly Action<int> _setActiveIndex;
-    private readonly Func<int, KeyboardEventArgs, Task> _handleOptionKeyDownAsync;
-    private readonly Func<KeyboardEventArgs, Task> _handleButtonKeyDownAsync;
-    private readonly Func<Task> _toggleAsync;
-    private readonly Func<Task> _closeAsync;
-    private readonly Action<ElementReference> _registerButton;
-
     internal BhListboxContext(
+        BhListbox<TValue> listbox,
+        BhListState<TValue> state,
         bool isOpen,
         bool disabled,
         bool multiple,
+        bool invalid,
+        bool required,
         TValue? singleValue,
+        bool hasValue,
         IReadOnlyCollection<TValue> multiValues,
-        int activeIndex,
         string baseId,
-        Func<BhListboxOption<TValue>, int> registerOption,
-        Action<BhListboxOption<TValue>> unregisterOption,
-        Func<TValue, Task> selectAsync,
-        Action<int> setActiveIndex,
-        Func<int, KeyboardEventArgs, Task> handleOptionKeyDownAsync,
-        Func<KeyboardEventArgs, Task> handleButtonKeyDownAsync,
-        Func<Task> toggleAsync,
-        Func<Task> closeAsync,
-        Action<ElementReference> registerButton)
+        string buttonId,
+        string optionsId,
+        BhFieldContext? field)
     {
+        Listbox = listbox;
+        State = state;
         IsOpen = isOpen;
         Disabled = disabled;
         Multiple = multiple;
+        Invalid = invalid;
+        Required = required;
         SingleValue = singleValue;
+        HasValue = hasValue;
         MultiValues = multiValues;
-        ActiveIndex = activeIndex;
         BaseId = baseId;
-        _registerOption = registerOption;
-        _unregisterOption = unregisterOption;
-        _selectAsync = selectAsync;
-        _setActiveIndex = setActiveIndex;
-        _handleOptionKeyDownAsync = handleOptionKeyDownAsync;
-        _handleButtonKeyDownAsync = handleButtonKeyDownAsync;
-        _toggleAsync = toggleAsync;
-        _closeAsync = closeAsync;
-        _registerButton = registerButton;
+        ButtonId = buttonId;
+        OptionsId = optionsId;
+        Field = field;
     }
+
+    internal BhListbox<TValue> Listbox { get; }
+
+    internal BhFieldContext? Field { get; }
+
+    /// <summary>The shared option-list state (highlight, options).</summary>
+    public BhListState<TValue> State { get; }
 
     /// <summary>Whether the options panel is currently open.</summary>
     public bool IsOpen { get; }
@@ -68,104 +55,89 @@ public sealed class BhListboxContext<TValue>
     /// <summary>Whether the listbox allows multiple selection.</summary>
     public bool Multiple { get; }
 
-    /// <summary>The currently selected value when single-select; default for value types when none.</summary>
+    /// <summary>Whether the listbox is invalid.</summary>
+    public bool Invalid { get; }
+
+    /// <summary>Whether the listbox is required.</summary>
+    public bool Required { get; }
+
+    /// <summary>The selected value (single-select).</summary>
     public TValue? SingleValue { get; }
 
-    /// <summary>The currently selected values when multi-select.</summary>
+    /// <summary>Whether a value is selected (single-select).</summary>
+    public bool HasValue { get; }
+
+    /// <summary>The selected values (multi-select).</summary>
     public IReadOnlyCollection<TValue> MultiValues { get; }
 
-    /// <summary>The index of the currently "active" (highlighted) option, or -1 if none.</summary>
-    public int ActiveIndex { get; }
-
-    /// <summary>The base id used to derive the button, options panel, and per-option ids.</summary>
+    /// <summary>The base id.</summary>
     public string BaseId { get; }
 
-    /// <summary>The deterministic id of the button element. Drives aria-activedescendant references.</summary>
-    public string ButtonId => $"{BaseId}-button";
+    /// <summary>The id of the button (<c>role="combobox"</c>).</summary>
+    public string ButtonId { get; }
 
-    /// <summary>The deterministic id of the options panel.</summary>
-    public string OptionsId => $"{BaseId}-options";
+    /// <summary>The id of the options panel (<c>role="listbox"</c>).</summary>
+    public string OptionsId { get; }
 
-    /// <summary>Returns the deterministic id for the option at <paramref name="index"/>.</summary>
-    public string GetOptionId(int index) => $"{BaseId}-option-{index}";
+    /// <summary>The id of the highlighted option, or null.</summary>
+    public string? ActiveId => State.ActiveId;
 
-    /// <summary>Returns whether <paramref name="value"/> matches the current selection (single or in the multi set).</summary>
-    public bool IsSelected(TValue value)
-    {
-        if (Multiple)
-            return MultiValues.Any(v => EqualityComparer<TValue>.Default.Equals(v, value));
-        return EqualityComparer<TValue>.Default.Equals(SingleValue, value);
-    }
+    /// <summary>Returns whether <paramref name="value"/> is selected.</summary>
+    public bool IsSelected(TValue value) => State.IsSelected(value);
 
-    internal int RegisterOption(BhListboxOption<TValue> option) => _registerOption(option);
-    internal void UnregisterOption(BhListboxOption<TValue> option) => _unregisterOption(option);
-    internal Task SelectAsync(TValue value) => _selectAsync(value);
-    internal void SetActiveIndex(int index) => _setActiveIndex(index);
-    internal Task HandleOptionKeyDownAsync(int index, KeyboardEventArgs args) => _handleOptionKeyDownAsync(index, args);
-    internal Task HandleButtonKeyDownAsync(KeyboardEventArgs args) => _handleButtonKeyDownAsync(args);
-    internal Task ToggleAsync() => _toggleAsync();
-    internal Task CloseAsync() => _closeAsync();
-    internal void RegisterButton(ElementReference button) => _registerButton(button);
+    /// <summary>Closes the options panel.</summary>
+    public Task CloseAsync() => Listbox.CloseAsync();
 
-    /// <summary>Gets the button element reference for anchor positioning.</summary>
-    internal ElementReference ButtonRef { get; private set; }
-
-    /// <summary>Sets the button element reference.</summary>
-    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
+    internal Task SelectAsync(TValue value) => Listbox.SelectAsync(value);
 }
 
-/// <summary>
-/// Render-fragment context exposed by <see cref="BhListbox{TValue}"/>. Provides
-/// open state, the selection, and a <c>Close()</c> callback for use anywhere
-/// inside the listbox.
-/// </summary>
-public sealed record BhListboxRenderContext<TValue>
-{
-    /// <summary>Whether the listbox panel is currently open.</summary>
-    public required bool IsOpen { get; init; }
-
-    /// <summary>The currently selected value (single-select mode).</summary>
-    public required TValue? Value { get; init; }
-
-    /// <summary>The currently selected values (multi-select mode).</summary>
-    public required IReadOnlyCollection<TValue> Values { get; init; }
-
-    /// <summary>Closes the listbox panel.</summary>
-    public required Action Close { get; init; }
-}
-
-/// <summary>
-/// Render-fragment context exposed by <see cref="BhListboxButton{TValue}"/>.
-/// </summary>
+/// <summary>Render-fragment context exposed by <see cref="BhListboxButton{TValue}"/>.</summary>
 public sealed record BhListboxButtonRenderContext<TValue>
 {
-    /// <summary>Whether the listbox panel is currently open.</summary>
+    /// <summary>Whether the options panel is open.</summary>
     public required bool IsOpen { get; init; }
 
     /// <summary>Whether the listbox is disabled.</summary>
     public required bool Disabled { get; init; }
 
-    /// <summary>The currently selected value (single-select mode).</summary>
+    /// <summary>The selected value (single-select).</summary>
     public required TValue? Value { get; init; }
 
-    /// <summary>The currently selected values (multi-select mode).</summary>
+    /// <summary>The selected values (multi-select).</summary>
     public required IReadOnlyCollection<TValue> Values { get; init; }
+
+    /// <summary>The label(s) of the selected option(s), comma-separated, or null when nothing is selected.</summary>
+    public string? Text { get; init; }
 }
 
-/// <summary>
-/// Render-fragment context exposed by <see cref="BhListboxOption{TValue}"/>.
-/// </summary>
+/// <summary>Render-fragment context exposed by <see cref="BhListboxOption{TValue}"/>.</summary>
 public sealed record BhListboxOptionRenderContext<TValue>
 {
     /// <summary>The option's value.</summary>
     public required TValue Value { get; init; }
 
-    /// <summary>Whether this option is currently selected.</summary>
+    /// <summary>Whether this option is selected.</summary>
     public required bool IsSelected { get; init; }
 
-    /// <summary>Whether this option is currently the "active" (highlighted) option.</summary>
+    /// <summary>Whether this option is highlighted.</summary>
     public required bool IsActive { get; init; }
 
     /// <summary>Whether this option is disabled.</summary>
     public required bool Disabled { get; init; }
+}
+
+/// <summary>Render-fragment context exposed by the listbox root (legacy).</summary>
+public sealed record BhListboxRenderContext<TValue>
+{
+    /// <summary>Whether the listbox panel is open.</summary>
+    public required bool IsOpen { get; init; }
+
+    /// <summary>The selected value (single-select).</summary>
+    public required TValue? Value { get; init; }
+
+    /// <summary>The selected values (multi-select).</summary>
+    public required IReadOnlyCollection<TValue> Values { get; init; }
+
+    /// <summary>Closes the listbox panel.</summary>
+    public required Action Close { get; init; }
 }

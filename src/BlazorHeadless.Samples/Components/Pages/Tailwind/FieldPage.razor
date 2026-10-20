@@ -1,5 +1,6 @@
 @page "/tw/field"
 @rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
 
 <PageTitle>Field / Input — BlazorHeadless · Tailwind</PageTitle>
 
@@ -106,9 +107,185 @@
             </form>
         </LiveContent>
     </TwDemoBlock>
+
+    <TwDemoBlock Title="EditForm validation" Code="@_editFormCode">
+        <Description>
+            Inside an <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">EditForm</code> with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">DataAnnotationsValidator</code>, controls bound with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">@@bind-Value</code> / <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">@@bind-Checked</code>
+            get <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-invalid</code> (style with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-invalid:</code> / <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-invalid:</code>), and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhErrorMessage</code> is wired into their <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-describedby</code> automatically.
+            The radio group is labelled via <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-labelledby</code> and focused by a label click. Plain child content means no <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Context</code> clashes inside the form. Submit empty to see it.
+        </Description>
+        <LiveContent>
+            <EditForm Model="signup" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="() => signupResult = null"
+                      novalidate="@true" class="flex w-full max-w-sm flex-col gap-4">
+                <DataAnnotationsValidator />
+
+                <BhField Required="true" class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900 data-invalid:text-red-700 data-required:after:ml-0.5 data-required:after:text-red-600 data-required:after:content-['*']">Full name</BhLabel>
+                    <BhInput @bind-Value="signup.Name" autocomplete="name"
+                             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+                    <BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" />
+                </BhField>
+
+                <BhField Required="true" class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900 data-invalid:text-red-700 data-required:after:ml-0.5 data-required:after:text-red-600 data-required:after:content-['*']">Email</BhLabel>
+                    <BhDescription class="m-0 text-xs text-zinc-500">We'll send the receipt here.</BhDescription>
+                    <BhInput type="email" @bind-Value="signup.Email" autocomplete="email"
+                             class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+                    <BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" />
+                </BhField>
+
+                <BhField Required="true" class="flex w-full flex-col gap-1.5">
+                    <BhLabel class="text-sm font-semibold text-zinc-900 data-invalid:text-red-700 data-required:after:ml-0.5 data-required:after:text-red-600 data-required:after:content-['*']">Plan</BhLabel>
+                    <BhRadioGroup @bind-Value="signup.Plan" Vertical="false" class="group/radios flex flex-wrap gap-2">
+                        <BhRadio Value="Free" class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-1.5 text-sm text-zinc-900 cursor-pointer outline-none group-aria-invalid/radios:border-red-300 data-state-checked:border-blue-600 data-state-checked:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            <span aria-hidden="true" class="size-3.5 rounded-full border border-zinc-400 bg-white group-data-state-checked:border-4 group-data-state-checked:border-blue-600"></span>Free
+                        </BhRadio>
+                        <BhRadio Value="Pro" class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-1.5 text-sm text-zinc-900 cursor-pointer outline-none group-aria-invalid/radios:border-red-300 data-state-checked:border-blue-600 data-state-checked:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            <span aria-hidden="true" class="size-3.5 rounded-full border border-zinc-400 bg-white group-data-state-checked:border-4 group-data-state-checked:border-blue-600"></span>Pro
+                        </BhRadio>
+                        <BhRadio Value="Team" class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-1.5 text-sm text-zinc-900 cursor-pointer outline-none group-aria-invalid/radios:border-red-300 data-state-checked:border-blue-600 data-state-checked:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            <span aria-hidden="true" class="size-3.5 rounded-full border border-zinc-400 bg-white group-data-state-checked:border-4 group-data-state-checked:border-blue-600"></span>Team
+                        </BhRadio>
+                    </BhRadioGroup>
+                    <BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" />
+                </BhField>
+
+                <BhField class="flex w-full flex-col gap-1.5">
+                    <div class="flex items-center gap-2">
+                        <BhCheckbox @bind-Checked="signup.AcceptTerms"
+                                    class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-state-checked:bg-blue-600 aria-invalid:border-red-600">
+                            <BhCheckboxIndicator class="text-sm leading-none">✓</BhCheckboxIndicator>
+                        </BhCheckbox>
+                        <BhLabel class="text-sm text-zinc-900 cursor-pointer">I accept the terms of service</BhLabel>
+                    </div>
+                    <BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" />
+                </BhField>
+
+                <div class="flex gap-2">
+                    <button type="submit"
+                            class="inline-flex items-center justify-center rounded-lg border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-medium text-white cursor-pointer hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Create account
+                    </button>
+                    <button type="button" @onclick="ResetSignup"
+                            class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Reset
+                    </button>
+                </div>
+
+                <BhLiveRegion class="text-sm text-green-800 not-empty:rounded-lg not-empty:border not-empty:border-green-200 not-empty:bg-green-50 not-empty:px-3.5 not-empty:py-2.5">@signupResult</BhLiveRegion>
+            </EditForm>
+        </LiveContent>
+    </TwDemoBlock>
 </div>
 
 @code {
+    // ── EditForm validation ───────────────────────────────────────────────────
+
+    private sealed class SignupModel
+    {
+        [Required(ErrorMessage = "Please enter your name.")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email.")]
+        [EmailAddress(ErrorMessage = "That doesn't look like an email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Pick a plan.")]
+        public string? Plan { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms.")]
+        public bool AcceptTerms { get; set; }
+    }
+
+    private SignupModel signup = new();
+    private string? signupResult;
+
+    private void HandleValidSubmit() =>
+        signupResult = $"Welcome aboard, {signup.Name}! You're on the {signup.Plan} plan.";
+
+    private void ResetSignup()
+    {
+        signup = new();
+        signupResult = null;
+    }
+
+    private const string _editFormCode = """
+@using System.ComponentModel.DataAnnotations
+
+@* novalidate: let DataAnnotations (not the browser) report errors *@
+<EditForm Model="signup" OnValidSubmit="HandleValidSubmit" novalidate="@true" class="flex w-full max-w-sm flex-col gap-4">
+    <DataAnnotationsValidator />
+
+    <BhField Required="true" class="flex w-full flex-col gap-1.5">
+        <BhLabel class="text-sm font-semibold text-zinc-900 data-invalid:text-red-700 data-required:after:ml-0.5 data-required:after:text-red-600 data-required:after:content-['*']">Full name</BhLabel>
+        <BhInput @bind-Value="signup.Name" autocomplete="name"
+                 class="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-blue-600 aria-invalid:border-red-600 aria-invalid:focus-visible:outline-red-600" />
+        @* Only rendered while invalid; referenced by the input's aria-describedby *@
+        <BhErrorMessage class="m-0 flex items-center gap-1.5 text-xs font-medium text-red-600 before:inline-flex before:size-3.5 before:items-center before:justify-center before:rounded-full before:bg-red-600 before:text-[0.6rem] before:font-bold before:text-white before:content-['!']" />
+    </BhField>
+
+    <BhField Required="true" class="flex w-full flex-col gap-1.5">
+        <BhLabel class="...">Email</BhLabel>
+        <BhDescription class="m-0 text-xs text-zinc-500">We'll send the receipt here.</BhDescription>
+        <BhInput type="email" @bind-Value="signup.Email" autocomplete="email" class="..." />
+        <BhErrorMessage class="..." />
+    </BhField>
+
+    @* Non-native control: labelled via aria-labelledby, focused by a label click *@
+    <BhField Required="true" class="flex w-full flex-col gap-1.5">
+        <BhLabel class="...">Plan</BhLabel>
+        <BhRadioGroup @bind-Value="signup.Plan" Vertical="false" class="group/radios flex flex-wrap gap-2">
+            <BhRadio Value="Free"
+                     class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-1.5 text-sm group-aria-invalid/radios:border-red-300 data-state-checked:border-blue-600 data-state-checked:bg-blue-50">
+                <span aria-hidden="true" class="size-3.5 rounded-full border border-zinc-400 bg-white group-data-state-checked:border-4 group-data-state-checked:border-blue-600"></span>Free
+            </BhRadio>
+            <BhRadio Value="Pro" class="...">…Pro</BhRadio>
+            <BhRadio Value="Team" class="...">…Team</BhRadio>
+        </BhRadioGroup>
+        <BhErrorMessage class="..." />
+    </BhField>
+
+    <BhField class="flex w-full flex-col gap-1.5">
+        <div class="flex items-center gap-2">
+            <BhCheckbox @bind-Checked="signup.AcceptTerms"
+                        class="inline-flex h-[1.15rem] w-[1.15rem] items-center justify-center rounded border border-zinc-300 bg-white text-white data-state-checked:border-blue-600 data-state-checked:bg-blue-600 aria-invalid:border-red-600">
+                <BhCheckboxIndicator class="text-sm leading-none">✓</BhCheckboxIndicator>
+            </BhCheckbox>
+            <BhLabel class="text-sm cursor-pointer">I accept the terms of service</BhLabel>
+        </div>
+        <BhErrorMessage class="..." />
+    </BhField>
+
+    <button type="submit" class="...">Create account</button>
+
+    <BhLiveRegion class="text-sm text-green-800 not-empty:rounded-lg not-empty:border not-empty:border-green-200 not-empty:bg-green-50 not-empty:px-3.5 not-empty:py-2.5">@signupResult</BhLiveRegion>
+</EditForm>
+
+@code {
+    private sealed class SignupModel
+    {
+        [Required(ErrorMessage = "Please enter your name.")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email.")]
+        [EmailAddress(ErrorMessage = "That doesn't look like an email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Pick a plan.")]
+        public string? Plan { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms.")]
+        public bool AcceptTerms { get; set; }
+    }
+
+    private SignupModel signup = new();
+    private string? signupResult;
+
+    private void HandleValidSubmit() =>
+        signupResult = $"Welcome aboard, {signup.Name}! You're on the {signup.Plan} plan.";
+}
+""";
+
     private const string _basicCode = """
 <BhField class="flex w-full max-w-sm flex-col gap-1.5">
     <BhLabel class="text-sm font-semibold text-zinc-900 data-disabled:opacity-50">Email</BhLabel>

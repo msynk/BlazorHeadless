@@ -16,8 +16,8 @@ namespace BlazorHeadless;
 ///     to avoid sticky hover states.
 ///   </item>
 ///   <item>
-///     <b><c>data-focus</c></b> — like <c>:focus-visible</c>, without false positives
-///     from imperative focusing.
+///     <b><c>data-focus</c></b> — present while focused; <b><c>data-focus-visible</c></b> — like
+///     <c>:focus-visible</c> (keyboard focus only).
 ///   </item>
 ///   <item>
 ///     <b><c>data-active</c></b> — like <c>:active</c>, but is removed when dragging
@@ -69,12 +69,17 @@ public class BhDataInteractive : BhComponentBase
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
     /// <summary>
-    /// Content template receiving <see cref="BhDataInteractiveContext"/> for state-driven rendering.
-    /// Plain content (without referencing context) works equally well.
+    /// Content that receives the render state (<c>BhDataInteractiveContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public RenderFragment<BhDataInteractiveContext>? ChildContent { get; set; }
+    public RenderFragment<BhDataInteractiveContext>? Template { get; set; }
 
     protected override string DefaultTag => "div";
 
@@ -120,8 +125,8 @@ public class BhDataInteractive : BhComponentBase
         if (Ref is not null)
             builder.AddElementReferenceCapture(70, Ref);
 
-        if (ChildContent is not null)
-            builder.AddContent(80, ChildContent(Context));
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(80, BhContent.Pick(Template, ChildContent, Context));
 
         builder.CloseElement();
     }
@@ -130,10 +135,13 @@ public class BhDataInteractive : BhComponentBase
     {
         var attrs = base.BuildComponentAttributes();
 
-        SetDataFlag(attrs, "hover", _isHovered && !Disabled);
-        SetDataFlag(attrs, "focus", _isFocused && !Disabled);
-        SetDataFlag(attrs, "active", _isActive && !Disabled);
+        // data-hover / data-active / data-focus / data-focus-visible are maintained
+        // in the browser by the JS runtime (instant, touch-aware, focus-visible
+        // aware). The C# state below only feeds the render context.
+        attrs["data-bh-interactive"] = "";
         SetDataFlag(attrs, "disabled", Disabled);
+        // Tell assistive tech too (the element stays focusable, like aria-disabled controls should).
+        if (Disabled) attrs["aria-disabled"] = "true";
 
         return attrs;
     }

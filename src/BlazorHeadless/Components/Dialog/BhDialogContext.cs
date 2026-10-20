@@ -6,29 +6,40 @@ namespace BlazorHeadless;
 /// Cascading context provided by <see cref="BhDialog"/> to its descendant parts
 /// (<see cref="BhDialogPanel"/>, <see cref="BhDialogTitle"/>,
 /// <see cref="BhDialogDescription"/>, <see cref="BhDialogBackdrop"/>). Carries
-/// open state, ARIA wiring ids, and a close callback.
+/// open state, ARIA wiring ids, and close / dismiss callbacks.
 /// </summary>
 public sealed class BhDialogContext : IBhCloseContext
 {
     private readonly Func<Task> _closeAsync;
-    private readonly Action<ElementReference> _registerPanel;
-    private readonly Action<string> _registerTitle;
-    private readonly Action<string> _registerDescription;
+    private readonly Func<BhDismissReason, Task> _dismissAsync;
+    private readonly Action<bool> _registerTitle;
+    private readonly Action<bool> _registerDescription;
+    private readonly Action<ElementReference?, bool> _registerPanel;
 
     internal BhDialogContext(
         bool isOpen,
         string baseId,
+        string role,
+        bool modal,
+        bool hasTitle,
+        bool hasDescription,
         Func<Task> closeAsync,
-        Action<ElementReference> registerPanel,
-        Action<string> registerTitle,
-        Action<string> registerDescription)
+        Func<BhDismissReason, Task> dismissAsync,
+        Action<bool> registerTitle,
+        Action<bool> registerDescription,
+        Action<ElementReference?, bool> registerPanel)
     {
         IsOpen = isOpen;
         BaseId = baseId;
+        Role = role;
+        Modal = modal;
+        HasTitle = hasTitle;
+        HasDescription = hasDescription;
         _closeAsync = closeAsync;
-        _registerPanel = registerPanel;
+        _dismissAsync = dismissAsync;
         _registerTitle = registerTitle;
         _registerDescription = registerDescription;
+        _registerPanel = registerPanel;
     }
 
     /// <summary>Whether the dialog is currently open.</summary>
@@ -36,6 +47,18 @@ public sealed class BhDialogContext : IBhCloseContext
 
     /// <summary>The base id used to derive the panel, title, and description ids.</summary>
     public string BaseId { get; }
+
+    /// <summary>The ARIA role of the panel (<c>dialog</c> or <c>alertdialog</c>).</summary>
+    public string Role { get; }
+
+    /// <summary>Whether the dialog is modal.</summary>
+    public bool Modal { get; }
+
+    /// <summary>Whether a <see cref="BhDialogTitle"/> is rendered.</summary>
+    public bool HasTitle { get; }
+
+    /// <summary>Whether a <see cref="BhDialogDescription"/> is rendered.</summary>
+    public bool HasDescription { get; }
 
     /// <summary>The deterministic id used as <c>aria-labelledby</c> on the dialog panel.</summary>
     public string TitleId => $"{BaseId}-title";
@@ -46,18 +69,20 @@ public sealed class BhDialogContext : IBhCloseContext
     /// <summary>The deterministic id of the dialog panel itself.</summary>
     public string PanelId => $"{BaseId}-panel";
 
-    /// <summary>Closes the dialog by calling the parent's <see cref="BhDialog.OnClose"/>.</summary>
+    /// <summary>Closes the dialog.</summary>
     public Task CloseAsync() => _closeAsync();
 
-    internal void RegisterPanel(ElementReference panel) => _registerPanel(panel);
-    internal void RegisterTitle(string id) => _registerTitle(id);
-    internal void RegisterDescription(string id) => _registerDescription(id);
+    /// <summary>Requests dismissal (respects <c>DismissOnEscape</c> and <c>OnDismissRequest</c>).</summary>
+    public Task DismissAsync(BhDismissReason reason) => _dismissAsync(reason);
+
+    internal void RegisterTitle(bool present) => _registerTitle(present);
+    internal void RegisterDescription(bool present) => _registerDescription(present);
+    internal void RegisterPanel(ElementReference? initialFocus, bool dismissOnEscape) => _registerPanel(initialFocus, dismissOnEscape);
 }
 
 /// <summary>
-/// Render-fragment context exposed by <see cref="BhDialog"/>. Allows consumers
-/// to render content driven by open state and to call <c>Close()</c> from
-/// anywhere inside the dialog.
+/// Render-fragment context exposed to dialog content. Allows consumers
+/// to render content driven by open state and to close the dialog.
 /// </summary>
 public sealed record BhDialogRenderContext
 {

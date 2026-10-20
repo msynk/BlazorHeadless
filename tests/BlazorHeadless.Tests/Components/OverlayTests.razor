@@ -1,0 +1,72 @@
+@inherits TestBase
+
+@code {
+    [Fact]
+    public void Popover_button_controls_its_panel_and_Escape_closes()
+    {
+        var cut = Render(
+            @<BhPopover>
+                <BhPopoverButton>Share</BhPopoverButton>
+                <BhPopoverPanel aria-label="Share options"><a href="/copy">Copy link</a></BhPopoverPanel>
+            </BhPopover>);
+
+        var button = cut.Find("button");
+        Assert.Equal("false", button.GetAttribute("aria-expanded"));
+        button.Click();
+        button = cut.Find("button");
+        Assert.Equal("true", button.GetAttribute("aria-expanded"));
+        var panel = cut.Find($"[id='{button.GetAttribute("aria-controls")}']");
+        Assert.Contains("Copy link", panel.TextContent);
+        cut.ShouldBeAccessible();
+
+        panel.Press("Escape");
+        Assert.Equal("false", cut.Find("button").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Popover_dismissal_can_be_cancelled()
+    {
+        var cut = Render(
+            @<BhPopover DefaultOpen="true" OnDismissRequest="r => r.Cancel = true">
+                <BhPopoverButton>Filters</BhPopoverButton>
+                <BhPopoverPanel aria-label="Filters">…</BhPopoverPanel>
+            </BhPopover>);
+        cut.Find("[aria-label=Filters]").Press("Escape");
+        Assert.Equal("true", cut.Find("button").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Tooltip_opens_on_keyboard_focus_and_describes_its_trigger()
+    {
+        var cut = Render(
+            @<BhTooltip DelayDuration="0">
+                <BhTooltipTrigger aria-label="Save">💾</BhTooltipTrigger>
+                <BhTooltipContent>Save (Ctrl+S)</BhTooltipContent>
+            </BhTooltip>);
+
+        // The tooltip stays mounted (hidden) so the trigger is always described.
+        Assert.True(cut.Find("[role=tooltip]").HasAttribute("hidden"));
+        cut.Find("button").Focus();
+        cut.WaitForAssertion(() => Assert.False(cut.Find("[role=tooltip]").HasAttribute("hidden")));
+        var trigger = cut.Find("button");
+        Assert.Equal("Save", trigger.AccessibleName());
+        Assert.Equal("Save (Ctrl+S)", trigger.AccessibleDescription());
+        cut.ShouldBeAccessible();
+
+        trigger.Press("Escape");
+        cut.WaitForAssertion(() => Assert.Equal("closed", cut.Find("button").GetAttribute("data-state")));
+    }
+
+    [Fact]
+    public void Disabled_tooltip_never_opens()
+    {
+        var cut = Render(
+            @<BhTooltip DelayDuration="0" Disabled="true">
+                <BhTooltipTrigger>?</BhTooltipTrigger>
+                <BhTooltipContent>Help</BhTooltipContent>
+            </BhTooltip>);
+        cut.Find("button").Focus();
+        Assert.Equal("closed", cut.Find("button").GetAttribute("data-state"));
+        Assert.All(cut.FindAll("[role=tooltip]"), t => Assert.True(t.HasAttribute("hidden")));
+    }
+}

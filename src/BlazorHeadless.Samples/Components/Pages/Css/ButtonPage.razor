@@ -45,16 +45,18 @@
             a spinner driven by the button's own state.
         </Description>
         <LiveContent>
-            <BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
-                @if (btn.Loading)
-                {
-                    <span class="spinner"></span>
-                    <span>Saving…</span>
-                }
-                else
-                {
-                    <span>Save Changes</span>
-                }
+            <BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn">
+                <Template Context="btn">
+                    @if (btn.Loading)
+                    {
+                        <span class="spinner"></span>
+                        <span>Saving…</span>
+                    }
+                    else
+                    {
+                        <span>Save Changes</span>
+                    }
+                </Template>
             </BhButton>
         </LiveContent>
     </DemoBlock>
@@ -160,16 +162,18 @@
 """;
 
     private const string _loadingCode = """
-<BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn" Context="btn">
-    @if (btn.Loading)
-    {
-        <span class="spinner"></span>
-        <span>Saving…</span>
-    }
-    else
-    {
-        <span>Save Changes</span>
-    }
+<BhButton Loading="@isLoading" OnClick="HandleLoadingClick" class="btn">
+    <Template Context="btn">
+        @if (btn.Loading)
+        {
+            <span class="spinner"></span>
+            <span>Saving…</span>
+        }
+        else
+        {
+            <span>Save Changes</span>
+        }
+    </Template>
 </BhButton>
 
 @code {

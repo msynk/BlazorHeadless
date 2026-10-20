@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html" class="active">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -143,7 +154,7 @@
     display: inline-block;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
-    color: #3b82f6;
+    color: #2563eb;
     text-decoration: none;
     border-radius: 0.375rem;
     transition: all 150ms ease;
@@ -168,15 +179,15 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
     Dashboard
 &lt;/BhDataInteractive&gt;
 &lt;BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
     Settings
 &lt;/BhDataInteractive&gt;
 &lt;BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"&gt;
     Profile
 &lt;/BhDataInteractive&gt;</code></pre>
                 </div>
@@ -193,16 +204,18 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="interactive-card" Context="state"&gt;
-    &lt;span class="card-icon"&gt;
-        @(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")
-    &lt;/span&gt;
-    &lt;span class="card-label"&gt;
-        @if (state.Active)      { &lt;span&gt;Pressing!&lt;/span&gt; }
-        else if (state.Hover)   { &lt;span&gt;Hovering…&lt;/span&gt; }
-        else if (state.Focus)   { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
-        else                    { &lt;span&gt;Interact with me&lt;/span&gt; }
-    &lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="interactive-card"&gt;
+    &lt;Template Context="state"&gt;
+        &lt;span class="card-icon"&gt;
+            @(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")
+        &lt;/span&gt;
+        &lt;span class="card-label"&gt;
+            @if (state.Active)      { &lt;span&gt;Pressing!&lt;/span&gt; }
+            else if (state.Hover)   { &lt;span&gt;Hovering…&lt;/span&gt; }
+            else if (state.Focus)   { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
+            else                    { &lt;span&gt;Interact with me&lt;/span&gt; }
+        &lt;/span&gt;
+    &lt;/Template&gt;
 &lt;/BhDataInteractive&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -243,15 +256,16 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button"
-                   class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"
-                   Context="state"&gt;
-    &lt;span class="text-2xl"&gt;@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")&lt;/span&gt;
-    &lt;span&gt;
-        @if (state.Active)    { &lt;span&gt;Pressing!&lt;/span&gt; }
-        else if (state.Hover) { &lt;span&gt;Hovering…&lt;/span&gt; }
-        else if (state.Focus) { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
-        else                  { &lt;span&gt;Interact with me&lt;/span&gt; }
-    &lt;/span&gt;
+                   class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"&gt;
+    &lt;Template Context="state"&gt;
+        &lt;span class="text-2xl"&gt;@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")&lt;/span&gt;
+        &lt;span&gt;
+            @if (state.Active)    { &lt;span&gt;Pressing!&lt;/span&gt; }
+            else if (state.Hover) { &lt;span&gt;Hovering…&lt;/span&gt; }
+            else if (state.Focus) { &lt;span&gt;Focused (Tab here)&lt;/span&gt; }
+            else                  { &lt;span&gt;Interact with me&lt;/span&gt; }
+        &lt;/span&gt;
+    &lt;/Template&gt;
 &lt;/BhDataInteractive&gt;</code></pre>
                 </div>
             </div>
@@ -427,13 +441,15 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="inspector-target" Context="s"&gt;
-    &lt;span&gt;Interact with this button&lt;/span&gt;
-    &lt;div class="inspector-states"&gt;
-        &lt;span&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
-        &lt;span&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
-        &lt;span&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
-    &lt;/div&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button" class="inspector-target"&gt;
+    &lt;Template Context="s"&gt;
+        &lt;span&gt;Interact with this button&lt;/span&gt;
+        &lt;div class="inspector-states"&gt;
+            &lt;span&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
+            &lt;span&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
+            &lt;span&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/Template&gt;
 &lt;/BhDataInteractive&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -472,7 +488,7 @@
     font-family: monospace;
     border-radius: 0.25rem;
     background: #f4f4f5;
-    color: #71717a;
+    color: #52525b;
     border: 1px solid #e4e4e7;
 }
 
@@ -488,22 +504,23 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhDataInteractive As="button"
-                   class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"
-                   Context="s"&gt;
-    &lt;span class="font-medium"&gt;Interact with this button&lt;/span&gt;
-    &lt;div class="flex flex-wrap gap-2"&gt;
-        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
-        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
-        &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")"&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
-    &lt;/div&gt;
+                   class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"&gt;
+    &lt;Template Context="s"&gt;
+        &lt;span class="font-medium"&gt;Interact with this button&lt;/span&gt;
+        &lt;div class="flex flex-wrap gap-2"&gt;
+            &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")"&gt;data-hover: @(s.Hover ? "✓" : "✗")&lt;/span&gt;
+            &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")"&gt;data-focus: @(s.Focus ? "✓" : "✗")&lt;/span&gt;
+            &lt;span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")"&gt;data-active: @(s.Active ? "✓" : "✗")&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/Template&gt;
 &lt;/BhDataInteractive&gt;</code></pre>
                 </div>
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="combobox.html">
+            <a class="prev" href="command.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Combobox</span>
+            <span class="pager-title">Command Palette</span>
         </a>
             <a class="next" href="dialog.html">
             <span class="pager-label">Next →</span>

@@ -64,15 +64,19 @@
             <BhCollapsible class="collapsible">
                 <div class="collapsible-header">
                     <span>What's inside?</span>
-                    <BhCollapsibleTrigger class="collapsible-trigger" Context="c">
-                        <span class="collapsible-chevron @(c.IsOpen ? "open" : "")">▾</span>
+                    <BhCollapsibleTrigger class="collapsible-trigger">
+                        <Template Context="c">
+                            <span class="collapsible-chevron @(c.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhCollapsibleTrigger>
                 </div>
-                <BhCollapsibleContent class="collapsible-content" Context="c">
-                    <div class="collapsible-row">
-                        <p>You can close me from inside the content:</p>
-                        <button class="btn" @onclick="c.Close">Close panel</button>
-                    </div>
+                <BhCollapsibleContent class="collapsible-content">
+                    <Template Context="c">
+                        <div class="collapsible-row">
+                            <p>You can close me from inside the content:</p>
+                            <button class="btn" @onclick="c.Close">Close panel</button>
+                        </div>
+                    </Template>
                 </BhCollapsibleContent>
             </BhCollapsible>
         </LiveContent>
@@ -169,15 +173,19 @@
 <BhCollapsible class="collapsible">
     <div class="collapsible-header">
         <span>What's inside?</span>
-        <BhCollapsibleTrigger class="collapsible-trigger" Context="c">
-            <span class="collapsible-chevron @(c.IsOpen ? "open" : "")">▾</span>
+        <BhCollapsibleTrigger class="collapsible-trigger">
+            <Template Context="c">
+                <span class="collapsible-chevron @(c.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhCollapsibleTrigger>
     </div>
-    <BhCollapsibleContent class="collapsible-content" Context="c">
-        <div class="collapsible-row">
-            <p>You can close me from inside the content:</p>
-            <button class="btn" @onclick="c.Close">Close panel</button>
-        </div>
+    <BhCollapsibleContent class="collapsible-content">
+        <Template Context="c">
+            <div class="collapsible-row">
+                <p>You can close me from inside the content:</p>
+                <button class="btn" @onclick="c.Close">Close panel</button>
+            </div>
+        </Template>
     </BhCollapsibleContent>
 </BhCollapsible>
 """;

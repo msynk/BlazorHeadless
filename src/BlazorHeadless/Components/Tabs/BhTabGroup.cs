@@ -9,107 +9,142 @@ namespace BlazorHeadless;
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Roving tabindex</b> — only the active tab is in the tab order; arrow keys move within the list.</item>
-///   <item><b>Full keyboard support</b> — Left/Right (or Up/Down for vertical), Home, End, with disabled-tab skipping and wrap-around.</item>
-///   <item><b>Automatic vs manual activation</b> — set <see cref="Manual"/> to require Enter/Space to activate (focus-only arrow nav).</item>
-///   <item><b>Uncontrolled and controlled</b> — seed via <see cref="DefaultIndex"/> or drive externally with <see cref="SelectedIndex"/> and <see cref="OnSelectedIndexChange"/>.</item>
-///   <item><b>Compound API</b> — compose with <see cref="BhTabList"/>, <see cref="BhTab"/>, <see cref="BhTabPanels"/>, <see cref="BhTabPanel"/>.</item>
-///   <item><b>Data attributes</b> — emits <c>data-orientation</c> and <c>data-disabled</c> on the root and <c>data-state="active"|"inactive"</c> on each tab and panel.</item>
+///   <item><b>Selection by value or index</b> — give tabs / panels a <c>Value</c> and use <c>@bind-Value</c>, or rely on order with <c>@bind-SelectedIndex</c>.</item>
+///   <item><b>Roving tabindex</b> — only the selected tab is in the tab order; arrows move within the list.</item>
+///   <item><b>Keyboard</b> — Left / Right (Up / Down when vertical, mirrored in RTL), Home, End; disabled tabs are skipped; wraps unless <see cref="Loop"/> is false.</item>
+///   <item><b>Automatic or manual activation</b> — <see cref="Manual"/> requires Enter / Space to activate the focused tab.</item>
+///   <item><b>Panels</b> — hidden when inactive (exit animations supported); <see cref="BhTabPanel.Unmount"/> removes inactive panels.</item>
 /// </list>
 ///
-/// <para><b>Usage:</b></para>
 /// <code>
-/// &lt;BhTabGroup&gt;
+/// &lt;BhTabGroup @bind-Value="tab"&gt;
 ///     &lt;BhTabList&gt;
-///         &lt;BhTab&gt;Account&lt;/BhTab&gt;
-///         &lt;BhTab&gt;Profile&lt;/BhTab&gt;
-///         &lt;BhTab Disabled="true"&gt;Billing&lt;/BhTab&gt;
+///         &lt;BhTab Value="account"&gt;Account&lt;/BhTab&gt;
+///         &lt;BhTab Value="billing" Disabled="true"&gt;Billing&lt;/BhTab&gt;
 ///     &lt;/BhTabList&gt;
 ///     &lt;BhTabPanels&gt;
-///         &lt;BhTabPanel&gt;Account settings&lt;/BhTabPanel&gt;
-///         &lt;BhTabPanel&gt;Profile settings&lt;/BhTabPanel&gt;
-///         &lt;BhTabPanel&gt;Billing settings&lt;/BhTabPanel&gt;
+///         &lt;BhTabPanel Value="account"&gt;…&lt;/BhTabPanel&gt;
+///         &lt;BhTabPanel Value="billing"&gt;…&lt;/BhTabPanel&gt;
 ///     &lt;/BhTabPanels&gt;
 /// &lt;/BhTabGroup&gt;
 /// </code>
 /// </summary>
 public class BhTabGroup : BhComponentBase
 {
-    private readonly List<BhTab> _tabs = new();
-    private readonly List<BhTabPanel> _panels = new();
+    private readonly BhCollection<BhTab> _tabs = new(BhId.New("bh-tabs"));
+    private readonly BhCollection<BhTabPanel> _panels = new(BhId.New("bh-panels"));
+    private int _index;
+    private string? _value;
+    private bool _initialSelectionResolved;
 
-    private int _selectedIndex;
-    private bool _initialized;
+    [CascadingParameter]
+    private BhDirection CascadedDir { get; set; }
 
-    /// <summary>The initial selected tab index when uncontrolled. Ignored when <see cref="SelectedIndex"/> is supplied.</summary>
+    /// <summary>The selected tab's value (value mode). Supplying it makes the group controlled (use <c>@bind-Value</c>).</summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>Initial selected value when uncontrolled (value mode).</summary>
+    [Parameter]
+    public string? DefaultValue { get; set; }
+
+    /// <summary>Two-way binding callback for <see cref="Value"/>.</summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>Fires when the selected value changes.</summary>
+    [Parameter]
+    public EventCallback<string?> OnValueChange { get; set; }
+
+    /// <summary>The selected tab index. Supplying it makes the group controlled (use <c>@bind-SelectedIndex</c>).</summary>
+    [Parameter]
+    public int SelectedIndex { get; set; }
+
+    /// <summary>Initial selected index when uncontrolled.</summary>
     [Parameter]
     public int DefaultIndex { get; set; }
 
-    /// <summary>
-    /// Controlled selected tab index. When non-null the component runs in controlled mode
-    /// and <see cref="OnSelectedIndexChange"/> must update this value.
-    /// </summary>
+    /// <summary>Two-way binding callback for <see cref="SelectedIndex"/>.</summary>
     [Parameter]
-    public int? SelectedIndex { get; set; }
+    public EventCallback<int> SelectedIndexChanged { get; set; }
 
     /// <summary>Fires whenever the selected index changes.</summary>
     [Parameter]
     public EventCallback<int> OnSelectedIndexChange { get; set; }
 
-    /// <summary>Whether all tabs are disabled. Individual tabs can also be disabled via <c>BhTab.Disabled</c>.</summary>
+    /// <summary>Disables every tab.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Renders tabs vertically. Switches arrow-key navigation to Up/Down and emits <c>aria-orientation="vertical"</c>.</summary>
+    /// <summary>Lays the tabs out vertically (Up / Down navigate).</summary>
     [Parameter]
     public bool Vertical { get; set; }
 
-    /// <summary>
-    /// When true, arrow keys move keyboard focus only and Space/Enter is required to activate
-    /// the focused tab. When false (the default), arrow keys both move focus and select.
-    /// </summary>
+    /// <summary>Requires Enter / Space to activate the focused tab (arrows only move focus).</summary>
     [Parameter]
     public bool Manual { get; set; }
 
-    /// <summary>Child content. Should contain an <see cref="BhTabList"/> and an <see cref="BhTabPanels"/>.</summary>
+    /// <summary>Whether arrow keys wrap around. Default: true.</summary>
+    [Parameter]
+    public bool Loop { get; set; } = true;
+
+    /// <summary>Reading direction (mirrors Left / Right). Inherits from <see cref="BhDirectionProvider"/>.</summary>
+    [Parameter]
+    public BhDirection? Dir { get; set; }
+
+    /// <summary>A <see cref="BhTabList"/> and <see cref="BhTabPanels"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private BhTabsOrientation Orientation => Vertical ? BhTabsOrientation.Vertical : BhTabsOrientation.Horizontal;
-
-    private int CurrentIndex => SelectedIndex ?? _selectedIndex;
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private BhOrientation Orientation => Vertical ? BhOrientation.Vertical : BhOrientation.Horizontal;
+    private BhDirection EffectiveDir => Dir ?? CascadedDir;
+    private bool ValueMode => IsProvided(nameof(Value)) || DefaultValue is not null || _tabs.Items.Any(t => t.Value is not null);
+    private string? CurrentValue => IsProvided(nameof(Value)) ? Value : _value;
+    private int CurrentIndex => IsProvided(nameof(SelectedIndex)) ? SelectedIndex : _index;
 
     protected override void OnInitialized()
     {
-        if (SelectedIndex is null)
-            _selectedIndex = DefaultIndex;
-        _initialized = true;
+        _index = DefaultIndex;
+        _value = DefaultValue;
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _ = _initialized;
-    }
+        await _tabs.EnsureOrderAsync(Interop);
+        await _panels.EnsureOrderAsync(Interop);
 
-    // ── Rendering ────────────────────────────────────────────────────────────
+        // Uncontrolled with nothing (or a disabled tab) selected: select the first enabled tab.
+        if (!_initialSelectionResolved && _tabs.Count > 0)
+        {
+            _initialSelectionResolved = true;
+            var selected = SelectedTab;
+            if ((selected is null || selected.IsItemDisabled) && !IsProvided(nameof(Value)) && !IsProvided(nameof(SelectedIndex)))
+            {
+                var first = _tabs.First();
+                if (first is not null && first != selected)
+                {
+                    if (ValueMode) _value = first.Value;
+                    _index = _tabs.IndexOf(first);
+                    StateHasChanged();
+                }
+            }
+        }
+    }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var context = new BhTabsContext(this, CurrentIndex, Disabled, Orientation, Manual, ComponentId, _tabs, _panels);
+
         builder.OpenComponent<CascadingValue<BhTabsContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
+        builder.AddComponentParameter(1, "Value", context);
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
             inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
@@ -119,109 +154,74 @@ public class BhTabGroup : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataValue(attrs, "orientation", Vertical ? "vertical" : "horizontal");
+        SetDataValue(attrs, "orientation", Orientation.ToAttribute());
         SetDataFlag(attrs, "disabled", Disabled);
+        if (Dir is { } dir) attrs["dir"] = dir.ToAttribute();
         return attrs;
     }
 
-    // ── Tab and Panel registration ───────────────────────────────────────────
+    // ── Selection model ──────────────────────────────────────────────────────
 
-    internal int RegisterTab(BhTab tab)
+    internal BhTab? SelectedTab
+        => ValueMode
+            ? _tabs.Items.FirstOrDefault(t => t.Value is not null && t.Value == CurrentValue)
+            : CurrentIndex >= 0 && CurrentIndex < _tabs.Count ? _tabs.Items[CurrentIndex] : null;
+
+    internal bool IsSelected(BhTab tab) => ReferenceEquals(SelectedTab, tab);
+
+    internal BhTab? TabForPanel(BhTabPanel panel)
     {
-        if (!_tabs.Contains(tab))
-            _tabs.Add(tab);
-        return _tabs.IndexOf(tab);
+        if (panel.Value is not null)
+            return _tabs.Items.FirstOrDefault(t => t.Value == panel.Value);
+        var index = _panels.IndexOf(panel);
+        return index >= 0 && index < _tabs.Count ? _tabs.Items[index] : null;
     }
 
-    internal void UnregisterTab(BhTab tab)
+    internal BhTabPanel? PanelForTab(BhTab tab)
     {
-        _tabs.Remove(tab);
+        if (tab.Value is not null && _panels.Items.FirstOrDefault(p => p.Value == tab.Value) is { } byValue)
+            return byValue;
+        var index = _tabs.IndexOf(tab);
+        return index >= 0 && index < _panels.Count && _panels.Items[index].Value is null ? _panels.Items[index] : null;
     }
 
-    internal int RegisterPanel(BhTabPanel panel)
+    internal async Task SelectAsync(BhTab tab)
     {
-        if (!_panels.Contains(panel))
-            _panels.Add(panel);
-        return _panels.IndexOf(panel);
-    }
+        if (Disabled || tab.IsItemDisabled || IsSelected(tab)) return;
+        var index = _tabs.IndexOf(tab);
 
-    internal void UnregisterPanel(BhTabPanel panel)
-    {
-        _panels.Remove(panel);
-    }
+        if (!IsProvided(nameof(Value))) _value = tab.Value;
+        if (!IsProvided(nameof(SelectedIndex))) _index = index;
 
-    // ── Selection and keyboard handling ──────────────────────────────────────
-
-    private BhTabsContext CreateContext() => new(
-        selectedIndex: CurrentIndex,
-        disabled: Disabled,
-        orientation: Orientation,
-        manual: Manual,
-        baseId: ComponentId,
-        registerTab: RegisterTab,
-        unregisterTab: UnregisterTab,
-        registerPanel: RegisterPanel,
-        unregisterPanel: UnregisterPanel,
-        selectAsync: SelectAsync,
-        handleKeyDownAsync: HandleKeyDownAsync);
-
-    private async Task SelectAsync(int index)
-    {
-        if (Disabled) return;
-        if (index < 0 || index >= _tabs.Count) return;
-        if (_tabs[index].IsTabDisabled) return;
-        if (index == CurrentIndex) return;
-
-        if (SelectedIndex is null)
-            _selectedIndex = index;
-
+        if (tab.Value is not null || ValueMode)
+        {
+            await ValueChanged.InvokeAsync(tab.Value);
+            await OnValueChange.InvokeAsync(tab.Value);
+        }
+        await SelectedIndexChanged.InvokeAsync(index);
         await OnSelectedIndexChange.InvokeAsync(index);
         StateHasChanged();
     }
 
-    private async Task HandleKeyDownAsync(int currentIndex, KeyboardEventArgs args)
+    internal async Task HandleKeyDownAsync(BhTab tab, KeyboardEventArgs e)
     {
         if (Disabled) return;
-        if (_tabs.Count == 0) return;
+        var next = BhKeyboard.NextKey(Orientation, EffectiveDir);
+        var prev = BhKeyboard.PreviousKey(Orientation, EffectiveDir);
 
-        var prevKey = Vertical ? "ArrowUp" : "ArrowLeft";
-        var nextKey = Vertical ? "ArrowDown" : "ArrowRight";
-
-        int? targetIndex = args.Key switch
+        BhTab? target = null;
+        if (e.Key == next) target = _tabs.Next(tab, Loop);
+        else if (e.Key == prev) target = _tabs.Previous(tab, Loop);
+        else if (e.Key == "Home") target = _tabs.First();
+        else if (e.Key == "End") target = _tabs.Last();
+        else if (Manual && e.Key is "Enter" or " ")
         {
-            var k when k == prevKey => FindEnabledIndex(currentIndex - 1, step: -1),
-            var k when k == nextKey => FindEnabledIndex(currentIndex + 1, step: +1),
-            "Home" => FindEnabledIndex(0, step: +1),
-            "End" => FindEnabledIndex(_tabs.Count - 1, step: -1),
-            "Enter" or " " => Manual ? currentIndex : null, // explicit activation in manual mode
-            _ => null,
-        };
-
-        if (targetIndex is null) return;
-
-        // Move focus to the target tab (always — both auto and manual modes do this).
-        await _tabs[targetIndex.Value].FocusAsync();
-
-        // In automatic-activation mode, also select the focused tab.
-        if (!Manual || args.Key is "Enter" or " ")
-            await SelectAsync(targetIndex.Value);
-    }
-
-    private int? FindEnabledIndex(int start, int step)
-    {
-        if (_tabs.Count == 0) return null;
-
-        // Wrap into range first.
-        var i = ((start % _tabs.Count) + _tabs.Count) % _tabs.Count;
-
-        for (var attempts = 0; attempts < _tabs.Count; attempts++)
-        {
-            if (!_tabs[i].IsTabDisabled)
-                return i;
-
-            i = ((i + step) % _tabs.Count + _tabs.Count) % _tabs.Count;
+            await SelectAsync(tab);
+            return;
         }
 
-        return null; // every tab is disabled
+        if (target is null || target == tab) return;
+        await Interop.FocusAsync(target.ItemId);
+        if (!Manual) await SelectAsync(target);
     }
 }

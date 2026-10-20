@@ -15,18 +15,14 @@
             Renders a native <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">&lt;button&gt;</code> with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">role="switch"</code>. The track and thumb are styled with the custom <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-state-checked:</code> variant.
         </Description>
         <LiveContent>
-            <BhSwitch DefaultChecked="false"
-                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                      Context="s">
-                <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                      data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Wi-Fi" DefaultChecked="false"
+                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
             </BhSwitch>
 
-            <BhSwitch DefaultChecked="true"
-                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                      Context="s">
-                <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                      data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Bluetooth" DefaultChecked="true"
+                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
             </BhSwitch>
         </LiveContent>
     </TwDemoBlock>
@@ -37,11 +33,9 @@
         </Description>
         <LiveContent>
             <div class="flex items-center gap-4">
-                <BhSwitch Checked="@notificationsOn" OnCheckedChange="v => notificationsOn = v"
-                          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                          Context="s">
-                    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                <BhSwitch aria-label="Notifications" Checked="@notificationsOn" OnCheckedChange="v => notificationsOn = v"
+                          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
                 </BhSwitch>
                 <span class="text-sm text-zinc-500">
                     Notifications: <strong class="text-zinc-900">@(notificationsOn ? "on" : "off")</strong>
@@ -59,17 +53,13 @@
             <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled:</code> dims the track and disables interaction.
         </Description>
         <LiveContent>
-            <BhSwitch DefaultChecked="false" Disabled="true"
-                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                      Context="s">
-                <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                      data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Airplane mode" DefaultChecked="false" Disabled="true"
+                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
             </BhSwitch>
-            <BhSwitch DefaultChecked="true" Disabled="true"
-                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                      Context="s">
-                <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                      data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true"
+                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
             </BhSwitch>
         </LiveContent>
     </TwDemoBlock>
@@ -79,10 +69,8 @@
         <LiveContent>
             <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                 <BhSwitch DefaultChecked="true"
-                          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                          Context="s">
-                    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
                 </BhSwitch>
                 <span>Email me about updates</span>
             </label>
@@ -94,11 +82,9 @@
             <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">As="div"</code> renders a div while keeping ARIA, tabindex, and keyboard handling intact.
         </Description>
         <LiveContent>
-            <BhSwitch As="div" DefaultChecked="false"
-                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                      Context="s">
-                <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                      data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+            <BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false"
+                      class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
             </BhSwitch>
         </LiveContent>
     </TwDemoBlock>
@@ -112,10 +98,8 @@
                   class="flex flex-wrap items-center gap-4">
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhSwitch Name="newsletter" Value="yes" DefaultChecked="false"
-                              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                              Context="s">
-                        <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                              data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
                     </BhSwitch>
                     <span>Subscribe to newsletter</span>
                 </label>
@@ -140,28 +124,22 @@
         lastSubmittedValue = "(submitted — check the network tab in a real form)";
 
     private const string _basicCode = """
-<BhSwitch DefaultChecked="false"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s">
-    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Wi-Fi" DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
 </BhSwitch>
 
-<BhSwitch DefaultChecked="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s">
-    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Bluetooth" DefaultChecked="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
 </BhSwitch>
 """;
 
     private const string _controlledCode = """
 <div class="flex items-center gap-4">
-    <BhSwitch Checked="@notificationsOn" OnCheckedChange="v => notificationsOn = v"
-              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-              Context="s">
-        <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+    <BhSwitch aria-label="Notifications" Checked="@notificationsOn" OnCheckedChange="v => notificationsOn = v"
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+        <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
     </BhSwitch>
     <span class="text-sm text-zinc-500">
         Notifications: <strong class="text-zinc-900">@(notificationsOn ? "on" : "off")</strong>
@@ -178,39 +156,31 @@
 """;
 
     private const string _disabledCode = """
-<BhSwitch DefaultChecked="false" Disabled="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s">
-    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Airplane mode" DefaultChecked="false" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
 </BhSwitch>
 
-<BhSwitch DefaultChecked="true" Disabled="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s">
-    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
 </BhSwitch>
 """;
 
     private const string _labelCode = """
 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
     <BhSwitch DefaultChecked="true"
-              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-              Context="s">
-        <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+        <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
     </BhSwitch>
     <span>Email me about updates</span>
 </label>
 """;
 
     private const string _polymorphicCode = """
-<BhSwitch As="div" DefaultChecked="false"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s">
-    <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+<BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
 </BhSwitch>
 """;
 
@@ -219,10 +189,8 @@
       class="flex flex-wrap items-center gap-4">
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhSwitch Name="newsletter" Value="yes" DefaultChecked="false"
-                  class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                  Context="s">
-            <span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                  data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
+                  class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" />
         </BhSwitch>
         <span>Subscribe to newsletter</span>
     </label>

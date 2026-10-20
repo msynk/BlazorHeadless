@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html" class="active">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -66,9 +77,8 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false" class="switch" Context="s"&gt;
-    &lt;span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Wi-Fi" DefaultChecked="false" class="switch"&gt;
+    &lt;BhSwitchThumb class="switch-thumb" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -125,18 +135,14 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s"&gt;
-    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Wi-Fi" DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
 &lt;/BhSwitch&gt;
 
-&lt;BhSwitch DefaultChecked="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s"&gt;
-    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;BhSwitch aria-label="Bluetooth" DefaultChecked="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
             </div>
@@ -152,11 +158,10 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch Checked="@notificationsOn"
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Notifications" Checked="@notificationsOn"
          OnCheckedChange="v =&gt; notificationsOn = v"
-         class="switch" Context="s"&gt;
-    &lt;span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+         class="switch"&gt;
+    &lt;BhSwitchThumb class="switch-thumb" /&gt;
 &lt;/BhSwitch&gt;
 
 @code {
@@ -236,11 +241,9 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;div class="flex items-center gap-4"&gt;
-    &lt;BhSwitch Checked="@notificationsOn" OnCheckedChange="v =&gt; notificationsOn = v"
-              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-              Context="s"&gt;
-        &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+    &lt;BhSwitch aria-label="Notifications" Checked="@notificationsOn" OnCheckedChange="v =&gt; notificationsOn = v"
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
     &lt;/BhSwitch&gt;
     &lt;span class="text-sm text-zinc-500"&gt;
         Notifications: &lt;strong class="text-zinc-900"&gt;@(notificationsOn ? "on" : "off")&lt;/strong&gt;
@@ -268,9 +271,8 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="true" Disabled="true" class="switch" Context="s"&gt;
-    &lt;span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true" class="switch"&gt;
+    &lt;BhSwitchThumb class="switch-thumb" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -331,18 +333,14 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch DefaultChecked="false" Disabled="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s"&gt;
-    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Airplane mode" DefaultChecked="false" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
 &lt;/BhSwitch&gt;
 
-&lt;BhSwitch DefaultChecked="true" Disabled="true"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s"&gt;
-    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+&lt;BhSwitch aria-label="Location services" DefaultChecked="true" Disabled="true"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
             </div>
@@ -359,9 +357,8 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;label class="switch-label"&gt;
-    &lt;BhSwitch DefaultChecked="true" class="switch" Context="s"&gt;
-        &lt;span class="switch-thumb"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+    &lt;BhSwitch DefaultChecked="true" class="switch"&gt;
+        &lt;BhSwitchThumb class="switch-thumb" /&gt;
     &lt;/BhSwitch&gt;
     &lt;span&gt;Email me about updates&lt;/span&gt;
 &lt;/label&gt;</code></pre>
@@ -432,10 +429,8 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
     &lt;BhSwitch DefaultChecked="true"
-              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-              Context="s"&gt;
-        &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-              data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+              class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
     &lt;/BhSwitch&gt;
     &lt;span&gt;Email me about updates&lt;/span&gt;
 &lt;/label&gt;</code></pre>
@@ -453,9 +448,8 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch As="div" DefaultChecked="false" class="switch" Context="s"&gt;
-    &lt;span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false" class="switch"&gt;
+    &lt;BhSwitchThumb class="switch-thumb" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -515,11 +509,9 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch As="div" DefaultChecked="false"
-          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-          Context="s"&gt;
-    &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                    <pre class="code-block"><code class="language-markup">&lt;BhSwitch aria-label="Dark mode" As="div" DefaultChecked="false"
+          class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
 &lt;/BhSwitch&gt;</code></pre>
                 </div>
             </div>
@@ -539,9 +531,8 @@
     &lt;label class="switch-label"&gt;
         &lt;BhSwitch Name="newsletter" Value="yes"
                  DefaultChecked="false"
-                 class="switch" Context="s"&gt;
-            &lt;span class="switch-thumb"
-                  data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                 class="switch"&gt;
+            &lt;BhSwitchThumb class="switch-thumb" /&gt;
         &lt;/BhSwitch&gt;
         &lt;span&gt;Subscribe to newsletter&lt;/span&gt;
     &lt;/label&gt;
@@ -647,10 +638,8 @@
       class="flex flex-wrap items-center gap-4"&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhSwitch Name="newsletter" Value="yes" DefaultChecked="false"
-                  class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                  Context="s"&gt;
-            &lt;span class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]"
-                  data-state="@(s.IsChecked ? "checked" : "unchecked")"&gt;&lt;/span&gt;
+                  class="relative inline-block w-10 h-5 rounded-full bg-zinc-300 cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-state-checked:bg-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;BhSwitchThumb class="absolute top-1/2 left-0.5 h-4 w-4 -translate-y-1/2 rounded-full bg-white shadow transition-[left] data-state-checked:left-[calc(100%-1.125rem)]" /&gt;
         &lt;/BhSwitch&gt;
         &lt;span&gt;Subscribe to newsletter&lt;/span&gt;
     &lt;/label&gt;
@@ -674,9 +663,9 @@
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="radiogroup.html">
+            <a class="prev" href="sortable.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Radio Group</span>
+            <span class="pager-title">Sortable</span>
         </a>
             <a class="next" href="tabs.html">
             <span class="pager-label">Next →</span>

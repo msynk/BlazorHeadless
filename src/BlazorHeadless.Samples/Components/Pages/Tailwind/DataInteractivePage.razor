@@ -26,15 +26,15 @@
         <Description>Use <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">As="a"</code> for nav links.</Description>
         <LiveContent>
             <BhDataInteractive As="a" href="#"
-                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
                 Dashboard
             </BhDataInteractive>
             <BhDataInteractive As="a" href="#"
-                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
                 Settings
             </BhDataInteractive>
             <BhDataInteractive As="a" href="#"
-                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                               class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
                 Profile
             </BhDataInteractive>
         </LiveContent>
@@ -44,15 +44,16 @@
         <Description>Access state programmatically via <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Context="state"</code>.</Description>
         <LiveContent>
             <BhDataInteractive As="button"
-                               class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"
-                               Context="state">
-                <span class="text-2xl">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
-                <span>
-                    @if (state.Active)    { <span>Pressing!</span> }
-                    else if (state.Hover) { <span>Hovering…</span> }
-                    else if (state.Focus) { <span>Focused (Tab here)</span> }
-                    else                  { <span>Interact with me</span> }
-                </span>
+                               class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600">
+                <Template Context="state">
+                    <span class="text-2xl">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
+                    <span>
+                        @if (state.Active)    { <span>Pressing!</span> }
+                        else if (state.Hover) { <span>Hovering…</span> }
+                        else if (state.Focus) { <span>Focused (Tab here)</span> }
+                        else                  { <span>Interact with me</span> }
+                    </span>
+                </Template>
             </BhDataInteractive>
         </LiveContent>
     </TwDemoBlock>
@@ -98,14 +99,15 @@
         <Description>Live view of the data attributes.</Description>
         <LiveContent>
             <BhDataInteractive As="button"
-                               class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"
-                               Context="s">
-                <span class="font-medium">Interact with this button</span>
-                <div class="flex flex-wrap gap-2">
-                    <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-hover: @(s.Hover ? "✓" : "✗")</span>
-                    <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-focus: @(s.Focus ? "✓" : "✗")</span>
-                    <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-active: @(s.Active ? "✓" : "✗")</span>
-                </div>
+                               class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600">
+                <Template Context="s">
+                    <span class="font-medium">Interact with this button</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-hover: @(s.Hover ? "✓" : "✗")</span>
+                        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-focus: @(s.Focus ? "✓" : "✗")</span>
+                        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-active: @(s.Active ? "✓" : "✗")</span>
+                    </div>
+                </Template>
             </BhDataInteractive>
         </LiveContent>
     </TwDemoBlock>
@@ -121,30 +123,31 @@
 
     private const string _linkCode = """
 <BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
     Dashboard
 </BhDataInteractive>
 <BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
     Settings
 </BhDataInteractive>
 <BhDataInteractive As="a" href="#"
-                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-500 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
+                   class="inline-block rounded-md px-4 py-2 text-sm text-blue-600 no-underline transition-all data-[hover]:bg-blue-50 data-[hover]:text-blue-700 data-active:bg-blue-100 data-active:text-blue-800 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500">
     Profile
 </BhDataInteractive>
 """;
 
     private const string _contextCode = """
 <BhDataInteractive As="button"
-                   class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600"
-                   Context="state">
-    <span class="text-2xl">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
-    <span>
-        @if (state.Active)    { <span>Pressing!</span> }
-        else if (state.Hover) { <span>Hovering…</span> }
-        else if (state.Focus) { <span>Focused (Tab here)</span> }
-        else                  { <span>Interact with me</span> }
-    </span>
+                   class="inline-flex items-center gap-3 rounded-xl border-2 border-zinc-200 bg-white px-6 py-4 text-base cursor-pointer transition-all data-[hover]:border-violet-400 data-[hover]:bg-violet-50 data-active:border-violet-600 data-active:bg-violet-100 data-active:scale-[0.96] data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-violet-600">
+    <Template Context="state">
+        <span class="text-2xl">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
+        <span>
+            @if (state.Active)    { <span>Pressing!</span> }
+            else if (state.Hover) { <span>Hovering…</span> }
+            else if (state.Focus) { <span>Focused (Tab here)</span> }
+            else                  { <span>Interact with me</span> }
+        </span>
+    </Template>
 </BhDataInteractive>
 """;
 
@@ -181,14 +184,15 @@
 
     private const string _inspectorCode = """
 <BhDataInteractive As="button"
-                   class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600"
-                   Context="s">
-    <span class="font-medium">Interact with this button</span>
-    <div class="flex flex-wrap gap-2">
-        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-hover: @(s.Hover ? "✓" : "✗")</span>
-        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-focus: @(s.Focus ? "✓" : "✗")</span>
-        <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-500 border-zinc-200")}")">data-active: @(s.Active ? "✓" : "✗")</span>
-    </div>
+                   class="flex flex-col items-center gap-3 rounded-xl border-2 border-zinc-200 bg-zinc-50 px-8 py-6 cursor-pointer transition-all min-w-72 data-[hover]:border-blue-400 data-[hover]:bg-blue-50 data-active:border-blue-600 data-active:bg-blue-100 data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-600">
+    <Template Context="s">
+        <span class="font-medium">Interact with this button</span>
+        <div class="flex flex-wrap gap-2">
+            <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Hover ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-hover: @(s.Hover ? "✓" : "✗")</span>
+            <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Focus ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-focus: @(s.Focus ? "✓" : "✗")</span>
+            <span class="@($"inline-block rounded px-2 py-1 text-xs font-mono border {(s.Active ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-zinc-100 text-zinc-600 border-zinc-200")}")">data-active: @(s.Active ? "✓" : "✗")</span>
+        </div>
+    </Template>
 </BhDataInteractive>
 """;
 }

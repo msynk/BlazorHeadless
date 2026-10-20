@@ -16,25 +16,28 @@
             <BhRadioGroup DefaultValue="medium" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="small"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Small</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="medium"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Medium</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="large"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Large</span>
                 </label>
@@ -48,25 +51,28 @@
             <BhRadioGroup Vertical="false" DefaultValue="card" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="card"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Card</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="bank"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Bank</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="paypal"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>PayPal</span>
                 </label>
@@ -80,25 +86,28 @@
             <BhRadioGroup DefaultValue="standard" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="standard"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Standard shipping (3–5 days)</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="express"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Express shipping (1–2 days)</span>
                 </label>
                 <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                     <BhRadio Value="same-day" Disabled="true"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Same-day shipping (unavailable in your region)</span>
                 </label>
@@ -112,9 +121,10 @@
             <BhRadioGroup DefaultValue="pro" class="flex flex-col gap-2.5 w-full max-w-md">
                 <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
                     <BhRadio Value="free"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="flex flex-col gap-0.5">
                         <strong class="text-sm text-zinc-900">Free</strong>
@@ -123,20 +133,22 @@
                 </label>
                 <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
                     <BhRadio Value="pro"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="flex flex-col gap-0.5">
                         <strong class="text-sm text-zinc-900">Pro — $9 / mo</strong>
-                        <span class="text-xs text-zinc-500">Unlimited projects, priority support.</span>
+                        <span class="text-xs text-zinc-600">Unlimited projects, priority support.</span>
                     </div>
                 </label>
                 <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
                     <BhRadio Value="team"
-                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                             Context="r">
-                        @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                             class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="flex flex-col gap-0.5">
                         <strong class="text-sm text-zinc-900">Team — $29 / mo</strong>
@@ -160,25 +172,28 @@
                 <BhRadioGroup Value="@selectedColor" OnValueChange="v => selectedColor = v" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="red"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Red</span>
                     </label>
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="green"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Green</span>
                     </label>
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="blue"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Blue</span>
                     </label>
@@ -194,25 +209,28 @@
                 <BhRadioGroup Name="size" DefaultValue="m" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="s"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Small</span>
                     </label>
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="m"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Medium</span>
                     </label>
                     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
                         <BhRadio Value="l"
-                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                 Context="r">
-                            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Large</span>
                     </label>
@@ -238,25 +256,28 @@
 <BhRadioGroup DefaultValue="medium" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="small"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Small</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="medium"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Medium</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="large"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Large</span>
     </label>
@@ -267,25 +288,28 @@
 <BhRadioGroup Vertical="false" DefaultValue="card" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="card"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Card</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="bank"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Bank</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="paypal"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>PayPal</span>
     </label>
@@ -296,25 +320,28 @@
 <BhRadioGroup DefaultValue="standard" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="standard"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Standard shipping (3–5 days)</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="express"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Express shipping (1–2 days)</span>
     </label>
     <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
         <BhRadio Value="same-day" Disabled="true"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <span>Same-day shipping (unavailable in your region)</span>
     </label>
@@ -325,9 +352,10 @@
 <BhRadioGroup DefaultValue="pro" class="flex flex-col gap-2.5 w-full max-w-md">
     <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
         <BhRadio Value="free"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <div class="flex flex-col gap-0.5">
             <strong class="text-sm text-zinc-900">Free</strong>
@@ -336,20 +364,22 @@
     </label>
     <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
         <BhRadio Value="pro"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <div class="flex flex-col gap-0.5">
             <strong class="text-sm text-zinc-900">Pro — $9 / mo</strong>
-            <span class="text-xs text-zinc-500">Unlimited projects, priority support.</span>
+            <span class="text-xs text-zinc-600">Unlimited projects, priority support.</span>
         </div>
     </label>
     <label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50">
         <BhRadio Value="team"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r">
-            @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+            </Template>
         </BhRadio>
         <div class="flex flex-col gap-0.5">
             <strong class="text-sm text-zinc-900">Team — $29 / mo</strong>
@@ -370,25 +400,28 @@
     <BhRadioGroup Value="@selectedColor" OnValueChange="v => selectedColor = v" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="red"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Red</span>
         </label>
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="green"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Green</span>
         </label>
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="blue"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Blue</span>
         </label>
@@ -405,25 +438,28 @@
     <BhRadioGroup Name="size" DefaultValue="m" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5">
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="s"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Small</span>
         </label>
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="m"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Medium</span>
         </label>
         <label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none">
             <BhRadio Value="l"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r">
-                @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="h-2 w-2 rounded-full bg-blue-600"></span> }
+                </Template>
             </BhRadio>
             <span>Large</span>
         </label>

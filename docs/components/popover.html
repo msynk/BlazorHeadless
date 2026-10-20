@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html" class="active">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -67,21 +78,25 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
-    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-        Learn more
-        &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhPopoverButton class="popover-button"&gt;
+        &lt;Template Context="b"&gt;
+            Learn more
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverButton&gt;
-    &lt;BhPopoverPanel class="popover-panel" Context="p"&gt;
-        &lt;h3 class="popover-title"&gt;BlazorHeadless&lt;/h3&gt;
-        &lt;p class="popover-body"&gt;
-            A headless component library for Blazor. Zero styles, full accessibility,
-            complete control over your design.
-        &lt;/p&gt;
-        &lt;a href="https://github.com" target="_blank" class="popover-link"&gt;
-            View on GitHub →
-        &lt;/a&gt;
-        @* BhPopoverButton inside the panel acts as a Close button *@
-        &lt;BhPopoverButton class="popover-close-btn"&gt;Close&lt;/BhPopoverButton&gt;
+    &lt;BhPopoverPanel class="popover-panel"&gt;
+        &lt;Template Context="p"&gt;
+            &lt;h3 class="popover-title"&gt;BlazorHeadless&lt;/h3&gt;
+            &lt;p class="popover-body"&gt;
+                A headless component library for Blazor. Zero styles, full accessibility,
+                complete control over your design.
+            &lt;/p&gt;
+            &lt;a href="https://github.com" target="_blank" class="popover-link"&gt;
+                View on GitHub →
+            &lt;/a&gt;
+            @* BhPopoverButton inside the panel acts as a Close button *@
+            &lt;BhPopoverButton class="popover-close-btn"&gt;Close&lt;/BhPopoverButton&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverPanel&gt;
 &lt;/BhPopover&gt;</code></pre>
                 </div>
@@ -149,18 +164,21 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
-    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                     Context="b"&gt;
-        Learn more
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+        &lt;Template Context="b"&gt;
+            Learn more
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverButton&gt;
     &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
         &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;BlazorHeadless&lt;/h3&gt;
         &lt;p class="text-sm text-zinc-500 m-0"&gt;A headless component library for Blazor. Zero styles, full accessibility, complete control over your design.&lt;/p&gt;
         &lt;a href="https://github.com" target="_blank" class="text-sm text-blue-600 no-underline hover:underline"&gt;View on GitHub →&lt;/a&gt;
-        &lt;BhPopoverButton Context="closeBtn"
+        &lt;BhPopoverButton
                          class="bg-transparent border-0 p-0 text-xs text-zinc-500 cursor-pointer underline underline-offset-2"&gt;
-            Close
+            &lt;Template Context="closeBtn"&gt;
+                Close
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
     &lt;/BhPopoverPanel&gt;
 &lt;/BhPopover&gt;</code></pre>
@@ -180,9 +198,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopoverGroup class="popover-group"&gt;
     &lt;BhPopover class="popover"&gt;
-        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-            Products
-            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="popover-button"&gt;
+            &lt;Template Context="b"&gt;
+                Products
+                &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="popover-panel"&gt;
             &lt;h3 class="popover-title"&gt;Products&lt;/h3&gt;
@@ -195,9 +215,11 @@
     &lt;/BhPopover&gt;
 
     &lt;BhPopover class="popover"&gt;
-        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-            Solutions
-            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="popover-button"&gt;
+            &lt;Template Context="b"&gt;
+                Solutions
+                &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="popover-panel"&gt;
             &lt;h3 class="popover-title"&gt;Solutions&lt;/h3&gt;
@@ -210,9 +232,11 @@
     &lt;/BhPopover&gt;
 
     &lt;BhPopover class="popover"&gt;
-        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-            Company
-            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="popover-button"&gt;
+            &lt;Template Context="b"&gt;
+                Company
+                &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="popover-panel"&gt;
             &lt;h3 class="popover-title"&gt;Company&lt;/h3&gt;
@@ -301,10 +325,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopoverGroup class="flex items-center gap-2"&gt;
     &lt;BhPopover class="relative inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Products
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Products
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
             &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Products&lt;/h3&gt;
@@ -316,10 +341,11 @@
         &lt;/BhPopoverPanel&gt;
     &lt;/BhPopover&gt;
     &lt;BhPopover class="relative inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Solutions
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Solutions
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
             &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Solutions&lt;/h3&gt;
@@ -331,10 +357,11 @@
         &lt;/BhPopoverPanel&gt;
     &lt;/BhPopover&gt;
     &lt;BhPopover class="relative inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Company
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Company
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
             &lt;h3 class="text-sm font-semibold text-zinc-900 m-0"&gt;Company&lt;/h3&gt;
@@ -371,9 +398,11 @@
     &lt;BhPopover Open="controlledOpen"
               OnOpenChange="v =&gt; controlledOpen = v"
               class="popover"&gt;
-        &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-            Internal trigger
-            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="popover-button"&gt;
+            &lt;Template Context="b"&gt;
+                Internal trigger
+                &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="popover-panel"&gt;
             &lt;p class="popover-body"&gt;
@@ -481,10 +510,11 @@
         &lt;span class="text-sm text-zinc-500"&gt;Open: &lt;strong class="text-zinc-900"&gt;@controlledOpen.ToString().ToLowerInvariant()&lt;/strong&gt;&lt;/span&gt;
     &lt;/div&gt;
     &lt;BhPopover Open="controlledOpen" OnOpenChange="v =&gt; controlledOpen = v" class="relative inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Internal trigger
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Internal trigger
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg flex flex-col gap-2.5"&gt;
             &lt;p class="text-sm text-zinc-500 m-0"&gt;Either trigger updates the same state.&lt;/p&gt;
@@ -514,12 +544,16 @@
    Supports all sides: top, right, bottom, left — with start/end alignment. *@
 
 &lt;BhPopover class="popover-anchored"&gt;
-    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-        Bottom Start ▾
+    &lt;BhPopoverButton class="popover-button"&gt;
+        &lt;Template Context="b"&gt;
+            Bottom Start ▾
+        &lt;/Template&gt;
     &lt;/BhPopoverButton&gt;
     &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
-                   class="popover-panel-anchored" Context="p"&gt;
-        &lt;p&gt;This panel is anchored with auto-flip and shift.&lt;/p&gt;
+                   class="popover-panel-anchored"&gt;
+        &lt;Template Context="p"&gt;
+            &lt;p&gt;This panel is anchored with auto-flip and shift.&lt;/p&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverPanel&gt;
 &lt;/BhPopover&gt;
 
@@ -576,10 +610,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-wrap items-start gap-6"&gt;
     &lt;BhPopover class="inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Bottom Start
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Bottom Start
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 8 })"
                         class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
@@ -587,10 +622,11 @@
         &lt;/BhPopoverPanel&gt;
     &lt;/BhPopover&gt;
     &lt;BhPopover class="inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Top End
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Top End
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "top end", Gap = 8 })"
                         class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
@@ -598,10 +634,11 @@
         &lt;/BhPopoverPanel&gt;
     &lt;/BhPopover&gt;
     &lt;BhPopover class="inline-block"&gt;
-        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                         Context="b"&gt;
-            Right
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+            &lt;Template Context="b"&gt;
+                Right
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhPopoverButton&gt;
         &lt;BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "right", Gap = 8 })"
                         class="z-30 min-w-64 rounded-lg border border-zinc-200 bg-white p-4 shadow-lg"&gt;
@@ -624,10 +661,12 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopover class="popover"&gt;
-    &lt;BhPopoverButton class="popover-button" Context="b"&gt;
-        Notifications
-        &lt;span class="popover-badge"&gt;3&lt;/span&gt;
-        &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhPopoverButton class="popover-button"&gt;
+        &lt;Template Context="b"&gt;
+            Notifications
+            &lt;span class="popover-badge"&gt;3&lt;/span&gt;
+            &lt;span class="popover-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverButton&gt;
     &lt;BhPopoverPanel class="popover-panel popover-panel-wide"&gt;
         &lt;div class="popover-header"&gt;
@@ -782,11 +821,12 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhPopover class="relative inline-block"&gt;
-    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"
-                     Context="b"&gt;
-        Notifications
-        &lt;span class="ml-1 inline-flex items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-xs font-bold text-white"&gt;3&lt;/span&gt;
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;BhPopoverButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600"&gt;
+        &lt;Template Context="b"&gt;
+            Notifications
+            &lt;span class="ml-1 inline-flex items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-xs font-bold text-white"&gt;3&lt;/span&gt;
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhPopoverButton&gt;
     &lt;BhPopoverPanel class="absolute top-[calc(100%+0.5rem)] left-0 z-30 min-w-88 rounded-lg border border-zinc-200 bg-white shadow-lg overflow-hidden"&gt;
         &lt;div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3"&gt;
@@ -823,9 +863,9 @@
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="menu.html">
+            <a class="prev" href="menubar.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Menu</span>
+            <span class="pager-title">Menubar</span>
         </a>
             <a class="next" href="portal.html">
             <span class="pager-label">Next →</span>

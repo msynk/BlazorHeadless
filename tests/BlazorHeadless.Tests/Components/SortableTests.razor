@@ -1,0 +1,64 @@
+@inherits TestBase
+
+@code {
+    private RenderFragment List(Stateful<List<string>> s, Action<BhReorderEventArgs<string>>? onReorder = null) =>
+        @<BhSortable TItem="string" Items="s.Value!" ItemsChanged="items => s.Set(items.ToList())"
+                     OnReorder="e => onReorder?.Invoke(e)" aria-label="Priorities" Context="item">
+            <BhSortableHandle TItem="string" aria-label="@($"Reorder {item.Item}")">⠿</BhSortableHandle>
+            @item.Item
+        </BhSortable>;
+
+    private IRenderedComponent<Bunit.Rendering.ContainerFragment> RenderList(Action<BhReorderEventArgs<string>>? onReorder = null)
+        => Render(@<Stateful T="List<string>" Initial="@(["Alpha", "Beta", "Gamma"])" Context="s">@List(s, onReorder)</Stateful>);
+
+    private static string[] Order(IRenderedComponent<Bunit.Rendering.ContainerFragment> cut)
+        => cut.FindAll("li").Select(li => li.TextContent.Replace("⠿", "").Trim()).ToArray();
+
+    [Fact]
+    public void Handles_are_described_by_the_instructions()
+    {
+        var cut = RenderList();
+        var handle = cut.FindAll("[data-bh-sortable-handle]")[0];
+        Assert.Equal("Reorder Alpha", handle.AccessibleName());
+        Assert.StartsWith("To pick up an item, press Space or Enter.", handle.AccessibleDescription());
+        Assert.Equal("false", handle.GetAttribute("aria-pressed"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public async Task Keyboard_pick_up_move_and_drop_with_announcements()
+    {
+        BhReorderEventArgs<string>? reorder = null;
+        var cut = RenderList(e => reorder = e);
+
+        cut.FindAll("[data-bh-sortable-handle]")[0].Press(" ");
+        Assert.Equal("true", cut.FindAll("[data-bh-sortable-handle]")[0].GetAttribute("aria-pressed"));
+        await Announcer.WaitForAsync("Picked up Alpha. Position 1 of 3.");
+
+        cut.FindAll("[data-bh-sortable-handle]")[0].Press("ArrowDown");
+        Assert.Equal(["Beta", "Alpha", "Gamma"], Order(cut));
+        await Announcer.WaitForAsync("Alpha moved to position 2 of 3.");
+        // Focus follows the moved item.
+        Assert.Equal(cut.FindAll("[data-bh-sortable-handle]")[1].Id, this.LastFocusRequest());
+
+        cut.FindAll("[data-bh-sortable-handle]")[1].Press("Enter");
+        await Announcer.WaitForAsync("Dropped Alpha at position 2 of 3.");
+        Assert.Equal(["Beta", "Alpha", "Gamma"], cut.FindComponent<Stateful<List<string>>>().Instance.Value!);
+        Assert.Equal(new BhReorderEventArgs<string>("Alpha", 0, 1), reorder);
+        Assert.Equal("false", cut.FindAll("[data-bh-sortable-handle]")[1].GetAttribute("aria-pressed"));
+    }
+
+    [Fact]
+    public async Task Escape_cancels_and_restores_the_order()
+    {
+        var cut = RenderList();
+        cut.FindAll("[data-bh-sortable-handle]")[2].Press(" ");
+        cut.FindAll("[data-bh-sortable-handle]")[2].Press("ArrowUp");
+        Assert.Equal(["Alpha", "Gamma", "Beta"], Order(cut));
+
+        cut.FindAll("[data-bh-sortable-handle]")[1].Press("Escape");
+        Assert.Equal(["Alpha", "Beta", "Gamma"], Order(cut));
+        await Announcer.WaitForAsync("Reordering cancelled. Gamma returned to position 3.");
+        Assert.Equal(0, cut.FindComponent<Stateful<List<string>>>().Instance.Changes);
+    }
+}

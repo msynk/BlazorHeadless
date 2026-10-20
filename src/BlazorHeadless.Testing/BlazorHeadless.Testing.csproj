@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>BlazorHeadless.Testing</RootNamespace>
+  </PropertyGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>BlazorHeadless.Testing</PackageId>
+    <Version>0.2.0</Version>
+    <Authors>Saleh Yusefnejad</Authors>
+    <Company>msynk</Company>
+    <Product>BlazorHeadless</Product>
+    <Title>BlazorHeadless.Testing</Title>
+    <Description>Accessibility test tooling for Razor components, built on bUnit: a WAI-ARIA rule engine (roles, states, ID references, required owned elements / context, accessible names, focusable-in-hidden, nested interactive …), accessible-name and focus-order inspection, keyboard helpers and a recording live-region announcer. Works with any Blazor component library; first-class support for BlazorHeadless.</Description>
+    <Copyright>Copyright (c) 2026 Saleh Yusefnejad</Copyright>
+    <PackageTags>blazor;bunit;accessibility;a11y;aria;wcag;testing;razor;headless</PackageTags>
+    <PackageProjectUrl>https://github.com/msynk/BlazorHeadless</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/msynk/BlazorHeadless.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/msynk/BlazorHeadless/blob/main/CHANGELOG.md</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true' or '$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bunit" Version="2.12.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorHeadless\BlazorHeadless.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

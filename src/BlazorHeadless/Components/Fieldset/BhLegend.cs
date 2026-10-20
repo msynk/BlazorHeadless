@@ -4,37 +4,29 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless legend component that serves as the title for a <see cref="BhFieldset"/>.
-/// Renders as a <c>&lt;div&gt;</c> by default (since the native <c>&lt;legend&gt;</c>
-/// element is notoriously difficult to style consistently across browsers).
-///
-/// <para>
-/// The component automatically picks up the <see cref="BhFieldsetContext"/> to
-/// wire its id for <c>aria-labelledby</c> on the parent fieldset and to
-/// reflect the disabled state via <c>data-disabled</c>.
-/// </para>
+/// The caption of a <see cref="BhFieldset"/>. Renders a native <c>&lt;legend&gt;</c>
+/// by default (which names the fieldset natively); with another element it names
+/// the fieldset through <c>aria-labelledby</c>.
 /// </summary>
-public class BhLegend : BhComponentBase
+public class BhLegend : BhComponentBase, IDisposable
 {
     [CascadingParameter]
-    private BhFieldsetContext? BhFieldsetContext { get; set; }
+    private BhFieldsetContext? FieldsetContext { get; set; }
 
-    /// <summary>Legend text or rich content.</summary>
+    /// <summary>Legend content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    protected override string DefaultTag => "div";
+    protected override string DefaultTag => "legend";
+
+    protected override void OnInitialized() => FieldsetContext?.RegisterLegend(true);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhFieldsetContext?.LegendId ?? ComponentId);
-        builder.AddAttribute(11, "role", "legend");
+        builder.AddAttribute(10, "id", FieldsetContext?.LegendId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(30, Ref);
-
+        builder.AddElementReferenceCapture(30, CaptureElement);
         builder.AddContent(40, ChildContent);
         builder.CloseElement();
     }
@@ -42,7 +34,9 @@ public class BhLegend : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataFlag(attrs, "disabled", BhFieldsetContext?.Disabled ?? false);
+        SetDataFlag(attrs, "disabled", FieldsetContext?.Disabled ?? false);
         return attrs;
     }
+
+    public void Dispose() => FieldsetContext?.RegisterLegend(false);
 }

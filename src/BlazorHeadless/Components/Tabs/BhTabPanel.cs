@@ -4,84 +4,86 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The content panel paired with a single <see cref="BhTab"/>. Renders as
-/// <c>&lt;div role="tabpanel"&gt;</c>. Hidden via the HTML <c>hidden</c> attribute
-/// when its tab is not selected, giving consumers full control over open/close
-/// transitions via <c>data-state</c> CSS hooks.
-///
-/// <para>
-/// Panels pair with tabs by document order: the first <see cref="BhTabPanel"/>
-/// inside <see cref="BhTabPanels"/> matches the first <see cref="BhTab"/>, and so on.
-/// </para>
+/// The content shown for a <see cref="BhTab"/> (<c>role="tabpanel"</c>, labelled by
+/// its tab). Pairs with the tab of the same <see cref="Value"/>, or by position.
+/// Hidden while inactive (exit animations supported); set <see cref="Unmount"/>
+/// to remove inactive panels from the DOM.
 /// </summary>
-public class BhTabPanel : BhComponentBase, IDisposable
+public class BhTabPanel : BhComponentBase, IBhCollectionItem, IDisposable
 {
     [CascadingParameter]
-    private BhTabsContext BhTabsContext { get; set; } = default!;
+    private BhTabsContext? TabsContext { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhTabPanelRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>Optional value pairing this panel with the <see cref="BhTab"/> of the same value.</summary>
     [Parameter]
-    public RenderFragment<BhTabPanelRenderContext>? ChildContent { get; set; }
+    public string? Value { get; set; }
 
-    private int _index = -1;
+    /// <summary>Remove the panel from the DOM while inactive. Default: false (kept, hidden).</summary>
+    [Parameter]
+    public bool Unmount { get; set; }
+
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Content that receives the render state (<c>BhTabPanelRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<BhTabPanelRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private bool IsSelected => BhTabsContext?.SelectedIndex == _index;
+    /// <inheritdoc />
+    public string ItemId => ComponentId;
 
-    private BhTabPanelRenderContext RenderContext => new()
-    {
-        IsSelected = IsSelected,
-    };
+    /// <inheritdoc />
+    public bool IsItemDisabled => false;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    /// <inheritdoc />
+    public string? ItemText => null;
 
-    protected override void OnInitialized()
-    {
-        if (BhTabsContext is not null)
-            _index = BhTabsContext.RegisterPanel(this);
-    }
+    private BhTab? Tab => TabsContext?.Group.TabForPanel(this);
+    private bool IsSelected => Tab is { } tab && tab.IsSelected;
 
-    public void Dispose()
-    {
-        BhTabsContext?.UnregisterPanel(this);
-    }
+    /// <summary>Whether the panel element is in the DOM (an unmounted inactive panel is not).</summary>
+    internal bool IsRendered => !Unmount || IsSelected;
 
-    // ── Rendering ────────────────────────────────────────────────────────────
+    protected override void OnInitialized() => TabsContext?.Panels.Register(this);
+
+    public void Dispose() => TabsContext?.Panels.Unregister(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var selected = IsSelected;
+        if (Unmount && !selected) return;
+
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhTabsContext is not null ? BhTabsContext.GetPanelId(_index) : ComponentId);
+        builder.AddAttribute(10, "id", ItemId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (!IsSelected)
-            builder.AddAttribute(30, "hidden", true);
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, new BhTabPanelRenderContext { IsSelected = selected }));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
+        var selected = IsSelected;
         attrs["role"] = "tabpanel";
-
-        // aria-labelledby points back at the corresponding tab.
-        if (BhTabsContext is not null && _index >= 0)
-            attrs["aria-labelledby"] = BhTabsContext.GetTabId(_index);
-
-        // Panels are focusable so keyboard users can tab into them after the tablist.
+        if (Tab is { } tab)
+            attrs["aria-labelledby"] = tab.ItemId;
+        // Focusable so keyboard users reach panel content that has no focusable elements.
         attrs["tabindex"] = 0;
-
-        SetDataState(attrs, IsSelected, "active", "inactive");
-
+        if (TabsContext is not null)
+            attrs["data-bh-item"] = TabsContext.Panels.Key;
+        attrs["data-bh-presence"] = "";
+        if (!selected)
+            attrs["hidden"] = true;
+        SetDataState(attrs, selected, "active", "inactive");
         return attrs;
     }
 }

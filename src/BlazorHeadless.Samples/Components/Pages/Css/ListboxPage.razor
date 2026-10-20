@@ -23,9 +23,11 @@
             <BhListbox TValue="string" Value="@favPerson"
                       OnValueChange="v => favPerson = v"
                       class="listbox">
-                <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                    <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
-                    <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhListboxButton aria-label="Person" TValue="string" class="listbox-button">
+                    <Template Context="b">
+                        <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhListboxButton>
                 <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var name in people)
@@ -51,18 +53,22 @@
                       Values="@favColors"
                       OnValuesChange="v => favColors = v"
                       class="listbox">
-                <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                    <span>
-                        @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
-                    </span>
-                    <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhListboxButton aria-label="Colours" TValue="string" class="listbox-button">
+                    <Template Context="b">
+                        <span>
+                            @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
+                        </span>
+                        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhListboxButton>
                 <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var c in colors)
                     {
-                        <BhListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
-                            <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
-                            <span>@c</span>
+                        <BhListboxOption TValue="string" Value="@c" class="listbox-option">
+                            <Template Context="o">
+                                <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
+                                <span>@c</span>
+                            </Template>
                         </BhListboxOption>
                     }
                 </BhListboxOptions>
@@ -81,9 +87,11 @@
         </Description>
         <LiveContent>
             <BhListbox TValue="string" DefaultValue='@("standard")' class="listbox">
-                <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                    <span>@(b.Value ?? "Pick a plan")</span>
-                    <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhListboxButton aria-label="Plan" TValue="string" class="listbox-button">
+                    <Template Context="b">
+                        <span>@(b.Value ?? "Pick a plan")</span>
+                        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhListboxButton>
                 <BhListboxOptions TValue="string" class="listbox-options">
                     <BhListboxOption TValue="string" Value="@("standard")" class="listbox-option">Standard</BhListboxOption>
@@ -109,9 +117,11 @@
             <BhListbox TValue="string" Value="@country"
                       OnValueChange="v => country = v"
                       class="listbox">
-                <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                    <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
-                    <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhListboxButton aria-label="Country" TValue="string" class="listbox-button">
+                    <Template Context="b">
+                        <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
+                        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhListboxButton>
                 <BhListboxOptions TValue="string" class="listbox-options">
                     @foreach (var c in countries)
@@ -145,9 +155,11 @@
                     <BhListbox TValue="string" Value="@anchorPerson"
                               OnValueChange="v => anchorPerson = v"
                               class="listbox-anchored">
-                        <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
-                            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        <BhListboxButton aria-label="Person" TValue="string" class="listbox-button">
+                            <Template Context="b">
+                                <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                                <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            </Template>
                         </BhListboxButton>
                         <BhListboxOptions TValue="string"
                                          Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
@@ -165,9 +177,11 @@
                     <BhListbox TValue="string" Value="@anchorPerson2"
                               OnValueChange="v => anchorPerson2 = v"
                               class="listbox-anchored">
-                        <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
-                            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        <BhListboxButton aria-label="Person" TValue="string" class="listbox-button">
+                            <Template Context="b">
+                                <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+                                <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            </Template>
                         </BhListboxButton>
                         <BhListboxOptions TValue="string"
                                          Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
@@ -199,9 +213,11 @@
                   @onsubmit:preventDefault="true"
                   style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
                 <BhListbox TValue="string" Name="role" DefaultValue='@("user")' class="listbox">
-                    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-                        <span>@(b.Value)</span>
-                        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhListboxButton aria-label="Role" TValue="string" class="listbox-button">
+                        <Template Context="b">
+                            <span>@(b.Value)</span>
+                            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhListboxButton>
                     <BhListboxOptions TValue="string" class="listbox-options">
                         <BhListboxOption TValue="string" Value="@("user")" class="listbox-option">User</BhListboxOption>
@@ -219,9 +235,55 @@
             </form>
         </LiveContent>
     </DemoBlock>
+
+    <DemoBlock Title="Large lists (virtualized)"
+               Code="@_virtualCode"
+               Css="@_virtualCss">
+        <Description>
+            For thousands of options, pass the data through <code>Items</code> and render each option
+            with an <code>ItemTemplate</code>. <code>Virtualize="true"</code> renders only the options in
+            view — give the panel a fixed height with <code>overflow-y: auto</code> and make every option
+            exactly <code>ItemSize</code> pixels tall. Options still get <code>aria-setsize</code> /
+            <code>aria-posinset</code>, and arrow keys, Home / End and typeahead reach all 10,000. With no
+            content, <code>BhListboxButton</code> shows the selected option's text or its
+            <code>Placeholder</code> (and emits <code>data-placeholder</code>).
+        </Description>
+        <LiveContent>
+            <BhListbox TValue="string" @bind-Value="virtualPick" class="listbox-anchored">
+                <BhListboxButton aria-label="Item" TValue="string" Placeholder="Choose one of 10,000…"
+                                 class="listbox-button listbox-button-auto" />
+                <BhListboxOptions TValue="string"
+                                  Items="@VirtualItems"
+                                  Virtualize="true"
+                                  ItemSize="36"
+                                  Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                                  class="listbox-virtual">
+                    <ItemTemplate Context="o">
+                        <span class="listbox-virtual-check">@(o.IsSelected ? "✓" : "")</span>
+                        <span>@o.Value</span>
+                    </ItemTemplate>
+                </BhListboxOptions>
+            </BhListbox>
+
+            <span class="demo-output">Selected: <strong>@(virtualPick ?? "(none)")</strong></span>
+        </LiveContent>
+    </DemoBlock>
 </div>
 
 @code {
+    // 10 adjectives × 10 animals × 100 = 10,000 options.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
     private string? favPerson;
     private string? anchorPerson;
     private string? anchorPerson2;
@@ -259,13 +321,110 @@
 
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
+    private const string _virtualCode = """
+<BhListbox TValue="string" @bind-Value="virtualPick" class="listbox-anchored">
+    @* No content: shows the selected text, or the placeholder *@
+    <BhListboxButton aria-label="Item" TValue="string" Placeholder="Choose one of 10,000…"
+                     class="listbox-button listbox-button-auto" />
+
+    <BhListboxOptions TValue="string"
+                      Items="@VirtualItems"
+                      Virtualize="true"
+                      ItemSize="36"
+                      Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                      class="listbox-virtual">
+        <ItemTemplate Context="o">
+            <span class="listbox-virtual-check">@(o.IsSelected ? "✓" : "")</span>
+            <span>@o.Value</span>
+        </ItemTemplate>
+    </BhListboxOptions>
+</BhListbox>
+
+@code {
+    // 10 adjectives × 10 animals × 100 = 10,000 options.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+}
+""";
+
+    private const string _virtualCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.listbox-anchored { display: inline-block; min-width: 14rem; }
+
+.listbox-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.listbox-button:focus-visible      { outline: 2px solid #2563eb; outline-offset: 2px; }
+.listbox-button[data-state="open"] { border-color: #2563eb; }
+
+/* Button without content: add the chevron with CSS, mute the placeholder */
+.listbox-button-auto::after         { content: "\25BE"; color: #71717a; }
+.listbox-button-auto[data-placeholder] { color: #71717a; }
+
+/* Virtualized panel: a fixed-height scroll container (positioned by Anchor) */
+.listbox-virtual {
+    z-index: 9999;
+    width: var(--button-width);
+    height: 16rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.listbox-virtual[hidden] { display: none; }
+
+/* Data-driven options carry no class — target the role.
+   Every option must be exactly ItemSize (36px) tall. */
+.listbox-virtual > [role="option"] {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.listbox-virtual > [role="option"][data-active]   { background: #eff6ff; }
+.listbox-virtual > [role="option"][data-selected] { font-weight: 600; }
+
+.listbox-virtual-check { width: 1rem; color: #2563eb; font-weight: 700; }
+""";
+
     private const string _basicCode = """
 <BhListbox TValue="string" Value="@favPerson"
           OnValueChange="v => favPerson = v"
           class="listbox">
-    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-        <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
-        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhListboxButton aria-label="Person" TValue="string" class="listbox-button">
+        <Template Context="b">
+            <span>@(string.IsNullOrEmpty(b.Value) ? "Select a person…" : b.Value)</span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var name in people)
@@ -292,18 +451,22 @@
           Values="@favColors"
           OnValuesChange="v => favColors = v"
           class="listbox">
-    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-        <span>
-            @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
-        </span>
-        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhListboxButton aria-label="Colours" TValue="string" class="listbox-button">
+        <Template Context="b">
+            <span>
+                @(b.Values.Count == 0 ? "Pick colours…" : string.Join(", ", b.Values))
+            </span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in colors)
         {
-            <BhListboxOption TValue="string" Value="@c" class="listbox-option" Context="o">
-                <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
-                <span>@c</span>
+            <BhListboxOption TValue="string" Value="@c" class="listbox-option">
+                <Template Context="o">
+                    <span class="check-mark">@(o.IsSelected ? "✓" : "")</span>
+                    <span>@c</span>
+                </Template>
             </BhListboxOption>
         }
     </BhListboxOptions>
@@ -317,9 +480,11 @@
 
     private const string _disabledCode = """
 <BhListbox TValue="string" DefaultValue="standard" class="listbox">
-    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-        <span>@(b.Value ?? "Pick a plan")</span>
-        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhListboxButton aria-label="Plan" TValue="string" class="listbox-button">
+        <Template Context="b">
+            <span>@(b.Value ?? "Pick a plan")</span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         <BhListboxOption TValue="string" Value="standard"   class="listbox-option">Standard</BhListboxOption>
@@ -335,9 +500,11 @@
 <BhListbox TValue="string" Value="@country"
           OnValueChange="v => country = v"
           class="listbox">
-    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-        <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
-        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhListboxButton aria-label="Country" TValue="string" class="listbox-button">
+        <Template Context="b">
+            <span>@(LookupCountry(b.Value)?.Name ?? "Pick a country")</span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhListboxButton>
     <BhListboxOptions TValue="string" class="listbox-options">
         @foreach (var c in countries)
@@ -378,9 +545,11 @@
       @onsubmit:preventDefault="true"
       style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
     <BhListbox TValue="string" Name="role" DefaultValue="user" class="listbox">
-        <BhListboxButton TValue="string" class="listbox-button" Context="b">
-            <span>@(b.Value)</span>
-            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhListboxButton aria-label="Role" TValue="string" class="listbox-button">
+            <Template Context="b">
+                <span>@(b.Value)</span>
+                <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhListboxButton>
         <BhListboxOptions TValue="string" class="listbox-options">
             <BhListboxOption TValue="string" Value="user"  class="listbox-option">User</BhListboxOption>
@@ -763,9 +932,11 @@
 <BhListbox TValue="string" Value="@person"
           OnValueChange="v => person = v"
           class="listbox-anchored">
-    <BhListboxButton TValue="string" class="listbox-button" Context="b">
-        <span>@(b.Value ?? "Select a person…")</span>
-        <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhListboxButton aria-label="Person" TValue="string" class="listbox-button">
+        <Template Context="b">
+            <span>@(b.Value ?? "Select a person…")</span>
+            <span class="listbox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhListboxButton>
     <BhListboxOptions TValue="string"
                      Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"

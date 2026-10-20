@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html" class="active">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -76,8 +87,10 @@
         &lt;BhComboboxInput TValue="string"
                         Placeholder="Pick a fruit…"
                         class="combobox-input" /&gt;
-        &lt;BhComboboxButton TValue="string" class="combobox-button" Context="b"&gt;
-            &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhComboboxButton TValue="string" class="combobox-button"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="string" class="combobox-options"&gt;
@@ -216,9 +229,10 @@
         &lt;BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" /&gt;
         &lt;BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b"&gt;
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="string"
@@ -232,10 +246,11 @@
             @foreach (var fruit in filteredFruits)
             {
                 &lt;BhComboboxOption TValue="string" Value="@fruit"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"
-                                  Context="o"&gt;
-                    &lt;span&gt;@fruit&lt;/span&gt;
-                    @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;span&gt;@fruit&lt;/span&gt;
+                        @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -291,8 +306,10 @@
         &lt;BhComboboxInput TValue="string"
                         Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                         class="combobox-input combobox-input-inline" /&gt;
-        &lt;BhComboboxButton TValue="string" class="combobox-button" Context="b"&gt;
-            &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhComboboxButton TValue="string" class="combobox-button"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="string" class="combobox-options"&gt;
@@ -304,9 +321,11 @@
         {
             @foreach (var tag in filteredTags)
             {
-                &lt;BhComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o"&gt;
-                    &lt;span class="combobox-tick"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
-                    &lt;span&gt;@tag&lt;/span&gt;
+                &lt;BhComboboxOption TValue="string" Value="@tag" class="combobox-option"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;span class="combobox-tick"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+                        &lt;span&gt;@tag&lt;/span&gt;
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -479,9 +498,10 @@
                          Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                          class="flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none w-auto min-w-24 px-1 py-1" /&gt;
         &lt;BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b"&gt;
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="string"
@@ -495,10 +515,11 @@
             @foreach (var tag in filteredTags)
             {
                 &lt;BhComboboxOption TValue="string" Value="@tag"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o"&gt;
-                    &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
-                    &lt;span&gt;@tag&lt;/span&gt;
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;span class="inline-block w-4 text-blue-600 font-bold"&gt;@(o.IsSelected ? "✓" : "")&lt;/span&gt;
+                        &lt;span&gt;@tag&lt;/span&gt;
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -555,8 +576,10 @@
         &lt;BhComboboxInput TValue="Person"
                         Placeholder="Search people…"
                         class="combobox-input" /&gt;
-        &lt;BhComboboxButton TValue="Person" class="combobox-button" Context="b"&gt;
-            &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhComboboxButton TValue="Person" class="combobox-button"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="Person" class="combobox-options"&gt;
@@ -568,15 +591,17 @@
         {
             @foreach (var person in filteredPeople)
             {
-                &lt;BhComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o"&gt;
-                    &lt;div class="person-row"&gt;
-                        &lt;span class="person-avatar"&gt;@person.Initials&lt;/span&gt;
-                        &lt;div class="person-info"&gt;
-                            &lt;strong&gt;@person.Name&lt;/strong&gt;
-                            &lt;span&gt;@person.Email&lt;/span&gt;
+                &lt;BhComboboxOption TValue="Person" Value="@person" class="combobox-option"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;div class="person-row"&gt;
+                            &lt;span class="person-avatar"&gt;@person.Initials&lt;/span&gt;
+                            &lt;div class="person-info"&gt;
+                                &lt;strong&gt;@person.Name&lt;/strong&gt;
+                                &lt;span&gt;@person.Email&lt;/span&gt;
+                            &lt;/div&gt;
+                            @if (o.IsSelected) { &lt;span class="combobox-tick"&gt;✓&lt;/span&gt; }
                         &lt;/div&gt;
-                        @if (o.IsSelected) { &lt;span class="combobox-tick"&gt;✓&lt;/span&gt; }
-                    &lt;/div&gt;
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -740,9 +765,10 @@
         &lt;BhComboboxInput TValue="Person" Placeholder="Search people…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" /&gt;
         &lt;BhComboboxButton TValue="Person"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b"&gt;
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="Person"
@@ -756,16 +782,17 @@
             @foreach (var person in filteredPeople)
             {
                 &lt;BhComboboxOption TValue="Person" Value="@person"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o"&gt;
-                    &lt;div class="flex w-full items-center gap-2.5"&gt;
-                        &lt;span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700"&gt;@person.Initials&lt;/span&gt;
-                        &lt;div class="flex flex-1 flex-col leading-tight"&gt;
-                            &lt;strong class="text-sm text-zinc-900"&gt;@person.Name&lt;/strong&gt;
-                            &lt;span class="text-xs text-zinc-500"&gt;@person.Email&lt;/span&gt;
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;div class="flex w-full items-center gap-2.5"&gt;
+                            &lt;span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700"&gt;@person.Initials&lt;/span&gt;
+                            &lt;div class="flex flex-1 flex-col leading-tight"&gt;
+                                &lt;strong class="text-sm text-zinc-900"&gt;@person.Name&lt;/strong&gt;
+                                &lt;span class="text-xs text-zinc-500"&gt;@person.Email&lt;/span&gt;
+                            &lt;/div&gt;
+                            @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
                         &lt;/div&gt;
-                        @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
-                    &lt;/div&gt;
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -946,9 +973,10 @@
         &lt;BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" /&gt;
         &lt;BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b"&gt;
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhComboboxButton&gt;
     &lt;/div&gt;
     &lt;BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
@@ -962,10 +990,11 @@
             @foreach (var fruit in anchorFilteredFruits)
             {
                 &lt;BhComboboxOption TValue="string" Value="@fruit"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o"&gt;
-                    &lt;span&gt;@fruit&lt;/span&gt;
-                    @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"&gt;
+                    &lt;Template Context="o"&gt;
+                        &lt;span&gt;@fruit&lt;/span&gt;
+                        @if (o.IsSelected) { &lt;span class="text-blue-600 font-bold"&gt;✓&lt;/span&gt; }
+                    &lt;/Template&gt;
                 &lt;/BhComboboxOption&gt;
             }
         }
@@ -991,14 +1020,203 @@
                 </div>
             </div>
         </div>
+        <h2 id="large-lists-virtualized">Large lists (virtualized)</h2>
+        <p>Pass the matching data to <code>BhComboboxOptions</code> through <code>Items</code> with an <code>ItemTemplate</code>, and set <code>Virtualize="true"</code> so only the options in view are rendered (fixed <code>ItemSize</code>, scrollable panel). Filtering stays yours: <code>OnQueryChange</code> runs <code>BhFilter.Contains</code> — case- and accent-insensitive — over 10,000 items on every keystroke. Child content such as <code>BhComboboxEmpty</code> still renders after the data options.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCombobox TValue="string"
+            @bind-Value="virtualPick"
+            OnQueryChange="HandleVirtualQuery"
+            DisplayValue="v =&gt; v ?? string.Empty"
+            class="combobox-anchored"&gt;
+    &lt;div class="combobox-input-wrapper"&gt;
+        &lt;BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…" class="combobox-input" /&gt;
+        &lt;BhComboboxButton TValue="string" class="combobox-button"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="combobox-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
+        &lt;/BhComboboxButton&gt;
+    &lt;/div&gt;
+
+    &lt;BhComboboxOptions TValue="string"
+                       Items="@virtualMatches"
+                       Virtualize="true"
+                       ItemSize="36"
+                       Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                       class="combobox-virtual"&gt;
+        &lt;ItemTemplate Context="o"&gt;
+            &lt;span&gt;@o.Value&lt;/span&gt;
+            @if (o.IsSelected) { &lt;span class="combobox-tick"&gt;✓&lt;/span&gt; }
+        &lt;/ItemTemplate&gt;
+        &lt;ChildContent&gt;
+            @* Rendered after the data options when nothing matches *@
+            &lt;BhComboboxEmpty TValue="string" class="combobox-empty"&gt;No animals match.&lt;/BhComboboxEmpty&gt;
+        &lt;/ChildContent&gt;
+    &lt;/BhComboboxOptions&gt;
+&lt;/BhCombobox&gt;
+
+@code {
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList&lt;string&gt; virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i =&gt; $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    // Case- and accent-insensitive "contains" match.
+    private void HandleVirtualQuery(string query) =&gt;
+        virtualMatches = VirtualItems.Where(item =&gt; BhFilter.Contains(item, query)).ToArray();
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.combobox-anchored { display: inline-block; min-width: 18rem; }
+
+.combobox-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+.combobox-input-wrapper:focus-within { border-color: #2563eb; }
+
+.combobox-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.5rem 0.85rem;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.combobox-button { all: unset; display: inline-flex; padding: 0 0.65rem; cursor: pointer; color: #71717a; }
+.combobox-chevron      { transition: transform 200ms ease; }
+.combobox-chevron.open { transform: rotate(180deg); }
+
+/* Virtualized panel: a scroll container with a bounded height (positioned by Anchor) */
+.combobox-virtual {
+    z-index: 9999;
+    width: 18rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.combobox-virtual[hidden] { display: none; }
+
+/* Data-driven options carry no class — target the role.
+   Every option must be exactly ItemSize (36px) tall. */
+.combobox-virtual &gt; [role="option"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.combobox-virtual &gt; [role="option"][data-active]   { background: #eff6ff; }
+.combobox-virtual &gt; [role="option"][data-selected] { font-weight: 600; }
+
+.combobox-empty { padding: 0.6rem 0.65rem; color: #71717a; font-size: 0.85rem; font-style: italic; }
+.combobox-tick  { color: #2563eb; font-weight: 700; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCombobox TValue="string"
+            @bind-Value="virtualPick"
+            OnQueryChange="HandleVirtualQuery"
+            DisplayValue="v =&gt; v ?? string.Empty"
+            class="inline-block min-w-72"&gt;
+    &lt;div class="flex items-center rounded-lg border border-zinc-300 bg-white focus-within:border-blue-600"&gt;
+        &lt;BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…"
+                         class="min-w-0 flex-1 border-0 bg-transparent px-3.5 py-2 text-sm outline-none" /&gt;
+        &lt;BhComboboxButton TValue="string" class="inline-flex items-center px-2.5 text-zinc-500"&gt;
+            &lt;Template Context="b"&gt;
+                &lt;span class="@($"transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
+        &lt;/BhComboboxButton&gt;
+    &lt;/div&gt;
+
+    @* Bounded scroll container; each option exactly ItemSize (36px = h-9) *@
+    &lt;BhComboboxOptions TValue="string"
+                       Items="@virtualMatches"
+                       Virtualize="true"
+                       ItemSize="36"
+                       Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                       class="z-9999 m-0 max-h-64 w-72 list-none overflow-y-auto rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
+        &lt;ItemTemplate Context="o"&gt;
+            &lt;span class="@($"flex h-9 items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 text-sm {(o.IsActive ? "bg-blue-50 text-blue-900" : "text-zinc-900")} {(o.IsSelected ? "font-semibold" : "")}")"&gt;
+                @o.Value
+                @if (o.IsSelected) { &lt;span class="font-bold text-blue-600"&gt;✓&lt;/span&gt; }
+            &lt;/span&gt;
+        &lt;/ItemTemplate&gt;
+        &lt;ChildContent&gt;
+            &lt;BhComboboxEmpty TValue="string" class="px-2.5 py-2.5 text-sm italic text-zinc-500"&gt;No animals match.&lt;/BhComboboxEmpty&gt;
+        &lt;/ChildContent&gt;
+    &lt;/BhComboboxOptions&gt;
+&lt;/BhCombobox&gt;
+
+@code {
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList&lt;string&gt; virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i =&gt; $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    // Case- and accent-insensitive "contains" match.
+    private void HandleVirtualQuery(string query) =&gt;
+        virtualMatches = VirtualItems.Where(item =&gt; BhFilter.Contains(item, query)).ToArray();
+}</code></pre>
+                </div>
+            </div>
+        </div>
         <nav class="pager">
             <a class="prev" href="collapsible.html">
             <span class="pager-label">← Previous</span>
             <span class="pager-title">Collapsible</span>
         </a>
-            <a class="next" href="data-interactive.html">
+            <a class="next" href="command.html">
             <span class="pager-label">Next →</span>
-            <span class="pager-title">DataInteractive</span>
+            <span class="pager-title">Command Palette</span>
         </a>
         </nav>
         </main>

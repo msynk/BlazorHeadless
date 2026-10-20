@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-
 namespace BlazorHeadless;
 
 /// <summary>
@@ -14,39 +12,62 @@ public sealed class BhAlertDialogContext : IBhCloseContext
 {
     private readonly Func<Task> _openAsync;
     private readonly Func<Task> _closeAsync;
-    private readonly Action<ElementReference> _registerContent;
-    private readonly Action<ElementReference> _registerTrigger;
-    private readonly Action<ElementReference> _registerCancel;
+    private readonly Func<BhDismissReason, Task> _dismissAsync;
+    private readonly Action<BhAlertDialogPart, bool> _register;
 
     internal BhAlertDialogContext(
         bool isOpen,
+        bool isPresent,
+        bool isHidden,
         string baseId,
+        bool hasTitle,
+        bool hasDescription,
         Func<Task> openAsync,
         Func<Task> closeAsync,
-        Action<ElementReference> registerContent,
-        Action<ElementReference> registerTrigger,
-        Action<ElementReference> registerCancel)
+        Func<BhDismissReason, Task> dismissAsync,
+        Action<BhAlertDialogPart, bool> register)
     {
         IsOpen = isOpen;
+        IsPresent = isPresent;
+        IsHidden = isHidden;
         BaseId = baseId;
+        HasTitle = hasTitle;
+        HasDescription = hasDescription;
         _openAsync = openAsync;
         _closeAsync = closeAsync;
-        _registerContent = registerContent;
-        _registerTrigger = registerTrigger;
-        _registerCancel = registerCancel;
+        _dismissAsync = dismissAsync;
+        _register = register;
     }
 
     /// <summary>Whether the alert dialog is currently open.</summary>
     public bool IsOpen { get; }
 
+    /// <summary>Whether the overlay and content should be rendered (open, or animating out).</summary>
+    public bool IsPresent { get; }
+
+    /// <summary>Whether the overlay and content should be hidden (waiting to be portalled / positioned).</summary>
+    public bool IsHidden { get; }
+
     /// <summary>Base id used to derive the trigger, content, title, and description ids.</summary>
     public string BaseId { get; }
+
+    /// <summary>Whether a title is rendered.</summary>
+    public bool HasTitle { get; }
+
+    /// <summary>Whether a description is rendered.</summary>
+    public bool HasDescription { get; }
 
     /// <summary>Deterministic id of the trigger button.</summary>
     public string TriggerId => $"{BaseId}-trigger";
 
     /// <summary>Deterministic id of the content surface.</summary>
     public string ContentId => $"{BaseId}-content";
+
+    /// <summary>Deterministic id of the overlay.</summary>
+    public string OverlayId => $"{BaseId}-overlay";
+
+    /// <summary>Deterministic id of the cancel button (receives initial focus).</summary>
+    public string CancelId => $"{BaseId}-cancel";
 
     /// <summary>The deterministic id used as <c>aria-labelledby</c> on the content.</summary>
     public string TitleId => $"{BaseId}-title";
@@ -60,9 +81,10 @@ public sealed class BhAlertDialogContext : IBhCloseContext
     /// <summary>Closes the alert dialog.</summary>
     public Task CloseAsync() => _closeAsync();
 
-    internal void RegisterContent(ElementReference content) => _registerContent(content);
-    internal void RegisterTrigger(ElementReference trigger) => _registerTrigger(trigger);
-    internal void RegisterCancel(ElementReference cancel) => _registerCancel(cancel);
+    /// <summary>Requests dismissal (Escape).</summary>
+    public Task DismissAsync(BhDismissReason reason) => _dismissAsync(reason);
+
+    internal void Register(BhAlertDialogPart part, bool present) => _register(part, present);
 }
 
 /// <summary>

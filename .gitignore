@@ -427,3 +427,8 @@ FodyWeavers.xsd
 # Tailwind standalone CLI binary + generated output (Samples project)
 src/BlazorHeadless.Samples/tools/
 src/BlazorHeadless.Samples/wwwroot/tailwind.css
+
+# Browser tests (tests/e2e)
+tests/e2e/node_modules/
+tests/e2e/test-results/
+tests/e2e/playwright-report/

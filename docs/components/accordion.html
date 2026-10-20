@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html" class="active">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -68,9 +79,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion DefaultValue="item-1" class="accordion"&gt;
     &lt;BhAccordionItem Value="item-1" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            What is BlazorHeadless?
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                What is BlazorHeadless?
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;
@@ -81,9 +94,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="item-2" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            Why headless?
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                Why headless?
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;
@@ -94,9 +109,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="item-3" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            How do I style it?
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                How do I style it?
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;
@@ -155,10 +172,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion DefaultValue="item-1" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
     &lt;BhAccordionItem Value="item-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            What is BlazorHeadless?
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                What is BlazorHeadless?
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
@@ -169,10 +187,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="item-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            Why headless?
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                Why headless?
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
@@ -182,10 +201,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="item-3" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            How do I style it?
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                How do I style it?
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;
@@ -210,9 +230,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion Type="BhAccordionType.Multiple" class="accordion"&gt;
     &lt;BhAccordionItem Value="faq-1" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            Can I open multiple panels?
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                Can I open multiple panels?
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;
@@ -222,9 +244,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="faq-2" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            Does this one close when I open another?
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                Does this one close when I open another?
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;
@@ -282,20 +306,22 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion Type="BhAccordionType.Multiple" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
     &lt;BhAccordionItem Value="faq-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            Can I open multiple panels?
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                Can I open multiple panels?
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Yes — every panel is independent. Try opening both!&lt;/div&gt;
         &lt;/BhAccordionContent&gt;
     &lt;/BhAccordionItem&gt;
     &lt;BhAccordionItem Value="faq-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            Does this one close when I open another?
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                Does this one close when I open another?
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;No — both can be open at once.&lt;/div&gt;
@@ -318,9 +344,11 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion class="accordion"&gt;
     &lt;BhAccordionItem Value="d-1" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            I am enabled
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                I am enabled
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;This item works normally.&lt;/div&gt;
@@ -328,9 +356,11 @@
     &lt;/BhAccordionItem&gt;
 
     &lt;BhAccordionItem Value="d-2" Disabled="true" class="accordion-item"&gt;
-        &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-            I am disabled
-            &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+            &lt;Template Context="t"&gt;
+                I am disabled
+                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent class="accordion-content"&gt;
             &lt;div class="accordion-body"&gt;You should not be able to open this.&lt;/div&gt;
@@ -392,20 +422,22 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhAccordion class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
     &lt;BhAccordionItem Value="d-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            I am enabled
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                I am enabled
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;This item works normally.&lt;/div&gt;
         &lt;/BhAccordionContent&gt;
     &lt;/BhAccordionItem&gt;
     &lt;BhAccordionItem Value="d-2" Disabled="true" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t"&gt;
-            I am disabled
-            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+            &lt;Template Context="t"&gt;
+                I am disabled
+                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhAccordionTrigger&gt;
         &lt;BhAccordionContent&gt;
             &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;You should not be able to open this.&lt;/div&gt;
@@ -438,9 +470,11 @@
                 OnValueChange="v =&gt; controlledValue = v"
                 class="accordion"&gt;
         &lt;BhAccordionItem Value="ctrl-1" class="accordion-item"&gt;
-            &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-                Panel 1
-                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+                &lt;Template Context="t"&gt;
+                    Panel 1
+                    &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+                &lt;/Template&gt;
             &lt;/BhAccordionTrigger&gt;
             &lt;BhAccordionContent class="accordion-content"&gt;
                 &lt;div class="accordion-body"&gt;Controlled by external state.&lt;/div&gt;
@@ -448,9 +482,11 @@
         &lt;/BhAccordionItem&gt;
 
         &lt;BhAccordionItem Value="ctrl-2" class="accordion-item"&gt;
-            &lt;BhAccordionTrigger class="accordion-trigger" Context="t"&gt;
-                Panel 2
-                &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;BhAccordionTrigger class="accordion-trigger"&gt;
+                &lt;Template Context="t"&gt;
+                    Panel 2
+                    &lt;span class="accordion-chevron @(t.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+                &lt;/Template&gt;
             &lt;/BhAccordionTrigger&gt;
             &lt;BhAccordionContent class="accordion-content"&gt;
                 &lt;div class="accordion-body"&gt;This panel is toggled by the button above.&lt;/div&gt;
@@ -558,20 +594,22 @@
 
     &lt;BhAccordion Value="@controlledValue" OnValueChange="v =&gt; controlledValue = v" class="w-full overflow-hidden rounded-lg border border-zinc-200"&gt;
         &lt;BhAccordionItem Value="ctrl-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                Context="t"&gt;
-                Panel 1
-                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+                &lt;Template Context="t"&gt;
+                    Panel 1
+                    &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                &lt;/Template&gt;
             &lt;/BhAccordionTrigger&gt;
             &lt;BhAccordionContent&gt;
                 &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;Controlled by external state.&lt;/div&gt;
             &lt;/BhAccordionContent&gt;
         &lt;/BhAccordionItem&gt;
         &lt;BhAccordionItem Value="ctrl-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50"&gt;
-            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                Context="t"&gt;
-                Panel 2
-                &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+            &lt;BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"&gt;
+                &lt;Template Context="t"&gt;
+                    Panel 2
+                    &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+                &lt;/Template&gt;
             &lt;/BhAccordionTrigger&gt;
             &lt;BhAccordionContent&gt;
                 &lt;div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500"&gt;This panel is toggled by the button above.&lt;/div&gt;
@@ -592,9 +630,9 @@
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="../getting-started.html">
+            <a class="prev" href="accessibility.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Getting started</span>
+            <span class="pager-title">Accessibility Utilities</span>
         </a>
             <a class="next" href="alert-dialog.html">
             <span class="pager-label">Next →</span>

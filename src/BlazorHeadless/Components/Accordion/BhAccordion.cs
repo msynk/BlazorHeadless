@@ -1,39 +1,26 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless Accordion root component that manages which items are open, wires up
-/// accessibility attributes, and provides zero visual opinion.
+/// A headless Accordion: a vertically (or horizontally) stacked set of
+/// expandable sections implementing the WAI-ARIA Accordion pattern.
 ///
-/// <para><b>Key features (inspired by Radix UI / Ark UI / Headless UI patterns):</b></para>
+/// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item>
-///     <b>Single or Multiple</b> — set <see cref="Type"/> to control whether
-///     only one item can be open at a time or many simultaneously.
-///   </item>
-///   <item>
-///     <b>Uncontrolled and controlled</b> — seed initial state via
-///     <see cref="DefaultValue"/> / <see cref="DefaultValues"/> (uncontrolled),
-///     or drive state externally via <see cref="Value"/> / <see cref="Values"/>
-///     with the matching change callbacks.
-///   </item>
-///   <item>
-///     <b>Data-attribute styling hooks</b> — emits <c>data-disabled</c> and
-///     <c>data-orientation="vertical"</c> for CSS selectors.
-///   </item>
-///   <item>
-///     <b>Polymorphic rendering</b> — renders a <c>&lt;div&gt;</c> by default;
-///     override with <see cref="BhComponentBase.As"/>.
-///   </item>
+///   <item><b>Single or multiple</b> open items (<see cref="Type"/>); <see cref="Collapsible"/> controls whether the last open item can be closed in single mode.</item>
+///   <item><b>Binding</b> — <c>@bind-Value</c> (single) / <c>@bind-Values</c> (multiple), or uncontrolled defaults.</item>
+///   <item><b>Keyboard</b> — ArrowDown / ArrowUp (ArrowRight / ArrowLeft when horizontal), Home and End move between triggers.</item>
+///   <item><b>Semantics</b> — triggers live in headings (<see cref="BhAccordionHeader"/>), panels are <c>role="region"</c> labelled by their trigger.</item>
+///   <item><b>Animations</b> — exit animations and <c>--bh-content-height</c> on the content.</item>
 /// </list>
 ///
-/// <para><b>Usage (uncontrolled, single):</b></para>
 /// <code>
 /// &lt;BhAccordion DefaultValue="item-1"&gt;
 ///     &lt;BhAccordionItem Value="item-1"&gt;
-///         &lt;BhAccordionTrigger&gt;Section 1&lt;/BhAccordionTrigger&gt;
+///         &lt;BhAccordionHeader&gt;&lt;BhAccordionTrigger&gt;Section 1&lt;/BhAccordionTrigger&gt;&lt;/BhAccordionHeader&gt;
 ///         &lt;BhAccordionContent&gt;Content for section 1.&lt;/BhAccordionContent&gt;
 ///     &lt;/BhAccordionItem&gt;
 /// &lt;/BhAccordion&gt;
@@ -41,113 +28,118 @@ namespace BlazorHeadless;
 /// </summary>
 public class BhAccordion : BhComponentBase
 {
-    private HashSet<string> _openItems = new(StringComparer.Ordinal);
-    private bool _initialized;
+    private readonly BhCollection<BhAccordionTrigger> _triggers;
+    private HashSet<string> _open = new(StringComparer.Ordinal);
 
-    /// <summary>
-    /// Controls the open-item selection model. Defaults to <see cref="BhAccordionType.Single"/>.
-    /// </summary>
+    public BhAccordion()
+    {
+        _triggers = new BhCollection<BhAccordionTrigger>(BhId.New("bh-acc"));
+    }
+
+    [CascadingParameter]
+    private BhDirection CascadedDir { get; set; }
+
+    /// <summary>Whether one or many items can be open. Default: <see cref="BhAccordionType.Single"/>.</summary>
     [Parameter]
     public BhAccordionType Type { get; set; } = BhAccordionType.Single;
 
-    /// <summary>Whether all items are disabled regardless of item-level settings.</summary>
+    /// <summary>In single mode, whether the open item can be closed (leaving none open). Default: true.</summary>
+    [Parameter]
+    public bool Collapsible { get; set; } = true;
+
+    /// <summary>Disables every item.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    // ── Uncontrolled initial values ──────────────────────────────────────────
+    /// <summary>Orientation used for arrow-key navigation. Default: vertical.</summary>
+    [Parameter]
+    public BhOrientation Orientation { get; set; } = BhOrientation.Vertical;
 
-    /// <summary>
-    /// The item value that is open by default (uncontrolled, <see cref="BhAccordionType.Single"/>).
-    /// Ignored when <see cref="Value"/> is supplied.
-    /// </summary>
+    /// <summary>Reading direction (flips Left / Right when horizontal).</summary>
+    [Parameter]
+    public BhDirection? Dir { get; set; }
+
+    /// <summary>Initially open item when uncontrolled (single mode).</summary>
     [Parameter]
     public string? DefaultValue { get; set; }
 
-    /// <summary>
-    /// The item values that are open by default (uncontrolled, <see cref="BhAccordionType.Multiple"/>).
-    /// Ignored when <see cref="Values"/> is supplied.
-    /// </summary>
+    /// <summary>Initially open items when uncontrolled (multiple mode).</summary>
     [Parameter]
     public IEnumerable<string>? DefaultValues { get; set; }
 
-    // ── Controlled values ────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Controlled open value for <see cref="BhAccordionType.Single"/>. When set the component
-    /// operates in controlled mode and <see cref="OnValueChange"/> must update this value.
-    /// </summary>
+    /// <summary>The open item (single mode). Supplying it makes the accordion controlled (use <c>@bind-Value</c>).</summary>
     [Parameter]
     public string? Value { get; set; }
 
-    /// <summary>
-    /// Controlled open values for <see cref="BhAccordionType.Multiple"/>. When set the component
-    /// operates in controlled mode and <see cref="OnValuesChange"/> must update this collection.
-    /// </summary>
+    /// <summary>Two-way binding callback for <see cref="Value"/>.</summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>The open items (multiple mode). Supplying it makes the accordion controlled (use <c>@bind-Values</c>).</summary>
     [Parameter]
     public IEnumerable<string>? Values { get; set; }
 
-    /// <summary>
-    /// Fires when the open item changes (controlled, <see cref="BhAccordionType.Single"/>).
-    /// The argument is the newly-opened item value, or <c>null</c> when the item is closed.
-    /// </summary>
+    /// <summary>Two-way binding callback for <see cref="Values"/>.</summary>
+    [Parameter]
+    public EventCallback<IReadOnlyCollection<string>> ValuesChanged { get; set; }
+
+    /// <summary>Fires when the open item changes (single mode).</summary>
     [Parameter]
     public EventCallback<string?> OnValueChange { get; set; }
 
-    /// <summary>
-    /// Fires when the set of open items changes (controlled, <see cref="BhAccordionType.Multiple"/>).
-    /// </summary>
+    /// <summary>Fires when the open items change (multiple mode).</summary>
     [Parameter]
     public EventCallback<IReadOnlyCollection<string>> OnValuesChange { get; set; }
 
-    /// <summary>Child content — should contain one or more <see cref="BhAccordionItem"/> components.</summary>
+    /// <summary>The accordion items.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private BhDirection EffectiveDir => Dir ?? CascadedDir;
+
+    private ISet<string> OpenItems
+    {
+        get
+        {
+            if (Type == BhAccordionType.Single && IsProvided(nameof(Value)))
+                return Value is null ? new HashSet<string>() : new HashSet<string>(StringComparer.Ordinal) { Value };
+            if (Type == BhAccordionType.Multiple && IsProvided(nameof(Values)))
+                return new HashSet<string>(Values ?? [], StringComparer.Ordinal);
+            return _open;
+        }
+    }
 
     protected override void OnInitialized()
     {
-        // Seed uncontrolled state once from defaults on first render.
-        if (Value is null && Values is null)
-        {
-            _openItems = new HashSet<string>(StringComparer.Ordinal);
-            if (DefaultValue is not null)
-                _openItems.Add(DefaultValue);
-            if (DefaultValues is not null)
-                foreach (var v in DefaultValues)
-                    _openItems.Add(v);
-        }
-        _initialized = true;
+        if (DefaultValue is not null) _open.Add(DefaultValue);
+        if (DefaultValues is not null) _open.UnionWith(DefaultValues);
     }
-
-    protected override void OnParametersSet()
-    {
-        if (!_initialized) return;
-
-        // Re-sync internal state when controlled values are updated externally.
-        if (Value is not null)
-            _openItems = new HashSet<string>(StringComparer.Ordinal) { Value };
-        else if (Values is not null)
-            _openItems = new HashSet<string>(Values, StringComparer.Ordinal);
-    }
-
-    // ── Rendering ────────────────────────────────────────────────────────────
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var open = OpenItems;
+        var context = new BhAccordionContext(
+            isOpen: open.Contains,
+            toggle: v => _ = ToggleAsync(v),
+            disabled: Disabled,
+            type: Type)
+        {
+            Accordion = this,
+            Orientation = Orientation,
+            Collapsible = Collapsible,
+            Triggers = _triggers,
+        };
+
         builder.OpenComponent<CascadingValue<BhAccordionContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
+        builder.AddComponentParameter(1, "Value", context);
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
             inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
@@ -157,40 +149,57 @@ public class BhAccordion : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataValue(attrs, "orientation", "vertical");
+        SetDataValue(attrs, "orientation", Orientation.ToAttribute());
         SetDataFlag(attrs, "disabled", Disabled);
         return attrs;
     }
 
-    // ── Context and state management ─────────────────────────────────────────
-
-    private BhAccordionContext CreateContext() => new(
-        isOpen: v => _openItems.Contains(v),
-        toggle: ToggleItem,
-        disabled: Disabled,
-        type: Type);
-
-    private void ToggleItem(string value)
+    internal async Task ToggleAsync(string value)
     {
         if (Disabled) return;
+        var next = new HashSet<string>(OpenItems, StringComparer.Ordinal);
 
-        if (_openItems.Contains(value))
+        if (next.Contains(value))
         {
-            _openItems.Remove(value);
+            if (Type == BhAccordionType.Single && !Collapsible) return;
+            next.Remove(value);
         }
         else
         {
-            if (Type == BhAccordionType.Single)
-                _openItems.Clear();
-            _openItems.Add(value);
+            if (Type == BhAccordionType.Single) next.Clear();
+            next.Add(value);
         }
 
-        // Fire change callbacks for controlled usage.
         if (Type == BhAccordionType.Single)
-            _ = OnValueChange.InvokeAsync(_openItems.FirstOrDefault());
+        {
+            var single = next.FirstOrDefault();
+            if (!IsProvided(nameof(Value))) _open = next;
+            await ValueChanged.InvokeAsync(single);
+            await OnValueChange.InvokeAsync(single);
+        }
         else
-            _ = OnValuesChange.InvokeAsync(_openItems.ToArray() as IReadOnlyCollection<string>);
-
+        {
+            var values = next.ToArray();
+            if (!IsProvided(nameof(Values))) _open = next;
+            await ValuesChanged.InvokeAsync(values);
+            await OnValuesChange.InvokeAsync(values);
+        }
         StateHasChanged();
+    }
+
+    internal async Task HandleTriggerKeyDownAsync(BhAccordionTrigger trigger, KeyboardEventArgs e)
+    {
+        var next = BhKeyboard.NextKey(Orientation, EffectiveDir);
+        var prev = BhKeyboard.PreviousKey(Orientation, EffectiveDir);
+        await _triggers.EnsureOrderAsync(Interop);
+
+        BhAccordionTrigger? target = null;
+        if (e.Key == next) target = _triggers.Next(trigger);
+        else if (e.Key == prev) target = _triggers.Previous(trigger);
+        else if (e.Key == "Home") target = _triggers.First();
+        else if (e.Key == "End") target = _triggers.Last();
+
+        if (target is not null)
+            await Interop.FocusAsync(target.ItemId);
     }
 }

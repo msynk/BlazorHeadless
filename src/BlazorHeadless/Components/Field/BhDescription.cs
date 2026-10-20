@@ -4,18 +4,16 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless description element linked to the sibling input via
-/// <c>aria-describedby</c>. Renders as <c>&lt;p&gt;</c> by default.
-///
-/// <para>
-/// Place inside an <see cref="BhField"/> alongside an <see cref="BhInput"/>,
-/// <see cref="BhTextarea"/>, or <see cref="BhSelect"/> — the ARIA wiring is automatic.
-/// </para>
+/// Help text for the control of the enclosing <see cref="BhField"/>, linked through
+/// <c>aria-describedby</c>. Renders as <c>&lt;p&gt;</c> by default. A field may contain
+/// several descriptions; all of them are referenced.
 /// </summary>
-public class BhDescription : BhComponentBase
+public class BhDescription : BhComponentBase, IDisposable
 {
+    private string? _id;
+
     [CascadingParameter]
-    private BhFieldContext? BhFieldContext { get; set; }
+    private BhFieldContext? FieldContext { get; set; }
 
     /// <summary>Description text or rich content.</summary>
     [Parameter]
@@ -23,16 +21,34 @@ public class BhDescription : BhComponentBase
 
     protected override string DefaultTag => "p";
 
+    private string ElementId => _id ?? ComponentId;
+
+    protected override void OnInitialized()
+    {
+        if (FieldContext is null) return;
+        _id = Id ?? FieldContext.NextId("description");
+        FieldContext.RegisterDescription(_id, true);
+    }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhFieldContext?.DescriptionId ?? ComponentId);
+        builder.AddAttribute(10, "id", ElementId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(30, Ref);
-
+        builder.AddElementReferenceCapture(30, CaptureElement);
         builder.AddContent(40, ChildContent);
         builder.CloseElement();
+    }
+
+    protected override Dictionary<string, object> BuildComponentAttributes()
+    {
+        var attrs = base.BuildComponentAttributes();
+        SetDataFlag(attrs, "disabled", FieldContext?.Disabled ?? false);
+        return attrs;
+    }
+
+    public void Dispose()
+    {
+        if (_id is not null) FieldContext?.RegisterDescription(_id, false);
     }
 }

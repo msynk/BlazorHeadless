@@ -22,9 +22,11 @@
         </Description>
         <LiveContent>
             <BhMenu class="menu">
-                <BhMenuButton class="menu-button" Context="b">
-                    Options
-                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhMenuButton class="menu-button">
+                    <Template Context="b">
+                        Options
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhMenuButton>
                 <BhMenuItems class="menu-items">
                     <BhMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</BhMenuItem>
@@ -48,9 +50,11 @@
         </Description>
         <LiveContent>
             <BhMenu class="menu">
-                <BhMenuButton class="menu-button" Context="b">
-                    Account
-                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhMenuButton class="menu-button">
+                    <Template Context="b">
+                        Account
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhMenuButton>
                 <BhMenuItems class="menu-items">
                     <BhMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</BhMenuItem>
@@ -75,42 +79,52 @@
         </Description>
         <LiveContent>
             <BhMenu class="menu">
-                <BhMenuButton class="menu-button" Context="b">
-                    File
-                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhMenuButton class="menu-button">
+                    <Template Context="b">
+                        File
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhMenuButton>
                 <BhMenuItems class="menu-items menu-items-wide">
-                    <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
-                        <span class="menu-item-icon">📄</span>
-                        <span class="menu-item-body">
-                            <strong>New file</strong>
-                            <span>Create a blank document</span>
-                        </span>
-                        <span class="menu-item-shortcut">⌘N</span>
+                    <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file">
+                        <Template Context="i">
+                            <span class="menu-item-icon">📄</span>
+                            <span class="menu-item-body">
+                                <strong>New file</strong>
+                                <span>Create a blank document</span>
+                            </span>
+                            <span class="menu-item-shortcut">⌘N</span>
+                        </Template>
                     </BhMenuItem>
-                    <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
-                        <span class="menu-item-icon">📂</span>
-                        <span class="menu-item-body">
-                            <strong>Open…</strong>
-                            <span>Browse for a file</span>
-                        </span>
-                        <span class="menu-item-shortcut">⌘O</span>
+                    <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open">
+                        <Template Context="i">
+                            <span class="menu-item-icon">📂</span>
+                            <span class="menu-item-body">
+                                <strong>Open…</strong>
+                                <span>Browse for a file</span>
+                            </span>
+                            <span class="menu-item-shortcut">⌘O</span>
+                        </Template>
                     </BhMenuItem>
-                    <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
-                        <span class="menu-item-icon">💾</span>
-                        <span class="menu-item-body">
-                            <strong>Save</strong>
-                            <span>Save the current document</span>
-                        </span>
-                        <span class="menu-item-shortcut">⌘S</span>
+                    <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save">
+                        <Template Context="i">
+                            <span class="menu-item-icon">💾</span>
+                            <span class="menu-item-body">
+                                <strong>Save</strong>
+                                <span>Save the current document</span>
+                            </span>
+                            <span class="menu-item-shortcut">⌘S</span>
+                        </Template>
                     </BhMenuItem>
                     <BhMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
-                               Disabled="true" Context="i">
-                        <span class="menu-item-icon">📤</span>
-                        <span class="menu-item-body">
-                            <strong>Export</strong>
-                            <span>Not available in this plan</span>
-                        </span>
+                               Disabled="true">
+                        <Template Context="i">
+                            <span class="menu-item-icon">📤</span>
+                            <span class="menu-item-body">
+                                <strong>Export</strong>
+                                <span>Not available in this plan</span>
+                            </span>
+                        </Template>
                     </BhMenuItem>
                 </BhMenuItems>
             </BhMenu>
@@ -129,9 +143,11 @@
         </Description>
         <LiveContent>
             <BhMenu class="menu">
-                <BhMenuButton class="menu-button" Context="b">
-                    More
-                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhMenuButton class="menu-button">
+                    <Template Context="b">
+                        More
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhMenuButton>
                 <BhMenuItems class="menu-items">
                     <li class="menu-section-label" role="presentation">View</li>
@@ -164,9 +180,11 @@
         <LiveContent>
             <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
                 <BhMenu class="menu">
-                    <BhMenuButton class="menu-button" Context="b">
-                        Bottom Start
-                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhMenuButton class="menu-button">
+                        <Template Context="b">
+                            Bottom Start
+                            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhMenuButton>
                     <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                                 class="menu-items-anchored">
@@ -177,9 +195,11 @@
                 </BhMenu>
 
                 <BhMenu class="menu">
-                    <BhMenuButton class="menu-button" Context="b">
-                        Bottom End
-                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhMenuButton class="menu-button">
+                        <Template Context="b">
+                            Bottom End
+                            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhMenuButton>
                     <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
                                 class="menu-items-anchored">
@@ -190,9 +210,11 @@
                 </BhMenu>
 
                 <BhMenu class="menu">
-                    <BhMenuButton class="menu-button" Context="b">
-                        Match Width
-                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhMenuButton class="menu-button">
+                        <Template Context="b">
+                            Match Width
+                            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhMenuButton>
                     <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
                                 class="menu-items-anchored menu-items-match-width">
@@ -217,9 +239,11 @@
         </Description>
         <LiveContent>
             <BhMenu class="menu">
-                <BhMenuButton class="menu-button" Context="b">
-                    Navigate
-                    <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                <BhMenuButton class="menu-button">
+                    <Template Context="b">
+                        Navigate
+                        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhMenuButton>
                 <BhMenuItems class="menu-items">
                     <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
@@ -241,9 +265,11 @@
 
     private const string _basicCode = """
 <BhMenu class="menu">
-    <BhMenuButton class="menu-button" Context="b">
-        Options
-        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhMenuButton class="menu-button">
+        <Template Context="b">
+            Options
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhMenuButton>
     <BhMenuItems class="menu-items">
         <BhMenuItem OnClick='@(() => Log("Edit"))'      class="menu-item" Label="Edit">Edit</BhMenuItem>
@@ -264,9 +290,11 @@
 
     private const string _disabledCode = """
 <BhMenu class="menu">
-    <BhMenuButton class="menu-button" Context="b">
-        Account
-        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhMenuButton class="menu-button">
+        <Template Context="b">
+            Account
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhMenuButton>
     <BhMenuItems class="menu-items">
         <BhMenuItem OnClick='@(() => Log("Profile"))'  class="menu-item" Label="Profile">Profile</BhMenuItem>
@@ -280,42 +308,52 @@
 
     private const string _richCode = """
 <BhMenu class="menu">
-    <BhMenuButton class="menu-button" Context="b">
-        File
-        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhMenuButton class="menu-button">
+        <Template Context="b">
+            File
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhMenuButton>
     <BhMenuItems class="menu-items menu-items-wide">
-        <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file" Context="i">
-            <span class="menu-item-icon">📄</span>
-            <span class="menu-item-body">
-                <strong>New file</strong>
-                <span>Create a blank document</span>
-            </span>
-            <span class="menu-item-shortcut">⌘N</span>
+        <BhMenuItem OnClick='@(() => Log("New file"))' class="menu-item" Label="New file">
+            <Template Context="i">
+                <span class="menu-item-icon">📄</span>
+                <span class="menu-item-body">
+                    <strong>New file</strong>
+                    <span>Create a blank document</span>
+                </span>
+                <span class="menu-item-shortcut">⌘N</span>
+            </Template>
         </BhMenuItem>
-        <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open" Context="i">
-            <span class="menu-item-icon">📂</span>
-            <span class="menu-item-body">
-                <strong>Open…</strong>
-                <span>Browse for a file</span>
-            </span>
-            <span class="menu-item-shortcut">⌘O</span>
+        <BhMenuItem OnClick='@(() => Log("Open"))' class="menu-item" Label="Open">
+            <Template Context="i">
+                <span class="menu-item-icon">📂</span>
+                <span class="menu-item-body">
+                    <strong>Open…</strong>
+                    <span>Browse for a file</span>
+                </span>
+                <span class="menu-item-shortcut">⌘O</span>
+            </Template>
         </BhMenuItem>
-        <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save" Context="i">
-            <span class="menu-item-icon">💾</span>
-            <span class="menu-item-body">
-                <strong>Save</strong>
-                <span>Save the current document</span>
-            </span>
-            <span class="menu-item-shortcut">⌘S</span>
+        <BhMenuItem OnClick='@(() => Log("Save"))' class="menu-item" Label="Save">
+            <Template Context="i">
+                <span class="menu-item-icon">💾</span>
+                <span class="menu-item-body">
+                    <strong>Save</strong>
+                    <span>Save the current document</span>
+                </span>
+                <span class="menu-item-shortcut">⌘S</span>
+            </Template>
         </BhMenuItem>
         <BhMenuItem OnClick='@(() => Log("Export"))' class="menu-item" Label="Export"
-                   Disabled="true" Context="i">
-            <span class="menu-item-icon">📤</span>
-            <span class="menu-item-body">
-                <strong>Export</strong>
-                <span>Not available in this plan</span>
-            </span>
+                   Disabled="true">
+            <Template Context="i">
+                <span class="menu-item-icon">📤</span>
+                <span class="menu-item-body">
+                    <strong>Export</strong>
+                    <span>Not available in this plan</span>
+                </span>
+            </Template>
         </BhMenuItem>
     </BhMenuItems>
 </BhMenu>
@@ -326,9 +364,11 @@
 
     private const string _sectionsCode = """
 <BhMenu class="menu">
-    <BhMenuButton class="menu-button" Context="b">
-        More
-        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhMenuButton class="menu-button">
+        <Template Context="b">
+            More
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhMenuButton>
     <BhMenuItems class="menu-items">
         <li class="menu-section-label" role="presentation">View</li>
@@ -347,9 +387,11 @@
 
     private const string _polymorphicCode = """
 <BhMenu class="menu">
-    <BhMenuButton class="menu-button" Context="b">
-        Navigate
-        <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+    <BhMenuButton class="menu-button">
+        <Template Context="b">
+            Navigate
+            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhMenuButton>
     <BhMenuItems class="menu-items">
         <BhMenuItem As="a" href="/button"     class="menu-item" Label="Button">Button</BhMenuItem>
@@ -366,9 +408,11 @@
 
 <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
     <BhMenu class="menu">
-        <BhMenuButton class="menu-button" Context="b">
-            Bottom Start
-            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhMenuButton class="menu-button">
+            <Template Context="b">
+                Bottom Start
+                <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhMenuButton>
         <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                     class="menu-items-anchored">
@@ -379,9 +423,11 @@
     </BhMenu>
 
     <BhMenu class="menu">
-        <BhMenuButton class="menu-button" Context="b">
-            Bottom End
-            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhMenuButton class="menu-button">
+            <Template Context="b">
+                Bottom End
+                <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhMenuButton>
         <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
                     class="menu-items-anchored">
@@ -393,9 +439,11 @@
 
     @* Use --button-width to match the dropdown width to the trigger *@
     <BhMenu class="menu">
-        <BhMenuButton class="menu-button" Context="b">
-            Match Width
-            <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhMenuButton class="menu-button">
+            <Template Context="b">
+                Match Width
+                <span class="menu-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhMenuButton>
         <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
                     class="menu-items-anchored menu-items-match-width">

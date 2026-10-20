@@ -1,156 +1,129 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-
 namespace BlazorHeadless;
 
 /// <summary>
-/// Cascading context provided by <see cref="BhCombobox{TValue}"/> to its descendant
-/// parts (<see cref="BhComboboxInput{TValue}"/>, <see cref="BhComboboxButton{TValue}"/>,
-/// <see cref="BhComboboxOptions{TValue}"/>, <see cref="BhComboboxOption{TValue}"/>).
-///
-/// <para>
-/// Carries open / selection / "active" (highlighted) state plus the registration
-/// and keyboard delegates the parts use to coordinate.
-/// </para>
+/// Cascading context provided by <see cref="BhCombobox{TValue}"/> to its input,
+/// button, options panel and options.
 /// </summary>
-public sealed class BhComboboxContext<TValue>
+/// <typeparam name="TValue">The option value type.</typeparam>
+public sealed class BhComboboxContext<TValue> : IBhCloseContext
 {
-    private readonly Func<BhComboboxOption<TValue>, int> _registerOption;
-    private readonly Action<BhComboboxOption<TValue>> _unregisterOption;
-    private readonly Func<TValue, Task> _selectAsync;
-    private readonly Action<int> _setActiveIndex;
-    private readonly Func<KeyboardEventArgs, Task> _handleInputKeyDownAsync;
-    private readonly Func<string, Task> _handleQueryAsync;
-    private readonly Func<Task> _toggleAsync;
-    private readonly Func<Task> _openAsync;
-    private readonly Func<Task> _closeAsync;
-    private readonly Func<TValue?, string> _displayValue;
-
     internal BhComboboxContext(
+        BhCombobox<TValue> combobox,
+        BhListState<TValue> state,
         bool isOpen,
         bool disabled,
         bool multiple,
+        bool invalid,
+        bool required,
         TValue? singleValue,
+        bool hasValue,
         IReadOnlyCollection<TValue> multiValues,
-        int activeIndex,
         string query,
         string baseId,
-        Func<BhComboboxOption<TValue>, int> registerOption,
-        Action<BhComboboxOption<TValue>> unregisterOption,
-        Func<TValue, Task> selectAsync,
-        Action<int> setActiveIndex,
-        Func<KeyboardEventArgs, Task> handleInputKeyDownAsync,
-        Func<string, Task> handleQueryAsync,
-        Func<Task> toggleAsync,
-        Func<Task> openAsync,
-        Func<Task> closeAsync,
-        Func<TValue?, string> displayValue)
+        string inputId,
+        string buttonId,
+        string optionsId,
+        BhFieldContext? field)
     {
+        Combobox = combobox;
+        State = state;
         IsOpen = isOpen;
         Disabled = disabled;
         Multiple = multiple;
+        Invalid = invalid;
+        Required = required;
         SingleValue = singleValue;
+        HasValue = hasValue;
         MultiValues = multiValues;
-        ActiveIndex = activeIndex;
         Query = query;
         BaseId = baseId;
-        _registerOption = registerOption;
-        _unregisterOption = unregisterOption;
-        _selectAsync = selectAsync;
-        _setActiveIndex = setActiveIndex;
-        _handleInputKeyDownAsync = handleInputKeyDownAsync;
-        _handleQueryAsync = handleQueryAsync;
-        _toggleAsync = toggleAsync;
-        _openAsync = openAsync;
-        _closeAsync = closeAsync;
-        _displayValue = displayValue;
+        InputId = inputId;
+        ButtonId = buttonId;
+        OptionsId = optionsId;
+        Field = field;
     }
 
-    /// <summary>Whether the options panel is currently open.</summary>
+    internal BhCombobox<TValue> Combobox { get; }
+
+    internal BhFieldContext? Field { get; }
+
+    /// <summary>The shared option-list state (highlight, options).</summary>
+    public BhListState<TValue> State { get; }
+
+    /// <summary>Whether the options panel is open.</summary>
     public bool IsOpen { get; }
 
     /// <summary>Whether the combobox is disabled.</summary>
     public bool Disabled { get; }
 
-    /// <summary>Whether the combobox allows multi-select.</summary>
+    /// <summary>Whether multiple options can be selected.</summary>
     public bool Multiple { get; }
 
-    /// <summary>The currently selected value (single-select mode).</summary>
+    /// <summary>Whether the combobox is invalid.</summary>
+    public bool Invalid { get; }
+
+    /// <summary>Whether the combobox is required.</summary>
+    public bool Required { get; }
+
+    /// <summary>The selected value (single-select).</summary>
     public TValue? SingleValue { get; }
 
-    /// <summary>The currently selected values (multi-select mode).</summary>
+    /// <summary>Whether a value is selected (single-select).</summary>
+    public bool HasValue { get; }
+
+    /// <summary>The selected values (multi-select).</summary>
     public IReadOnlyCollection<TValue> MultiValues { get; }
 
-    /// <summary>The currently active (highlighted) option index, or -1 if none.</summary>
-    public int ActiveIndex { get; }
-
-    /// <summary>The current query string typed into the input.</summary>
+    /// <summary>The current query.</summary>
     public string Query { get; }
 
-    /// <summary>The base id used to derive deterministic input/options/option ids.</summary>
+    /// <summary>The base id.</summary>
     public string BaseId { get; }
 
-    /// <summary>The deterministic id of the input element.</summary>
-    public string InputId => $"{BaseId}-input";
+    /// <summary>The id of the input (<c>role="combobox"</c>).</summary>
+    public string InputId { get; }
 
-    /// <summary>The deterministic id of the options panel.</summary>
-    public string OptionsId => $"{BaseId}-options";
+    /// <summary>The id of the optional toggle button.</summary>
+    public string ButtonId { get; }
 
-    /// <summary>Returns the deterministic id for the option at <paramref name="index"/>.</summary>
-    public string GetOptionId(int index) => $"{BaseId}-option-{index}";
+    /// <summary>The id of the options panel (<c>role="listbox"</c>).</summary>
+    public string OptionsId { get; }
 
-    /// <summary>Returns the display string for <paramref name="value"/> using the configured display function.</summary>
-    public string DisplayValue(TValue? value) => _displayValue(value);
+    /// <summary>The id of the highlighted option, or null.</summary>
+    public string? ActiveId => State.ActiveId;
 
-    /// <summary>Returns whether <paramref name="value"/> is currently in the selection.</summary>
-    public bool IsSelected(TValue value)
-    {
-        if (Multiple)
-            return MultiValues.Any(v => EqualityComparer<TValue>.Default.Equals(v, value));
-        return EqualityComparer<TValue>.Default.Equals(SingleValue, value);
-    }
+    /// <summary>Returns the display text for a value.</summary>
+    public string DisplayValue(TValue? value) => Combobox.Display(value);
 
-    internal int RegisterOption(BhComboboxOption<TValue> option) => _registerOption(option);
-    internal void UnregisterOption(BhComboboxOption<TValue> option) => _unregisterOption(option);
-    internal Task SelectAsync(TValue value) => _selectAsync(value);
-    internal void SetActiveIndex(int index) => _setActiveIndex(index);
-    internal Task HandleInputKeyDownAsync(KeyboardEventArgs args) => _handleInputKeyDownAsync(args);
-    internal Task HandleQueryAsync(string query) => _handleQueryAsync(query);
-    internal Task ToggleAsync() => _toggleAsync();
-    internal Task OpenAsync() => _openAsync();
-    internal Task CloseAsync() => _closeAsync();
+    /// <summary>Returns whether <paramref name="value"/> is selected.</summary>
+    public bool IsSelected(TValue value) => State.IsSelected(value);
 
-    /// <summary>Gets the input element reference for anchor positioning.</summary>
-    internal ElementReference InputRef { get; private set; }
+    /// <summary>Closes the options panel.</summary>
+    public Task CloseAsync() => Combobox.CloseAsync();
 
-    /// <summary>Sets the input element reference.</summary>
-    internal void SetInputRef(ElementReference inputRef) => InputRef = inputRef;
+    internal Task SelectAsync(TValue value) => Combobox.SelectAsync(value);
 }
 
-/// <summary>
-/// Render-fragment context exposed by <see cref="BhComboboxButton{TValue}"/>.
-/// </summary>
+/// <summary>Render-fragment context exposed by <see cref="BhComboboxButton{TValue}"/>.</summary>
 public sealed record BhComboboxButtonRenderContext<TValue>
 {
-    /// <summary>Whether the listbox panel is currently open.</summary>
+    /// <summary>Whether the options panel is open.</summary>
     public required bool IsOpen { get; init; }
 
     /// <summary>Whether the combobox is disabled.</summary>
     public required bool Disabled { get; init; }
 }
 
-/// <summary>
-/// Render-fragment context exposed by <see cref="BhComboboxOption{TValue}"/>.
-/// </summary>
+/// <summary>Render-fragment context exposed by <see cref="BhComboboxOption{TValue}"/>.</summary>
 public sealed record BhComboboxOptionRenderContext<TValue>
 {
     /// <summary>The option's value.</summary>
     public required TValue Value { get; init; }
 
-    /// <summary>Whether this option is currently selected.</summary>
+    /// <summary>Whether this option is selected.</summary>
     public required bool IsSelected { get; init; }
 
-    /// <summary>Whether this option is currently the "active" (highlighted) option.</summary>
+    /// <summary>Whether this option is highlighted.</summary>
     public required bool IsActive { get; init; }
 
     /// <summary>Whether this option is disabled.</summary>

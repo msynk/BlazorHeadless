@@ -1,53 +1,61 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless, accessible Popover — a non-modal floating panel that can contain
-/// any content (navigation links, forms, rich overlays).
+/// A headless, accessible Popover — a floating panel that can contain any
+/// content (navigation links, forms, rich overlays), opened by a button.
 ///
-/// <para><b>Key differences from <see cref="BhDialog"/>:</b></para>
+/// <para><b>Key differences from <see cref="BhDialog"/> (when not <see cref="Modal"/>):</b></para>
 /// <list type="bullet">
-///   <item><b>No focus trap</b> — Tab navigates freely inside and out of the panel.</item>
-///   <item><b>No scroll lock</b> — the page remains scrollable.</item>
-///   <item><b>No inert background</b> — the rest of the page stays interactive.</item>
-///   <item><b>Focus moves into the panel</b> on open and returns to the button on close.</item>
+///   <item><b>No focus trap</b> — Tab navigates freely; moving focus out closes the popover.</item>
+///   <item><b>No scroll lock</b> and <b>no page isolation</b> — the rest of the page stays interactive.</item>
+///   <item><b>Focus moves into the panel</b> on open and returns to the button when focus would otherwise be lost.</item>
 /// </list>
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Escape closes</b> from anywhere inside the panel.</item>
-///   <item><b>Click-outside closes</b> via a transparent full-viewport overlay.</item>
+///   <item><b>Dismissal</b> — Escape, pointer-down outside and focus leaving close it (cancellable via <see cref="OnDismissRequest"/>).</item>
+///   <item><b>Anchor positioning</b> and <b>portal</b> on <see cref="BhPopoverPanel"/>; optional <see cref="BhPopoverArrow"/>.</item>
 ///   <item><b>Group coordination</b> — inside an <see cref="BhPopoverGroup"/>, opening one popover closes the others.</item>
-///   <item><b>Uncontrolled and controlled</b> — seed with <see cref="DefaultOpen"/> or drive with <see cref="Open"/> + <see cref="OnOpenChange"/>.</item>
+///   <item><b>Binding</b> — <c>@bind-Open</c>, or uncontrolled with <see cref="DefaultOpen"/>.</item>
 ///   <item><b>Data attributes</b> — <c>data-state="open|closed"</c> on root, button, and panel.</item>
 /// </list>
-///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup.</b></para>
 /// </summary>
 public class BhPopover : BhComponentBase, IDisposable
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
+    private bool _open;
 
     [CascadingParameter]
     private BhPopoverGroupContext? GroupContext { get; set; }
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    /// <summary>Whether the popover is open. Supplying it makes the popover controlled (use <c>@bind-Open</c>).</summary>
+    [Parameter]
+    public bool Open { get; set; }
 
-    /// <summary>Initial open state (uncontrolled). Ignored when <see cref="Open"/> is supplied.</summary>
+    /// <summary>Initial open state when uncontrolled.</summary>
     [Parameter]
     public bool DefaultOpen { get; set; }
 
-    /// <summary>Controlled open state. When non-null, <see cref="OnOpenChange"/> must update this value.</summary>
+    /// <summary>Two-way binding callback for <see cref="Open"/>.</summary>
     [Parameter]
-    public bool? Open { get; set; }
+    public EventCallback<bool> OpenChanged { get; set; }
 
     /// <summary>Fires whenever the open state changes.</summary>
     [Parameter]
     public EventCallback<bool> OnOpenChange { get; set; }
+
+    /// <summary>Raised before the popover is dismissed by Escape, an outside click or focus leaving it. Set <see cref="BhDismissRequest.Cancel"/> to keep it open.</summary>
+    [Parameter]
+    public EventCallback<BhDismissRequest> OnDismissRequest { get; set; }
+
+    /// <summary>
+    /// Modal popovers trap focus, lock scrolling and hide the rest of the page from
+    /// assistive tech (like a dialog anchored to a button). Default: false.
+    /// </summary>
+    [Parameter]
+    public bool Modal { get; set; }
 
     /// <summary>Child content. Should contain an <see cref="BhPopoverButton"/> and an <see cref="BhPopoverPanel"/>.</summary>
     [Parameter]
@@ -55,48 +63,15 @@ public class BhPopover : BhComponentBase, IDisposable
 
     protected override string DefaultTag => "div";
 
-    // ── State ─────────────────────────────────────────────────────────────────
-
-    private bool _isOpen;
-    private bool _wasOpen;
-    private ElementReference _panelRef;
-    private ElementReference _buttonRef;
-    private bool _hasPanelRef;
-    private IJSObjectReference? _previousFocus;
-
-    private bool IsOpen => Open ?? _isOpen;
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private bool IsOpen => IsProvided(nameof(Open)) ? Open : _open;
 
     protected override void OnInitialized()
     {
-        if (Open is null)
-            _isOpen = DefaultOpen;
+        _open = DefaultOpen;
         GroupContext?.Register(this);
     }
 
-    public void Dispose()
-    {
-        GroupContext?.Unregister(this);
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (IsOpen && !_wasOpen && _hasPanelRef)
-        {
-            _previousFocus = await Interop.PopoverFocusPanelAsync(_panelRef);
-            _wasOpen = true;
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            await Interop.PopoverRestoreFocusAsync(_previousFocus);
-            _previousFocus = null;
-            _wasOpen = false;
-            _hasPanelRef = false;
-        }
-    }
-
-    // ── Rendering ────────────────────────────────────────────────────────────
+    public void Dispose() => GroupContext?.Unregister(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
@@ -113,24 +88,8 @@ public class BhPopover : BhComponentBase, IDisposable
                 inner.OpenElement(0, Tag);
                 inner.AddAttribute(10, "id", ComponentId);
                 inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-                if (Ref is not null)
-                    inner.AddElementReferenceCapture(30, Ref);
-
+                inner.AddElementReferenceCapture(30, CaptureElement);
                 inner.AddContent(40, ChildContent);
-
-                // Click-outside overlay — only present while open.
-                if (IsOpen)
-                {
-                    inner.OpenElement(50, "div");
-                    inner.AddAttribute(51, "data-blazor-headless-overlay", true);
-                    inner.AddAttribute(52, "style",
-                        "position:fixed;inset:0;z-index:30;background:transparent;");
-                    inner.AddAttribute(53, "onclick",
-                        EventCallback.Factory.Create<MouseEventArgs>(this, async _ => await CloseAsync()));
-                    inner.CloseElement();
-                }
-
                 inner.CloseElement();
             }));
             closeOuter.CloseComponent();
@@ -145,62 +104,49 @@ public class BhPopover : BhComponentBase, IDisposable
         return attrs;
     }
 
-    // ── Context ───────────────────────────────────────────────────────────────
+    private BhPopoverContext CreateContext() => new(
+        isOpen: IsOpen,
+        modal: Modal,
+        baseId: ComponentId,
+        openAsync: OpenAsync,
+        closeAsync: CloseAsync,
+        toggleAsync: ToggleAsync,
+        dismissAsync: DismissAsync);
 
-    private BhPopoverContext CreateContext()
-    {
-        var ctx = new BhPopoverContext(
-            isOpen: IsOpen,
-            baseId: ComponentId,
-            openAsync: OpenAsync,
-            closeAsync: CloseAsync,
-            toggleAsync: ToggleAsync,
-            registerPanel: RegisterPanelRef,
-            registerButton: RegisterButtonRef);
-        ctx.SetButtonRef(_buttonRef);
-        return ctx;
-    }
-
-    private void RegisterPanelRef(ElementReference panel)
-    {
-        _panelRef = panel;
-        _hasPanelRef = true;
-    }
-
-    private void RegisterButtonRef(ElementReference button) => _buttonRef = button;
-
-    // ── Open / Close / Toggle ─────────────────────────────────────────────────
-
-    internal async Task OpenAsync()
+    /// <summary>Opens the popover.</summary>
+    public async Task OpenAsync()
     {
         if (IsOpen) return;
-        SetOpen(true);
-        // Notify the group so siblings close.
+        await SetOpenAsync(true);
         if (GroupContext is not null)
             await GroupContext.CloseOthersAsync(this);
     }
 
-    internal async Task CloseAsync()
-    {
-        if (!IsOpen) return;
-        SetOpen(false);
-        await Task.CompletedTask;
-    }
+    /// <summary>Closes the popover.</summary>
+    public Task CloseAsync() => IsOpen ? SetOpenAsync(false) : Task.CompletedTask;
 
-    /// <summary>Called by <see cref="BhPopoverGroup"/> to close this popover when a sibling opens.</summary>
+    private Task ToggleAsync() => IsOpen ? CloseAsync() : OpenAsync();
+
     internal Task CloseFromGroupAsync() => CloseAsync();
 
-    private async Task ToggleAsync()
+    private async Task DismissAsync(BhDismissReason reason)
     {
-        if (IsOpen) await CloseAsync();
-        else await OpenAsync();
+        if (!IsOpen) return;
+        if (OnDismissRequest.HasDelegate)
+        {
+            var request = new BhDismissRequest(reason);
+            await OnDismissRequest.InvokeAsync(request);
+            if (request.Cancel) return;
+        }
+        await CloseAsync();
     }
 
-    private void SetOpen(bool value)
+    private async Task SetOpenAsync(bool value)
     {
-        if (Open is null)
-            _isOpen = value;
-        _ = OnOpenChange.InvokeAsync(value);
+        if (!IsProvided(nameof(Open)))
+            _open = value;
+        await OpenChanged.InvokeAsync(value);
+        await OnOpenChange.InvokeAsync(value);
         StateHasChanged();
     }
 }

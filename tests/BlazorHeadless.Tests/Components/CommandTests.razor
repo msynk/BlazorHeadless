@@ -1,0 +1,161 @@
+@inherits TestBase
+
+@code {
+    private readonly List<string> _ran = new();
+
+    private RenderFragment Palette(bool shouldFilter = true) =>
+        @<BhCommand Label="Command menu" ShouldFilter="shouldFilter">
+            <BhCommandInput placeholder="Type a command…" />
+            <BhCommandList>
+                <BhCommandEmpty>No results.</BhCommandEmpty>
+                <BhCommandGroup Heading="Suggestions">
+                    <BhCommandItem OnSelect="@(() => _ran.Add("calendar"))">Calendar</BhCommandItem>
+                    <BhCommandItem Keywords="@(["emoji", "smiley"])" OnSelect="@(() => _ran.Add("emoji"))">Search emoji</BhCommandItem>
+                    <BhCommandItem Disabled="true">Calculator</BhCommandItem>
+                </BhCommandGroup>
+                <BhCommandSeparator />
+                <BhCommandGroup Heading="Settings">
+                    <BhCommandItem OnSelect="@(() => _ran.Add("profile"))">Profile</BhCommandItem>
+                    <BhCommandItem OnSelect="@(() => _ran.Add("billing"))">Billing</BhCommandItem>
+                </BhCommandGroup>
+            </BhCommandList>
+        </BhCommand>;
+
+    private static string[] Options(IRenderedComponent<Bunit.Rendering.ContainerFragment> cut)
+        => cut.FindAll("[role=option]").Select(o => o.TextContent.Trim()).ToArray();
+
+    [Fact]
+    public void Input_controls_the_list_and_highlights_the_first_item()
+    {
+        var cut = Render(Palette());
+        var input = cut.Find("input");
+        Assert.Equal("combobox", input.GetAttribute("role"));
+        Assert.Equal(cut.Find("[role=listbox]").Id, input.GetAttribute("aria-controls"));
+        Assert.Equal("Command menu", input.AccessibleName());
+        Assert.Equal("Command menu", cut.Find("[role=listbox]").AccessibleName());
+        Assert.Equal("Calendar", Text(ActiveOf(input)));
+        Assert.Equal("Suggestions", cut.FindAll("[role=group]")[0].AccessibleName());
+        Assert.DoesNotContain("No results.", cut.Markup);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Arrow_keys_skip_disabled_items_and_cross_groups()
+    {
+        var cut = Render(Palette());
+        cut.Find("input").Press("ArrowDown");
+        Assert.Equal("Search emoji", Text(ActiveOf(cut.Find("input"))));
+        cut.Find("input").Press("ArrowDown");
+        Assert.Equal("Profile", Text(ActiveOf(cut.Find("input"))));
+        cut.Find("input").Press("ArrowUp", alt: true);
+        Assert.Equal("Calendar", Text(ActiveOf(cut.Find("input"))));
+        cut.Find("input").Press("End", ctrl: true);
+        Assert.Equal("Billing", Text(ActiveOf(cut.Find("input"))));
+        cut.Find("input").Press("p", ctrl: true);
+        Assert.Equal("Profile", Text(ActiveOf(cut.Find("input"))));
+    }
+
+    [Fact]
+    public void Typing_filters_by_text_and_keywords_and_hides_empty_groups()
+    {
+        var cut = Render(Palette());
+        cut.Find("input").Input("smiley");
+        Assert.Equal(["Search emoji"], Options(cut));
+        Assert.Equal("Search emoji", Text(ActiveOf(cut.Find("input"))));
+        // The empty "Settings" group and the separator disappear while searching.
+        Assert.True(cut.FindAll("[data-bh-command-group]")[1].HasAttribute("hidden"));
+        Assert.Empty(cut.FindAll("[data-bh-command-separator]"));
+
+        cut.Find("input").Input("zzz");
+        Assert.Empty(Options(cut));
+        Assert.Contains("No results.", cut.Markup);
+        Assert.Null(cut.Find("input").GetAttribute("aria-activedescendant"));
+    }
+
+    [Fact]
+    public void Enter_runs_the_active_command()
+    {
+        var cut = Render(Palette());
+        cut.Find("input").Input("bill");
+        cut.Find("input").Press("Enter");
+        Assert.Equal(["billing"], _ran);
+    }
+
+    [Fact]
+    public async Task Result_counts_are_announced()
+    {
+        var cut = Render(Palette());
+        cut.Find("input").Input("profile");
+        await Announcer.WaitForAsync("1 result");
+        cut.Find("input").Input("");
+        await Announcer.WaitForAsync("5 results");
+    }
+
+    [Fact]
+    public void Filtering_can_be_turned_off_for_server_side_search()
+    {
+        var cut = Render(Palette(shouldFilter: false));
+        cut.Find("input").Input("zzz");
+        Assert.Equal(5, Options(cut).Length);
+    }
+
+    [Fact]
+    public void Pages_nest_and_Backspace_goes_back()
+    {
+        var cut = Render(
+            @<BhCommand Label="Palette" Context="cmd">
+                <BhCommandInput />
+                <BhCommandList>
+                    <BhCommandPage>
+                        <Template Context="c">
+                            <BhCommandItem OnSelect="@(() => c.PushPageAsync("theme"))">Change theme…</BhCommandItem>
+                        </Template>
+                    </BhCommandPage>
+                    <BhCommandPage Name="theme">
+                        <BhCommandItem>Dark</BhCommandItem>
+                        <BhCommandItem>Light</BhCommandItem>
+                    </BhCommandPage>
+                </BhCommandList>
+            </BhCommand>);
+
+        Assert.Equal(["Change theme…"], Options(cut));
+        cut.Find("input").Press("Enter");
+        Assert.Equal(["Dark", "Light"], Options(cut));
+        Assert.Equal("Dark", Text(ActiveOf(cut.Find("input"))));
+        cut.Find("input").Press("Backspace");
+        Assert.Equal(["Change theme…"], Options(cut));
+    }
+
+    [Fact]
+    public void Palette_stays_open_when_an_item_opens_a_page_and_forwards_search()
+    {
+        var searches = new List<string>();
+        var cut = Render(
+            @<Stateful T="bool" Initial="true" Context="s">
+                <BhCommandDialog Open="s.Value" OpenChanged="s.Set" Shortcut="@null" SearchChanged="q => searches.Add(q)">
+                    <BhCommandInput />
+                    <BhCommandList>
+                        <BhCommandPage>
+                            <Template Context="c">
+                                <BhCommandItem OnSelect="@(() => c.PushPageAsync("theme"))">Theme…</BhCommandItem>
+                                <BhCommandItem>Settings</BhCommandItem>
+                            </Template>
+                        </BhCommandPage>
+                        <BhCommandPage Name="theme">
+                            <BhCommandItem>Dark</BhCommandItem>
+                        </BhCommandPage>
+                    </BhCommandList>
+                </BhCommandDialog>
+            </Stateful>);
+
+        cut.Find("input").Input("th");
+        Assert.Equal(["th"], searches);
+        cut.Find("input").Press("Enter");
+        Assert.True(cut.FindComponent<Stateful<bool>>().Instance.Value);
+        Assert.Equal(["Dark"], Options(cut));
+
+        // A final choice closes it.
+        cut.Find("input").Press("Enter");
+        Assert.False(cut.FindComponent<Stateful<bool>>().Instance.Value);
+    }
+}

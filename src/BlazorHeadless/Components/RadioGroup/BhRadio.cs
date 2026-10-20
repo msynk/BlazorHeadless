@@ -5,137 +5,97 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A single radio inside an <see cref="BhRadioGroup"/>. Renders as a native
-/// <c>&lt;button role="radio"&gt;</c> by default and participates in the group's
-/// roving-tabindex keyboard navigation.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Click selects this radio.</item>
-///   <item>Arrow / Space keys delegate to the parent group.</item>
-///   <item>Sets <c>role="radio"</c>, <c>aria-checked</c>, and <c>tabindex</c> (0 when this is the active tab stop, -1 otherwise).</item>
-///   <item>Emits <c>data-state="checked"|"unchecked"</c> and <c>data-disabled</c>.</item>
-///   <item>Render-prop via <see cref="ChildContent"/> exposes <see cref="BhRadioRenderContext"/>.</item>
-/// </list>
+/// A radio in a <see cref="BhRadioGroup"/>. Renders <c>&lt;button role="radio"&gt;</c>
+/// with <c>aria-checked</c> and roving <c>tabindex</c>; emits
+/// <c>data-state="checked|unchecked"</c> and <c>data-disabled</c>. Its text content
+/// is its accessible name (or use <c>aria-label</c> / <c>aria-labelledby</c>).
 /// </summary>
-public class BhRadio : BhComponentBase, IDisposable
+public class BhRadio : BhComponentBase, IBhCollectionItem, IDisposable
 {
     [CascadingParameter]
-    private BhRadioGroupContext GroupContext { get; set; } = default!;
+    private BhRadioGroupContext? GroupContext { get; set; }
 
-    /// <summary>The unique value identifying this radio within the group.</summary>
+    /// <summary>The value this radio represents.</summary>
     [Parameter, EditorRequired]
     public string Value { get; set; } = string.Empty;
 
-    /// <summary>Disables this radio independently of the group's disabled state.</summary>
+    /// <summary>Disables this radio.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhRadioRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhRadioRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
-    private int _index = -1;
-    private ElementReference _elementRef;
+    /// <summary>
+    /// Content that receives the render state (<c>BhRadioRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<BhRadioRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "button";
 
-    /// <summary>Whether this radio is currently selected.</summary>
+    /// <inheritdoc />
+    public string ItemId => ComponentId;
+
+    /// <inheritdoc />
+    public bool IsItemDisabled => Disabled || (GroupContext?.Disabled ?? false);
+
+    /// <inheritdoc />
+    public string? ItemText => Value;
+
+    /// <summary>Whether this radio is checked.</summary>
     public bool IsChecked => GroupContext?.SelectedValue == Value;
 
-    /// <summary>Whether this radio is disabled (own flag or group).</summary>
-    public bool IsRadioDisabled => Disabled || (GroupContext?.Disabled ?? false);
+    protected override void OnInitialized() => GroupContext?.Radios.Register(this);
 
-    private bool IsNativeButton =>
-        Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
-
-    private BhRadioRenderContext RenderContext => new()
-    {
-        IsChecked = IsChecked,
-        Disabled = IsRadioDisabled,
-    };
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
-
-    protected override void OnInitialized()
-    {
-        if (GroupContext is not null)
-            _index = GroupContext.RegisterRadio(this);
-    }
-
-    public void Dispose()
-    {
-        GroupContext?.UnregisterRadio(this);
-    }
-
-    /// <summary>Moves keyboard focus to this radio. Invoked by the group during arrow-key nav.</summary>
-    internal ValueTask FocusAsync() => _elementRef.FocusAsync();
-
-    // ── Rendering ────────────────────────────────────────────────────────────
+    public void Dispose() => GroupContext?.Radios.Unregister(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-
-        builder.AddAttribute(10, "id", ComponentId);
+        builder.AddAttribute(10, "id", ItemId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
         builder.AddAttribute(31, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            _elementRef = e;
-            Ref?.Invoke(e);
-        });
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, new BhRadioRenderContext { IsChecked = IsChecked, Disabled = IsItemDisabled }));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
         attrs["role"] = "radio";
-        attrs["aria-checked"] = IsChecked ? "true" : "false";
+        SetAriaBool(attrs, "aria-checked", IsChecked);
+        attrs["tabindex"] = GroupContext?.Group.IsTabStop(this) == true ? 0 : -1;
+        attrs[BhKeyboard.KeysAttribute] = "ArrowUp ArrowDown ArrowLeft ArrowRight Space Enter";
+        if (GroupContext is not null)
+            attrs["data-bh-item"] = GroupContext.Radios.Key;
 
-        // Roving tabindex: only the active tab stop is in the document tab order.
-        var isTabStop = GroupContext?.IsTabStop(_index) ?? false;
-        attrs["tabindex"] = isTabStop ? 0 : -1;
-
-        if (IsNativeButton)
+        if (Tag.Equals("button", StringComparison.OrdinalIgnoreCase))
         {
             attrs["type"] = "button";
-            if (IsRadioDisabled)
-                attrs["disabled"] = true;
+            if (IsItemDisabled) attrs["disabled"] = true;
         }
-        else
+        else if (IsItemDisabled)
         {
-            if (IsRadioDisabled)
-                attrs["aria-disabled"] = "true";
+            attrs["aria-disabled"] = "true";
         }
 
         SetDataState(attrs, IsChecked, "checked", "unchecked");
-        SetDataFlag(attrs, "disabled", IsRadioDisabled);
-
+        SetDataFlag(attrs, "disabled", IsItemDisabled);
         return attrs;
     }
 
-    // ── Event handling ───────────────────────────────────────────────────────
-
     private Task HandleClick(MouseEventArgs _)
-    {
-        if (IsRadioDisabled) return Task.CompletedTask;
-        return GroupContext?.SelectAsync(Value) ?? Task.CompletedTask;
-    }
+        => IsItemDisabled || GroupContext is null ? Task.CompletedTask : GroupContext.SelectAsync(Value);
 
-    private Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        return GroupContext?.HandleKeyDownAsync(_index, args) ?? Task.CompletedTask;
-    }
+    private Task HandleKeyDown(KeyboardEventArgs e)
+        => GroupContext is null || e.Key == "Enter" ? Task.CompletedTask : GroupContext.Group.HandleKeyDownAsync(this, e);
 }

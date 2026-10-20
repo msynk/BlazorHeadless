@@ -1,0 +1,120 @@
+@inherits TestBase
+
+@code {
+    [Fact]
+    public void Thumb_exposes_value_range_and_text()
+    {
+        var cut = Render(
+            @<BhSlider DefaultValue="40" Min="0" Max="200" Step="10" ValueText="@(v => $"{v} px")">
+                <BhSliderTrack><BhSliderRange /></BhSliderTrack>
+                <BhSliderThumb aria-label="Width" />
+            </BhSlider>);
+
+        var thumb = cut.Find("[role=slider]");
+        Assert.Equal("0", thumb.GetAttribute("aria-valuemin"));
+        Assert.Equal("200", thumb.GetAttribute("aria-valuemax"));
+        Assert.Equal("40", thumb.GetAttribute("aria-valuenow"));
+        Assert.Equal("40 px", thumb.GetAttribute("aria-valuetext"));
+        Assert.Equal("horizontal", thumb.GetAttribute("aria-orientation"));
+        Assert.Equal("0", thumb.GetAttribute("tabindex"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Keyboard_steps_clamps_and_jumps()
+    {
+        var commits = new List<double>();
+        var cut = Render(
+            @<BhSlider DefaultValue="50" Step="5" LargeStep="20" OnValueCommit="v => commits.Add(v[0])">
+                <BhSliderTrack><BhSliderRange /></BhSliderTrack>
+                <BhSliderThumb aria-label="Volume" />
+            </BhSlider>);
+
+        string Now() => cut.Find("[role=slider]").GetAttribute("aria-valuenow")!;
+        cut.Find("[role=slider]").Press("ArrowRight");
+        Assert.Equal("55", Now());
+        cut.Find("[role=slider]").Press("ArrowDown");
+        Assert.Equal("50", Now());
+        cut.Find("[role=slider]").Press("PageUp");
+        Assert.Equal("70", Now());
+        cut.Find("[role=slider]").Press("ArrowUp", shift: true);
+        Assert.Equal("90", Now());
+        cut.Find("[role=slider]").Press("PageUp");
+        Assert.Equal("100", Now()); // clamped
+        cut.Find("[role=slider]").Press("Home");
+        Assert.Equal("0", Now());
+        cut.Find("[role=slider]").Press("End");
+        Assert.Equal("100", Now());
+        Assert.Equal(100, commits[^1]);
+    }
+
+    [Fact]
+    public void Range_part_follows_the_value()
+    {
+        var cut = Render(
+            @<BhSlider DefaultValue="20">
+                <BhSliderTrack><BhSliderRange /></BhSliderTrack>
+                <BhSliderThumb aria-label="Level" />
+            </BhSlider>);
+
+        string RangeStyle() => cut.Find("[role=slider]").ParentElement!.FirstElementChild!.FirstElementChild!.GetAttribute("style")!;
+        Assert.Contains("right:80%", RangeStyle());
+        cut.Find("[role=slider]").Press("End");
+        Assert.Contains("right:0%", RangeStyle());
+    }
+
+    [Fact]
+    public void Rtl_reverses_left_and_right()
+    {
+        var cut = Render(
+            @<BhSlider DefaultValue="50" Dir="BhDirection.Rtl">
+                <BhSliderThumb aria-label="Balance" />
+            </BhSlider>);
+        cut.Find("[role=slider]").Press("ArrowLeft");
+        Assert.Equal("51", cut.Find("[role=slider]").GetAttribute("aria-valuenow"));
+    }
+
+    [Fact]
+    public void Range_slider_keeps_thumbs_ordered()
+    {
+        IReadOnlyList<double>? values = null;
+        var cut = Render(
+            @<BhSlider DefaultValues="@(new double[] { 20, 30 })" MinStepsBetweenThumbs="5" ValuesChanged="v => values = v">
+                <BhSliderThumb aria-label="Minimum price" />
+                <BhSliderThumb aria-label="Maximum price" />
+            </BhSlider>);
+
+        var thumbs = cut.FindAll("[role=slider]");
+        Assert.Equal(2, thumbs.Count);
+        thumbs[0].Press("PageUp");
+        // The lower thumb can't pass the upper one minus the minimum gap.
+        Assert.Equal(25, values![0]);
+        Assert.Equal(30, values[1]);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Disabled_slider_ignores_keys_and_leaves_the_tab_order()
+    {
+        var cut = Render(
+            @<BhSlider DefaultValue="10" Disabled="true">
+                <BhSliderThumb aria-label="Speed" />
+            </BhSlider>);
+        cut.Find("[role=slider]").Press("ArrowRight");
+        Assert.Equal("10", cut.Find("[role=slider]").GetAttribute("aria-valuenow"));
+        Assert.Equal("-1", cut.Find("[role=slider]").GetAttribute("tabindex"));
+        Assert.Equal("true", cut.Find("[role=slider]").GetAttribute("aria-disabled"));
+    }
+
+    [Fact]
+    public void Slider_in_a_field_is_labelled()
+    {
+        var cut = Render(
+            @<BhField>
+                <BhLabel>Brightness</BhLabel>
+                <BhSlider DefaultValue="3" Max="10"><BhSliderThumb /></BhSlider>
+            </BhField>);
+        Assert.Equal("Brightness", cut.Find("[role=slider]").AccessibleName());
+        cut.ShouldBeAccessible();
+    }
+}

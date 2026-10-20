@@ -1,0 +1,159 @@
+@inherits TestBase
+
+@code {
+    [Fact]
+    public void Toggle_reports_aria_pressed()
+    {
+        var pressed = new List<bool>();
+        var cut = Render(@<BhToggle aria-label="Bold" OnPressedChange="p => pressed.Add(p)">B</BhToggle>);
+        var button = cut.Find("button");
+        Assert.Equal("false", button.GetAttribute("aria-pressed"));
+        button.Click();
+        Assert.Equal("true", cut.Find("button").GetAttribute("aria-pressed"));
+        Assert.Equal("on", cut.Find("button").GetAttribute("data-state"));
+        Assert.Equal(new[] { true }, pressed);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Single_toggle_group_is_a_radio_group_with_roving_focus()
+    {
+        var cut = Render(
+            @<BhToggleGroup Type="BhToggleGroupType.Single" DefaultValue="center" aria-label="Alignment">
+                <BhToggleGroupItem Value="left" aria-label="Left" />
+                <BhToggleGroupItem Value="center" aria-label="Center" />
+                <BhToggleGroupItem Value="right" aria-label="Right" />
+            </BhToggleGroup>);
+
+        Assert.Equal("radiogroup", cut.Find("[aria-label=Alignment]").GetAttribute("role"));
+        var items = cut.FindAll("[role=radio]");
+        Assert.Equal("true", items[1].GetAttribute("aria-checked"));
+        // The pressed item is the single tab stop.
+        Assert.Equal(new[] { "-1", "0", "-1" }, items.Select(i => i.GetAttribute("tabindex")));
+
+        items[1].Press("ArrowRight");
+        Assert.Equal(cut.FindAll("[role=radio]")[2].Id, this.LastFocusRequest());
+        Assert.Equal("0", cut.FindAll("[role=radio]")[2].GetAttribute("tabindex"));
+
+        // Parameterless items still follow the group state.
+        cut.FindAll("[role=radio]")[0].Click();
+        Assert.Equal(new[] { "true", "false", "false" }, cut.FindAll("[role=radio]").Select(i => i.GetAttribute("aria-checked")));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Single_toggle_group_can_forbid_emptying()
+    {
+        var cut = Render(
+            @<BhToggleGroup Type="BhToggleGroupType.Single" DefaultValue="a" AllowEmpty="false" aria-label="Mode">
+                <BhToggleGroupItem Value="a">A</BhToggleGroupItem>
+                <BhToggleGroupItem Value="b">B</BhToggleGroupItem>
+            </BhToggleGroup>);
+        cut.FindAll("[role=radio]")[0].Click();
+        Assert.Equal("true", cut.FindAll("[role=radio]")[0].GetAttribute("aria-checked"));
+    }
+
+    [Fact]
+    public void Single_toggle_group_allows_emptying_by_default()
+    {
+        var cut = Render(
+            @<BhToggleGroup Type="BhToggleGroupType.Single" DefaultValue="a" aria-label="Mode">
+                <BhToggleGroupItem Value="a">A</BhToggleGroupItem>
+                <BhToggleGroupItem Value="b">B</BhToggleGroupItem>
+            </BhToggleGroup>);
+        cut.FindAll("[role=radio]")[0].Click();
+        Assert.All(cut.FindAll("[role=radio]"), r => Assert.Equal("false", r.GetAttribute("aria-checked")));
+        // With nothing pressed the first item is the tab stop.
+        Assert.Equal("0", cut.FindAll("[role=radio]")[0].GetAttribute("tabindex"));
+    }
+
+    [Fact]
+    public void Multiple_toggle_group_uses_pressed_buttons()
+    {
+        IReadOnlyCollection<string>? values = null;
+        var cut = Render(
+            @<BhToggleGroup Type="BhToggleGroupType.Multiple" ValuesChanged="v => values = v" aria-label="Style">
+                <BhToggleGroupItem Value="bold">B</BhToggleGroupItem>
+                <BhToggleGroupItem Value="italic">I</BhToggleGroupItem>
+            </BhToggleGroup>);
+        Assert.Equal("group", cut.Find("[aria-label=Style]").GetAttribute("role"));
+        cut.FindAll("button")[0].Click();
+        cut.FindAll("button")[1].Click();
+        Assert.Equal(["bold", "italic"], values!.OrderBy(v => v));
+        Assert.All(cut.FindAll("button"), b => Assert.Equal("true", b.GetAttribute("aria-pressed")));
+    }
+
+    [Fact]
+    public void Toolbar_is_one_tab_stop_with_arrow_navigation()
+    {
+        var cut = Render(
+            @<BhToolbar aria-label="Formatting">
+                <BhToolbarButton>Cut</BhToolbarButton>
+                <BhToolbarButton Disabled="true">Paste</BhToolbarButton>
+                <BhToolbarSeparator />
+                <BhToolbarLink href="/help">Help</BhToolbarLink>
+            </BhToolbar>);
+
+        var toolbar = cut.Find("[role=toolbar]");
+        Assert.Equal("horizontal", toolbar.GetAttribute("aria-orientation"));
+        var stops = cut.TabSequence();
+        Assert.Single(stops);
+        Assert.Equal("Cut", stops[0].Element.TextContent);
+
+        // Disabled toolbar items stay focusable so they remain discoverable (APG).
+        cut.FindAll("button")[0].Press("ArrowRight");
+        Assert.Equal(cut.FindAll("button")[1].Id, this.LastFocusRequest());
+        Assert.Equal("true", cut.FindAll("button")[1].GetAttribute("aria-disabled"));
+        cut.FindAll("button")[1].Press("ArrowRight");
+        Assert.Equal(cut.Find("a").Id, this.LastFocusRequest());
+        cut.Find("a").Press("ArrowRight"); // wraps
+        Assert.Equal(cut.FindAll("button")[0].Id, this.LastFocusRequest());
+        cut.FindAll("button")[0].Press("End");
+        Assert.Equal(cut.Find("a").Id, this.LastFocusRequest());
+        Assert.Equal("vertical", cut.Find("[role=separator]").GetAttribute("aria-orientation"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Toggle_group_inside_a_toolbar_shares_its_tab_stop()
+    {
+        var cut = Render(
+            @<BhToolbar aria-label="Formatting">
+                <BhToggleGroup Type="BhToggleGroupType.Multiple" aria-label="Text style">
+                    <BhToggleGroupItem Value="bold">B</BhToggleGroupItem>
+                    <BhToggleGroupItem Value="italic">I</BhToggleGroupItem>
+                </BhToggleGroup>
+                <BhToolbarButton>Share</BhToolbarButton>
+            </BhToolbar>);
+        // One tab stop for the whole toolbar (document order needs the browser, so not asserted here).
+        Assert.Single(cut.TabSequence());
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Single_group_selects_on_arrow_keys_but_not_inside_a_toolbar()
+    {
+        var cut = Render(
+            @<div>
+                <BhToggleGroup Type="BhToggleGroupType.Single" DefaultValue="left" aria-label="Standalone">
+                    <BhToggleGroupItem Value="left">L</BhToggleGroupItem>
+                    <BhToggleGroupItem Value="right">R</BhToggleGroupItem>
+                </BhToggleGroup>
+                <BhToolbar aria-label="Tools">
+                    <BhToggleGroup Type="BhToggleGroupType.Single" DefaultValue="left" aria-label="In toolbar">
+                        <BhToggleGroupItem Value="left">L</BhToggleGroupItem>
+                        <BhToggleGroupItem Value="right">R</BhToggleGroupItem>
+                    </BhToggleGroup>
+                </BhToolbar>
+            </div>);
+
+        // Standalone: a radio group — selection follows focus (APG).
+        cut.Find("[aria-label=Standalone] [role=radio]").Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[aria-label=Standalone] [role=radio]")[1].GetAttribute("aria-checked"));
+
+        // In a toolbar: arrows only move focus; Space / Enter select (APG toolbar).
+        cut.Find("[aria-label='In toolbar'] [role=radio]").Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[aria-label='In toolbar'] [role=radio]")[0].GetAttribute("aria-checked"));
+        Assert.Equal("false", cut.FindAll("[aria-label='In toolbar'] [role=radio]")[1].GetAttribute("aria-checked"));
+    }
+}

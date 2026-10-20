@@ -1,0 +1,138 @@
+@inherits TestBase
+
+@code {
+    private RenderFragment Tabs(bool manual = false, bool vertical = false) =>
+        @<BhTabGroup Manual="manual" Vertical="vertical">
+            <BhTabList aria-label="Account">
+                <BhTab>Profile</BhTab>
+                <BhTab Disabled="true">Billing</BhTab>
+                <BhTab>Security</BhTab>
+            </BhTabList>
+            <BhTabPanels>
+                <BhTabPanel>Profile panel</BhTabPanel>
+                <BhTabPanel>Billing panel</BhTabPanel>
+                <BhTabPanel>Security panel</BhTabPanel>
+            </BhTabPanels>
+        </BhTabGroup>;
+
+    [Fact]
+    public void Tabs_and_panels_are_wired_to_each_other()
+    {
+        var cut = Render(Tabs());
+        var tabs = cut.FindAll("[role=tab]");
+        var panels = cut.FindAll("[role=tabpanel]");
+
+        Assert.Equal("horizontal", cut.Find("[role=tablist]").GetAttribute("aria-orientation"));
+        for (var i = 0; i < 3; i++)
+        {
+            Assert.Equal(panels[i].Id, tabs[i].GetAttribute("aria-controls"));
+            Assert.Equal(tabs[i].Id, panels[i].GetAttribute("aria-labelledby"));
+        }
+        Assert.Equal("true", tabs[0].GetAttribute("aria-selected"));
+        Assert.Equal("0", tabs[0].GetAttribute("tabindex"));
+        Assert.Equal("-1", tabs[2].GetAttribute("tabindex"));
+        Assert.False(panels[0].HasAttribute("hidden"));
+        Assert.True(panels[2].HasAttribute("hidden"));
+        Assert.Equal("Profile", panels[0].AccessibleName());
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Arrow_keys_select_automatically_and_skip_disabled_tabs()
+    {
+        var cut = Render(Tabs());
+        cut.FindAll("[role=tab]")[0].Press("ArrowRight");
+
+        var tabs = cut.FindAll("[role=tab]");
+        Assert.Equal("true", tabs[2].GetAttribute("aria-selected"));
+        Assert.Equal("0", tabs[2].GetAttribute("tabindex"));
+        Assert.Equal("-1", tabs[0].GetAttribute("tabindex"));
+        Assert.False(cut.FindAll("[role=tabpanel]")[2].HasAttribute("hidden"));
+
+        // Wraps around.
+        tabs[2].Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[0].GetAttribute("aria-selected"));
+        cut.FindAll("[role=tab]")[0].Press("End");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[2].GetAttribute("aria-selected"));
+        cut.FindAll("[role=tab]")[2].Press("Home");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[0].GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Manual_activation_requires_Enter_or_Space()
+    {
+        var cut = Render(Tabs(manual: true));
+        cut.FindAll("[role=tab]")[0].Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[0].GetAttribute("aria-selected"));
+
+        cut.FindAll("[role=tab]")[2].Press("Enter");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[2].GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Vertical_tabs_use_up_and_down()
+    {
+        var cut = Render(Tabs(vertical: true));
+        Assert.Equal("vertical", cut.Find("[role=tablist]").GetAttribute("aria-orientation"));
+        cut.FindAll("[role=tab]")[0].Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[0].GetAttribute("aria-selected"));
+        cut.FindAll("[role=tab]")[0].Press("ArrowDown");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[2].GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Value_mode_binds_by_value_and_clicking_selects()
+    {
+        var cut = Render(
+            @<Stateful T="string" Initial="@("b")" Context="s">
+                <BhTabGroup Value="@s.Value" ValueChanged="s.Set">
+                    <BhTabList aria-label="Letters">
+                        <BhTab Value="a">A</BhTab>
+                        <BhTab Value="b">B</BhTab>
+                    </BhTabList>
+                    <BhTabPanel Value="a">Panel A</BhTabPanel>
+                    <BhTabPanel Value="b">Panel B</BhTabPanel>
+                </BhTabGroup>
+            </Stateful>);
+
+        Assert.Equal("true", cut.FindAll("[role=tab]")[1].GetAttribute("aria-selected"));
+        cut.FindAll("[role=tab]")[0].Click();
+        Assert.Equal("a", cut.FindComponent<Stateful<string>>().Instance.Value);
+        Assert.Equal("true", cut.FindAll("[role=tab]")[0].GetAttribute("aria-selected"));
+        Assert.False(cut.FindAll("[role=tabpanel]")[0].HasAttribute("hidden"));
+    }
+
+    [Fact]
+    public void Unmounted_panels_are_not_referenced()
+    {
+        var cut = Render(
+            @<BhTabGroup>
+                <BhTabList aria-label="Sections">
+                    <BhTab>One</BhTab>
+                    <BhTab>Two</BhTab>
+                </BhTabList>
+                <BhTabPanel Unmount="true">First</BhTabPanel>
+                <BhTabPanel Unmount="true">Second</BhTabPanel>
+            </BhTabGroup>);
+
+        Assert.Single(cut.FindAll("[role=tabpanel]"));
+        Assert.Null(cut.FindAll("[role=tab]")[1].GetAttribute("aria-controls"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Rtl_mirrors_the_arrow_keys()
+    {
+        var cut = Render(
+            @<BhTabGroup Dir="BhDirection.Rtl">
+                <BhTabList aria-label="Sections">
+                    <BhTab>One</BhTab>
+                    <BhTab>Two</BhTab>
+                </BhTabList>
+                <BhTabPanel>First</BhTabPanel>
+                <BhTabPanel>Second</BhTabPanel>
+            </BhTabGroup>);
+        cut.FindAll("[role=tab]")[0].Press("ArrowLeft");
+        Assert.Equal("true", cut.FindAll("[role=tab]")[1].GetAttribute("aria-selected"));
+    }
+}

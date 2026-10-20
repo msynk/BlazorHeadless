@@ -1,55 +1,25 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-
 namespace BlazorHeadless;
 
 /// <summary>
-/// Cascading context provided by <see cref="BhMenu"/> to its descendant menu parts
-/// (<see cref="BhMenuButton"/>, <see cref="BhMenuItems"/>, <see cref="BhMenuItem"/>).
-/// Carries open / active state plus the registration and keyboard delegates the
-/// parts use to coordinate.
+/// Cascading context provided by <see cref="BhMenu"/> to its button and panel.
+/// Carries open state and the ids used for ARIA wiring.
 /// </summary>
-public sealed class BhMenuContext
+public sealed class BhMenuContext : IBhCloseContext
 {
-    private readonly Func<BhMenuItem, int> _registerItem;
-    private readonly Action<BhMenuItem> _unregisterItem;
-    private readonly Action<int> _setActiveIndex;
-    private readonly Func<int, Task> _activateItemAsync;
-    private readonly Func<KeyboardEventArgs, Task> _handleButtonKeyDownAsync;
-    private readonly Func<KeyboardEventArgs, Task> _handleMenuKeyDownAsync;
-    private readonly Func<Task> _toggleAsync;
-    private readonly Func<Task> _closeAsync;
-    private readonly Action<ElementReference> _registerButton;
-
-    internal BhMenuContext(
-        bool isOpen,
-        bool disabled,
-        int activeIndex,
-        string baseId,
-        Func<BhMenuItem, int> registerItem,
-        Action<BhMenuItem> unregisterItem,
-        Action<int> setActiveIndex,
-        Func<int, Task> activateItemAsync,
-        Func<KeyboardEventArgs, Task> handleButtonKeyDownAsync,
-        Func<KeyboardEventArgs, Task> handleMenuKeyDownAsync,
-        Func<Task> toggleAsync,
-        Func<Task> closeAsync,
-        Action<ElementReference> registerButton)
+    internal BhMenuContext(BhMenu menu, bool isOpen, bool disabled, string baseId, string buttonId, string itemsId, BhMenubarContext? menubar)
     {
+        Menu = menu;
         IsOpen = isOpen;
         Disabled = disabled;
-        ActiveIndex = activeIndex;
         BaseId = baseId;
-        _registerItem = registerItem;
-        _unregisterItem = unregisterItem;
-        _setActiveIndex = setActiveIndex;
-        _activateItemAsync = activateItemAsync;
-        _handleButtonKeyDownAsync = handleButtonKeyDownAsync;
-        _handleMenuKeyDownAsync = handleMenuKeyDownAsync;
-        _toggleAsync = toggleAsync;
-        _closeAsync = closeAsync;
-        _registerButton = registerButton;
+        ButtonId = buttonId;
+        ItemsId = itemsId;
+        Menubar = menubar;
     }
+
+    internal BhMenu Menu { get; }
+
+    internal BhMenubarContext? Menubar { get; }
 
     /// <summary>Whether the menu is currently open.</summary>
     public bool IsOpen { get; }
@@ -57,36 +27,22 @@ public sealed class BhMenuContext
     /// <summary>Whether the menu is disabled.</summary>
     public bool Disabled { get; }
 
-    /// <summary>The index of the currently "active" (highlighted) item, or -1 if none.</summary>
-    public int ActiveIndex { get; }
-
-    /// <summary>Base id used to derive button, panel, and per-item ids.</summary>
+    /// <summary>Base id used to derive button and panel ids.</summary>
     public string BaseId { get; }
 
     /// <summary>Deterministic id of the menu trigger button.</summary>
-    public string ButtonId => $"{BaseId}-button";
+    public string ButtonId { get; }
 
     /// <summary>Deterministic id of the menu items panel.</summary>
-    public string ItemsId => $"{BaseId}-items";
+    public string ItemsId { get; }
 
-    /// <summary>Returns the deterministic id for the menu item at <paramref name="index"/>.</summary>
-    public string GetItemId(int index) => $"{BaseId}-item-{index}";
+    /// <summary>Opens the menu.</summary>
+    public Task OpenAsync(BhMenuFocus focus = BhMenuFocus.Container) => Menu.OpenAsync(focus);
 
-    internal int RegisterItem(BhMenuItem item) => _registerItem(item);
-    internal void UnregisterItem(BhMenuItem item) => _unregisterItem(item);
-    internal void SetActiveIndex(int index) => _setActiveIndex(index);
-    internal Task ActivateItemAsync(int index) => _activateItemAsync(index);
-    internal Task HandleButtonKeyDownAsync(KeyboardEventArgs args) => _handleButtonKeyDownAsync(args);
-    internal Task HandleMenuKeyDownAsync(KeyboardEventArgs args) => _handleMenuKeyDownAsync(args);
-    internal Task ToggleAsync() => _toggleAsync();
-    internal Task CloseAsync() => _closeAsync();
-    internal void RegisterButton(ElementReference button) => _registerButton(button);
+    /// <summary>Closes the menu.</summary>
+    public Task CloseAsync() => Menu.CloseAsync();
 
-    /// <summary>Gets the button element reference for anchor positioning.</summary>
-    internal ElementReference ButtonRef { get; private set; }
-
-    /// <summary>Sets the button element reference (called during context creation).</summary>
-    internal void SetButtonRef(ElementReference buttonRef) => ButtonRef = buttonRef;
+    internal Task ToggleAsync(BhMenuFocus focus) => Menu.ToggleAsync(focus);
 }
 
 /// <summary>Render-fragment context exposed by <see cref="BhMenuButton"/>.</summary>
@@ -99,12 +55,18 @@ public sealed record BhMenuButtonRenderContext
     public required bool Disabled { get; init; }
 }
 
-/// <summary>Render-fragment context exposed by <see cref="BhMenuItem"/>.</summary>
+/// <summary>Render-fragment context exposed by menu items.</summary>
 public sealed record BhMenuItemRenderContext
 {
-    /// <summary>Whether this item is currently the "active" (highlighted) item.</summary>
+    /// <summary>Whether this item is currently the highlighted item.</summary>
     public required bool IsActive { get; init; }
 
     /// <summary>Whether this item is disabled.</summary>
     public required bool Disabled { get; init; }
+
+    /// <summary>Whether the item is checked (checkbox and radio items; false otherwise).</summary>
+    public bool Checked { get; init; }
+
+    /// <summary>Whether the item's submenu is open (submenu triggers; false otherwise).</summary>
+    public bool IsOpen { get; init; }
 }

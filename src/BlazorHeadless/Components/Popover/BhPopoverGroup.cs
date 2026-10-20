@@ -5,7 +5,8 @@ namespace BlazorHeadless;
 
 /// <summary>
 /// An optional wrapper that groups multiple <see cref="BhPopover"/> components so
-/// that opening one automatically closes the others (mutual exclusion).
+/// that opening one automatically closes the others (mutual exclusion) — the
+/// typical behaviour of a navigation bar with flyout menus.
 ///
 /// <para>
 /// When popovers are not inside a group they operate independently — any number
@@ -15,6 +16,7 @@ namespace BlazorHeadless;
 public class BhPopoverGroup : BhComponentBase
 {
     private readonly List<BhPopover> _popovers = new();
+    private BhPopoverGroupContext? _context;
 
     /// <summary>Child content. Should contain one or more <see cref="BhPopover"/> components.</summary>
     [Parameter]
@@ -24,29 +26,27 @@ public class BhPopoverGroup : BhComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        _context ??= new BhPopoverGroupContext(
+            register: p => { if (!_popovers.Contains(p)) _popovers.Add(p); },
+            unregister: p => _popovers.Remove(p),
+            closeOthersAsync: async except =>
+            {
+                foreach (var p in _popovers.Where(p => p != except).ToArray())
+                    await p.CloseFromGroupAsync();
+            });
+
         builder.OpenComponent<CascadingValue<BhPopoverGroupContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateGroupContext());
-        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+        builder.AddComponentParameter(1, "Value", _context);
+        builder.AddComponentParameter(2, "IsFixed", true);
+        builder.AddComponentParameter(3, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
             inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
         builder.CloseComponent();
     }
-
-    private BhPopoverGroupContext CreateGroupContext() => new(
-        register: p => { if (!_popovers.Contains(p)) _popovers.Add(p); },
-        unregister: p => _popovers.Remove(p),
-        closeOthersAsync: async except =>
-        {
-            foreach (var p in _popovers.Where(p => p != except))
-                await p.CloseFromGroupAsync();
-        });
 }

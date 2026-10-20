@@ -5,101 +5,143 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The trigger button that opens the listbox. Renders as
-/// <c>&lt;button role="combobox"&gt;</c> with the proper ARIA wiring
-/// (<c>aria-haspopup</c>, <c>aria-expanded</c>, <c>aria-controls</c>,
-/// <c>aria-activedescendant</c>).
+/// The trigger of a <see cref="BhListbox{TValue}"/>. Renders as
+/// <c>&lt;button role="combobox"&gt;</c> with <c>aria-haspopup="listbox"</c>,
+/// <c>aria-expanded</c>, <c>aria-controls</c> and <c>aria-activedescendant</c>. Keeps
+/// focus while the panel is open and handles all keyboard interaction.
 /// </summary>
-/// <typeparam name="TValue">The option value type. Must match the parent <see cref="BhListbox{TValue}"/>.</typeparam>
-public class BhListboxButton<TValue> : BhComponentBase
+/// <typeparam name="TValue">The option value type.</typeparam>
+public class BhListboxButton<TValue> : BhComponentBase, IDisposable
 {
     [CascadingParameter]
-    private BhListboxContext<TValue> BhListboxContext { get; set; } = default!;
+    private BhListboxContext<TValue>? ListboxContext { get; set; }
+
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Content template receiving <see cref="BhListboxButtonRenderContext{TValue}"/>
-    /// for state-driven rendering (chevron icons, badge counts, etc.).
+    /// Content that receives the render state (<c>BhListboxButtonRenderContext&lt;TValue&gt;</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public RenderFragment<BhListboxButtonRenderContext<TValue>>? ChildContent { get; set; }
+    public RenderFragment<BhListboxButtonRenderContext<TValue>>? Template { get; set; }
 
-    private ElementReference _elementRef;
+    /// <summary>
+    /// Text shown when nothing is selected and neither <see cref="ChildContent"/> nor
+    /// <see cref="Template"/> is supplied (the button then shows the selected option text).
+    /// </summary>
+    [Parameter]
+    public string? Placeholder { get; set; }
 
     protected override string DefaultTag => "button";
 
-    private BhListboxButtonRenderContext<TValue> RenderContext => new()
+    private bool IsOpen => ListboxContext?.IsOpen ?? false;
+    private bool IsDisabled => ListboxContext?.Disabled ?? false;
+
+    protected override void OnInitialized()
     {
-        IsOpen = BhListboxContext?.IsOpen ?? false,
-        Disabled = BhListboxContext?.Disabled ?? false,
-        Value = BhListboxContext is null ? default : BhListboxContext.SingleValue,
-        Values = BhListboxContext?.MultiValues ?? Array.Empty<TValue>(),
-    };
+        if (ListboxContext is not null) ListboxContext.Listbox.Button = this;
+    }
+
+    internal void Refresh() => StateHasChanged();
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhListboxContext?.ButtonId ?? ComponentId);
+        builder.AddAttribute(10, "id", ListboxContext?.ButtonId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
         builder.AddAttribute(31, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
+        // While open the button owns every key (incl. Escape); don't let an
+        // enclosing popover / dialog react to them as well.
+        builder.AddEventStopPropagationAttribute(32, "onkeydown", IsOpen);
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is null && ChildContent is not null)
         {
-            _elementRef = e;
-            BhListboxContext?.RegisterButton(e);
-            Ref?.Invoke(e);
-        });
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+            builder.AddContent(50, ChildContent);
+        }
+        else if (ListboxContext is not null)
+        {
+            var text = string.Join(", ", ListboxContext.State.SelectedTexts());
+            if (Template is not null)
+            {
+                builder.AddContent(51, Template(new BhListboxButtonRenderContext<TValue>
+                {
+                    IsOpen = IsOpen,
+                    Disabled = IsDisabled,
+                    Value = ListboxContext.SingleValue,
+                    Values = ListboxContext.MultiValues,
+                    Text = text.Length == 0 ? null : text,
+                }));
+            }
+            else
+            {
+                // No content supplied: show the selection, or the placeholder.
+                builder.AddContent(52, text.Length == 0 ? Placeholder : text);
+            }
+        }
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
+        var isButton = Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
 
-        var isOpen = BhListboxContext?.IsOpen ?? false;
-        var isDisabled = BhListboxContext?.Disabled ?? false;
+        if (isButton) attrs["type"] = "button";
+        else attrs["tabindex"] = IsDisabled ? -1 : 0;
 
-        attrs["type"] = "button";
         attrs["role"] = "combobox";
         attrs["aria-haspopup"] = "listbox";
-        attrs["aria-expanded"] = isOpen ? "true" : "false";
+        SetAriaBool(attrs, "aria-expanded", IsOpen);
 
-        if (BhListboxContext is not null)
+        if (ListboxContext is not null)
         {
-            attrs["aria-controls"] = BhListboxContext.OptionsId;
-
-            if (isOpen && BhListboxContext.ActiveIndex >= 0)
-                attrs["aria-activedescendant"] = BhListboxContext.GetOptionId(BhListboxContext.ActiveIndex);
+            if (IsOpen)
+            {
+                attrs["aria-controls"] = ListboxContext.OptionsId;
+                if (ListboxContext.ActiveId is { } active)
+                    attrs["aria-activedescendant"] = active;
+            }
+            if (ListboxContext.Field?.LabelledBy is { } label)
+                attrs["aria-labelledby"] = label;
+            if (ListboxContext.Field?.DescribedBy is { } describedBy)
+                attrs["aria-describedby"] = describedBy;
+            if (ListboxContext.Invalid)
+                attrs["aria-invalid"] = "true";
+            if (ListboxContext.Required)
+                attrs["aria-required"] = "true";
+            SetDataFlag(attrs, "placeholder", ListboxContext.Multiple ? ListboxContext.MultiValues.Count == 0 : !ListboxContext.HasValue);
+            SetDataFlag(attrs, "invalid", ListboxContext.Invalid);
         }
 
-        if (isDisabled)
-            attrs["disabled"] = true;
+        attrs[BhKeyboard.KeysAttribute] = IsOpen
+            ? "ArrowDown ArrowUp Home End PageUp PageDown Enter Space"
+            : "ArrowDown ArrowUp Home End Enter Space";
 
-        SetDataState(attrs, isOpen);
-        SetDataFlag(attrs, "disabled", isDisabled);
+        if (IsDisabled)
+        {
+            if (isButton) attrs["disabled"] = true;
+            else attrs["aria-disabled"] = "true";
+        }
 
+        SetDataState(attrs, IsOpen);
+        SetDataFlag(attrs, "disabled", IsDisabled);
         return attrs;
     }
 
     private Task HandleClick(MouseEventArgs _)
-    {
-        return BhListboxContext?.ToggleAsync() ?? Task.CompletedTask;
-    }
+        => IsDisabled ? Task.CompletedTask : ListboxContext?.Listbox.ToggleAsync() ?? Task.CompletedTask;
 
     private Task HandleKeyDown(KeyboardEventArgs args)
+        => ListboxContext?.Listbox.HandleKeyDownAsync(args) ?? Task.CompletedTask;
+
+    public void Dispose()
     {
-        // While open, the button receives all navigation keys (focus stays on the
-        // button; aria-activedescendant drives screen-reader announcements). While
-        // closed, only the "open" keys are meaningful.
-        if (BhListboxContext?.IsOpen == true)
-            return BhListboxContext.HandleOptionKeyDownAsync(BhListboxContext.ActiveIndex, args);
-        return BhListboxContext?.HandleButtonKeyDownAsync(args) ?? Task.CompletedTask;
+        if (ListboxContext?.Listbox.Button == this) ListboxContext.Listbox.Button = null;
     }
 }

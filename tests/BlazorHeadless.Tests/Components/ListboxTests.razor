@@ -1,0 +1,128 @@
+@inherits TestBase
+
+@code {
+    [Fact]
+    public void Keyboard_selection_with_bind_value()
+    {
+        var cut = Render(
+            @<Stateful T="string" Context="s">
+                <BhListbox TValue="string" Value="s.Value" ValueChanged="s.Set" Name="person">
+                    <BhListboxButton TValue="string" aria-label="Person"><Template Context="b">@(b.Text ?? "Pick")</Template></BhListboxButton>
+                    <BhListboxOptions TValue="string">
+                        <BhListboxOption TValue="string" Value="@("ada")">Ada</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("bob")" Disabled="true">Bob</BhListboxOption>
+                        <BhListboxOption TValue="string" Value="@("cy")">Cy</BhListboxOption>
+                    </BhListboxOptions>
+                </BhListbox>
+            </Stateful>);
+        var host = cut.FindComponent<Stateful<string>>().Instance;
+
+        var button = cut.Find("[role=combobox]");
+        Assert.Equal("listbox", button.GetAttribute("aria-haspopup"));
+        button.Press("ArrowDown");
+        Assert.Equal("Ada", Text(ActiveOf(cut.Find("[role=combobox]"))));
+
+        cut.Find("[role=combobox]").Press("ArrowDown");
+        Assert.Equal("Cy", Text(ActiveOf(cut.Find("[role=combobox]"))));
+        cut.ShouldBeAccessible();
+
+        cut.Find("[role=combobox]").Press("Enter");
+        Assert.Equal("cy", host.Value);
+        Assert.Equal("false", cut.Find("[role=combobox]").GetAttribute("aria-expanded"));
+        Assert.Equal("cy", cut.Find("input[type=hidden][name=person]").GetAttribute("value"));
+        Assert.Equal("Cy", cut.Find("[role=combobox]").TextContent);
+    }
+
+    [Fact]
+    public void Option_label_names_the_selection_in_the_button()
+    {
+        var cut = Render(
+            @<BhListbox TValue="int" DefaultValue="3">
+                <BhListboxButton TValue="int" aria-label="Count"><Template Context="b">@b.Text</Template></BhListboxButton>
+                <BhListboxOptions TValue="int">
+                    <BhListboxOption TValue="int" Value="1" Label="One">One</BhListboxOption>
+                    <BhListboxOption TValue="int" Value="3" Label="Three">Three</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>);
+        Assert.Equal("Three", cut.Find("[role=combobox]").TextContent);
+    }
+
+    [Fact]
+    public void Reopening_highlights_the_selected_option()
+    {
+        var cut = Render(
+            @<BhListbox TValue="int" DefaultValue="2">
+                <BhListboxButton TValue="int" aria-label="Count">Count</BhListboxButton>
+                <BhListboxOptions TValue="int">
+                    <BhListboxOption TValue="int" Value="1">One</BhListboxOption>
+                    <BhListboxOption TValue="int" Value="2">Two</BhListboxOption>
+                    <BhListboxOption TValue="int" Value="3">Three</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>);
+
+        cut.Find("[role=combobox]").Press("Enter");
+        Assert.Equal("Two", Text(ActiveOf(cut.Find("[role=combobox]"))));
+        Assert.Equal("true", cut.FindAll("[role=option]")[1].GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Multiple_selection_toggles_and_stays_open()
+    {
+        IReadOnlyCollection<string> values = ["a"];
+        var cut = Render(
+            @<BhListbox TValue="string" Multiple="true" Values="values" ValuesChanged="v => values = v">
+                <BhListboxButton TValue="string" aria-label="Letters">Letters</BhListboxButton>
+                <BhListboxOptions TValue="string">
+                    <BhListboxOption TValue="string" Value="@("a")">A</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("b")">B</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>);
+
+        cut.Find("[role=combobox]").Click();
+        cut.FindAll("[role=option]")[1].Click();
+        Assert.Equal(["a", "b"], values.OrderBy(v => v));
+        Assert.Equal("true", cut.Find("[role=listbox]").GetAttribute("aria-multiselectable"));
+        Assert.Equal("true", cut.Find("[role=combobox]").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Typeahead_while_closed_opens_on_the_match()
+    {
+        var cut = Render(
+            @<BhListbox TValue="string">
+                <BhListboxButton TValue="string" aria-label="City">City</BhListboxButton>
+                <BhListboxOptions TValue="string">
+                    <BhListboxOption TValue="string" Value="@("Berlin")">Berlin</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Cairo")">Cairo</BhListboxOption>
+                    <BhListboxOption TValue="string" Value="@("Chicago")">Chicago</BhListboxOption>
+                </BhListboxOptions>
+            </BhListbox>);
+        cut.Find("[role=combobox]").Press("c");
+        Assert.Equal("true", cut.Find("[role=combobox]").GetAttribute("aria-expanded"));
+        Assert.Equal("Cairo", Text(ActiveOf(cut.Find("[role=combobox]"))));
+        cut.Find("[role=combobox]").Press("c");
+        Assert.Equal("Chicago", Text(ActiveOf(cut.Find("[role=combobox]"))));
+    }
+
+    [Fact]
+    public void Inside_a_field_the_button_is_labelled_and_described()
+    {
+        var cut = Render(
+            @<BhField>
+                <BhLabel>Assignee</BhLabel>
+                <BhDescription>Who owns this task.</BhDescription>
+                <BhListbox TValue="string">
+                    <BhListboxButton TValue="string">Pick</BhListboxButton>
+                    <BhListboxOptions TValue="string">
+                        <BhListboxOption TValue="string" Value="@("x")">X</BhListboxOption>
+                    </BhListboxOptions>
+                </BhListbox>
+            </BhField>);
+
+        var button = cut.Find("[role=combobox]");
+        Assert.Equal("Assignee", button.AccessibleName());
+        Assert.Equal("Who owns this task.", button.AccessibleDescription());
+        Assert.Equal(button.Id, cut.Find("label").GetAttribute("for"));
+        cut.ShouldBeAccessible();
+    }
+}

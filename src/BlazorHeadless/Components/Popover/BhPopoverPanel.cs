@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
@@ -11,130 +10,119 @@ namespace BlazorHeadless;
 ///
 /// <para><b>Behaviour:</b></para>
 /// <list type="bullet">
-///   <item>Receives focus on open (first focusable element, or the panel itself).</item>
-///   <item>Escape closes the popover from anywhere inside the panel.</item>
-///   <item>Emits <c>data-state="open|closed"</c> for CSS-driven transitions.</item>
+///   <item>Receives focus on open (an element marked <c>data-bh-autofocus</c>, else the first focusable element, else the panel).</item>
+///   <item>Escape, pointer-down outside and focus leaving dismiss the popover.</item>
+///   <item>Emits <c>data-state="open|closed"</c> (kept <c>closed</c> during exit animations) plus <c>data-side</c> / <c>data-align</c> when anchored.</item>
 /// </list>
 ///
 /// <para>
-/// When <see cref="Anchor"/> is set, the panel is automatically positioned
-/// relative to the <see cref="BhPopoverButton"/> using the anchor positioning system.
+/// Set <see cref="BhFloatingContentBase.Anchor"/> to position the panel relative
+/// to the <see cref="BhPopoverButton"/>, and <see cref="BhFloatingContentBase.Portal"/>
+/// to render it at the end of <c>&lt;body&gt;</c>.
 /// </para>
 /// </summary>
-public class BhPopoverPanel : BhComponentBase, IAsyncDisposable
+public class BhPopoverPanel : BhFloatingContentBase
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
-
     [CascadingParameter]
-    private BhPopoverContext BhPopoverContext { get; set; } = default!;
+    private BhPopoverContext? PopoverContext { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhPopoverRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhPopoverRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Configures automatic positioning of the panel relative to the
-    /// <see cref="BhPopoverButton"/>. When set, the panel is positioned using
-    /// fixed positioning and auto-updates on scroll/resize.
+    /// Content that receives the render state (<c>BhPopoverRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public BhAnchorOptions? Anchor { get; set; }
+    public RenderFragment<BhPopoverRenderContext>? Template { get; set; }
 
-    private ElementReference _elementRef;
-    private int _anchorHandle;
-    private bool _wasOpen;
-    private bool _positioned;
+    /// <summary>Move focus into the panel when it opens. Default: true.</summary>
+    [Parameter]
+    public bool AutoFocus { get; set; } = true;
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => BhPopoverContext?.IsOpen ?? false;
+    protected override bool IsOpen => PopoverContext?.IsOpen ?? false;
+
+    private string PanelId => PopoverContext?.PanelId ?? ComponentId;
 
     private BhPopoverRenderContext RenderContext => new()
     {
         IsOpen = IsOpen,
-        Close = () => _ = BhPopoverContext?.CloseAsync(),
+        Close = () => _ = PopoverContext?.CloseAsync(),
     };
+
+    protected override BhFloatingRequest CreateFloatingRequest()
+    {
+        var modal = PopoverContext?.Modal ?? false;
+        var layer = new BhLayerOptions
+        {
+            FocusOutside = !modal,
+            Modal = modal,
+            ParentHandle = ParentLayerHandle,
+        };
+        layer.BranchIds.Add(PopoverContext?.ButtonId);
+
+        return new BhFloatingRequest
+        {
+            ContentId = PanelId,
+            ReferenceId = PopoverContext?.ButtonId,
+            Anchor = EffectiveAnchor,
+            ArrowId = ArrowId,
+            Portal = EffectivePortal,
+            PortalTarget = PortalTarget,
+            Modal = modal,
+            Layer = layer,
+            Focus = new BhFocusScopeOptions
+            {
+                Trap = modal,
+                AutoFocus = AutoFocus ? "first" : "none",
+                RestoreFocus = true,
+                ReturnFocusId = PopoverContext?.ButtonId,
+            },
+        };
+    }
+
+    protected override Task OnDismissAsync(BhDismissReason reason)
+        => PopoverContext?.DismissAsync(reason) ?? Task.CompletedTask;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!ShouldRenderContent) return;
+
+        Scope.Owner = PanelId;
+
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhPopoverContext?.PanelId ?? ComponentId);
+        builder.AddAttribute(10, "id", PanelId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Keep the panel hidden while it's open but not yet positioned by the
-        // anchor engine. This prevents a flash at the unpositioned location
-        // before OnAfterRenderAsync runs the JS positioning.
-        if (!IsOpen || (Anchor is not null && !_positioned))
+        if (IsHidden)
             builder.AddAttribute(30, "hidden", true);
-
         builder.AddAttribute(35, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            _elementRef = e;
-            BhPopoverContext?.RegisterPanel(e);
-            Ref?.Invoke(e);
-        });
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        // While open, keep Escape from also closing an enclosing popover / dialog.
+        builder.AddEventStopPropagationAttribute(36, "onkeydown", IsOpen);
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            BhFloatingScope.Render(builder, 50, Scope, BhContent.Pick(Template, ChildContent, RenderContext));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
         // tabindex=-1 so the panel is programmatically focusable when it has no
         // focusable descendants, but isn't in the natural tab order.
         attrs["tabindex"] = -1;
-
         SetDataState(attrs, IsOpen);
-
         return attrs;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private Task HandleKeyDown(KeyboardEventArgs args)
     {
-        if (Anchor is null) return;
-
-        if (IsOpen && !_wasOpen)
-        {
-            var buttonId = BhPopoverContext.ButtonId;
-            var panelId = BhPopoverContext.PanelId;
-            _anchorHandle = await Interop.AnchorStartByIdAsync(buttonId, panelId, Anchor);
-            _wasOpen = true;
-            // JS has positioned and revealed the panel; reflect that in the
-            // render so a subsequent render won't re-add the hidden attribute.
-            _positioned = true;
-            StateHasChanged();
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            await Interop.AnchorStopAsync(_anchorHandle);
-            _anchorHandle = 0;
-            _wasOpen = false;
-            _positioned = false;
-        }
-    }
-
-    private async Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        if (args.Key == "Escape" && BhPopoverContext is not null)
-            await BhPopoverContext.CloseAsync();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_anchorHandle > 0)
-        {
-            try
-            {
-                await Interop.AnchorStopAsync(_anchorHandle);
-            }
-            catch (JSDisconnectedException) { /* circuit gone */ }
-        }
+        if (args.Key == "Escape" && IsOpen && PopoverContext is not null)
+            return PopoverContext.DismissAsync(BhDismissReason.EscapeKey);
+        return Task.CompletedTask;
     }
 }

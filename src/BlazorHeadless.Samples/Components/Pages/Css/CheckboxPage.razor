@@ -19,12 +19,16 @@
             <code>DefaultChecked</code> seeds the initial state.
         </Description>
         <LiveContent>
-            <BhCheckbox class="checkbox" Context="c">
-                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            <BhCheckbox aria-label="Remember me" class="checkbox">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </Template>
             </BhCheckbox>
 
-            <BhCheckbox DefaultChecked="true" class="checkbox" Context="c">
-                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            <BhCheckbox aria-label="Keep me signed in" DefaultChecked="true" class="checkbox">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </Template>
             </BhCheckbox>
         </LiveContent>
     </DemoBlock>
@@ -37,10 +41,12 @@
         </Description>
         <LiveContent>
             <div style="display:flex; align-items:center; gap:1rem;">
-                <BhCheckbox Checked="@acceptedTerms"
+                <BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms"
                            OnCheckedChange="v => acceptedTerms = v"
-                           class="checkbox" Context="c">
-                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                           class="checkbox">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                    </Template>
                 </BhCheckbox>
 
                 <span class="demo-output">
@@ -62,12 +68,16 @@
             <code>disabled</code> attribute and a <code>data-disabled</code> hook.
         </Description>
         <LiveContent>
-            <BhCheckbox Disabled="true" class="checkbox" Context="c">
-                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            <BhCheckbox aria-label="Unavailable option" Disabled="true" class="checkbox">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </Template>
             </BhCheckbox>
 
-            <BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
-                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            <BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true" class="checkbox">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                </Template>
             </BhCheckbox>
         </LiveContent>
     </DemoBlock>
@@ -87,9 +97,11 @@
                     <BhCheckbox Checked="@SelectAllChecked"
                                Indeterminate="@SelectAllIndeterminate"
                                OnCheckedChange="HandleSelectAll"
-                               class="checkbox" Context="c">
-                        @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
-                        else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+                               class="checkbox">
+                        <Template Context="c">
+                            @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
+                            else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+                        </Template>
                     </BhCheckbox>
                     <strong>Select all</strong>
                 </label>
@@ -101,8 +113,10 @@
                         <label class="checkbox-label">
                             <BhCheckbox Checked="@items[captured]"
                                        OnCheckedChange="v => HandleItemChange(captured, v)"
-                                       class="checkbox" Context="c">
-                                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                                       class="checkbox">
+                                <Template Context="c">
+                                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                                </Template>
                             </BhCheckbox>
                             <span>@($"Item {captured + 1}")</span>
                         </label>
@@ -121,8 +135,10 @@
         </Description>
         <LiveContent>
             <label class="checkbox-label">
-                <BhCheckbox class="checkbox" Context="c">
-                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                <BhCheckbox class="checkbox">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                    </Template>
                 </BhCheckbox>
                 <span>Send me product updates</span>
             </label>
@@ -143,8 +159,10 @@
                   style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start;">
                 <label class="checkbox-label">
                     <BhCheckbox Name="agree" Value="yes"
-                               class="checkbox" Context="c">
-                        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                               class="checkbox">
+                        <Template Context="c">
+                            @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                        </Template>
                     </BhCheckbox>
                     <span>I agree to the terms</span>
                 </label>
@@ -158,10 +176,48 @@
             </form>
         </LiveContent>
     </DemoBlock>
+
+    <DemoBlock Title="Group with select all"
+               Code="@_groupCode"
+               Css="@_groupCss">
+        <Description>
+            <code>BhCheckboxGroup</code> binds one collection with <code>@@bind-Values</code> and
+            renders <code>role="group"</code>; each <code>BhCheckbox</code> with a <code>Value</code>
+            toggles that value. <code>SelectAll="true"</code> turns a checkbox into the tri-state
+            parent — checked when every value is selected, <code>aria-checked="mixed"</code> /
+            <code>data-state="indeterminate"</code> when only some are. <code>BhCheckboxIndicator</code>
+            renders only while its checkbox is checked or mixed, and mirrors its <code>data-state</code>.
+        </Description>
+        <LiveContent>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="checkbox-group">
+                    <BhCheckbox SelectAll="true" class="checkbox-row checkbox-row-all">
+                        <span class="checkbox-box"><BhCheckboxIndicator class="checkbox-indicator" /></span>
+                        All toppings
+                    </BhCheckbox>
+                    <div class="checkbox-group-items">
+                        @foreach (var topping in allToppings)
+                        {
+                            <BhCheckbox Value="@topping" class="checkbox-row">
+                                <span class="checkbox-box"><BhCheckboxIndicator class="checkbox-indicator" /></span>
+                                @topping
+                            </BhCheckbox>
+                        }
+                    </div>
+                </BhCheckboxGroup>
+
+                <span class="demo-output">
+                    Values: <strong>@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))</strong>
+                </span>
+            </div>
+        </LiveContent>
+    </DemoBlock>
 </div>
 
 @code {
     private bool acceptedTerms;
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection<string> toppings = new[] { "Cheese", "Olives" };
     private bool[] items = new[] { false, false, false };
     private string? lastSubmitted;
 
@@ -187,21 +243,106 @@
 
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
+    private const string _groupCode = """
+<BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="checkbox-group">
+    @* Tri-state parent: checked / mixed / unchecked from the group's values *@
+    <BhCheckbox SelectAll="true" class="checkbox-row checkbox-row-all">
+        <span class="checkbox-box"><BhCheckboxIndicator class="checkbox-indicator" /></span>
+        All toppings
+    </BhCheckbox>
+
+    <div class="checkbox-group-items">
+        @foreach (var topping in allToppings)
+        {
+            <BhCheckbox Value="@topping" class="checkbox-row">
+                <span class="checkbox-box"><BhCheckboxIndicator class="checkbox-indicator" /></span>
+                @topping
+            </BhCheckbox>
+        }
+    </div>
+</BhCheckboxGroup>
+
+<span class="demo-output">
+    Values: <strong>@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))</strong>
+</span>
+
+@code {
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection<string> toppings = new[] { "Cheese", "Olives" };
+}
+""";
+
+    private const string _groupCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox-group       { display: flex; flex-direction: column; gap: 0.5rem; }
+.checkbox-group-items { display: flex; flex-direction: column; gap: 0.4rem; padding-left: 1.6rem; }
+
+/* The checkbox button holds the box and the label text (its accessible name) */
+.checkbox-row {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+}
+.checkbox-row:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.checkbox-row-all           { font-weight: 600; }
+
+.checkbox-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+.checkbox-row:hover .checkbox-box { border-color: #a1a1af; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox-row[data-state="checked"] .checkbox-box,
+.checkbox-row[data-state="indeterminate"] .checkbox-box {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* BhCheckboxIndicator mirrors the state, so CSS picks the glyph */
+.checkbox-indicator { font-size: 0.8rem; font-weight: 700; line-height: 1; }
+.checkbox-indicator[data-state="checked"]::before       { content: "\2713"; }   /* ✓ */
+.checkbox-indicator[data-state="indeterminate"]::before { content: "\2013"; }   /* – */
+
+.demo-output { font-size: 0.875rem; color: #71717a; }
+""";
+
     private const string _basicCode = """
-<BhCheckbox class="checkbox" Context="c">
-    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+<BhCheckbox aria-label="Remember me" class="checkbox">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </Template>
 </BhCheckbox>
 
-<BhCheckbox DefaultChecked="true" class="checkbox" Context="c">
-    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+<BhCheckbox aria-label="Keep me signed in" DefaultChecked="true" class="checkbox">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </Template>
 </BhCheckbox>
 """;
 
     private const string _controlledCode = """
-<BhCheckbox Checked="@acceptedTerms"
+<BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms"
            OnCheckedChange="v => acceptedTerms = v"
-           class="checkbox" Context="c">
-    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+           class="checkbox">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </Template>
 </BhCheckbox>
 
 @code {
@@ -210,12 +351,16 @@
 """;
 
     private const string _disabledCode = """
-<BhCheckbox Disabled="true" class="checkbox" Context="c">
-    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+<BhCheckbox aria-label="Unavailable option" Disabled="true" class="checkbox">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </Template>
 </BhCheckbox>
 
-<BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c">
-    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+<BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true" class="checkbox">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    </Template>
 </BhCheckbox>
 """;
 
@@ -225,9 +370,11 @@
         <BhCheckbox Checked="@SelectAllChecked"
                    Indeterminate="@SelectAllIndeterminate"
                    OnCheckedChange="HandleSelectAll"
-                   class="checkbox" Context="c">
-            @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
-            else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+                   class="checkbox">
+            <Template Context="c">
+                @if (c.IsIndeterminate)  { <span class="checkbox-dash">–</span> }
+                else if (c.IsChecked)    { <span class="checkbox-tick">✓</span> }
+            </Template>
         </BhCheckbox>
         <strong>Select all</strong>
     </label>
@@ -239,8 +386,10 @@
             <label class="checkbox-label">
                 <BhCheckbox Checked="@items[captured]"
                            OnCheckedChange="v => HandleItemChange(captured, v)"
-                           class="checkbox" Context="c">
-                    @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                           class="checkbox">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                    </Template>
                 </BhCheckbox>
                 <span>@($"Item {captured + 1}")</span>
             </label>
@@ -265,8 +414,10 @@
 
     private const string _labelCode = """
 <label class="checkbox-label">
-    <BhCheckbox class="checkbox" Context="c">
-        @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+    <BhCheckbox class="checkbox">
+        <Template Context="c">
+            @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+        </Template>
     </BhCheckbox>
     <span>Send me product updates</span>
 </label>
@@ -276,8 +427,10 @@
 <form method="post">
     <label class="checkbox-label">
         <BhCheckbox Name="agree" Value="yes"
-                   class="checkbox" Context="c">
-            @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+                   class="checkbox">
+            <Template Context="c">
+                @if (c.IsChecked) { <span class="checkbox-tick">✓</span> }
+            </Template>
         </BhCheckbox>
         <span>I agree to the terms</span>
     </label>

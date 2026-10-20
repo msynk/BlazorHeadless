@@ -1,0 +1,173 @@
+@inherits TestBase
+
+@code {
+    private static readonly string[] Fruits = ["Apple", "Apricot", "Banana", "Blueberry", "Cherry"];
+
+    private sealed class Harness
+    {
+        public string Query = string.Empty;
+        public string? Selected;
+        public IEnumerable<string> Filtered => Fruits.Where(f => BhFilter.Contains(f, Query));
+    }
+
+    private RenderFragment Combobox(Harness h) =>
+        @<BhCombobox TValue="string" @bind-Value="h.Selected" OnQueryChange="q => h.Query = q">
+            <BhComboboxInput TValue="string" aria-label="Fruit" />
+            <BhComboboxOptions TValue="string">
+                @foreach (var f in h.Filtered)
+                {
+                    <BhComboboxOption TValue="string" Value="@f" @key="f">@f</BhComboboxOption>
+                }
+                <BhComboboxEmpty TValue="string">No fruit</BhComboboxEmpty>
+            </BhComboboxOptions>
+        </BhCombobox>;
+
+    [Fact]
+    public void Typing_opens_and_highlights_the_first_match()
+    {
+        var h = new Harness();
+        var cut = Render(Combobox(h));
+        cut.Find("input").Input("ap");
+
+        var input = cut.Find("input");
+        Assert.Equal("true", input.GetAttribute("aria-expanded"));
+        Assert.Equal(2, cut.FindAll("[role=option]").Count);
+        Assert.Equal("Apple", Text(ActiveOf(input)));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Highlight_stays_valid_when_results_change()
+    {
+        // Regression: option indexes were captured at registration, so filtering
+        // made aria-activedescendant point at the wrong (or a missing) option.
+        var h = new Harness();
+        var cut = Render(Combobox(h));
+        cut.Find("input").Input("b");
+        cut.Find("input").Press("ArrowDown");
+        Assert.Equal("Blueberry", Text(ActiveOf(cut.Find("input"))));
+
+        cut.Find("input").Input("");
+        var input = cut.Find("input");
+        var active = ActiveOf(input);
+        Assert.NotNull(active);
+        Assert.Equal("Blueberry", Text(active));
+        Assert.Equal("true", active!.GetAttribute("data-active") is null ? "false" : "true");
+        // Every id referenced by the input exists exactly once.
+        Assert.Single(cut.FindAll($"[id='{input.GetAttribute("aria-activedescendant")}']"));
+    }
+
+    [Fact]
+    public void Enter_selects_the_highlighted_option()
+    {
+        var h = new Harness();
+        var cut = Render(Combobox(h));
+        cut.Find("input").Input("ch");
+        cut.Find("input").Press("Enter");
+
+        Assert.Equal("Cherry", h.Selected);
+        Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Controlled_value_is_shown_in_the_input()
+    {
+        var h = new Harness();
+        var cut = Render(
+            @<Stateful T="string" Context="s">
+                <BhCombobox TValue="string" Value="s.Value" ValueChanged="s.Set" Name="fruit" OnQueryChange="q => h.Query = q">
+                    <BhComboboxInput TValue="string" aria-label="Fruit" />
+                    <BhComboboxOptions TValue="string">
+                        @foreach (var f in h.Filtered)
+                        {
+                            <BhComboboxOption TValue="string" Value="@f" @key="f">@f</BhComboboxOption>
+                        }
+                    </BhComboboxOptions>
+                </BhCombobox>
+            </Stateful>);
+
+        cut.Find("input").Input("ch");
+        cut.Find("input").Press("Enter");
+
+        Assert.Equal("Cherry", cut.Find("input").GetAttribute("value"));
+        Assert.Equal("Cherry", cut.Find("input[type=hidden][name=fruit]").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void Uncontrolled_value_is_shown_in_the_input()
+    {
+        var cut = Render(
+            @<BhCombobox TValue="string" DefaultValue="@("Apple")">
+                <BhComboboxInput TValue="string" aria-label="Fruit" />
+                <BhComboboxOptions TValue="string">
+                    @foreach (var f in Fruits)
+                    {
+                        <BhComboboxOption TValue="string" Value="@f" @key="f">@f</BhComboboxOption>
+                    }
+                </BhComboboxOptions>
+            </BhCombobox>);
+
+        Assert.Equal("Apple", cut.Find("input").GetAttribute("value"));
+        cut.Find("input").Input("ban");
+        cut.Find("input").PressSequence("ArrowDown", "ArrowDown", "Enter"); // consumer did not filter: Apple, Apricot, Banana
+
+        Assert.Equal("Banana", cut.Find("input").GetAttribute("value"));
+    }
+
+    [Fact]
+    public void Escape_closes_and_reverts_the_text()
+    {
+        var h = new Harness { Selected = "Banana" };
+        var cut = Render(Combobox(h));
+        cut.Find("input").Input("xyz");
+        cut.Find("input").Press("Escape");
+
+        Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded"));
+        Assert.Equal("Banana", cut.Find("input").GetAttribute("value"));
+        Assert.Equal("Banana", h.Selected);
+    }
+
+    [Fact]
+    public void Empty_state_renders_when_nothing_matches()
+    {
+        var h = new Harness();
+        var cut = Render(Combobox(h));
+        cut.Find("input").Input("zzz");
+        Assert.Empty(cut.FindAll("[role=option]"));
+        Assert.Contains("No fruit", cut.Markup);
+        Assert.Null(cut.Find("input").GetAttribute("aria-activedescendant"));
+    }
+
+    [Fact]
+    public void Clicking_an_option_selects_it()
+    {
+        var h = new Harness();
+        var cut = Render(Combobox(h));
+        cut.Find("input").Press("ArrowDown");
+        cut.FindAll("[role=option]")[2].Click();
+        Assert.Equal("Banana", h.Selected);
+    }
+
+    [Fact]
+    public void Data_driven_options_render_with_setsize_and_posinset()
+    {
+        string? selected = null;
+        var cut = Render(
+            @<BhCombobox TValue="string" @bind-Value="selected">
+                <BhComboboxInput TValue="string" aria-label="Fruit" />
+                <BhComboboxOptions TValue="string" Items="Fruits" Context="o">
+                    <ItemTemplate>@o.Value</ItemTemplate>
+                </BhComboboxOptions>
+            </BhCombobox>);
+        cut.Find("input").Press("ArrowDown");
+
+        var options = cut.FindAll("[role=option]");
+        Assert.Equal(5, options.Count);
+        Assert.Equal("5", options[0].GetAttribute("aria-setsize"));
+        Assert.Equal("3", options[2].GetAttribute("aria-posinset"));
+        Assert.Equal("Apple", Text(ActiveOf(cut.Find("input"))));
+
+        cut.Find("input").PressSequence("ArrowDown", "ArrowDown", "Enter");
+        Assert.Equal("Banana", selected);
+    }
+}

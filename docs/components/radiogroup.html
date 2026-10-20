@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html" class="active">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -68,20 +79,26 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="medium" class="radio-group"&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="small" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="small" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Small&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="medium" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="medium" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Medium&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="large" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="large" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Large&lt;/span&gt;
     &lt;/label&gt;
@@ -153,25 +170,28 @@
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="medium" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="small"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Small&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="medium"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Medium&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="large"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Large&lt;/span&gt;
     &lt;/label&gt;
@@ -192,20 +212,26 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group"&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="card" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="card" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Card&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="bank" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="bank" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Bank&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="paypal" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="paypal" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;PayPal&lt;/span&gt;
     &lt;/label&gt;
@@ -278,25 +304,28 @@
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup Vertical="false" DefaultValue="card" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="card"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Card&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="bank"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Bank&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="paypal"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;PayPal&lt;/span&gt;
     &lt;/label&gt;
@@ -317,20 +346,26 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="standard" class="radio-group"&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="standard" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="standard" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Standard shipping (3–5 days)&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="express" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="express" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Express shipping (1–2 days)&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="radio-label"&gt;
-        &lt;BhRadio Value="same-day" Disabled="true" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="same-day" Disabled="true" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Same-day shipping (unavailable in your region)&lt;/span&gt;
     &lt;/label&gt;
@@ -408,25 +443,28 @@
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="standard" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="standard"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Standard shipping (3–5 days)&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="express"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Express shipping (1–2 days)&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
         &lt;BhRadio Value="same-day" Disabled="true"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;span&gt;Same-day shipping (unavailable in your region)&lt;/span&gt;
     &lt;/label&gt;
@@ -447,8 +485,10 @@
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="pro" class="plan-group"&gt;
     &lt;label class="plan-card"&gt;
-        &lt;BhRadio Value="free" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="free" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="plan-info"&gt;
             &lt;strong&gt;Free&lt;/strong&gt;
@@ -456,8 +496,10 @@
         &lt;/div&gt;
     &lt;/label&gt;
     &lt;label class="plan-card"&gt;
-        &lt;BhRadio Value="pro" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="pro" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="plan-info"&gt;
             &lt;strong&gt;Pro — $9 / mo&lt;/strong&gt;
@@ -465,8 +507,10 @@
         &lt;/div&gt;
     &lt;/label&gt;
     &lt;label class="plan-card"&gt;
-        &lt;BhRadio Value="team" class="radio" Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+        &lt;BhRadio Value="team" class="radio"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="plan-info"&gt;
             &lt;strong&gt;Team — $29 / mo&lt;/strong&gt;
@@ -544,7 +588,7 @@
 }
 
 .plan-info strong { font-size: 0.95rem; color: #18181b; }
-.plan-info span   { font-size: 0.8rem; color: #71717a; }</code></pre>
+.plan-info span   { font-size: 0.8rem; color: #52525b; }</code></pre>
                 </div>
             </div>
             <div class="example-panel" data-tab="tw">
@@ -554,9 +598,10 @@
                     <pre class="code-block"><code class="language-markup">&lt;BhRadioGroup DefaultValue="pro" class="flex flex-col gap-2.5 w-full max-w-md"&gt;
     &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
         &lt;BhRadio Value="free"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="flex flex-col gap-0.5"&gt;
             &lt;strong class="text-sm text-zinc-900"&gt;Free&lt;/strong&gt;
@@ -565,20 +610,22 @@
     &lt;/label&gt;
     &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
         &lt;BhRadio Value="pro"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="flex flex-col gap-0.5"&gt;
             &lt;strong class="text-sm text-zinc-900"&gt;Pro — $9 / mo&lt;/strong&gt;
-            &lt;span class="text-xs text-zinc-500"&gt;Unlimited projects, priority support.&lt;/span&gt;
+            &lt;span class="text-xs text-zinc-600"&gt;Unlimited projects, priority support.&lt;/span&gt;
         &lt;/div&gt;
     &lt;/label&gt;
     &lt;label class="flex items-center gap-3.5 rounded-lg border border-zinc-200 px-4 py-3.5 cursor-pointer transition-colors has-[[data-state=checked]]:border-blue-600 has-[[data-state=checked]]:bg-blue-50"&gt;
         &lt;BhRadio Value="team"
-                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                 Context="r"&gt;
-            @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                 class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="r"&gt;
+                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhRadio&gt;
         &lt;div class="flex flex-col gap-0.5"&gt;
             &lt;strong class="text-sm text-zinc-900"&gt;Team — $29 / mo&lt;/strong&gt;
@@ -612,20 +659,26 @@
                  OnValueChange="v =&gt; selectedColor = v"
                  class="radio-group"&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="red" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="red" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Red&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="green" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="green" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Green&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="blue" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="blue" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Blue&lt;/span&gt;
         &lt;/label&gt;
@@ -734,25 +787,28 @@
     &lt;BhRadioGroup Value="@selectedColor" OnValueChange="v =&gt; selectedColor = v" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="red"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Red&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="green"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Green&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="blue"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Blue&lt;/span&gt;
         &lt;/label&gt;
@@ -781,20 +837,26 @@
       style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;"&gt;
     &lt;BhRadioGroup Name="size" DefaultValue="m" class="radio-group"&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="s" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="s" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Small&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="m" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="m" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Medium&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="radio-label"&gt;
-            &lt;BhRadio Value="l" class="radio" Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+            &lt;BhRadio Value="l" class="radio"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="radio-dot"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Large&lt;/span&gt;
         &lt;/label&gt;
@@ -914,25 +976,28 @@
     &lt;BhRadioGroup Name="size" DefaultValue="m" class="flex flex-col gap-2.5 data-orientation-horizontal:flex-row data-orientation-horizontal:gap-5"&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="s"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Small&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="m"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Medium&lt;/span&gt;
         &lt;/label&gt;
         &lt;label class="inline-flex items-center gap-2.5 cursor-pointer text-sm select-none"&gt;
             &lt;BhRadio Value="l"
-                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                     Context="r"&gt;
-                @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                     class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded-full border border-zinc-300 bg-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                &lt;Template Context="r"&gt;
+                    @if (r.IsChecked) { &lt;span class="h-2 w-2 rounded-full bg-blue-600"&gt;&lt;/span&gt; }
+                &lt;/Template&gt;
             &lt;/BhRadio&gt;
             &lt;span&gt;Large&lt;/span&gt;
         &lt;/label&gt;
@@ -954,13 +1019,13 @@
             </div>
         </div>
         <nav class="pager">
-            <a class="prev" href="portal.html">
+            <a class="prev" href="progress.html">
             <span class="pager-label">← Previous</span>
-            <span class="pager-title">Portal</span>
+            <span class="pager-title">Progress / Meter</span>
         </a>
-            <a class="next" href="switch.html">
+            <a class="next" href="slider.html">
             <span class="pager-label">Next →</span>
-            <span class="pager-title">Switch</span>
+            <span class="pager-title">Slider</span>
         </a>
         </nav>
         </main>

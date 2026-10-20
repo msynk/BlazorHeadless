@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BlazorHeadless;
 
@@ -8,19 +9,22 @@ namespace BlazorHeadless;
 public static class BhServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers the services required by BlazorHeadless components that need
-    /// JS interop (currently Dialog; later Popover, Combobox positioning, etc.).
-    /// Components that don't need JS work without this call.
+    /// Registers the services used by BlazorHeadless components: the JS runtime
+    /// wrapper (<see cref="BhInterop"/>), the live-region announcer
+    /// (<see cref="IBhAnnouncer"/>) and the toast queue (<see cref="BhToaster"/>).
+    /// Safe to call more than once.
     ///
     /// <para>
-    /// Register once during application startup:
+    /// Register once during application startup (in both the server and the
+    /// client project of a Blazor Web App that uses WebAssembly rendering):
     /// <code>builder.Services.AddBlazorHeadless();</code>
     /// </para>
     /// </summary>
     public static IServiceCollection AddBlazorHeadless(this IServiceCollection services)
     {
-        services.AddScoped<BhInterop>();
-        services.AddScoped<BhPortalService>();
+        services.TryAddScoped<BhInterop>();
+        services.TryAddScoped<IBhAnnouncer, BhAnnouncer>();
+        services.TryAddScoped<BhToaster>();
         return services;
     }
 }

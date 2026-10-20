@@ -1,126 +1,44 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A single option inside an <see cref="BhComboboxOptions{TValue}"/>. Renders as
-/// <c>&lt;li role="option"&gt;</c> by default.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Mouse-down (intentionally not click — see remarks) selects the option.</item>
-///   <item>Mouse-enter sets this option as the "active" highlight.</item>
-///   <item>Sets <c>aria-selected</c>; emits <c>data-active</c>, <c>data-selected</c>, <c>data-disabled</c>.</item>
-/// </list>
-///
-/// <para>
-/// <b>Why mouse-down instead of click?</b> The input has focus while the panel is
-/// open. A normal click on an option would first fire <c>blur</c> on the input,
-/// which closes the panel before the click registers. Using <c>mousedown</c>
-/// (which fires before blur) plus <c>preventDefault</c> on the option's
-/// click event prevents that focus-loss race.
-/// </para>
+/// A single option of a <see cref="BhCombobox{TValue}"/> (<c>&lt;li role="option"&gt;</c>).
+/// Clicking selects it without taking focus out of the input; hovering highlights it.
+/// Emits <c>aria-selected</c>, <c>data-active</c>, <c>data-selected</c> and <c>data-disabled</c>.
 /// </summary>
-public class BhComboboxOption<TValue> : BhComponentBase, IDisposable
+/// <typeparam name="TValue">The option value type.</typeparam>
+public class BhComboboxOption<TValue> : BhOptionBase<TValue>
 {
     [CascadingParameter]
-    private BhComboboxContext<TValue> BhComboboxContext { get; set; } = default!;
+    private BhComboboxContext<TValue>? ComboboxContext { get; set; }
 
-    /// <summary>The option's value. Required.</summary>
-    [Parameter, EditorRequired]
-    public TValue Value { get; set; } = default!;
-
-    /// <summary>Disables this option.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public bool Disabled { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhComboboxOptionRenderContext{TValue}"/>.</summary>
+    /// <summary>
+    /// Content that receives the render state (<c>BhComboboxOptionRenderContext&lt;TValue&gt;</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
     [Parameter]
-    public RenderFragment<BhComboboxOptionRenderContext<TValue>>? ChildContent { get; set; }
+    public RenderFragment<BhComboboxOptionRenderContext<TValue>>? Template { get; set; }
 
-    private int _index = -1;
+    protected override bool RootDisabled => ComboboxContext?.Disabled ?? false;
 
-    protected override string DefaultTag => "li";
+    protected override Task SelectAsync() => ComboboxContext?.SelectAsync(Value) ?? Task.CompletedTask;
 
-    /// <summary>Whether this option is in the current selection.</summary>
-    public bool IsSelected => BhComboboxContext?.IsSelected(Value) ?? false;
-
-    /// <summary>Whether this option is the currently "active" (highlighted) option.</summary>
-    public bool IsActive => BhComboboxContext?.ActiveIndex == _index;
-
-    /// <summary>Whether this option is disabled (own flag or root combobox).</summary>
-    public bool IsOptionDisabled => Disabled || (BhComboboxContext?.Disabled ?? false);
-
-    private BhComboboxOptionRenderContext<TValue> RenderContext => new()
+    protected override void RenderContent(RenderTreeBuilder builder, int sequence)
     {
-        Value = Value,
-        IsSelected = IsSelected,
-        IsActive = IsActive,
-        Disabled = IsOptionDisabled,
-    };
-
-    protected override void OnInitialized()
-    {
-        if (BhComboboxContext is not null)
-            _index = BhComboboxContext.RegisterOption(this);
-    }
-
-    public void Dispose()
-    {
-        BhComboboxContext?.UnregisterOption(this);
-    }
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhComboboxContext is not null ? BhComboboxContext.GetOptionId(_index) : ComponentId);
-        builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Mouse-down so we beat the input's blur event. preventDefault on
-        // mousedown also stops the input from losing focus when the option is clicked.
-        builder.AddAttribute(30, "onmousedown",
-            EventCallback.Factory.Create<MouseEventArgs>(this, HandleMouseDown));
-        builder.AddAttribute(31, "onmousedown:preventDefault", true);
-        builder.AddAttribute(32, "onmouseenter",
-            EventCallback.Factory.Create<MouseEventArgs>(this, HandleMouseEnter));
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
-        builder.CloseElement();
-    }
-
-    protected override Dictionary<string, object> BuildComponentAttributes()
-    {
-        var attrs = base.BuildComponentAttributes();
-
-        attrs["role"] = "option";
-        attrs["aria-selected"] = IsSelected ? "true" : "false";
-
-        if (IsOptionDisabled)
-            attrs["aria-disabled"] = "true";
-
-        SetDataFlag(attrs, "active", IsActive);
-        SetDataFlag(attrs, "selected", IsSelected);
-        SetDataFlag(attrs, "disabled", IsOptionDisabled);
-
-        return attrs;
-    }
-
-    private Task HandleMouseDown(MouseEventArgs _)
-    {
-        if (IsOptionDisabled) return Task.CompletedTask;
-        return BhComboboxContext?.SelectAsync(Value) ?? Task.CompletedTask;
-    }
-
-    private void HandleMouseEnter(MouseEventArgs _)
-    {
-        if (IsOptionDisabled) return;
-        BhComboboxContext?.SetActiveIndex(_index);
+        if (Template is null && ChildContent is null) return;
+        builder.AddContent(sequence, BhContent.Pick(Template, ChildContent, new BhComboboxOptionRenderContext<TValue>
+        {
+            Value = Value,
+            IsSelected = IsSelected,
+            IsActive = IsActive,
+            Disabled = IsItemDisabled,
+        }));
     }
 }

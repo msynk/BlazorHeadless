@@ -20,9 +20,11 @@
         <LiveContent>
             <BhAccordion DefaultValue="item-1" class="accordion">
                 <BhAccordionItem Value="item-1" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        What is BlazorHeadless?
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            What is BlazorHeadless?
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">
@@ -33,9 +35,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="item-2" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        Why headless?
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            Why headless?
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">
@@ -46,9 +50,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="item-3" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        How do I style it?
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            How do I style it?
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">
@@ -71,9 +77,11 @@
         <LiveContent>
             <BhAccordion Type="BhAccordionType.Multiple" class="accordion">
                 <BhAccordionItem Value="faq-1" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        Can I open multiple panels?
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            Can I open multiple panels?
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">
@@ -83,9 +91,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="faq-2" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        Does this one close when I open another?
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            Does this one close when I open another?
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">
@@ -107,9 +117,11 @@
         <LiveContent>
             <BhAccordion class="accordion">
                 <BhAccordionItem Value="d-1" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        I am enabled
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            I am enabled
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">This item works normally.</div>
@@ -117,9 +129,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="d-2" Disabled="true" class="accordion-item">
-                    <BhAccordionTrigger class="accordion-trigger" Context="t">
-                        I am disabled
-                        <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                    <BhAccordionTrigger class="accordion-trigger">
+                        <Template Context="t">
+                            I am disabled
+                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent class="accordion-content">
                         <div class="accordion-body">You should not be able to open this.</div>
@@ -149,9 +163,11 @@
                             OnValueChange="v => controlledValue = v"
                             class="accordion">
                     <BhAccordionItem Value="ctrl-1" class="accordion-item">
-                        <BhAccordionTrigger class="accordion-trigger" Context="t">
-                            Panel 1
-                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        <BhAccordionTrigger class="accordion-trigger">
+                            <Template Context="t">
+                                Panel 1
+                                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                            </Template>
                         </BhAccordionTrigger>
                         <BhAccordionContent class="accordion-content">
                             <div class="accordion-body">Controlled by external state.</div>
@@ -159,9 +175,11 @@
                     </BhAccordionItem>
 
                     <BhAccordionItem Value="ctrl-2" class="accordion-item">
-                        <BhAccordionTrigger class="accordion-trigger" Context="t">
-                            Panel 2
-                            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                        <BhAccordionTrigger class="accordion-trigger">
+                            <Template Context="t">
+                                Panel 2
+                                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                            </Template>
                         </BhAccordionTrigger>
                         <BhAccordionContent class="accordion-content">
                             <div class="accordion-body">This panel is toggled by the button above.</div>
@@ -186,9 +204,11 @@
     private const string _basicCode = """
 <BhAccordion DefaultValue="item-1" class="accordion">
     <BhAccordionItem Value="item-1" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            What is BlazorHeadless?
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                What is BlazorHeadless?
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">
@@ -199,9 +219,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="item-2" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            Why headless?
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                Why headless?
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">
@@ -212,9 +234,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="item-3" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            How do I style it?
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                How do I style it?
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">
@@ -229,9 +253,11 @@
     private const string _multipleCode = """
 <BhAccordion Type="BhAccordionType.Multiple" class="accordion">
     <BhAccordionItem Value="faq-1" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            Can I open multiple panels?
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                Can I open multiple panels?
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">
@@ -241,9 +267,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="faq-2" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            Does this one close when I open another?
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                Does this one close when I open another?
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">
@@ -257,9 +285,11 @@
     private const string _disabledCode = """
 <BhAccordion class="accordion">
     <BhAccordionItem Value="d-1" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            I am enabled
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                I am enabled
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">This item works normally.</div>
@@ -267,9 +297,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="d-2" Disabled="true" class="accordion-item">
-        <BhAccordionTrigger class="accordion-trigger" Context="t">
-            I am disabled
-            <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+        <BhAccordionTrigger class="accordion-trigger">
+            <Template Context="t">
+                I am disabled
+                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent class="accordion-content">
             <div class="accordion-body">You should not be able to open this.</div>
@@ -291,9 +323,11 @@
                 OnValueChange="v => controlledValue = v"
                 class="accordion">
         <BhAccordionItem Value="ctrl-1" class="accordion-item">
-            <BhAccordionTrigger class="accordion-trigger" Context="t">
-                Panel 1
-                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            <BhAccordionTrigger class="accordion-trigger">
+                <Template Context="t">
+                    Panel 1
+                    <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                </Template>
             </BhAccordionTrigger>
             <BhAccordionContent class="accordion-content">
                 <div class="accordion-body">Controlled by external state.</div>
@@ -301,9 +335,11 @@
         </BhAccordionItem>
 
         <BhAccordionItem Value="ctrl-2" class="accordion-item">
-            <BhAccordionTrigger class="accordion-trigger" Context="t">
-                Panel 2
-                <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+            <BhAccordionTrigger class="accordion-trigger">
+                <Template Context="t">
+                    Panel 2
+                    <span class="accordion-chevron @(t.IsOpen ? "open" : "")">▾</span>
+                </Template>
             </BhAccordionTrigger>
             <BhAccordionContent class="accordion-content">
                 <div class="accordion-body">This panel is toggled by the button above.</div>

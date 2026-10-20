@@ -56,26 +56,28 @@
             or apply classes based on hover, focus, and active states.
         </Description>
         <LiveContent>
-            <BhDataInteractive As="button" class="interactive-card" Context="state">
-                <span class="card-icon">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
-                <span class="card-label">
-                    @if (state.Active)
-                    {
-                        <span>Pressing!</span>
-                    }
-                    else if (state.Hover)
-                    {
-                        <span>Hovering…</span>
-                    }
-                    else if (state.Focus)
-                    {
-                        <span>Focused (Tab here)</span>
-                    }
-                    else
-                    {
-                        <span>Interact with me</span>
-                    }
-                </span>
+            <BhDataInteractive As="button" class="interactive-card">
+                <Template Context="state">
+                    <span class="card-icon">@(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")</span>
+                    <span class="card-label">
+                        @if (state.Active)
+                        {
+                            <span>Pressing!</span>
+                        }
+                        else if (state.Hover)
+                        {
+                            <span>Hovering…</span>
+                        }
+                        else if (state.Focus)
+                        {
+                            <span>Focused (Tab here)</span>
+                        }
+                        else
+                        {
+                            <span>Interact with me</span>
+                        }
+                    </span>
+                </Template>
             </BhDataInteractive>
         </LiveContent>
     </DemoBlock>
@@ -130,19 +132,21 @@
             watch the state indicators update in real time.
         </Description>
         <LiveContent>
-            <BhDataInteractive As="button" class="inspector-target" Context="s">
-                <span class="inspector-label">Interact with this button</span>
-                <div class="inspector-states">
-                    <span class="state-badge @(s.Hover ? "state-on" : "")">
-                        data-hover: @(s.Hover ? "✓" : "✗")
-                    </span>
-                    <span class="state-badge @(s.Focus ? "state-on" : "")">
-                        data-focus: @(s.Focus ? "✓" : "✗")
-                    </span>
-                    <span class="state-badge @(s.Active ? "state-on" : "")">
-                        data-active: @(s.Active ? "✓" : "✗")
-                    </span>
-                </div>
+            <BhDataInteractive As="button" class="inspector-target">
+                <Template Context="s">
+                    <span class="inspector-label">Interact with this button</span>
+                    <div class="inspector-states">
+                        <span class="state-badge @(s.Hover ? "state-on" : "")">
+                            data-hover: @(s.Hover ? "✓" : "✗")
+                        </span>
+                        <span class="state-badge @(s.Focus ? "state-on" : "")">
+                            data-focus: @(s.Focus ? "✓" : "✗")
+                        </span>
+                        <span class="state-badge @(s.Active ? "state-on" : "")">
+                            data-active: @(s.Active ? "✓" : "✗")
+                        </span>
+                    </div>
+                </Template>
             </BhDataInteractive>
         </LiveContent>
     </DemoBlock>
@@ -167,16 +171,18 @@
 """;
 
     private const string _contextCode = """
-<BhDataInteractive As="button" class="interactive-card" Context="state">
-    <span class="card-icon">
-        @(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")
-    </span>
-    <span class="card-label">
-        @if (state.Active)      { <span>Pressing!</span> }
-        else if (state.Hover)   { <span>Hovering…</span> }
-        else if (state.Focus)   { <span>Focused (Tab here)</span> }
-        else                    { <span>Interact with me</span> }
-    </span>
+<BhDataInteractive As="button" class="interactive-card">
+    <Template Context="state">
+        <span class="card-icon">
+            @(state.Active ? "⚡" : state.Hover ? "👆" : "🖱️")
+        </span>
+        <span class="card-label">
+            @if (state.Active)      { <span>Pressing!</span> }
+            else if (state.Hover)   { <span>Hovering…</span> }
+            else if (state.Focus)   { <span>Focused (Tab here)</span> }
+            else                    { <span>Interact with me</span> }
+        </span>
+    </Template>
 </BhDataInteractive>
 """;
 
@@ -203,13 +209,15 @@
 """;
 
     private const string _inspectorCode = """
-<BhDataInteractive As="button" class="inspector-target" Context="s">
-    <span>Interact with this button</span>
-    <div class="inspector-states">
-        <span>data-hover: @(s.Hover ? "✓" : "✗")</span>
-        <span>data-focus: @(s.Focus ? "✓" : "✗")</span>
-        <span>data-active: @(s.Active ? "✓" : "✗")</span>
-    </div>
+<BhDataInteractive As="button" class="inspector-target">
+    <Template Context="s">
+        <span>Interact with this button</span>
+        <div class="inspector-states">
+            <span>data-hover: @(s.Hover ? "✓" : "✗")</span>
+            <span>data-focus: @(s.Focus ? "✓" : "✗")</span>
+            <span>data-active: @(s.Active ? "✓" : "✗")</span>
+        </div>
+    </Template>
 </BhDataInteractive>
 """;
 
@@ -251,7 +259,7 @@
     display: inline-block;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
-    color: #3b82f6;
+    color: #2563eb;
     text-decoration: none;
     border-radius: 0.375rem;
     transition: all 150ms ease;
@@ -413,7 +421,7 @@
     font-family: monospace;
     border-radius: 0.25rem;
     background: #f4f4f5;
-    color: #71717a;
+    color: #52525b;
     border: 1px solid #e4e4e7;
 }
 

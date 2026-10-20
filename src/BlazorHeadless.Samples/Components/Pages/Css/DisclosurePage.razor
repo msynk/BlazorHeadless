@@ -63,15 +63,19 @@
         </Description>
         <LiveContent>
             <BhDisclosure class="disclosure">
-                <BhDisclosureButton class="disclosure-button" Context="d">
-                    <span>What's inside?</span>
-                    <span class="disclosure-chevron @(d.IsOpen ? "open" : "")">▾</span>
+                <BhDisclosureButton class="disclosure-button">
+                    <Template Context="d">
+                        <span>What's inside?</span>
+                        <span class="disclosure-chevron @(d.IsOpen ? "open" : "")">▾</span>
+                    </Template>
                 </BhDisclosureButton>
-                <BhDisclosurePanel class="disclosure-panel" Context="d">
-                    <div class="disclosure-body">
-                        <p>You can close me from inside the panel:</p>
-                        <button class="btn" @onclick="d.Close">Close panel</button>
-                    </div>
+                <BhDisclosurePanel class="disclosure-panel">
+                    <Template Context="d">
+                        <div class="disclosure-body">
+                            <p>You can close me from inside the panel:</p>
+                            <button class="btn" @onclick="d.Close">Close panel</button>
+                        </div>
+                    </Template>
                 </BhDisclosurePanel>
             </BhDisclosure>
         </LiveContent>
@@ -165,15 +169,19 @@
 
     private const string _renderContextCode = """
 <BhDisclosure class="disclosure">
-    <BhDisclosureButton class="disclosure-button" Context="d">
-        <span>What's inside?</span>
-        <span class="disclosure-chevron @(d.IsOpen ? "open" : "")">▾</span>
+    <BhDisclosureButton class="disclosure-button">
+        <Template Context="d">
+            <span>What's inside?</span>
+            <span class="disclosure-chevron @(d.IsOpen ? "open" : "")">▾</span>
+        </Template>
     </BhDisclosureButton>
-    <BhDisclosurePanel class="disclosure-panel" Context="d">
-        <div class="disclosure-body">
-            <p>You can close me from inside the panel:</p>
-            <button class="btn" @onclick="d.Close">Close panel</button>
-        </div>
+    <BhDisclosurePanel class="disclosure-panel">
+        <Template Context="d">
+            <div class="disclosure-body">
+                <p>You can close me from inside the panel:</p>
+                <button class="btn" @onclick="d.Close">Close panel</button>
+            </div>
+        </Template>
     </BhDisclosurePanel>
 </BhDisclosure>
 """;

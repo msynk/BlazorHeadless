@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sortable — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html" class="active">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Sortable</h1>
+        <p class="lead">Reorder a list by dragging with a pointer or entirely with the keyboard, with live screen-reader announcements.</p>
+        <h2 id="reorderable-task-list">Reorderable task list</h2>
+        <p>Bind the list with <code>@@bind-Items</code>; <code>ItemKey</code> keeps each row's identity stable and <code>ItemLabel</code> names it in announcements. Drag a grip with a mouse, pen or finger — or focus a grip, press <kbd>Space</kbd> / <kbd>Enter</kbd> to pick the task up, <kbd>↑</kbd> / <kbd>↓</kbd> to move it, <kbd>Space</kbd> / <kbd>Enter</kbd> to drop it and <kbd>Escape</kbd> to cancel. Each step is announced automatically.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="TaskItem" @bind-Items="tasks"
+            ItemKey="t =&gt; t.Id" ItemLabel="t =&gt; t.Title"
+            aria-label="Tasks" class="sortable-list" Context="s"&gt;
+    &lt;BhSortableHandle TItem="TaskItem" class="sortable-handle"
+                      aria-label="@($"Reorder {s.Item.Title}")"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="sortable-title"&gt;@s.Item.Title&lt;/span&gt;
+    &lt;span class="sortable-tag"&gt;@s.Item.Tag&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+&lt;p class="sortable-output"&gt;
+    Bound order (ids): &lt;strong&gt;@string.Join(" · ", tasks.Select(t =&gt; t.Id))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    public sealed record TaskItem(int Id, string Title, string Tag);
+
+    // Declare the field with the parameter's type (IList&lt;T&gt;) so @bind-Items infers cleanly.
+    private IList&lt;TaskItem&gt; tasks =
+    [
+        new(1, "Write release notes", "Docs"),
+        new(2, "Fix flaky login test", "Bug"),
+        new(3, "Review pull requests", "Team"),
+        new(4, "Update dependencies", "Chore"),
+    ];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Each item is rendered by BhSortable as &lt;li data-bh-sortable-item&gt;. */
+.sortable-list &gt; li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem 0.55rem 0.5rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* data-dragging: the item is picked up (keyboard) or dragged (pointer). */
+.sortable-list &gt; li[data-dragging] {
+    border-color: #2563eb;
+    box-shadow: 0 10px 24px rgba(24, 24, 27, 0.14);
+}
+
+/* The root also carries data-dragging while any item moves. */
+.sortable-list[data-dragging] { user-select: none; }
+
+/* Drag handle (BhSortableHandle renders a &lt;button&gt;) */
+.sortable-handle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: #a1a1aa;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: grab;
+    touch-action: none;   /* lets touch drags start on the handle */
+    user-select: none;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sortable-handle:hover         { background: #f4f4f5; color: #3f3f46; }
+.sortable-handle:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" (and data-dragging) while picked up with the keyboard */
+.sortable-handle[aria-pressed="true"] {
+    background: #2563eb;
+    color: #fff;
+    cursor: grabbing;
+}
+
+.sortable-title { flex: 1; color: #18181b; }
+
+.sortable-tag {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #52525b;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Demo layout */
+.sortable-demo { display: grid; gap: 1rem; width: 100%; }
+
+.sortable-output { margin: 0; font-size: 0.85rem; color: #71717a; }
+.sortable-output strong { color: #18181b; font-weight: 600; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="TaskItem" @bind-Items="tasks"
+            ItemKey="t =&gt; t.Id" ItemLabel="t =&gt; t.Title"
+            aria-label="Tasks"
+            class="m-0 flex w-full max-w-md list-none flex-col gap-2 p-0 data-dragging:select-none *:flex *:items-center *:gap-3 *:rounded-lg *:border *:border-zinc-200 *:bg-white *:py-2 *:pr-3 *:pl-2 *:text-sm *:transition *:data-dragging:border-blue-600 *:data-dragging:shadow-lg"
+            Context="s"&gt;
+    &lt;BhSortableHandle TItem="TaskItem" aria-label="@($"Reorder {s.Item.Title}")"
+                      class="inline-grid size-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded-md text-base leading-none text-zinc-400 outline-none transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:cursor-grabbing aria-pressed:bg-blue-600 aria-pressed:text-white"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="flex-1 text-zinc-900"&gt;@s.Item.Title&lt;/span&gt;
+    &lt;span class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600"&gt;@s.Item.Tag&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;
+    Bound order (ids): &lt;strong class="font-semibold text-zinc-900"&gt;@string.Join(" · ", tasks.Select(t =&gt; t.Id))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    public sealed record TaskItem(int Id, string Title, string Tag);
+
+    // Declare the field with the parameter's type (IList&lt;T&gt;) so @bind-Items infers cleanly.
+    private IList&lt;TaskItem&gt; tasks =
+    [
+        new(1, "Write release notes", "Docs"),
+        new(2, "Fix flaky login test", "Bug"),
+        new(3, "Review pull requests", "Team"),
+        new(4, "Update dependencies", "Chore"),
+    ];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="onreorder-event-log">OnReorder event log</h2>
+        <p><code>OnReorder</code> fires once per committed move with the item and its old and new index — handy for persisting the order or sending a PATCH. Moves cancelled with <kbd>Escape</kbd> (or dropped in place) don't fire it.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="string" @bind-Items="backlog" OnReorder="LogReorder"
+            aria-label="Sprint backlog" class="sortable-list" Context="s"&gt;
+    &lt;BhSortableHandle TItem="string" class="sortable-handle"
+                      aria-label="@($"Reorder {s.Item}")"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="sortable-title"&gt;@s.Item&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+&lt;ol class="sortable-log" aria-label="Reorder events"&gt;
+    @if (reorderLog.Count == 0)
+    {
+        &lt;li class="sortable-log-empty"&gt;No moves yet — reorder an item.&lt;/li&gt;
+    }
+    @foreach (var entry in reorderLog)
+    {
+        &lt;li&gt;@entry&lt;/li&gt;
+    }
+&lt;/ol&gt;
+
+@code {
+    private IList&lt;string&gt; backlog = ["Login page", "Password reset", "Audit log", "Dark mode", "CSV export"];
+    private readonly List&lt;string&gt; reorderLog = [];
+
+    private void LogReorder(BhReorderEventArgs&lt;string&gt; e)
+    {
+        reorderLog.Insert(0, $"“{e.Item}” moved from index {e.OldIndex} to {e.NewIndex}");
+        if (reorderLog.Count &gt; 6) reorderLog.RemoveAt(reorderLog.Count - 1);
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Each item is rendered by BhSortable as &lt;li data-bh-sortable-item&gt;. */
+.sortable-list &gt; li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem 0.55rem 0.5rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* data-dragging: the item is picked up (keyboard) or dragged (pointer). */
+.sortable-list &gt; li[data-dragging] {
+    border-color: #2563eb;
+    box-shadow: 0 10px 24px rgba(24, 24, 27, 0.14);
+}
+
+/* The root also carries data-dragging while any item moves. */
+.sortable-list[data-dragging] { user-select: none; }
+
+/* Drag handle (BhSortableHandle renders a &lt;button&gt;) */
+.sortable-handle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: #a1a1aa;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: grab;
+    touch-action: none;   /* lets touch drags start on the handle */
+    user-select: none;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sortable-handle:hover         { background: #f4f4f5; color: #3f3f46; }
+.sortable-handle:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" (and data-dragging) while picked up with the keyboard */
+.sortable-handle[aria-pressed="true"] {
+    background: #2563eb;
+    color: #fff;
+    cursor: grabbing;
+}
+
+.sortable-title { flex: 1; color: #18181b; }
+
+/* List and log side by side */
+.sortable-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    align-items: start;
+}
+
+.sortable-log {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    list-style: none;
+    min-height: 100%;
+    background: #fafafa;
+    border: 1px dashed #d4d4d8;
+    border-radius: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.78rem;
+    color: #3f3f46;
+}
+
+.sortable-log li + li { margin-top: 0.35rem; }
+.sortable-log-empty   { color: #71717a; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="grid w-full grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] items-start gap-6"&gt;
+    &lt;BhSortable TItem="string" @bind-Items="backlog" OnReorder="LogReorder"
+                aria-label="Sprint backlog"
+                class="m-0 flex w-full list-none flex-col gap-2 p-0 data-dragging:select-none *:flex *:items-center *:gap-3 *:rounded-lg *:border *:border-zinc-200 *:bg-white *:py-2 *:pr-3 *:pl-2 *:text-sm *:transition *:data-dragging:border-blue-600 *:data-dragging:shadow-lg"
+                Context="s"&gt;
+        &lt;BhSortableHandle TItem="string" aria-label="@($"Reorder {s.Item}")"
+                          class="inline-grid size-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded-md text-base leading-none text-zinc-400 outline-none transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:cursor-grabbing aria-pressed:bg-blue-600 aria-pressed:text-white"&gt;⠿&lt;/BhSortableHandle&gt;
+        &lt;span class="flex-1 text-zinc-900"&gt;@s.Item&lt;/span&gt;
+    &lt;/BhSortable&gt;
+
+    &lt;ol class="m-0 min-h-full list-none space-y-1.5 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 font-mono text-xs text-zinc-700"
+        aria-label="Reorder events"&gt;
+        @if (reorderLog.Count == 0)
+        {
+            &lt;li class="text-zinc-500"&gt;No moves yet — reorder an item.&lt;/li&gt;
+        }
+        @foreach (var entry in reorderLog)
+        {
+            &lt;li&gt;@entry&lt;/li&gt;
+        }
+    &lt;/ol&gt;
+&lt;/div&gt;
+
+@code {
+    private IList&lt;string&gt; backlog = ["Login page", "Password reset", "Audit log", "Dark mode", "CSV export"];
+    private readonly List&lt;string&gt; reorderLog = [];
+
+    private void LogReorder(BhReorderEventArgs&lt;string&gt; e)
+    {
+        reorderLog.Insert(0, $"“{e.Item}” moved from index {e.OldIndex} to {e.NewIndex}");
+        if (reorderLog.Count &gt; 6) reorderLog.RemoveAt(reorderLog.Count - 1);
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="horizontal-orientation">Horizontal orientation</h2>
+        <p>Set <code>Orientation="BhOrientation.Horizontal"</code> for a row: pointer drags shift siblings sideways and, once picked up, <kbd>←</kbd> / <kbd>→</kbd> move the item. Here the whole chip is the <code>BhSortableHandle</code>, so its text becomes the accessible name.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="string" @bind-Items="priorities"
+            Orientation="BhOrientation.Horizontal"
+            aria-label="Priorities" class="sortable-row" Context="s"&gt;
+    @* The whole chip is the handle: pointer drags and keyboard both start here. *@
+    &lt;BhSortableHandle TItem="string" class="sortable-chip"&gt;
+        &lt;span class="sortable-chip-grip" aria-hidden="true"&gt;⠿&lt;/span&gt;@s.Item
+    &lt;/BhSortableHandle&gt;
+&lt;/BhSortable&gt;
+
+&lt;p class="sortable-output"&gt;
+    Ranking: &lt;strong&gt;@string.Join(" › ", priorities)&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private IList&lt;string&gt; priorities = ["Speed", "Quality", "Cost", "Scope"];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.sortable-row {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* &lt;li data-bh-sortable-item&gt; rendered by BhSortable */
+.sortable-row &gt; li {
+    background: #fff;
+    border: 1px solid #d4d4d8;
+    border-radius: 999px;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.sortable-row &gt; li[data-dragging] {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 6px 16px rgba(24, 24, 27, 0.14);
+}
+
+/* The chip is the BhSortableHandle &lt;button&gt; */
+.sortable-chip {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #3f3f46;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.sortable-chip:focus-visible        { outline: 2px solid #2563eb; outline-offset: 2px; }
+.sortable-chip[aria-pressed="true"] { color: #1d4ed8; cursor: grabbing; }
+.sortable-chip-grip                 { color: #a1a1aa; }
+
+/* Demo layout */
+.sortable-demo { display: grid; gap: 1rem; width: 100%; }
+
+.sortable-output { margin: 0; font-size: 0.85rem; color: #71717a; }
+.sortable-output strong { color: #18181b; font-weight: 600; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="string" @bind-Items="priorities"
+            Orientation="BhOrientation.Horizontal" aria-label="Priorities"
+            class="m-0 flex list-none gap-2 p-0 *:rounded-full *:border *:border-zinc-300 *:bg-white *:transition *:data-dragging:border-blue-600 *:data-dragging:bg-blue-50 *:data-dragging:shadow-md"
+            Context="s"&gt;
+    @* The whole chip is the handle: pointer drags and keyboard both start here. *@
+    &lt;BhSortableHandle TItem="string"
+                      class="inline-flex cursor-grab touch-none select-none items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium text-zinc-700 outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:cursor-grabbing aria-pressed:text-blue-700"&gt;
+        &lt;span class="text-zinc-400" aria-hidden="true"&gt;⠿&lt;/span&gt;@s.Item
+    &lt;/BhSortableHandle&gt;
+&lt;/BhSortable&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;
+    Ranking: &lt;strong class="font-semibold text-zinc-900"&gt;@string.Join(" › ", priorities)&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private IList&lt;string&gt; priorities = ["Speed", "Quality", "Cost", "Scope"];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="custom-announcements">Custom announcements</h2>
+        <p>Pass a <code>BhSortableAnnouncements</code> to localize or reword what screen readers hear: the <code>Instructions</code> every handle is described by, plus the <code>PickedUp</code>, <code>Moved</code>, <code>Dropped</code> and <code>Cancelled</code> messages. The template's <code>Index</code> is the live (preview) position.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="string" @bind-Items="queue" Announcements="queueAnnouncements"
+            aria-label="Up next" class="sortable-list" Context="s"&gt;
+    &lt;BhSortableHandle TItem="string" class="sortable-handle"
+                      aria-label="@($"Move {s.Item}")"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="sortable-index"&gt;@(s.Index + 1)&lt;/span&gt;
+    &lt;span class="sortable-title"&gt;@s.Item&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+@code {
+    private IList&lt;string&gt; queue = ["Blue in Green", "So What", "Naima", "Take Five"];
+
+    private readonly BhSortableAnnouncements queueAnnouncements = new()
+    {
+        Instructions = "Press Space to grab a song. Use the up and down arrows to change its place in the queue, Space to drop it, or Escape to cancel.",
+        PickedUp = (song, position, count) =&gt; $"Grabbed {song}. It plays as number {position} of {count}.",
+        Moved = (song, position, count) =&gt; $"{song} now plays as number {position} of {count}.",
+        Dropped = (song, position, _) =&gt; position == 1 ? $"{song} plays next." : $"{song} plays as number {position}.",
+        Cancelled = (song, position) =&gt; $"Cancelled. {song} stays at number {position}.",
+    };
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Each item is rendered by BhSortable as &lt;li data-bh-sortable-item&gt;. */
+.sortable-list &gt; li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem 0.55rem 0.5rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* data-dragging: the item is picked up (keyboard) or dragged (pointer). */
+.sortable-list &gt; li[data-dragging] {
+    border-color: #2563eb;
+    box-shadow: 0 10px 24px rgba(24, 24, 27, 0.14);
+}
+
+/* The root also carries data-dragging while any item moves. */
+.sortable-list[data-dragging] { user-select: none; }
+
+/* Drag handle (BhSortableHandle renders a &lt;button&gt;) */
+.sortable-handle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: #a1a1aa;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: grab;
+    touch-action: none;   /* lets touch drags start on the handle */
+    user-select: none;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sortable-handle:hover         { background: #f4f4f5; color: #3f3f46; }
+.sortable-handle:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" (and data-dragging) while picked up with the keyboard */
+.sortable-handle[aria-pressed="true"] {
+    background: #2563eb;
+    color: #fff;
+    cursor: grabbing;
+}
+
+.sortable-title { flex: 1; color: #18181b; }
+
+/* Live position badge (the template's Index) */
+.sortable-index {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSortable TItem="string" @bind-Items="queue" Announcements="queueAnnouncements"
+            aria-label="Up next"
+            class="m-0 flex w-full max-w-md list-none flex-col gap-2 p-0 data-dragging:select-none *:flex *:items-center *:gap-3 *:rounded-lg *:border *:border-zinc-200 *:bg-white *:py-2 *:pr-3 *:pl-2 *:text-sm *:transition *:data-dragging:border-blue-600 *:data-dragging:shadow-lg"
+            Context="s"&gt;
+    &lt;BhSortableHandle TItem="string" aria-label="@($"Move {s.Item}")"
+                      class="inline-grid size-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded-md text-base leading-none text-zinc-400 outline-none transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:cursor-grabbing aria-pressed:bg-blue-600 aria-pressed:text-white"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="inline-grid size-6 place-items-center rounded-full bg-blue-50 text-xs font-semibold tabular-nums text-blue-700"&gt;@(s.Index + 1)&lt;/span&gt;
+    &lt;span class="flex-1 text-zinc-900"&gt;@s.Item&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+@code {
+    private IList&lt;string&gt; queue = ["Blue in Green", "So What", "Naima", "Take Five"];
+
+    private readonly BhSortableAnnouncements queueAnnouncements = new()
+    {
+        Instructions = "Press Space to grab a song. Use the up and down arrows to change its place in the queue, Space to drop it, or Escape to cancel.",
+        PickedUp = (song, position, count) =&gt; $"Grabbed {song}. It plays as number {position} of {count}.",
+        Moved = (song, position, count) =&gt; $"{song} now plays as number {position} of {count}.",
+        Dropped = (song, position, _) =&gt; position == 1 ? $"{song} plays next." : $"{song} plays as number {position}.",
+        Cancelled = (song, position) =&gt; $"Cancelled. {song} stays at number {position}.",
+    };
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled">Disabled</h2>
+        <p><code>Disabled="true"</code> stops pointer and keyboard reordering. The root and every item get <code>data-disabled</code> and the handles <code>aria-disabled="true"</code>. The lock below is a <code>BhToggle</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle @bind-Pressed="locked" class="sortable-lock"&gt;Lock order&lt;/BhToggle&gt;
+
+&lt;BhSortable TItem="string" @bind-Items="steps" Disabled="locked"
+            aria-label="Onboarding steps" class="sortable-list" Context="s"&gt;
+    &lt;BhSortableHandle TItem="string" class="sortable-handle"
+                      aria-label="@($"Reorder {s.Item}")"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="sortable-title"&gt;@s.Item&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+@code {
+    private bool locked = true;
+    private IList&lt;string&gt; steps = ["Create account", "Verify email", "Invite teammates", "Connect a repository"];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Each item is rendered by BhSortable as &lt;li data-bh-sortable-item&gt;. */
+.sortable-list &gt; li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem 0.55rem 0.5rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+/* data-dragging: the item is picked up (keyboard) or dragged (pointer). */
+.sortable-list &gt; li[data-dragging] {
+    border-color: #2563eb;
+    box-shadow: 0 10px 24px rgba(24, 24, 27, 0.14);
+}
+
+/* The root also carries data-dragging while any item moves. */
+.sortable-list[data-dragging] { user-select: none; }
+
+/* Drag handle (BhSortableHandle renders a &lt;button&gt;) */
+.sortable-handle {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: #a1a1aa;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: grab;
+    touch-action: none;   /* lets touch drags start on the handle */
+    user-select: none;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.sortable-handle:hover         { background: #f4f4f5; color: #3f3f46; }
+.sortable-handle:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" (and data-dragging) while picked up with the keyboard */
+.sortable-handle[aria-pressed="true"] {
+    background: #2563eb;
+    color: #fff;
+    cursor: grabbing;
+}
+
+.sortable-title { flex: 1; color: #18181b; }
+
+/* Hooks emitted when Disabled="true" */
+.sortable-list[data-disabled] &gt; li {
+    background: #fafafa;
+    color: #71717a;
+}
+
+.sortable-handle[aria-disabled="true"] { cursor: not-allowed; opacity: 0.5; }
+
+/* The lock is a BhToggle: data-state="on|off" + aria-pressed */
+.sortable-lock {
+    all: unset;
+    box-sizing: border-box;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #3f3f46;
+    cursor: pointer;
+}
+
+.sortable-lock:hover               { background: #f4f4f5; }
+.sortable-lock:focus-visible       { outline: 2px solid #2563eb; outline-offset: 2px; }
+.sortable-lock[data-state="on"]    { background: #18181b; border-color: #18181b; color: #fff; }
+
+.sortable-demo { display: grid; gap: 1rem; width: 100%; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle @bind-Pressed="locked"
+          class="inline-flex cursor-pointer items-center justify-self-start rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 outline-none transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 data-[state=on]:border-zinc-900 data-[state=on]:bg-zinc-900 data-[state=on]:text-white data-[state=on]:hover:bg-zinc-800"&gt;Lock order&lt;/BhToggle&gt;
+
+&lt;BhSortable TItem="string" @bind-Items="steps" Disabled="locked"
+            aria-label="Onboarding steps"
+            class="m-0 flex w-full max-w-md list-none flex-col gap-2 p-0 *:flex *:items-center *:gap-3 *:rounded-lg *:border *:border-zinc-200 *:bg-white *:py-2 *:pr-3 *:pl-2 *:text-sm *:transition *:data-dragging:border-blue-600 *:data-dragging:shadow-lg data-disabled:*:bg-zinc-50 data-disabled:*:text-zinc-500"
+            Context="s"&gt;
+    &lt;BhSortableHandle TItem="string" aria-label="@($"Reorder {s.Item}")"
+                      class="inline-grid size-7 shrink-0 cursor-grab touch-none select-none place-items-center rounded-md text-base leading-none text-zinc-400 outline-none transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:cursor-grabbing aria-pressed:bg-blue-600 aria-pressed:text-white aria-disabled:cursor-not-allowed aria-disabled:opacity-50"&gt;⠿&lt;/BhSortableHandle&gt;
+    &lt;span class="flex-1"&gt;@s.Item&lt;/span&gt;
+&lt;/BhSortable&gt;
+
+@code {
+    private bool locked = true;
+    private IList&lt;string&gt; steps = ["Create account", "Verify email", "Invite teammates", "Connect a repository"];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="slider.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Slider</span>
+        </a>
+            <a class="next" href="switch.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Switch</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

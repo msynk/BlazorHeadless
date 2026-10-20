@@ -55,7 +55,7 @@ public class BhAvatarImage : BhComponentBase
 
     private BhAvatarImageLoadingStatus Status => AvatarContext?.Status ?? BhAvatarImageLoadingStatus.Idle;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (string.IsNullOrEmpty(Src))
         {
@@ -63,7 +63,7 @@ public class BhAvatarImage : BhComponentBase
             if (_reportedSrc is not null || Status != BhAvatarImageLoadingStatus.Error)
             {
                 _reportedSrc = null;
-                ReportStatus(BhAvatarImageLoadingStatus.Error);
+                await ReportStatusAsync(BhAvatarImageLoadingStatus.Error);
             }
             return;
         }
@@ -72,7 +72,7 @@ public class BhAvatarImage : BhComponentBase
         {
             // A new source begins loading.
             _reportedSrc = Src;
-            ReportStatus(BhAvatarImageLoadingStatus.Loading);
+            await ReportStatusAsync(BhAvatarImageLoadingStatus.Loading);
         }
     }
 
@@ -105,13 +105,13 @@ public class BhAvatarImage : BhComponentBase
         builder.CloseElement();
     }
 
-    private void HandleLoad(ProgressEventArgs args) => ReportStatus(BhAvatarImageLoadingStatus.Loaded);
+    private Task HandleLoad(ProgressEventArgs args) => ReportStatusAsync(BhAvatarImageLoadingStatus.Loaded);
 
-    private void HandleError(Microsoft.AspNetCore.Components.Web.ErrorEventArgs args) => ReportStatus(BhAvatarImageLoadingStatus.Error);
+    private Task HandleError(Microsoft.AspNetCore.Components.Web.ErrorEventArgs args) => ReportStatusAsync(BhAvatarImageLoadingStatus.Error);
 
-    private void ReportStatus(BhAvatarImageLoadingStatus status)
+    private Task ReportStatusAsync(BhAvatarImageLoadingStatus status)
     {
         AvatarContext?.SetStatus(status);
-        _ = OnLoadingStatusChange.InvokeAsync(status);
+        return OnLoadingStatusChange.InvokeAsync(status);
     }
 }

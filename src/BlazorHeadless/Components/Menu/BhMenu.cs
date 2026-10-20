@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
@@ -9,42 +8,60 @@ namespace BlazorHeadless;
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Action-based</b> — each item runs a callback and closes the menu. No selection model.</item>
-///   <item><b>Virtual focus</b> — focus stays on the button; <c>aria-activedescendant</c> drives screen-reader announcements.</item>
-///   <item><b>Full keyboard support</b> — ArrowDown/Up (with auto-open), Home, End, Enter/Space (activate), Escape, Tab, typeahead.</item>
-///   <item><b>Click-outside closes</b> via a transparent full-viewport overlay.</item>
-///   <item><b>Compound API</b> — <see cref="BhMenuButton"/>, <see cref="BhMenuItems"/>, <see cref="BhMenuItem"/>.</item>
-///   <item><b>Data attributes</b> — <c>data-state="open|closed"</c> on root and panel; <c>data-active</c>, <c>data-disabled</c> on items.</item>
+///   <item><b>Rich items</b> — <see cref="BhMenuItem"/>, <see cref="BhMenuCheckboxItem"/>, <see cref="BhMenuRadioGroup"/> / <see cref="BhMenuRadioItem"/>, groups, labels, separators.</item>
+///   <item><b>Nested submenus</b> — <see cref="BhMenuSub"/>, <see cref="BhMenuSubTrigger"/>, <see cref="BhMenuSubContent"/> with hover intent and keyboard support.</item>
+///   <item><b>Full keyboard support</b> — Enter / Space / ArrowDown / ArrowUp open; arrows, Home / End, typeahead navigate; Enter / Space activate; ArrowRight / ArrowLeft enter and leave submenus; Escape and Tab close.</item>
+///   <item><b>Focus management</b> — focus moves into the menu (items are announced via <c>aria-activedescendant</c>) and returns to the button on close.</item>
+///   <item><b>Dismissal</b> — pointer-down outside or Escape closes it; no invisible overlays, so the first outside click still reaches its target.</item>
+///   <item><b>Menubar ready</b> — place menus inside a <see cref="BhMenubar"/> for an application menu bar.</item>
+///   <item><b>Data attributes</b> — <c>data-state="open|closed"</c>; <c>data-active</c> / <c>data-highlighted</c>, <c>data-disabled</c>, <c>data-state="checked|unchecked"</c> on items.</item>
 /// </list>
 ///
 /// <para><b>Usage:</b></para>
 /// <code>
-/// &lt;BhMenu class="menu"&gt;
-///     &lt;BhMenuButton class="menu-button"&gt;Options ▾&lt;/BhMenuButton&gt;
-///     &lt;BhMenuItems class="menu-items"&gt;
-///         &lt;BhMenuItem OnClick="Edit"   class="menu-item"&gt;Edit&lt;/BhMenuItem&gt;
-///         &lt;BhMenuItem OnClick="Delete" class="menu-item" Disabled="true"&gt;Delete&lt;/BhMenuItem&gt;
+/// &lt;BhMenu&gt;
+///     &lt;BhMenuButton&gt;Options ▾&lt;/BhMenuButton&gt;
+///     &lt;BhMenuItems Anchor="@("bottom start")"&gt;
+///         &lt;BhMenuItem OnClick="Edit"&gt;Edit&lt;/BhMenuItem&gt;
+///         &lt;BhMenuItem OnClick="Delete" Disabled="true"&gt;Delete&lt;/BhMenuItem&gt;
 ///     &lt;/BhMenuItems&gt;
 /// &lt;/BhMenu&gt;
 /// </code>
 /// </summary>
-public class BhMenu : BhComponentBase
+public class BhMenu : BhComponentBase, IBhMenuRoot, IDisposable
 {
-    private readonly List<BhMenuItem> _items = new();
+    private bool _open;
+    private BhMenuFocus _focusIntent;
 
-    private bool _isOpen;
-    private int _activeIndex = -1;
-    private ElementReference _buttonRef;
+    [CascadingParameter]
+    private BhDirection CascadedDir { get; set; }
 
-    private string _typeaheadBuffer = string.Empty;
-    private DateTime _typeaheadResetAt = DateTime.MinValue;
-    private static readonly TimeSpan TypeaheadWindow = TimeSpan.FromMilliseconds(500);
+    [CascadingParameter]
+    private BhMenubarContext? MenubarContext { get; set; }
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    /// <summary>Whether the menu is open. Supplying it makes the menu controlled (use <c>@bind-Open</c>).</summary>
+    [Parameter]
+    public bool Open { get; set; }
+
+    /// <summary>Initial open state when uncontrolled.</summary>
+    [Parameter]
+    public bool DefaultOpen { get; set; }
+
+    /// <summary>Two-way binding callback for <see cref="Open"/>.</summary>
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Fires whenever the open state changes.</summary>
+    [Parameter]
+    public EventCallback<bool> OnOpenChange { get; set; }
 
     /// <summary>Disables the entire menu.</summary>
     [Parameter]
     public bool Disabled { get; set; }
+
+    /// <summary>Reading direction (flips submenu keys). Inherits from <see cref="BhDirectionProvider"/>.</summary>
+    [Parameter]
+    public BhDirection? Dir { get; set; }
 
     /// <summary>Child content. Should contain an <see cref="BhMenuButton"/> and an <see cref="BhMenuItems"/>.</summary>
     [Parameter]
@@ -52,36 +69,45 @@ public class BhMenu : BhComponentBase
 
     protected override string DefaultTag => "div";
 
-    // ── Rendering ────────────────────────────────────────────────────────────
+    /// <summary>Whether the menu is open.</summary>
+    public bool IsOpen => IsProvided(nameof(Open)) ? Open : _open;
+
+    bool IBhMenuRoot.Disabled => Disabled;
+    BhDirection IBhMenuRoot.Dir => Dir ?? CascadedDir;
+    string? IBhMenuRoot.TriggerId => ButtonId;
+    BhMenubarContext? IBhMenuRoot.Menubar => MenubarContext;
+
+    private string ButtonId => $"{ComponentId}-button";
+    private string ItemsId => $"{ComponentId}-items";
+
+    protected override void OnInitialized()
+    {
+        _open = DefaultOpen;
+        MenubarContext?.Register(this);
+    }
+
+    public void Dispose() => MenubarContext?.Unregister(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenComponent<CascadingValue<BhMenuContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
-        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+        var context = new BhMenuContext(this, IsOpen, Disabled, ComponentId, ButtonId, ItemsId, MenubarContext);
+
+        builder.OpenComponent<CascadingValue<IBhCloseContext>>(0);
+        builder.AddComponentParameter(1, "Value", (IBhCloseContext)context);
+        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(closeOuter =>
         {
-            inner.OpenElement(0, Tag);
-            inner.AddAttribute(10, "id", ComponentId);
-            inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
-            inner.AddContent(40, ChildContent);
-
-            // Click-outside overlay — only present while open.
-            if (_isOpen)
+            closeOuter.OpenComponent<CascadingValue<BhMenuContext>>(0);
+            closeOuter.AddComponentParameter(1, "Value", context);
+            closeOuter.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
             {
-                inner.OpenElement(50, "div");
-                inner.AddAttribute(51, "data-blazor-headless-overlay", true);
-                inner.AddAttribute(52, "style",
-                    "position:fixed;inset:0;z-index:30;background:transparent;");
-                inner.AddAttribute(53, "onclick",
-                    EventCallback.Factory.Create<MouseEventArgs>(this, async _ => await CloseAsync()));
+                inner.OpenElement(0, Tag);
+                inner.AddAttribute(10, "id", ComponentId);
+                inner.AddMultipleAttributes(20, GetFinalAttributes());
+                inner.AddElementReferenceCapture(30, CaptureElement);
+                inner.AddContent(40, ChildContent);
                 inner.CloseElement();
-            }
-
-            inner.CloseElement();
+            }));
+            closeOuter.CloseComponent();
         }));
         builder.CloseComponent();
     }
@@ -89,194 +115,48 @@ public class BhMenu : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataState(attrs, _isOpen);
+        SetDataState(attrs, IsOpen);
         SetDataFlag(attrs, "disabled", Disabled);
         return attrs;
     }
 
-    // ── Context ───────────────────────────────────────────────────────────────
-
-    private BhMenuContext CreateContext()
+    internal BhMenuFocus ConsumeFocusIntent()
     {
-        var ctx = new BhMenuContext(
-            isOpen: _isOpen,
-            disabled: Disabled,
-            activeIndex: _activeIndex,
-            baseId: ComponentId,
-            registerItem: RegisterItem,
-            unregisterItem: UnregisterItem,
-            setActiveIndex: SetActiveIndex,
-            activateItemAsync: ActivateItemAsync,
-            handleButtonKeyDownAsync: HandleButtonKeyDownAsync,
-            handleMenuKeyDownAsync: HandleMenuKeyDownAsync,
-            toggleAsync: ToggleAsync,
-            closeAsync: CloseAsync,
-            registerButton: RegisterButton);
-        ctx.SetButtonRef(_buttonRef);
-        return ctx;
+        var intent = _focusIntent;
+        _focusIntent = BhMenuFocus.Container;
+        return intent;
     }
 
-    // ── Button registration ───────────────────────────────────────────────────
+    internal BhMenuFocus PeekFocusIntent() => _focusIntent;
 
-    private void RegisterButton(ElementReference button) => _buttonRef = button;
-
-    /// <summary>Gets the button element reference for anchor positioning.</summary>
-    internal ElementReference ButtonRef => _buttonRef;
-
-    // ── Item registration ─────────────────────────────────────────────────────
-
-    internal int RegisterItem(BhMenuItem item)
+    /// <summary>Opens the menu, highlighting the item selected by <paramref name="focus"/>.</summary>
+    public async Task OpenAsync(BhMenuFocus focus = BhMenuFocus.Container)
     {
-        if (!_items.Contains(item))
-            _items.Add(item);
-        return _items.IndexOf(item);
+        if (Disabled) return;
+        _focusIntent = focus;
+        if (IsOpen) return;
+        await SetOpenAsync(true);
+        if (MenubarContext is not null)
+            await MenubarContext.OnMenuOpenedAsync(this);
     }
 
-    internal void UnregisterItem(BhMenuItem item) => _items.Remove(item);
+    /// <summary>Closes the menu (and every open submenu).</summary>
+    public Task CloseAsync() => IsOpen ? SetOpenAsync(false) : Task.CompletedTask;
 
-    private void SetActiveIndex(int index)
+    internal Task ToggleAsync(BhMenuFocus focus) => IsOpen ? CloseAsync() : OpenAsync(focus);
+
+    private async Task SetOpenAsync(bool value)
     {
-        if (index == _activeIndex) return;
-        _activeIndex = index;
+        if (!IsProvided(nameof(Open)))
+            _open = value;
+        await OpenChanged.InvokeAsync(value);
+        await OnOpenChange.InvokeAsync(value);
         StateHasChanged();
     }
 
-    // ── Activation ────────────────────────────────────────────────────────────
+    internal Task FocusButtonAsync() => Interop.FocusAsync(ButtonId).AsTask();
 
-    private async Task ActivateItemAsync(int index)
-    {
-        if (Disabled) return;
-        if (index < 0 || index >= _items.Count) return;
-        if (_items[index].IsItemDisabled) return;
+    internal bool IsDisabled => Disabled;
 
-        await CloseAsync();
-        await _items[index].InvokeClickAsync();
-    }
-
-    // ── Open / Close / Toggle ─────────────────────────────────────────────────
-
-    private Task ToggleAsync()
-    {
-        if (Disabled) return Task.CompletedTask;
-        if (_isOpen) return CloseAsync();
-        return OpenAsync(activateLast: false);
-    }
-
-    private Task OpenAsync(bool activateLast = false)
-    {
-        if (Disabled) return Task.CompletedTask;
-        _isOpen = true;
-        _activeIndex = activateLast
-            ? FindEnabledIndex(_items.Count - 1, step: -1) ?? -1
-            : FindEnabledIndex(0, step: +1) ?? -1;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    private Task CloseAsync()
-    {
-        if (!_isOpen) return Task.CompletedTask;
-        _isOpen = false;
-        _activeIndex = -1;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    // ── Keyboard handling ─────────────────────────────────────────────────────
-
-    private async Task HandleButtonKeyDownAsync(KeyboardEventArgs args)
-    {
-        if (Disabled) return;
-
-        switch (args.Key)
-        {
-            case " ":
-            case "Enter":
-            case "ArrowDown":
-                await OpenAsync(activateLast: false);
-                break;
-
-            case "ArrowUp":
-                await OpenAsync(activateLast: true);
-                break;
-        }
-    }
-
-    private async Task HandleMenuKeyDownAsync(KeyboardEventArgs args)
-    {
-        if (Disabled) return;
-
-        switch (args.Key)
-        {
-            case "ArrowDown":
-                _activeIndex = FindEnabledIndex(_activeIndex + 1, step: +1) ?? _activeIndex;
-                StateHasChanged();
-                break;
-
-            case "ArrowUp":
-                _activeIndex = FindEnabledIndex(
-                    (_activeIndex < 0 ? _items.Count : _activeIndex) - 1, step: -1) ?? _activeIndex;
-                StateHasChanged();
-                break;
-
-            case "Home":
-                _activeIndex = FindEnabledIndex(0, step: +1) ?? _activeIndex;
-                StateHasChanged();
-                break;
-
-            case "End":
-                _activeIndex = FindEnabledIndex(_items.Count - 1, step: -1) ?? _activeIndex;
-                StateHasChanged();
-                break;
-
-            case "Enter":
-            case " ":
-                if (_activeIndex >= 0 && _activeIndex < _items.Count)
-                    await ActivateItemAsync(_activeIndex);
-                break;
-
-            case "Escape":
-            case "Tab":
-                await CloseAsync();
-                break;
-
-            default:
-                if (args.Key.Length == 1 && !string.IsNullOrWhiteSpace(args.Key))
-                    HandleTypeahead(args.Key);
-                break;
-        }
-    }
-
-    private void HandleTypeahead(string key)
-    {
-        var now = DateTime.UtcNow;
-        if (now > _typeaheadResetAt)
-            _typeaheadBuffer = string.Empty;
-
-        _typeaheadBuffer += key;
-        _typeaheadResetAt = now + TypeaheadWindow;
-
-        var match = _items.FirstOrDefault(item =>
-            !item.IsItemDisabled
-            && (item.GetTextLabel() ?? string.Empty)
-                .StartsWith(_typeaheadBuffer, StringComparison.OrdinalIgnoreCase));
-
-        if (match is not null)
-        {
-            _activeIndex = _items.IndexOf(match);
-            StateHasChanged();
-        }
-    }
-
-    private int? FindEnabledIndex(int start, int step)
-    {
-        if (_items.Count == 0) return null;
-        var i = ((start % _items.Count) + _items.Count) % _items.Count;
-        for (var attempts = 0; attempts < _items.Count; attempts++)
-        {
-            if (!_items[i].IsItemDisabled) return i;
-            i = ((i + step) % _items.Count + _items.Count) % _items.Count;
-        }
-        return null;
-    }
+    internal void Refresh() => StateHasChanged();
 }

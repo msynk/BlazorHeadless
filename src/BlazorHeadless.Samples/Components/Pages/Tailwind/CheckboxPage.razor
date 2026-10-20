@@ -13,14 +13,16 @@
     <TwDemoBlock Title="Basic Checkbox (Uncontrolled)" Code="@_basicCode">
         <Description>Native <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">&lt;button&gt;</code> with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">role="checkbox"</code>. Click or press Space to toggle.</Description>
         <LiveContent>
-            <BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                        Context="c">
-                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            <BhCheckbox aria-label="Remember me" class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                </Template>
             </BhCheckbox>
-            <BhCheckbox DefaultChecked="true"
-                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                        Context="c">
-                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            <BhCheckbox aria-label="Keep me signed in" DefaultChecked="true"
+                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                </Template>
             </BhCheckbox>
         </LiveContent>
     </TwDemoBlock>
@@ -29,10 +31,11 @@
         <Description>External <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Checked</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OnCheckedChange</code>.</Description>
         <LiveContent>
             <div class="flex items-center gap-4">
-                <BhCheckbox Checked="@acceptedTerms" OnCheckedChange="v => acceptedTerms = v"
-                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                            Context="c">
-                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                <BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms" OnCheckedChange="v => acceptedTerms = v"
+                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                    </Template>
                 </BhCheckbox>
                 <span class="text-sm text-zinc-500">
                     Terms accepted: <strong class="text-zinc-900">@(acceptedTerms ? "yes" : "no")</strong>
@@ -48,15 +51,17 @@
     <TwDemoBlock Title="Disabled" Code="@_disabledCode">
         <Description>The custom <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled:</code> variant applies the disabled visuals.</Description>
         <LiveContent>
-            <BhCheckbox Disabled="true"
-                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                        Context="c">
-                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            <BhCheckbox aria-label="Unavailable option" Disabled="true"
+                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                </Template>
             </BhCheckbox>
-            <BhCheckbox DefaultChecked="true" Disabled="true"
-                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                        Context="c">
-                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            <BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true"
+                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                <Template Context="c">
+                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                </Template>
             </BhCheckbox>
         </LiveContent>
     </TwDemoBlock>
@@ -69,10 +74,11 @@
             <div class="flex flex-col gap-2">
                 <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
                     <BhCheckbox Checked="@SelectAllChecked" Indeterminate="@SelectAllIndeterminate" OnCheckedChange="HandleSelectAll"
-                                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                Context="c">
-                        @if (c.IsIndeterminate) { <span class="text-base leading-none font-bold">–</span> }
-                        else if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="c">
+                            @if (c.IsIndeterminate) { <span class="text-base leading-none font-bold">–</span> }
+                            else if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                        </Template>
                     </BhCheckbox>
                     <strong>Select all</strong>
                 </label>
@@ -82,9 +88,10 @@
                         var captured = i;
                         <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
                             <BhCheckbox Checked="@items[captured]" OnCheckedChange="v => HandleItemChange(captured, v)"
-                                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                        Context="c">
-                                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                                        class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                                <Template Context="c">
+                                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                                </Template>
                             </BhCheckbox>
                             <span>Item @(captured + 1)</span>
                         </label>
@@ -98,9 +105,10 @@
         <Description>Wrap in <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">&lt;label&gt;</code> for clickable text.</Description>
         <LiveContent>
             <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
-                <BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                            Context="c">
-                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                <BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                    </Template>
                 </BhCheckbox>
                 <span>Send me product updates</span>
             </label>
@@ -114,9 +122,10 @@
                   class="flex flex-col items-start gap-2">
                 <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
                     <BhCheckbox Name="agree" Value="yes"
-                                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                                Context="c">
-                        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                        <Template Context="c">
+                            @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                        </Template>
                     </BhCheckbox>
                     <span>I agree to the terms</span>
                 </label>
@@ -131,10 +140,51 @@
             </form>
         </LiveContent>
     </TwDemoBlock>
+
+    <TwDemoBlock Title="Group with select all" Code="@_groupCode">
+        <Description>
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhCheckboxGroup</code> binds one collection with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">@@bind-Values</code>;
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">SelectAll="true"</code> makes the tri-state parent (<code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-checked="mixed"</code> when only some are selected).
+            The box is styled from the checkbox with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">group-data-state-checked:</code> / <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">group-data-state-indeterminate:</code>.
+        </Description>
+        <LiveContent>
+            <div class="flex flex-col gap-4">
+                <BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="flex flex-col gap-2">
+                    <BhCheckbox SelectAll="true"
+                                class="group inline-flex items-center gap-2 self-start rounded text-sm font-semibold text-zinc-900 cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        <span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600 group-data-state-indeterminate:border-blue-600 group-data-state-indeterminate:bg-blue-600">
+                            <BhCheckboxIndicator class="text-xs font-bold leading-none">
+                                <Template Context="state">@(state.IsIndeterminate ? "–" : "✓")</Template>
+                            </BhCheckboxIndicator>
+                        </span>
+                        All toppings
+                    </BhCheckbox>
+                    <div class="ml-6 flex flex-col gap-1.5">
+                        @foreach (var topping in allToppings)
+                        {
+                            <BhCheckbox Value="@topping"
+                                        class="group inline-flex items-center gap-2 self-start rounded text-sm text-zinc-900 cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                <span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600">
+                                    <BhCheckboxIndicator class="text-xs font-bold leading-none">✓</BhCheckboxIndicator>
+                                </span>
+                                @topping
+                            </BhCheckbox>
+                        }
+                    </div>
+                </BhCheckboxGroup>
+
+                <span class="text-sm text-zinc-500">
+                    Values: <strong class="text-zinc-900">@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))</strong>
+                </span>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
 </div>
 
 @code {
     private bool acceptedTerms;
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection<string> toppings = new[] { "Cheese", "Olives" };
     private bool[] items = new[] { false, false, false };
     private string? lastSubmitted;
 
@@ -152,25 +202,65 @@
     private void HandleFormSubmit() =>
         lastSubmitted = "(submitted — when checked, the form posts agree=yes)";
 
+    private const string _groupCode = """
+<BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="flex flex-col gap-2">
+    @* Tri-state parent: checked / mixed / unchecked from the group's values *@
+    <BhCheckbox SelectAll="true"
+                class="group inline-flex items-center gap-2 self-start rounded text-sm font-semibold cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+        <span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600 group-data-state-indeterminate:border-blue-600 group-data-state-indeterminate:bg-blue-600">
+            <BhCheckboxIndicator class="text-xs font-bold leading-none">
+                <Template Context="state">@(state.IsIndeterminate ? "–" : "✓")</Template>
+            </BhCheckboxIndicator>
+        </span>
+        All toppings
+    </BhCheckbox>
+
+    <div class="ml-6 flex flex-col gap-1.5">
+        @foreach (var topping in allToppings)
+        {
+            <BhCheckbox Value="@topping"
+                        class="group inline-flex items-center gap-2 self-start rounded text-sm cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                <span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600">
+                    <BhCheckboxIndicator class="text-xs font-bold leading-none">✓</BhCheckboxIndicator>
+                </span>
+                @topping
+            </BhCheckbox>
+        }
+    </div>
+</BhCheckboxGroup>
+
+<span class="text-sm text-zinc-500">
+    Values: <strong class="text-zinc-900">@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))</strong>
+</span>
+
+@code {
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection<string> toppings = new[] { "Cheese", "Olives" };
+}
+""";
+
     private const string _basicCode = """
-<BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c">
-    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+<BhCheckbox aria-label="Remember me" class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    </Template>
 </BhCheckbox>
 
-<BhCheckbox DefaultChecked="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c">
-    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+<BhCheckbox aria-label="Keep me signed in" DefaultChecked="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    </Template>
 </BhCheckbox>
 """;
 
     private const string _controlledCode = """
 <div class="flex items-center gap-4">
-    <BhCheckbox Checked="@acceptedTerms" OnCheckedChange="v => acceptedTerms = v"
-                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                Context="c">
-        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    <BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms" OnCheckedChange="v => acceptedTerms = v"
+                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+        <Template Context="c">
+            @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+        </Template>
     </BhCheckbox>
     <span class="text-sm text-zinc-500">
         Terms accepted: <strong class="text-zinc-900">@(acceptedTerms ? "yes" : "no")</strong>
@@ -187,16 +277,18 @@
 """;
 
     private const string _disabledCode = """
-<BhCheckbox Disabled="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c">
-    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+<BhCheckbox aria-label="Unavailable option" Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    </Template>
 </BhCheckbox>
 
-<BhCheckbox DefaultChecked="true" Disabled="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c">
-    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+<BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+    <Template Context="c">
+        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    </Template>
 </BhCheckbox>
 """;
 
@@ -204,10 +296,11 @@
 <div class="flex flex-col gap-2">
     <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
         <BhCheckbox Checked="@SelectAllChecked" Indeterminate="@SelectAllIndeterminate" OnCheckedChange="HandleSelectAll"
-                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                    Context="c">
-            @if (c.IsIndeterminate) { <span class="text-base leading-none font-bold">–</span> }
-            else if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="c">
+                @if (c.IsIndeterminate) { <span class="text-base leading-none font-bold">–</span> }
+                else if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            </Template>
         </BhCheckbox>
         <strong>Select all</strong>
     </label>
@@ -217,9 +310,10 @@
             var captured = i;
             <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
                 <BhCheckbox Checked="@items[captured]" OnCheckedChange="v => HandleItemChange(captured, v)"
-                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                            Context="c">
-                    @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+                    <Template Context="c">
+                        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                    </Template>
                 </BhCheckbox>
                 <span>Item @(captured + 1)</span>
             </label>
@@ -244,9 +338,10 @@
 
     private const string _labelCode = """
 <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
-    <BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                Context="c">
-        @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+    <BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+        <Template Context="c">
+            @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+        </Template>
     </BhCheckbox>
     <span>Send me product updates</span>
 </label>
@@ -257,9 +352,10 @@
       class="flex flex-col items-start gap-2">
     <label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none">
         <BhCheckbox Name="agree" Value="yes"
-                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                    Context="c">
-            @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed">
+            <Template Context="c">
+                @if (c.IsChecked) { <span class="text-sm leading-none">✓</span> }
+            </Template>
         </BhCheckbox>
         <span>I agree to the terms</span>
     </label>

@@ -5,75 +5,50 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The text input that drives the combobox query. Renders as
-/// <c>&lt;input role="combobox"&gt;</c> with all the ARIA wiring for the
-/// list-autocomplete pattern (<c>aria-haspopup</c>, <c>aria-expanded</c>,
-/// <c>aria-controls</c>, <c>aria-activedescendant</c>, <c>aria-autocomplete="list"</c>).
-///
-/// <para>
-/// The input value is two-way bound through the parent <see cref="BhCombobox{TValue}"/>
-/// — typing fires the parent's <c>OnQueryChange</c>, and selecting an option writes
-/// the formatted display value back here.
-/// </para>
+/// The text input of a <see cref="BhCombobox{TValue}"/>: <c>&lt;input role="combobox"&gt;</c>
+/// with <c>aria-autocomplete="list"</c>, <c>aria-expanded</c>, <c>aria-controls</c> and
+/// <c>aria-activedescendant</c>. Shows the live query while typing and the
+/// selection's display text otherwise.
 /// </summary>
 /// <typeparam name="TValue">The option value type.</typeparam>
-public class BhComboboxInput<TValue> : BhComponentBase
+public class BhComboboxInput<TValue> : BhComponentBase, IDisposable
 {
     [CascadingParameter]
-    private BhComboboxContext<TValue> BhComboboxContext { get; set; } = default!;
+    private BhComboboxContext<TValue>? ComboboxContext { get; set; }
 
     /// <summary>Optional placeholder text.</summary>
     [Parameter]
     public string? Placeholder { get; set; }
 
-    private ElementReference _elementRef;
-
     protected override string DefaultTag => "input";
 
-    /// <summary>The current value rendered in the input — driven by the parent combobox.</summary>
-    private string CurrentInputValue
+    private bool IsOpen => ComboboxContext?.IsOpen ?? false;
+
+    protected override void OnInitialized()
     {
-        get
-        {
-            if (BhComboboxContext is null) return string.Empty;
-
-            // While the panel is open and the user is typing, show the live query.
-            // While closed (or in multi-select), show the formatted selected value.
-            if (BhComboboxContext.IsOpen)
-                return BhComboboxContext.Query;
-
-            if (BhComboboxContext.Multiple)
-                return string.Empty;
-
-            return BhComboboxContext.DisplayValue(BhComboboxContext.SingleValue);
-        }
+        if (ComboboxContext is not null) ComboboxContext.Combobox.Input = this;
     }
+
+    internal void Refresh() => StateHasChanged();
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var text = ComboboxContext?.Combobox.InputText ?? string.Empty;
+
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhComboboxContext?.InputId ?? ComponentId);
+        builder.AddAttribute(10, "id", ComboboxContext?.InputId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        builder.AddAttribute(30, "value", CurrentInputValue);
-
+        builder.AddAttribute(30, "value", text);
         builder.AddAttribute(31, "oninput",
             EventCallback.Factory.Create<ChangeEventArgs>(this, HandleInput));
+        // Typing updates "value" itself: don't let a stale render overwrite the caret.
+        builder.SetUpdatesAttributeName("value");
         builder.AddAttribute(32, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-        builder.AddAttribute(33, "onfocus",
+        builder.AddEventStopPropagationAttribute(33, "onkeydown", IsOpen);
+        builder.AddAttribute(34, "onfocus",
             EventCallback.Factory.Create<FocusEventArgs>(this, HandleFocus));
-
-        if (!string.IsNullOrEmpty(Placeholder))
-            builder.AddAttribute(34, "placeholder", Placeholder);
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            _elementRef = e;
-            BhComboboxContext?.SetInputRef(e);
-            Ref?.Invoke(e);
-        });
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
         builder.CloseElement();
     }
 
@@ -84,47 +59,52 @@ public class BhComboboxInput<TValue> : BhComponentBase
         attrs["type"] = "text";
         attrs["role"] = "combobox";
         attrs["aria-autocomplete"] = "list";
-        attrs["aria-haspopup"] = "listbox";
+        attrs["autocomplete"] = "off";
+        attrs["autocorrect"] = "off";
+        attrs["spellcheck"] = "false";
+        SetAriaBool(attrs, "aria-expanded", IsOpen);
 
-        var isOpen = BhComboboxContext?.IsOpen ?? false;
-        attrs["aria-expanded"] = isOpen ? "true" : "false";
+        if (!string.IsNullOrEmpty(Placeholder))
+            attrs["placeholder"] = Placeholder;
 
-        // Sensible defaults that prevent browser interference.
-        if (!attrs.ContainsKey("autocomplete")) attrs["autocomplete"] = "off";
-        if (!attrs.ContainsKey("autocorrect")) attrs["autocorrect"] = "off";
-        if (!attrs.ContainsKey("spellcheck")) attrs["spellcheck"] = "false";
-
-        if (BhComboboxContext is not null)
+        if (ComboboxContext is not null)
         {
-            attrs["aria-controls"] = BhComboboxContext.OptionsId;
+            attrs["aria-controls"] = ComboboxContext.OptionsId;
+            if (IsOpen && ComboboxContext.ActiveId is { } active)
+                attrs["aria-activedescendant"] = active;
+            if (ComboboxContext.Field?.DescribedBy is { } describedBy)
+                attrs["aria-describedby"] = describedBy;
+            if (ComboboxContext.Invalid)
+                attrs["aria-invalid"] = "true";
+            if (ComboboxContext.Required)
+                attrs["aria-required"] = "true";
+            if (ComboboxContext.Disabled)
+                attrs["disabled"] = true;
 
-            if (isOpen && BhComboboxContext.ActiveIndex >= 0)
-                attrs["aria-activedescendant"] = BhComboboxContext.GetOptionId(BhComboboxContext.ActiveIndex);
+            var keys = IsOpen
+                ? ComboboxContext.ActiveId is not null ? "ArrowDown ArrowUp PageDown PageUp Enter" : "ArrowDown ArrowUp PageDown PageUp"
+                : "ArrowDown ArrowUp";
+            attrs[BhKeyboard.KeysAttribute] = keys;
+
+            SetDataFlag(attrs, "disabled", ComboboxContext.Disabled);
+            SetDataFlag(attrs, "invalid", ComboboxContext.Invalid);
         }
 
-        if (BhComboboxContext?.Disabled == true)
-            attrs["disabled"] = true;
-
-        SetDataState(attrs, isOpen);
-        SetDataFlag(attrs, "disabled", BhComboboxContext?.Disabled ?? false);
-
+        SetDataState(attrs, IsOpen);
         return attrs;
     }
 
     private Task HandleInput(ChangeEventArgs args)
-    {
-        var newQuery = args.Value?.ToString() ?? string.Empty;
-        return BhComboboxContext?.HandleQueryAsync(newQuery) ?? Task.CompletedTask;
-    }
+        => ComboboxContext?.Combobox.HandleInputAsync(args.Value?.ToString() ?? string.Empty) ?? Task.CompletedTask;
 
     private Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        return BhComboboxContext?.HandleInputKeyDownAsync(args) ?? Task.CompletedTask;
-    }
+        => ComboboxContext?.Combobox.HandleKeyDownAsync(args) ?? Task.CompletedTask;
 
     private Task HandleFocus(FocusEventArgs _)
+        => ComboboxContext?.Combobox.HandleFocusAsync() ?? Task.CompletedTask;
+
+    public void Dispose()
     {
-        // Focusing the input opens the panel (matches Headless UI behaviour).
-        return BhComboboxContext?.OpenAsync() ?? Task.CompletedTask;
+        if (ComboboxContext?.Combobox.Input == this) ComboboxContext.Combobox.Input = null;
     }
 }

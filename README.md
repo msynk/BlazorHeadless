@@ -1,344 +1,299 @@
 # BlazorHeadless
 
-A headless UI component library for Blazor: behaviour, accessibility, and state management without any visual opinion. Style it your way with plain CSS, Tailwind, or any design system.
+**Accessible, unstyled UI primitives for Blazor — with accessibility testing built in.**
 
-Inspired by [Headless UI](https://headlessui.com/), [Radix UI](https://www.radix-ui.com/), and [Ark UI](https://ark-ui.com/) patterns, ported natively to Blazor.
+BlazorHeadless gives you the hard parts of interactive UI — keyboard interaction, focus management, ARIA semantics, positioning, dismissal, announcements — as plain Razor components that render semantic HTML and nothing else. You bring the styles: plain CSS, Tailwind, Bootstrap, Fluent tokens or your own design system.
 
-## Why headless?
+It ships with **BlazorHeadless.Testing**, a bUnit-based accessibility toolkit (WAI-ARIA rule engine, accessible-name and focus-order inspection, keyboard helpers, live-region assertions) used to test every component in this repository — and usable for testing *your* components too.
 
-- **Zero visual opinion** — the library ships no CSS, only semantic HTML and `data-*` hooks.
-- **Accessibility built in** — ARIA roles, states, and keyboard interactions are handled for you.
-- **Polymorphic rendering** — every component renders as any HTML element via the `As` parameter.
-- **Styling hooks via data attributes** — `[data-state]`, `[data-disabled]`, `[data-active]`, and friends.
-- **Attribute merging** — `class` and `style` concatenate; everything else lets the consumer win.
-- **Controlled and uncontrolled** — every stateful component supports both modes.
-- **Render-prop context** — child content receives a typed render context for state-driven UI.
-- **Anchor positioning** — automatic floating panel positioning with flip/shift via JS interop.
+Inspired by [Radix UI](https://www.radix-ui.com/), [React Aria](https://react-spectrum.adobe.com/react-aria/), [Headless UI](https://headlessui.com/), [Ark UI](https://ark-ui.com/) and [cmdk](https://cmdk.paco.me/), implemented natively for Blazor (Server, WebAssembly, Auto and static SSR prerendering).
 
-## Requirements
+---
 
-- .NET 10
-- `Microsoft.AspNetCore.Components.Web` 10.x
+## Contents
 
-## Setup
+- [Why BlazorHeadless](#why-blazorheadless)
+- [Installation](#installation)
+- [Components](#components)
+- [Concepts](#concepts)
+- [Styling](#styling)
+- [Testing accessibility](#testing-accessibility)
+- [Sample app and docs](#sample-app-and-docs)
+- [Contributing](#contributing)
+
+## Why BlazorHeadless
+
+- **Zero visual opinion.** No CSS ships with the library. Components render semantic elements and expose their state through `data-*` and ARIA attributes.
+- **Accessibility is the feature.** Every widget follows the [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/): roles, states, properties, keyboard interaction, focus management, typeahead and screen-reader announcements.
+- **Composable.** Compound components (`BhMenu` → `BhMenuButton` + `BhMenuItems` + `BhMenuItem`) share state through cascading contexts, so you control the markup and nesting.
+- **Controlled or uncontrolled.** Every stateful component works with `@bind-…`, with `Default…` initial values, or with change callbacks (`On…Change`).
+- **Forms built in.** `EditForm` validation, `BhField` label / description / error wiring, hidden inputs for plain form posts.
+- **Polymorphic.** Render any element with `As="…"`; `class`, `style` and any attribute flow through.
+- **Robust overlays.** Layered dismissal (Escape, outside click, focus out) that respects nesting, focus scopes with restore, `inert` / `aria-hidden` for modals, scroll locking, portals that keep the component tree intact, and exit animations.
+- **Positioning engine included.** Anchor panels with flip, shift, size and arrow support — no Popper / Floating UI dependency.
+- **Large data.** Option, item and tree collections use stable ids (never indexes) and support virtualization.
+- **Tested.** Every component is covered by keyboard and ARIA tests, plus automated accessibility audits.
+
+## Installation
+
+```bash
+dotnet add package BlazorHeadless
+```
+
+Register the services (recommended — components fall back to sensible defaults without it):
 
 ```csharp
-// Program.cs
+// Program.cs (server and, for WebAssembly / Auto, the client project too)
 builder.Services.AddBlazorHeadless();
 ```
 
-This registers the JS interop service used by Dialog, Popover, Transition, Portal, FocusTrap, and anchor positioning.
-
-If you use `BhPortal`, also add a portal outlet to your root layout:
+Import the namespace:
 
 ```razor
-<BhPortalOutlet />
+@* _Imports.razor *@
+@using BlazorHeadless
 ```
+
+That's it. The small JavaScript runtime (`blazor-headless.js`) is loaded automatically through a Razor class library initializer; there is no script tag to add. Components must run in an **interactive** render mode to respond to input; during prerendering they render their initial, accessible markup.
+
+Requirements: .NET 10.
 
 ## Components
 
-| Component | Description |
+| Area | Components |
 | --- | --- |
-| **BhAccordion** | Single or multiple expandable sections |
-| **BhAspectRatio** | Constrain content to a desired width-to-height ratio |
-| **BhAvatar** | Image with a graceful fallback for representing a user or entity |
-| **BhButton** | Polymorphic button with disabled and loading states |
-| **BhCheckbox** | Custom checkbox with indeterminate state support |
-| **BhCloseButton** | Pre-wired button that closes the nearest Dialog, Popover, or Disclosure |
-| **BhCollapsible** | Interactive region that expands and collapses a panel via a trigger |
-| **BhCombobox** | Typeable autocomplete with consumer-driven filtering |
-| **BhDataInteractive** | Forward `data-hover` / `data-active` / `data-focus` attributes for unified state styling |
-| **BhDialog** | Modal with focus trap, scroll lock, and inert background |
-| **BhDisclosure** | Single show/hide region |
-| **BhField** | Form field grouping with `BhLabel`, `BhDescription`, `BhInput`, `BhSelect`, `BhTextarea` |
-| **BhFieldset** | Group form controls under a `BhLegend`, with cascading disabled state |
-| **BhFocusTrap** | Trap keyboard focus inside a container |
-| **BhHoverCard** | Preview content behind a link on hover or focus |
-| **BhListbox** | Custom select with single/multi-select, typeahead, and form integration |
-| **BhMenu** | Dropdown menu with keyboard nav, typeahead, and virtual focus |
-| **BhContextMenu** | Right-click menu opened at the pointer, with keyboard nav and typeahead |
-| **BhPopover** | Non-modal floating panel with focus management and group coordination |
-| **BhPortal** | Render children into a different part of the DOM tree |
-| **BhRadioGroup** | Single-select radio group |
-| **BhSwitch** | Two-state toggle with optional hidden form input |
-| **BhTabGroup** | Tabbed interface with keyboard navigation |
-| **BhTooltip** | Pop-up label that appears on hover or focus, with delay coordination via provider |
-| **BhTransition** | CSS class-based enter/leave animations with lifecycle callbacks |
+| **Overlays** | `BhDialog`, `BhAlertDialog`, `BhPopover`, `BhTooltip` (+ `BhTooltipProvider`), `BhHoverCard`, `BhPortal` |
+| **Menus** | `BhMenu` (submenus, checkbox / radio items, groups, labels), `BhMenubar`, `BhContextMenu` |
+| **Selection** | `BhListbox` (single / multi, typeahead, virtualized), `BhCombobox` (autocomplete, multi, virtualized), `BhCommand` / `BhCommandDialog` (command palette with fuzzy ranking and nested pages) |
+| **Hierarchies & data** | `BhTree` (single / multi / tri-state checkboxes, lazy loading), `BhGrid` (data grid and treegrid with cell navigation and row selection), `BhSortable` (pointer and keyboard reordering with announcements) |
+| **Disclosure** | `BhTabGroup`, `BhAccordion`, `BhDisclosure`, `BhCollapsible` |
+| **Form controls** | `BhField` (`BhLabel`, `BhDescription`, `BhErrorMessage`, `BhInput`, `BhSelect`, `BhTextarea`), `BhFieldset`, `BhCheckbox` (+ `BhCheckboxGroup`, select-all), `BhSwitch`, `BhRadioGroup`, `BhSlider` (range, vertical), `BhToggle`, `BhToggleGroup` |
+| **Layout & feedback** | `BhToolbar`, `BhSeparator`, `BhProgress`, `BhMeter`, `BhToaster` / `BhToastViewport`, `BhAvatar`, `BhAspectRatio`, `BhButton`, `BhCloseButton` |
+| **Accessibility utilities** | `BhFocusScope` / `BhFocusTrap`, `BhRovingFocusGroup`, `BhVisuallyHidden`, `BhLiveRegion`, `IBhAnnouncer`, `BhHotkey`, `BhDirectionProvider`, `BhDataInteractive`, `BhTransition` |
 
-## Anchor Positioning
-
-Dropdown panels (`BhMenuItems`, `BhListboxOptions`, `BhComboboxOptions`, `BhPopoverPanel`) support automatic positioning relative to their trigger via the `Anchor` parameter:
+### A taste
 
 ```razor
 <BhMenu>
-    <BhMenuButton>Options ▾</BhMenuButton>
-    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })">
+    <BhMenuButton class="btn">Options</BhMenuButton>
+    <BhMenuItems class="menu" Anchor="@("bottom start")">
         <BhMenuItem OnClick="Edit">Edit</BhMenuItem>
-        <BhMenuItem OnClick="Delete">Delete</BhMenuItem>
+        <BhMenuItem OnClick="Duplicate" Disabled="true">Duplicate</BhMenuItem>
+        <BhMenuSeparator />
+        <BhMenuSub>
+            <BhMenuSubTrigger>Share</BhMenuSubTrigger>
+            <BhMenuSubContent class="menu">
+                <BhMenuItem OnClick="CopyLink">Copy link</BhMenuItem>
+            </BhMenuSubContent>
+        </BhMenuSub>
     </BhMenuItems>
 </BhMenu>
 ```
 
-### Placement options
-
-Use `top`, `right`, `bottom`, or `left` to center along an edge. Combine with `start` or `end` for corner alignment:
-
+```razor
+<EditForm Model="model" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <BhField>
+        <BhLabel>Country</BhLabel>
+        <BhCombobox TValue="string" @bind-Value="model.Country" OnQueryChange="q => query = q">
+            <BhComboboxInput TValue="string" class="input" />
+            <BhComboboxOptions TValue="string" class="options" Anchor="@("bottom start")">
+                @foreach (var c in Countries.Where(c => BhFilter.Contains(c, query)))
+                {
+                    <BhComboboxOption TValue="string" Value="@c">@c</BhComboboxOption>
+                }
+                <BhComboboxEmpty TValue="string">No matches</BhComboboxEmpty>
+            </BhComboboxOptions>
+        </BhCombobox>
+        <BhErrorMessage class="error" />
+    </BhField>
+</EditForm>
 ```
-top start    |  top     |  top end
-left start   |  left    |  left end
-right start  |  right   |  right end
-bottom start |  bottom  |  bottom end
-```
-
-### BhAnchorOptions
-
-| Property | Default | Description |
-| --- | --- | --- |
-| `To` | `"bottom"` | Placement string |
-| `Gap` | `0` | Space (px) between trigger and panel |
-| `Offset` | `0` | Nudge along the alignment axis |
-| `Padding` | `8` | Minimum space from viewport edges |
-
-### Features
-
-- **Auto-flip** — flips to the opposite side when there's not enough space.
-- **Auto-shift** — clamps the panel within viewport bounds.
-- **Auto-update** — repositions on scroll, resize, and element size changes via `ResizeObserver`.
-- **CSS variables** — exposes `--button-width`, `--anchor-gap`, `--anchor-offset`, `--anchor-padding` on the panel.
-- **Zero dependencies** — self-contained positioning engine, no Floating UI or Popper needed.
-
-### Matching trigger width
-
-```css
-.my-dropdown {
-    width: var(--button-width);
-}
-```
-
-## Quick examples
-
-### Accordion
 
 ```razor
-<BhAccordion DefaultValue="item-1">
-    <BhAccordionItem Value="item-1">
-        <BhAccordionTrigger Context="t">
-            Section 1 <span>@(t.IsOpen ? "−" : "+")</span>
-        </BhAccordionTrigger>
-        <BhAccordionContent>Content for section 1.</BhAccordionContent>
-    </BhAccordionItem>
-</BhAccordion>
+<BhCommandDialog @bind-Open="paletteOpen" Shortcut="mod+k" Label="Command palette">
+    <BhCommandInput placeholder="Type a command…" />
+    <BhCommandList>
+        <BhCommandEmpty>No results.</BhCommandEmpty>
+        <BhCommandGroup Heading="Navigation">
+            <BhCommandItem OnSelect="@(() => Nav.NavigateTo("/settings"))" Keywords="@(["preferences"])">Settings</BhCommandItem>
+        </BhCommandGroup>
+    </BhCommandList>
+</BhCommandDialog>
 ```
 
-### Combobox
+## Concepts
+
+### Compound components and state
+
+Parent components own state and cascade it to their parts. Every stateful part supports three modes:
 
 ```razor
-<BhCombobox TValue="string" Value="@fruit" OnValueChange="v => fruit = v"
-            OnQueryChange="Filter" DisplayValue="v => v ?? string.Empty">
-    <BhComboboxInput TValue="string" Placeholder="Search…" />
-    <BhComboboxOptions TValue="string">
-        @foreach (var f in filtered)
-        {
-            <BhComboboxOption TValue="string" Value="@f">@f</BhComboboxOption>
-        }
-    </BhComboboxOptions>
-</BhCombobox>
+<BhTabGroup @bind-Value="tab">…</BhTabGroup>                  @* controlled *@
+<BhTabGroup DefaultValue="profile">…</BhTabGroup>             @* uncontrolled *@
+<BhTabGroup OnValueChange="v => Log(v)">…</BhTabGroup>        @* uncontrolled + notified *@
 ```
 
-### Collapsible
+### Rendering state in content: `Template`
+
+`ChildContent` is always a plain `RenderFragment`, so components nest freely inside `EditForm`, panels and each other. When markup depends on a component's state, use its `Template` instead:
 
 ```razor
-<BhCollapsible>
-    <BhCollapsibleTrigger Context="c">@(c.IsOpen ? "Hide" : "Show")</BhCollapsibleTrigger>
-    <BhCollapsibleContent>Expandable content here.</BhCollapsibleContent>
-</BhCollapsible>
+<BhDisclosureButton>
+    <Template Context="d">@(d.IsOpen ? "Hide" : "Show") details</Template>
+</BhDisclosureButton>
 ```
 
-### Dialog
+Most of the time CSS is enough: style `[data-state="open"]`, `[aria-expanded="true"]`, `[data-active]` … directly.
 
-```razor
-<BhDialog Open="@showDialog" OnClose="() => showDialog = false">
-    <BhDialogBackdrop class="backdrop" />
-    <BhDialogPanel class="dialog-panel">
-        <BhDialogTitle>Confirm</BhDialogTitle>
-        <BhDialogDescription>Are you sure?</BhDialogDescription>
-        <BhCloseButton>OK</BhCloseButton>
-    </BhDialogPanel>
-</BhDialog>
-```
+### Common parameters
 
-### Disclosure
-
-```razor
-<BhDisclosure>
-    <BhDisclosureButton Context="d">@(d.IsOpen ? "Hide" : "Show") details</BhDisclosureButton>
-    <BhDisclosurePanel>Hidden content here.</BhDisclosurePanel>
-</BhDisclosure>
-```
-
-### Listbox
-
-```razor
-<BhListbox TValue="string" Value="@person" OnValueChange="v => person = v">
-    <BhListboxButton TValue="string" Context="b">
-        @(b.Value ?? "Select…")
-    </BhListboxButton>
-    <BhListboxOptions TValue="string">
-        <BhListboxOption TValue="string" Value="@("alice")">Alice</BhListboxOption>
-        <BhListboxOption TValue="string" Value="@("bob")">Bob</BhListboxOption>
-    </BhListboxOptions>
-</BhListbox>
-```
-
-### Menu
-
-```razor
-<BhMenu>
-    <BhMenuButton class="btn" Context="b">
-        Options
-        <span class="chevron @(b.IsOpen ? "open" : "")">▾</span>
-    </BhMenuButton>
-    <BhMenuItems class="dropdown">
-        <BhMenuItem OnClick="Edit"   Label="Edit">Edit</BhMenuItem>
-        <BhMenuItem OnClick="Delete" Label="Delete" Disabled="true">Delete</BhMenuItem>
-    </BhMenuItems>
-</BhMenu>
-```
-
-### Context Menu
-
-```razor
-<BhContextMenu>
-    <BhContextMenuTrigger class="trigger">Right-click here</BhContextMenuTrigger>
-    <BhContextMenuContent class="menu">
-        <BhContextMenuItem OnClick="Back"    Label="Back">Back</BhContextMenuItem>
-        <BhContextMenuItem OnClick="Forward" Label="Forward" Disabled="true">Forward</BhContextMenuItem>
-        <BhContextMenuSeparator />
-        <BhContextMenuLabel>Danger zone</BhContextMenuLabel>
-        <BhContextMenuItem OnClick="Delete"  Label="Delete">Delete</BhContextMenuItem>
-    </BhContextMenuContent>
-</BhContextMenu>
-```
-
-### Popover
-
-```razor
-<BhPopover>
-    <BhPopoverButton Context="b">Info ▾</BhPopoverButton>
-    <BhPopoverPanel>
-        <p>Panel content here.</p>
-        <BhPopoverButton Context="closeBtn">Close</BhPopoverButton>
-    </BhPopoverPanel>
-</BhPopover>
-```
-
-### Switch
-
-```razor
-<BhSwitch Checked="@enabled" OnCheckedChange="v => enabled = v" class="switch" Context="s">
-    <span class="switch-thumb"
-          data-state="@(s.IsChecked ? "checked" : "unchecked")"></span>
-</BhSwitch>
-```
-
-### Tabs
-
-```razor
-<BhTabGroup>
-    <BhTabList>
-        <BhTab>Account</BhTab>
-        <BhTab>Profile</BhTab>
-    </BhTabList>
-    <BhTabPanels>
-        <BhTabPanel>Account settings</BhTabPanel>
-        <BhTabPanel>Profile settings</BhTabPanel>
-    </BhTabPanels>
-</BhTabGroup>
-```
-
-## Common parameters
-
-Every component inherits from `BhComponentBase` and supports:
+Every component derives from `BhComponentBase`:
 
 | Parameter | Purpose |
 | --- | --- |
-| `As` | Override the rendered HTML tag (e.g. `As="a"`) |
-| `Id` | Explicit HTML `id`; auto-generated when omitted |
-| `Ref` | `Action<ElementReference>` for DOM access and focus management |
-| `AdditionalAttributes` | Captured unmatched attributes — `class`, `style`, `data-*`, `aria-*`, anything HTML |
+| `As` | Render a different element (`As="a"`, `As="li"`, `As="table"` …) |
+| `Id` | Explicit id; generated otherwise. ARIA references (`aria-controls`, `aria-labelledby` …) are wired for you |
+| `Ref` | `Action<ElementReference>` to get the element |
+| any attribute | `class`, `style`, `data-*`, `aria-*` … are forwarded; `class` / `style` merge with internal values |
 
-## Styling with data attributes
+### Positioning
 
-Components emit data attributes that mirror their state:
+Floating parts (`BhMenuItems`, `BhListboxOptions`, `BhComboboxOptions`, `BhPopoverPanel`, `BhTooltipContent`, `BhHoverCardContent`, submenus …) take an `Anchor`:
+
+```razor
+<BhPopoverPanel Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 6, MatchReferenceWidth = true })" />
+<BhMenuItems Anchor="@("right start")" />   @* a placement string converts implicitly *@
+```
+
+Placements: `top | right | bottom | left`, optionally with `start` / `end`. Options: `Gap`, `Offset`, `Padding`, `Flip`, `Shift`, `MatchReferenceWidth`, `HideWhenDetached`, `ArrowPadding`. Panels receive `data-anchor="bottom start"` (the resolved side) and the CSS variables `--bh-anchor-width`, `--bh-anchor-height`, `--bh-available-width`, `--bh-available-height`, `--bh-transform-origin`. Arrows (`BhPopoverArrow`, `BhTooltipArrow`, `BhMenuArrow`) are positioned automatically.
+
+### Overlays, dismissal and focus
+
+- Escape and outside interaction dismiss the **topmost** layer only; `OnDismissRequest` lets you cancel (`r.Cancel = true`).
+- Modals (`BhDialog`, `BhAlertDialog`, `Modal` popovers) trap focus, make the rest of the page `inert`, lock scrolling and restore focus on close.
+- `BhPortal` moves the DOM node but keeps the component tree, so cascading values and events keep working.
+- Exit animations: closing parts stay mounted until their CSS animations / transitions finish (`data-state="closed"`).
+
+### Announcements
+
+`IBhAnnouncer` speaks through a shared polite / assertive live region. Components use it for result counts (command palette), toasts and drag-and-drop steps; you can inject it too:
+
+```razor
+@inject IBhAnnouncer Announcer
+<button @onclick='() => Announcer.AnnounceAsync("Saved")'>Save</button>
+```
+
+### Right-to-left
+
+Wrap content in `<BhDirectionProvider Dir="BhDirection.Rtl">` (or set `Dir` per component) and horizontal arrow keys mirror.
+
+## Styling
+
+Every component exposes state as attributes. The most common hooks:
 
 ```css
-[data-state="open"]          { /* expanded / open */ }
-[data-state="closed"]        { /* collapsed / closed */ }
-[data-state="checked"]       { /* switch/checkbox on */ }
-[data-state="unchecked"]     { /* switch/checkbox off */ }
-[data-state="indeterminate"] { /* checkbox mixed state */ }
-[data-state="active"]        { /* selected tab */ }
-[data-active]                { background: #eff6ff; }   /* highlighted menu/listbox option */
-[data-selected]              { font-weight: 600; }      /* selected listbox/combobox option */
-[data-disabled]              { opacity: 0.5; pointer-events: none; }
-[data-loading]               { cursor: progress; }
-[data-orientation="horizontal"] { /* tablists, radio groups */ }
-[data-orientation="vertical"]   { /* tablists, radio groups */ }
+[data-state="open"], [data-state="closed"]            /* disclosure, menus, popovers, dialogs */
+[data-state="checked"], [data-state="indeterminate"]  /* checkbox, switch, radio */
+[data-state="active"]                                 /* selected tab */
+[data-state="on"]                                     /* pressed toggle */
+[data-active], [data-highlighted]                     /* keyboard / pointer highlight in menus, listboxes */
+[data-selected], [data-disabled], [data-invalid]
+[data-orientation="vertical"], [data-anchor^="top"]
+[aria-expanded="true"], [aria-selected="true"], [aria-pressed="true"]
 ```
 
-## Important CSS note
-
-When your panel CSS sets an explicit `display` value (e.g. `display: flex`), you must add a `[hidden]` override so the `hidden` attribute works correctly:
+**Plain CSS**
 
 ```css
-.my-panel {
-    display: flex;
-    /* ... */
-}
-
-.my-panel[hidden] {
-    display: none;
-}
+.menu-item[data-highlighted] { background: #eff6ff; }
+.dialog[data-state="closed"] { animation: fade-out 150ms ease-in; }
 ```
 
-Tailwind users can register a single global rule once in their input file:
+**Tailwind v4** — arbitrary data / aria variants work out of the box:
+
+```razor
+<BhMenuItem class="rounded px-2 py-1 data-highlighted:bg-blue-50 data-disabled:opacity-50">Edit</BhMenuItem>
+<BhTab class="border-b-2 border-transparent data-[state=active]:border-blue-600">Profile</BhTab>
+```
+
+**Bootstrap** — reuse its classes and map states:
+
+```razor
+<BhMenuItems class="dropdown-menu show">
+    <BhMenuItem class="dropdown-item">Edit</BhMenuItem>
+</BhMenuItems>
+```
+```css
+.dropdown-item[data-highlighted] { background-color: var(--bs-dropdown-link-hover-bg); }
+```
+
+**Design tokens (Fluent or your own)** — headless components consume whatever custom properties your theme defines:
 
 ```css
-@layer utilities {
-    [hidden] { display: none !important; }
+.menu { background: var(--colorNeutralBackground1); border-radius: var(--borderRadiusMedium); }
+```
+
+> If you give a hideable part an explicit `display` (e.g. `display: flex`), keep `[hidden] { display: none }` working: `.panel[hidden] { display: none; }`, or in Tailwind `@layer base { [hidden] { display: none !important; } }`.
+
+## Testing accessibility
+
+```bash
+dotnet add package BlazorHeadless.Testing
+```
+
+```csharp
+public class SaveMenuTests : BhTestContext
+{
+    [Fact]
+    public void Menu_is_accessible_and_keyboard_operable()
+    {
+        var cut = Render<SaveMenu>();               // .razor test files can use Render(@<SaveMenu />)
+        cut.Find("button").Press("ArrowDown");
+
+        var menu = cut.Find("[role=menu]");
+        Assert.Equal("Save as…", cut.ActiveDescendant(menu)!.AccessibleName());
+        cut.ShouldBeAccessible();                   // WAI-ARIA rule engine
+        Assert.Single(cut.TabSequence());           // one tab stop
+    }
 }
 ```
 
-## Sample app
+`BhTestContext` emulates the browser behaviour the components rely on (document order and text of items, so typeahead and filtering work like in a browser) and records announcements (`await Announcer.WaitForAsync("3 results")`). The audit (`ShouldBeAccessible`, `Audit`) checks roles, required states, allowed attributes, ID references, required owned elements / context, accessible names, focusable content inside `aria-hidden`, nested interactive controls, positive `tabindex`, presentational conflicts, `aria-activedescendant` targets and form labels, and can render Markdown / JSON reports for CI. See [the Testing README](src/BlazorHeadless.Testing/README.md).
 
-The repo ships with a sample project that demonstrates every component twice — once with hand-written CSS and once with Tailwind utilities, side by side. Both versions render the same headless components; only the styling layer changes.
+The audit complements — it does not replace — browser-based checks (e.g. axe-core with Playwright) and testing with real assistive technology.
 
-```
-src/BlazorHeadless.Samples/
-├── Components/Pages/Css/        # Plain CSS demos     (routes: /<slug>)
-├── Components/Pages/Tailwind/   # Tailwind v4 demos   (routes: /tw/<slug>)
-├── tailwind/input.css           # Tailwind entry point + custom data-* variants
-└── wwwroot/app.css              # Hand-written CSS for the CSS section
-```
-
-Run it with:
+## Sample app and docs
 
 ```bash
 dotnet run --project src/BlazorHeadless.Samples
 ```
 
-The Tailwind section uses Tailwind v4's standalone CLI, downloaded automatically on first build by an MSBuild target — no Node.js required. Custom data-attribute variants (`data-state-open:`, `data-state-checked:`, `data-active:`, `data-disabled:`, etc.) are registered in `tailwind/input.css` so you can style states the Tailwind way:
+Every component is demonstrated twice — hand-written CSS at `/<component>` and Tailwind at `/tw/<component>` — with the Razor and CSS for each demo one click away. The static documentation site in [`docs/`](docs/README.md) is generated from the same pages (`node docs/build.mjs`).
 
-```html
-<button class="bg-white data-state-open:bg-zinc-100 data-disabled:opacity-50">…</button>
+```
+src/BlazorHeadless/            the library (components, Core, wwwroot/blazor-headless.js)
+src/BlazorHeadless.Testing/    accessibility test toolkit (bUnit)
+src/BlazorHeadless.Samples/    demo app (CSS + Tailwind)
+tests/BlazorHeadless.Tests/    component and engine tests
+tests/e2e/                     real-browser tests: axe-core + keyboard (Playwright)
+docs/                          static docs generator
 ```
 
-A header switcher on every demo page lets you flip between the CSS and Tailwind implementations of the same component.
+## Contributing
 
-## Project status
+```bash
+dotnet build src/BlazorHeadless.slnx
+dotnet test src/BlazorHeadless.slnx          # component, keyboard and ARIA tests (bUnit)
 
-Active development. APIs may evolve as the library approaches feature parity with Headless UI v2.
+cd tests/e2e && npm ci && npx playwright install chromium
+npx playwright test                            # axe-core on every demo page + keyboard flows in Chromium
+```
+
+CI runs all of the above on every pull request; a demo page that fails axe (WCAG 2.2 AA) fails the build.
+
+New components should follow the APG pattern for their role, cover keyboard interaction and ARIA in tests (`ShouldBeAccessible()` on every state), and come with CSS and Tailwind demos. See [CHANGELOG.md](CHANGELOG.md) for release notes and migration guidance.
 
 ## License
 
-See [LICENSE](LICENSE).
+[MIT](LICENSE)

@@ -1,53 +1,38 @@
 namespace BlazorHeadless;
 
-/// <summary>
-/// Cascading context provided by <see cref="BhAccordionItem"/> to its descendants
-/// (<see cref="BhAccordionTrigger"/> and <see cref="BhAccordionContent"/>).
-/// Carries per-item identity, state, and the item-scoped toggle callback.
-/// </summary>
+/// <summary>Cascading context provided by <see cref="BhAccordionItem"/> to its header, trigger and content.</summary>
 public sealed class BhAccordionItemContext
 {
-    /// <summary>The unique string identifier of this accordion item.</summary>
+    /// <summary>The item's value.</summary>
     public required string Value { get; init; }
 
-    /// <summary>Whether this item's panel is currently open.</summary>
+    /// <summary>Whether the item is open.</summary>
     public required bool IsOpen { get; init; }
 
-    /// <summary>Whether this item (or the root accordion) is disabled.</summary>
+    /// <summary>Whether the item is disabled.</summary>
     public required bool Disabled { get; init; }
 
-    /// <summary>
-    /// The HTML <c>id</c> assigned to this item's <see cref="BhAccordionTrigger"/>.
-    /// Referenced by <see cref="BhAccordionContent"/> via <c>aria-labelledby</c>.
-    /// </summary>
+    /// <summary>The trigger id.</summary>
     public required string TriggerId { get; init; }
 
-    /// <summary>
-    /// The HTML <c>id</c> assigned to this item's <see cref="BhAccordionContent"/> panel.
-    /// Referenced by <see cref="BhAccordionTrigger"/> via <c>aria-controls</c>.
-    /// </summary>
+    /// <summary>The content id.</summary>
     public required string ContentId { get; init; }
 
-    /// <summary>Toggles this item open or closed. Calls back into <see cref="BhAccordionContext"/>.</summary>
+    /// <summary>Toggles the item.</summary>
     public required Action Toggle { get; init; }
+
+    internal BhAccordionContext? Accordion { get; init; }
 }
 
-/// <summary>
-/// Exposes the current state of an <see cref="BhAccordionTrigger"/> to its render
-/// fragment, enabling consumers to conditionally render content (e.g. a rotating
-/// chevron icon) driven by the trigger's own open/closed state.
-///
-/// Passed via <c>RenderFragment&lt;BhAccordionTriggerContext&gt;</c> — access via the
-/// implicit <c>@context</c> variable or a named <c>Context="t"</c> parameter.
-/// </summary>
+/// <summary>Render-fragment context exposed by <see cref="BhAccordionTrigger"/>.</summary>
 public sealed record BhAccordionTriggerContext
 {
-    /// <summary>Whether the associated accordion item panel is currently open.</summary>
+    /// <summary>Whether the item is open.</summary>
     public required bool IsOpen { get; init; }
 
-    /// <summary>Whether the trigger (or the root accordion) is disabled.</summary>
+    /// <summary>Whether the item is disabled.</summary>
     public required bool Disabled { get; init; }
 
-    /// <summary>Shorthand: the trigger can receive interaction.</summary>
+    /// <summary>Whether the trigger can be activated.</summary>
     public bool Interactive => !Disabled;
 }

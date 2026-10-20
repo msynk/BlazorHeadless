@@ -1,23 +1,17 @@
 namespace BlazorHeadless;
 
-/// <summary>
-/// Controls whether only one item may be open at a time (<see cref="Single"/>)
-/// or multiple items may be open simultaneously (<see cref="Multiple"/>).
-/// </summary>
+/// <summary>Whether an <see cref="BhAccordion"/> allows one or many open items.</summary>
 public enum BhAccordionType
 {
-    /// <summary>Only one item can be open at a time. Opening an item closes the current one.</summary>
+    /// <summary>Only one item can be open at a time.</summary>
     Single,
 
-    /// <summary>Any number of items can be open simultaneously.</summary>
+    /// <summary>Any number of items can be open.</summary>
     Multiple,
 }
 
 /// <summary>
-/// Cascading context provided by <see cref="BhAccordion"/> to all descendant accordion
-/// components. Carries the current open-item state and the toggle callback so that
-/// <see cref="BhAccordionItem"/>, <see cref="BhAccordionTrigger"/>, and
-/// <see cref="BhAccordionContent"/> can coordinate without prop-drilling.
+/// Cascading context provided by <see cref="BhAccordion"/> to its items.
 /// </summary>
 public sealed class BhAccordionContext
 {
@@ -36,15 +30,28 @@ public sealed class BhAccordionContext
         Type = type;
     }
 
-    /// <summary>Returns true when the item identified by <paramref name="value"/> is currently open.</summary>
+    internal BhAccordion? Accordion { get; init; }
+
+    internal BhCollection<BhAccordionTrigger>? Triggers { get; init; }
+
+    /// <summary>Whether a single-mode accordion lets its open item be closed.</summary>
+    public bool Collapsible { get; init; }
+
+    /// <summary>The keyboard navigation orientation.</summary>
+    public BhOrientation Orientation { get; init; } = BhOrientation.Vertical;
+
+    /// <summary>Whether the item with <paramref name="value"/> is open.</summary>
     public bool IsOpen(string value) => _isOpen(value);
 
-    /// <summary>Toggles the item identified by <paramref name="value"/> open or closed.</summary>
+    /// <summary>Toggles the item with <paramref name="value"/>.</summary>
     public void Toggle(string value) => _toggle(value);
 
-    /// <summary>Whether interaction is globally disabled for all items in this accordion.</summary>
+    /// <summary>Toggles the item with <paramref name="value"/>.</summary>
+    public Task ToggleAsync(string value) => Accordion?.ToggleAsync(value) ?? Task.CompletedTask;
+
+    /// <summary>Whether the whole accordion is disabled.</summary>
     public bool Disabled { get; }
 
-    /// <summary>The open-item selection model for this accordion (Single or Multiple).</summary>
+    /// <summary>Single or multiple mode.</summary>
     public BhAccordionType Type { get; }
 }

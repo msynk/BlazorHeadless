@@ -1,126 +1,65 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// The popup panel containing the menu's items. Renders as
-/// <c>&lt;ul role="menu"&gt;</c> by default. Hidden via the HTML <c>hidden</c>
-/// attribute when the menu is closed.
+/// The popup panel containing the menu's items. Renders as <c>&lt;div role="menu"&gt;</c>
+/// by default and is hidden via the HTML <c>hidden</c> attribute while closed.
 ///
 /// <para>
-/// When <see cref="Anchor"/> is set, the panel is automatically positioned
-/// relative to the <see cref="BhMenuButton"/> using the anchor positioning system.
-/// The panel receives CSS custom properties <c>--button-width</c>, <c>--anchor-gap</c>,
-/// <c>--anchor-offset</c>, and <c>--anchor-padding</c> for styling.
+/// Set <see cref="BhFloatingContentBase.Anchor"/> to position it relative to the
+/// <see cref="BhMenuButton"/> (with flip / shift and the <c>--button-width</c>,
+/// <c>--bh-available-height</c> … CSS variables) and
+/// <see cref="BhFloatingContentBase.Portal"/> to render it at the end of <c>&lt;body&gt;</c>.
 /// </para>
 /// </summary>
-public class BhMenuItems : BhComponentBase, IAsyncDisposable
+public class BhMenuItems : BhMenuContentBase
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
-
     [CascadingParameter]
-    private BhMenuContext BhMenuContext { get; set; } = default!;
+    private BhMenuContext? MenuContext { get; set; }
 
-    /// <summary>Child content. Should contain one or more <see cref="BhMenuItem"/> components.</summary>
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    protected override bool IsOpen => MenuContext?.IsOpen ?? false;
 
-    /// <summary>
-    /// Configures automatic positioning of the dropdown relative to the
-    /// <see cref="BhMenuButton"/>. When set, the panel is positioned using
-    /// fixed positioning and auto-updates on scroll/resize.
-    ///
-    /// <para><b>Usage:</b></para>
-    /// <code>
-    /// &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"&gt;
-    /// </code>
-    /// Or with the implicit string conversion:
-    /// <code>
-    /// &lt;BhMenuItems Anchor="@((BhAnchorOptions)"bottom start")"&gt;
-    /// </code>
-    /// </summary>
-    [Parameter]
-    public BhAnchorOptions? Anchor { get; set; }
+    protected override string ContentId => MenuContext?.ItemsId ?? ComponentId;
 
-    private ElementReference _elementRef;
-    private int _anchorHandle;
-    private bool _wasOpen;
-    private bool _positioned;
+    protected override string? LabelledById => MenuContext?.ButtonId;
 
-    protected override string DefaultTag => "ul";
+    private protected override BhMenuLevel CreateLevel(Action refresh)
+        => new((IBhMenuRoot?)MenuContext?.Menu ?? DetachedMenuRoot.Instance, null, null, ContentId, Interop, refresh);
 
-    private bool IsOpen => BhMenuContext?.IsOpen ?? false;
+    private protected override BhMenuFocus ConsumeFocusIntent() => MenuContext?.Menu.ConsumeFocusIntent() ?? BhMenuFocus.Container;
 
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    private protected override BhMenuFocus PeekFocusIntent() => MenuContext?.Menu.PeekFocusIntent() ?? BhMenuFocus.Container;
+
+    protected override BhFloatingRequest CreateFloatingRequest()
     {
-        builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhMenuContext?.ItemsId ?? ComponentId);
-        builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Keep the panel hidden while it's open but not yet positioned by the
-        // anchor engine. This prevents a flash at the unpositioned location
-        // before OnAfterRenderAsync runs the JS positioning.
-        if (!IsOpen || (Anchor is not null && !_positioned))
-            builder.AddAttribute(30, "hidden", true);
-
-        builder.AddElementReferenceCapture(40, e =>
+        var layer = new BhLayerOptions { ParentHandle = ParentLayerHandle };
+        layer.BranchIds.Add(MenuContext?.ButtonId);
+        return new BhFloatingRequest
         {
-            _elementRef = e;
-            Ref?.Invoke(e);
-        });
-
-        builder.AddContent(50, ChildContent);
-        builder.CloseElement();
+            ContentId = ContentId,
+            ReferenceId = MenuContext?.ButtonId,
+            Anchor = EffectiveAnchor,
+            ArrowId = ArrowId,
+            Portal = EffectivePortal,
+            PortalTarget = PortalTarget,
+            Layer = layer,
+            Focus = CreateFocusOptions(MenuContext?.ButtonId),
+        };
     }
 
-    protected override Dictionary<string, object> BuildComponentAttributes()
-    {
-        var attrs = base.BuildComponentAttributes();
-        attrs["role"] = "menu";
-        attrs["tabindex"] = -1;
-        SetDataState(attrs, IsOpen);
-        return attrs;
-    }
+    protected override Task OnDismissAsync(BhDismissReason reason)
+        => MenuContext?.CloseAsync() ?? Task.CompletedTask;
+}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (Anchor is null) return;
-
-        if (IsOpen && !_wasOpen)
-        {
-            // Use the deterministic button ID to find the reference element in JS.
-            // This is more reliable than passing ElementReference which may not
-            // be captured yet on the first open.
-            var buttonId = BhMenuContext.ButtonId;
-            var panelId = BhMenuContext.ItemsId;
-            _anchorHandle = await Interop.AnchorStartByIdAsync(buttonId, panelId, Anchor);
-            _wasOpen = true;
-            // JS has positioned and revealed the panel; reflect that in the
-            // render so a subsequent render won't re-add the hidden attribute.
-            _positioned = true;
-            StateHasChanged();
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            // Stop anchor positioning when the menu closes
-            await Interop.AnchorStopAsync(_anchorHandle);
-            _anchorHandle = 0;
-            _wasOpen = false;
-            _positioned = false;
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_anchorHandle > 0)
-        {
-            try
-            {
-                await Interop.AnchorStopAsync(_anchorHandle);
-            }
-            catch (JSDisconnectedException) { /* circuit gone */ }
-        }
-    }
+/// <summary>Root used when a menu panel is rendered outside of a menu (design-time / tests).</summary>
+internal sealed class DetachedMenuRoot : IBhMenuRoot
+{
+    public static readonly DetachedMenuRoot Instance = new();
+    public bool IsOpen => false;
+    public bool Disabled => false;
+    public BhDirection Dir => BhDirection.Ltr;
+    public string? TriggerId => null;
+    public BhMenubarContext? Menubar => null;
+    public Task CloseAsync() => Task.CompletedTask;
 }

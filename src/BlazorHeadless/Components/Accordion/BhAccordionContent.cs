@@ -4,34 +4,23 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The collapsible content panel for an <see cref="BhAccordionItem"/>. Rendered
-/// always but hidden via the HTML <c>hidden</c> attribute when the item is closed,
-/// giving consumers full control over open/close transitions via CSS.
-///
-/// <para><b>Key behaviours:</b></para>
-/// <list type="bullet">
-///   <item>Sets <c>id</c> to the panel ID so the trigger's <c>aria-controls</c> can reference it.</item>
-///   <item>Sets <c>role="region"</c> and <c>aria-labelledby</c> pointing to the trigger.</item>
-///   <item>Emits <c>data-state="open"|"closed"</c> for CSS-driven animations.</item>
-///   <item>
-///     Sets the HTML <c>hidden</c> attribute when closed (accessible hiding).
-///     To animate, override with CSS: <c>[data-state="closed"] { display: block; … }</c>.
-///   </item>
-/// </list>
-///
-/// <para><b>Usage:</b></para>
-/// <code>
-/// &lt;BhAccordionContent class="accordion-panel"&gt;
-///     This content is hidden when the item is closed.
-/// &lt;/BhAccordionContent&gt;
-/// </code>
+/// The collapsible panel of a <see cref="BhAccordionItem"/> (<c>role="region"</c>,
+/// labelled by its trigger). Hidden while closed, visible during exit animations,
+/// and exposes <c>--bh-content-height</c> / <c>--bh-content-width</c> for size animations.
 /// </summary>
 public class BhAccordionContent : BhComponentBase
 {
     [CascadingParameter]
-    private BhAccordionItemContext ItemContext { get; set; } = default!;
+    private BhAccordionItemContext? ItemContext { get; set; }
 
-    /// <summary>The content to display inside the panel when the item is open.</summary>
+    /// <summary>
+    /// Use <c>hidden="until-found"</c> while closed so find-in-page can reveal
+    /// matches (the item opens automatically).
+    /// </summary>
+    [Parameter]
+    public bool HiddenUntilFound { get; set; }
+
+    /// <summary>The panel content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -42,19 +31,9 @@ public class BhAccordionContent : BhComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-
         builder.AddAttribute(10, "id", ItemContext?.ContentId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Hidden attribute provides accessible hiding and is the default closed behaviour.
-        // Consumers who want CSS animations should override display with:
-        //   [data-state="closed"] { display: block; overflow: hidden; height: 0; }
-        if (!IsOpen)
-            builder.AddAttribute(30, "hidden", true);
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
         builder.AddContent(50, ChildContent);
         builder.CloseElement();
     }
@@ -62,13 +41,12 @@ public class BhAccordionContent : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataState(attrs, IsOpen);
-
         attrs["role"] = "region";
-
-        if (ItemContext?.TriggerId is not null)
+        if (ItemContext is not null)
             attrs["aria-labelledby"] = ItemContext.TriggerId;
-
+        SetDataState(attrs, IsOpen);
+        SetDataFlag(attrs, "disabled", ItemContext?.Disabled ?? false);
+        BhToggleAttributes.ApplyPanel(attrs, IsOpen, HiddenUntilFound, ItemContext?.TriggerId);
         return attrs;
     }
 }

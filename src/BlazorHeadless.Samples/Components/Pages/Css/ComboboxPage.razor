@@ -29,8 +29,10 @@
                     <BhComboboxInput TValue="string"
                                     Placeholder="Pick a fruit…"
                                     class="combobox-input" />
-                    <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-                        <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhComboboxButton TValue="string" class="combobox-button">
+                        <Template Context="b">
+                            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="string" class="combobox-options">
@@ -42,9 +44,11 @@
                     {
                         @foreach (var fruit in filteredFruits)
                         {
-                            <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
-                                <span>@fruit</span>
-                                @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                            <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+                                <Template Context="o">
+                                    <span>@fruit</span>
+                                    @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -83,8 +87,10 @@
                     <BhComboboxInput TValue="string"
                                     Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                                     class="combobox-input combobox-input-inline" />
-                    <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-                        <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhComboboxButton TValue="string" class="combobox-button">
+                        <Template Context="b">
+                            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="string" class="combobox-options">
@@ -96,9 +102,11 @@
                     {
                         @foreach (var tag in filteredTags)
                         {
-                            <BhComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o">
-                                <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
-                                <span>@tag</span>
+                            <BhComboboxOption TValue="string" Value="@tag" class="combobox-option">
+                                <Template Context="o">
+                                    <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
+                                    <span>@tag</span>
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -128,8 +136,10 @@
                     <BhComboboxInput TValue="Person"
                                     Placeholder="Search people…"
                                     class="combobox-input" />
-                    <BhComboboxButton TValue="Person" class="combobox-button" Context="b">
-                        <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                    <BhComboboxButton TValue="Person" class="combobox-button">
+                        <Template Context="b">
+                            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="Person" class="combobox-options">
@@ -141,15 +151,17 @@
                     {
                         @foreach (var person in filteredPeople)
                         {
-                            <BhComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o">
-                                <div class="person-row">
-                                    <span class="person-avatar">@person.Initials</span>
-                                    <div class="person-info">
-                                        <strong>@person.Name</strong>
-                                        <span>@person.Email</span>
+                            <BhComboboxOption TValue="Person" Value="@person" class="combobox-option">
+                                <Template Context="o">
+                                    <div class="person-row">
+                                        <span class="person-avatar">@person.Initials</span>
+                                        <div class="person-info">
+                                            <strong>@person.Name</strong>
+                                            <span>@person.Email</span>
+                                        </div>
+                                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
                                     </div>
-                                    @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
-                                </div>
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -185,8 +197,10 @@
                             <BhComboboxInput TValue="string"
                                             Placeholder="Pick a fruit…"
                                             class="combobox-input" />
-                            <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-                                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            <BhComboboxButton TValue="string" class="combobox-button">
+                                <Template Context="b">
+                                    <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                                </Template>
                             </BhComboboxButton>
                         </div>
                         <BhComboboxOptions TValue="string"
@@ -200,9 +214,11 @@
                             {
                                 @foreach (var fruit in anchorFilteredFruits)
                                 {
-                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
-                                        <span>@fruit</span>
-                                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+                                        <Template Context="o">
+                                            <span>@fruit</span>
+                                            @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                        </Template>
                                     </BhComboboxOption>
                                 }
                             }
@@ -222,8 +238,10 @@
                             <BhComboboxInput TValue="string"
                                             Placeholder="Pick a fruit…"
                                             class="combobox-input" />
-                            <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-                                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                            <BhComboboxButton TValue="string" class="combobox-button">
+                                <Template Context="b">
+                                    <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                                </Template>
                             </BhComboboxButton>
                         </div>
                         <BhComboboxOptions TValue="string"
@@ -237,9 +255,11 @@
                             {
                                 @foreach (var fruit in anchorFilteredFruits2)
                                 {
-                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option" Context="o">
-                                        <span>@fruit</span>
-                                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                    <BhComboboxOption TValue="string" Value="@fruit" class="combobox-option">
+                                        <Template Context="o">
+                                            <span>@fruit</span>
+                                            @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                                        </Template>
                                     </BhComboboxOption>
                                 }
                             }
@@ -253,9 +273,75 @@
             </span>
         </LiveContent>
     </DemoBlock>
+
+    <DemoBlock Title="Large lists (virtualized)"
+               Code="@_virtualCode"
+               Css="@_virtualCss">
+        <Description>
+            Pass the matching data to <code>BhComboboxOptions</code> through <code>Items</code> with an
+            <code>ItemTemplate</code>, and set <code>Virtualize="true"</code> so only the options in view
+            are rendered (fixed <code>ItemSize</code>, scrollable panel). Filtering stays yours:
+            <code>OnQueryChange</code> runs <code>BhFilter.Contains</code> — case- and
+            accent-insensitive — over 10,000 items on every keystroke. Child content such as
+            <code>BhComboboxEmpty</code> still renders after the data options.
+        </Description>
+        <LiveContent>
+            <BhCombobox TValue="string"
+                        @bind-Value="virtualPick"
+                        OnQueryChange="HandleVirtualQuery"
+                        DisplayValue="v => v ?? string.Empty"
+                        class="combobox-anchored">
+                <div class="combobox-input-wrapper">
+                    <BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…" class="combobox-input" />
+                    <BhComboboxButton TValue="string" class="combobox-button">
+                        <Template Context="b">
+                            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+                        </Template>
+                    </BhComboboxButton>
+                </div>
+                <BhComboboxOptions TValue="string"
+                                   Items="@virtualMatches"
+                                   Virtualize="true"
+                                   ItemSize="36"
+                                   Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                                   class="combobox-virtual">
+                    <ItemTemplate Context="o">
+                        <span>@o.Value</span>
+                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+                    </ItemTemplate>
+                    <ChildContent>
+                        <BhComboboxEmpty TValue="string" class="combobox-empty">No animals match.</BhComboboxEmpty>
+                    </ChildContent>
+                </BhComboboxOptions>
+            </BhCombobox>
+
+            <span class="demo-output">
+                @virtualMatches.Count.ToString("N0") matches · Selected: <strong>@(virtualPick ?? "(none)")</strong>
+            </span>
+        </LiveContent>
+    </DemoBlock>
 </div>
 
 @code {
+    // ── Large lists (virtualized) ───────────────────────────────────────────
+
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList<string> virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    private void HandleVirtualQuery(string query) =>
+        virtualMatches = VirtualItems.Where(item => BhFilter.Contains(item, query)).ToArray();
+
     // ── Single-select (fruits) ──────────────────────────────────────────────
 
     private string? selectedFruit;
@@ -376,6 +462,124 @@
 
     // ── Source snippets shown alongside each live demo ─────────────────────────
 
+    private const string _virtualCode = """
+<BhCombobox TValue="string"
+            @bind-Value="virtualPick"
+            OnQueryChange="HandleVirtualQuery"
+            DisplayValue="v => v ?? string.Empty"
+            class="combobox-anchored">
+    <div class="combobox-input-wrapper">
+        <BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…" class="combobox-input" />
+        <BhComboboxButton TValue="string" class="combobox-button">
+            <Template Context="b">
+                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
+        </BhComboboxButton>
+    </div>
+
+    <BhComboboxOptions TValue="string"
+                       Items="@virtualMatches"
+                       Virtualize="true"
+                       ItemSize="36"
+                       Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                       class="combobox-virtual">
+        <ItemTemplate Context="o">
+            <span>@o.Value</span>
+            @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
+        </ItemTemplate>
+        <ChildContent>
+            @* Rendered after the data options when nothing matches *@
+            <BhComboboxEmpty TValue="string" class="combobox-empty">No animals match.</BhComboboxEmpty>
+        </ChildContent>
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList<string> virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    // Case- and accent-insensitive "contains" match.
+    private void HandleVirtualQuery(string query) =>
+        virtualMatches = VirtualItems.Where(item => BhFilter.Contains(item, query)).ToArray();
+}
+""";
+
+    private const string _virtualCss = """
+/* All styles are consumer-authored — the library ships zero CSS */
+.combobox-anchored { display: inline-block; min-width: 18rem; }
+
+.combobox-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+.combobox-input-wrapper:focus-within { border-color: #2563eb; }
+
+.combobox-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.5rem 0.85rem;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.combobox-button { all: unset; display: inline-flex; padding: 0 0.65rem; cursor: pointer; color: #71717a; }
+.combobox-chevron      { transition: transform 200ms ease; }
+.combobox-chevron.open { transform: rotate(180deg); }
+
+/* Virtualized panel: a scroll container with a bounded height (positioned by Anchor) */
+.combobox-virtual {
+    z-index: 9999;
+    width: 18rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.combobox-virtual[hidden] { display: none; }
+
+/* Data-driven options carry no class — target the role.
+   Every option must be exactly ItemSize (36px) tall. */
+.combobox-virtual > [role="option"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 0.65rem;
+    border-radius: 0.35rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.combobox-virtual > [role="option"][data-active]   { background: #eff6ff; }
+.combobox-virtual > [role="option"][data-selected] { font-weight: 600; }
+
+.combobox-empty { padding: 0.6rem 0.65rem; color: #71717a; font-size: 0.85rem; font-style: italic; }
+.combobox-tick  { color: #2563eb; font-weight: 700; }
+""";
+
     private const string _basicCode = """
 <BhCombobox TValue="string"
            Value="@selectedFruit"
@@ -387,8 +591,10 @@
         <BhComboboxInput TValue="string"
                         Placeholder="Pick a fruit…"
                         class="combobox-input" />
-        <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhComboboxButton TValue="string" class="combobox-button">
+            <Template Context="b">
+                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string" class="combobox-options">
@@ -447,8 +653,10 @@
         <BhComboboxInput TValue="string"
                         Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                         class="combobox-input combobox-input-inline" />
-        <BhComboboxButton TValue="string" class="combobox-button" Context="b">
-            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhComboboxButton TValue="string" class="combobox-button">
+            <Template Context="b">
+                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string" class="combobox-options">
@@ -460,9 +668,11 @@
         {
             @foreach (var tag in filteredTags)
             {
-                <BhComboboxOption TValue="string" Value="@tag" class="combobox-option" Context="o">
-                    <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
-                    <span>@tag</span>
+                <BhComboboxOption TValue="string" Value="@tag" class="combobox-option">
+                    <Template Context="o">
+                        <span class="combobox-tick">@(o.IsSelected ? "✓" : "")</span>
+                        <span>@tag</span>
+                    </Template>
                 </BhComboboxOption>
             }
         }
@@ -508,8 +718,10 @@ public sealed record Person(string Name, string Email)
         <BhComboboxInput TValue="Person"
                         Placeholder="Search people…"
                         class="combobox-input" />
-        <BhComboboxButton TValue="Person" class="combobox-button" Context="b">
-            <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+        <BhComboboxButton TValue="Person" class="combobox-button">
+            <Template Context="b">
+                <span class="combobox-chevron @(b.IsOpen ? "open" : "")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="Person" class="combobox-options">
@@ -521,15 +733,17 @@ public sealed record Person(string Name, string Email)
         {
             @foreach (var person in filteredPeople)
             {
-                <BhComboboxOption TValue="Person" Value="@person" class="combobox-option" Context="o">
-                    <div class="person-row">
-                        <span class="person-avatar">@person.Initials</span>
-                        <div class="person-info">
-                            <strong>@person.Name</strong>
-                            <span>@person.Email</span>
+                <BhComboboxOption TValue="Person" Value="@person" class="combobox-option">
+                    <Template Context="o">
+                        <div class="person-row">
+                            <span class="person-avatar">@person.Initials</span>
+                            <div class="person-info">
+                                <strong>@person.Name</strong>
+                                <span>@person.Email</span>
+                            </div>
+                            @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
                         </div>
-                        @if (o.IsSelected) { <span class="combobox-tick">✓</span> }
-                    </div>
+                    </Template>
                 </BhComboboxOption>
             }
         }

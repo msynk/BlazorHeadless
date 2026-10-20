@@ -4,62 +4,32 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// Renders all portalled content from <see cref="BhPortal"/> components that are
-/// not inside a <see cref="BhPortalGroup"/>. Place this component once in your
-/// root layout (e.g. <c>MainLayout.razor</c>) so that portals can teleport their
-/// content here, escaping overflow and z-index stacking contexts.
+/// Optional destination for portalled content (<see cref="BhPortal"/> and the
+/// <c>Portal</c> option of dialogs, popovers, menus …). Without an outlet a root is
+/// appended to <c>&lt;body&gt;</c> on demand. Place it at the end of your root layout
+/// when you want portalled content inside your app element (e.g. to inherit
+/// theme classes or CSS variables).
 ///
-/// <para><b>Usage (in MainLayout.razor):</b></para>
 /// <code>
-/// @inherits LayoutComponentBase
-///
-/// &lt;div class="page"&gt;
-///     @Body
-/// &lt;/div&gt;
-///
+/// &lt;div class="page"&gt;@Body&lt;/div&gt;
 /// &lt;BhPortalOutlet /&gt;
 /// </code>
-///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup.</b></para>
 /// </summary>
-public class BhPortalOutlet : ComponentBase, IDisposable
+public class BhPortalOutlet : ComponentBase
 {
-    [Inject] private BhPortalService PortalService { get; set; } = default!;
-
-    private bool _disposed;
-
-    protected override void OnInitialized()
-    {
-        PortalService.Subscribe(OnPortalsChanged);
-    }
-
-    private void OnPortalsChanged()
-    {
-        if (_disposed) return;
-        _ = InvokeAsync(StateHasChanged);
-    }
+    /// <summary>Additional attributes for the outlet element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var entries = PortalService.GetEntries();
-        if (entries.Count == 0) return;
-
         builder.OpenElement(0, "div");
-        builder.AddAttribute(1, "data-headlessui-portal-root", "");
-        builder.AddAttribute(2, "style", "display:contents;");
-
-        int seq = 10;
-        foreach (var entry in entries)
-        {
-            builder.AddContent(seq++, entry.Content);
-        }
-
+        builder.AddAttribute(1, "id", "bh-portal-root");
+        builder.AddAttribute(2, "data-bh-portal-root", "");
+        builder.AddMultipleAttributes(3, AdditionalAttributes);
         builder.CloseElement();
     }
 
-    public void Dispose()
-    {
-        _disposed = true;
-        PortalService.Unsubscribe();
-    }
+    // The outlet's children are managed by the JS runtime; never re-render it.
+    protected override bool ShouldRender() => false;
 }

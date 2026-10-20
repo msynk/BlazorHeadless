@@ -5,33 +5,16 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The alert dialog's surface — the actual <c>role="alertdialog"</c> element that
-/// holds the title, description, and the Cancel/Action buttons. Receives focus on
-/// open (the <see cref="BhAlertDialogCancel"/> button when present) and is the
-/// focus-trap boundary.
+/// The alert dialog's surface — the <c>role="alertdialog"</c> element that holds
+/// the title, description, and the Cancel/Action buttons. It is the focus-trap
+/// boundary; focus starts on <see cref="BhAlertDialogCancel"/> when present.
 ///
-/// <para>
-/// Only rendered while the alert dialog is open. Captures its own
-/// <see cref="ElementReference"/> and registers it with the parent
-/// <see cref="BhAlertDialog"/> so the JS interop can lock focus to it.
-/// </para>
-///
-/// <para>
-/// Unlike <see cref="BhDialog"/>, an alert dialog is <b>not</b> dismissed by
-/// clicking the overlay — the user must explicitly choose Cancel or Action.
-/// </para>
+/// <para>Rendered only while open (and while its exit animation runs).</para>
 /// </summary>
 public class BhAlertDialogContent : BhComponentBase
 {
     [CascadingParameter]
-    private BhAlertDialogContext BhAlertDialogContext { get; set; } = default!;
-
-    /// <summary>
-    /// When true (the default), Escape closes the alert dialog. Set to <c>false</c>
-    /// to require explicit dismissal via Cancel or Action.
-    /// </summary>
-    [Parameter]
-    public bool DismissOnEscape { get; set; } = true;
+    private BhAlertDialogContext? AlertDialogContext { get; set; }
 
     /// <summary>Child content. Title, description, Cancel/Action, and any other markup go here.</summary>
     [Parameter]
@@ -39,28 +22,19 @@ public class BhAlertDialogContent : BhComponentBase
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => BhAlertDialogContext?.IsOpen ?? false;
-
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (!IsOpen) return;
+        if (AlertDialogContext is { IsPresent: false }) return;
 
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhAlertDialogContext?.ContentId ?? ComponentId);
+        builder.AddAttribute(10, "id", AlertDialogContext?.ContentId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (DismissOnEscape)
-        {
-            builder.AddAttribute(30, "onkeydown",
-                EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-        }
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            BhAlertDialogContext?.RegisterContent(e);
-            Ref?.Invoke(e);
-        });
-
+        if (AlertDialogContext?.IsHidden == true)
+            builder.AddAttribute(25, "hidden", true);
+        builder.AddAttribute(30, "onkeydown",
+            EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
+        builder.AddEventStopPropagationAttribute(31, "onkeydown", true);
+        builder.AddElementReferenceCapture(40, CaptureElement);
         builder.AddContent(50, ChildContent);
         builder.CloseElement();
     }
@@ -68,29 +42,25 @@ public class BhAlertDialogContent : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
         attrs["role"] = "alertdialog";
         attrs["aria-modal"] = "true";
-        attrs["aria-labelledby"] = BhAlertDialogContext?.TitleId ?? string.Empty;
-        attrs["aria-describedby"] = BhAlertDialogContext?.DescriptionId ?? string.Empty;
-
-        // tabindex=-1 so the content itself is programmatically focusable when no
-        // descendants are focusable, but isn't part of the tab order.
+        if (AlertDialogContext?.HasTitle == true)
+            attrs["aria-labelledby"] = AlertDialogContext.TitleId;
+        if (AlertDialogContext?.HasDescription == true)
+            attrs["aria-describedby"] = AlertDialogContext.DescriptionId;
         attrs["tabindex"] = -1;
-
-        SetDataState(attrs, IsOpen);
+        SetDataState(attrs, AlertDialogContext?.IsOpen ?? false);
+        attrs["data-bh-presence"] = "";
 
         // Default positioning — centred in the viewport, above the overlay.
         // Consumers override entirely via class=/style=.
-        if (!attrs.ContainsKey("style"))
+        if (GetAdditionalAttribute("style") is null && GetAdditionalAttribute("class") is null)
             attrs["style"] = "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:51;";
-
         return attrs;
     }
 
-    private async Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        if (args.Key == "Escape" && BhAlertDialogContext is not null)
-            await BhAlertDialogContext.CloseAsync();
-    }
+    private Task HandleKeyDown(KeyboardEventArgs args)
+        => args.Key == "Escape" && AlertDialogContext is not null
+            ? AlertDialogContext.DismissAsync(BhDismissReason.EscapeKey)
+            : Task.CompletedTask;
 }

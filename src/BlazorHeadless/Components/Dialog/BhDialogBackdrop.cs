@@ -6,7 +6,7 @@ namespace BlazorHeadless;
 
 /// <summary>
 /// The optional dim overlay rendered behind the dialog panel. Clicking the
-/// backdrop dismisses the dialog by calling <see cref="BhDialog.OnClose"/>.
+/// backdrop dismisses the dialog.
 ///
 /// <para>
 /// Set <see cref="DismissOnClick"/> to <c>false</c> to disable dismiss-on-click
@@ -16,7 +16,7 @@ namespace BlazorHeadless;
 public class BhDialogBackdrop : BhComponentBase
 {
     [CascadingParameter]
-    private BhDialogContext BhDialogContext { get; set; } = default!;
+    private BhDialogContext? DialogContext { get; set; }
 
     /// <summary>Whether clicking the backdrop should close the dialog. Defaults to <c>true</c>.</summary>
     [Parameter]
@@ -37,16 +37,10 @@ public class BhDialogBackdrop : BhComponentBase
         if (DismissOnClick)
         {
             builder.AddAttribute(30, "onclick",
-                EventCallback.Factory.Create<MouseEventArgs>(this, async _ =>
-                {
-                    if (BhDialogContext is not null)
-                        await BhDialogContext.CloseAsync();
-                }));
+                EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
         }
 
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
         builder.AddContent(50, ChildContent);
         builder.CloseElement();
     }
@@ -54,16 +48,23 @@ public class BhDialogBackdrop : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataState(attrs, BhDialogContext?.IsOpen ?? false);
+        SetDataState(attrs, DialogContext?.IsOpen ?? false);
 
         // Default styles position the backdrop behind the panel inside the
         // dialog's positioning container. Consumers can override via class=/style=.
-        if (!attrs.ContainsKey("style"))
-            attrs["style"] = "position:absolute;inset:0;z-index:0;";
+        if (GetAdditionalAttribute("style") is null && GetAdditionalAttribute("class") is null)
+            attrs["style"] = "position:fixed;inset:0;z-index:0;";
 
-        // Marked aria-hidden so AT skips it.
+        // Decorative: hidden from assistive tech.
         attrs["aria-hidden"] = "true";
+
+        // Clicks on a non-dismissing backdrop must not count as "outside".
+        if (!DismissOnClick)
+            attrs["data-bh-dismiss-ignore"] = "";
 
         return attrs;
     }
+
+    private Task HandleClick(MouseEventArgs _)
+        => DialogContext?.DismissAsync(BhDismissReason.PointerDownOutside) ?? Task.CompletedTask;
 }

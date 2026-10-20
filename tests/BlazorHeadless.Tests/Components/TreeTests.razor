@@ -1,0 +1,213 @@
+@inherits TestBase
+
+@code {
+    private RenderFragment Files(BhTreeSelectionMode mode = BhTreeSelectionMode.Single, bool checkboxes = false, Action<string?>? onSelect = null) =>
+        @<BhTree TValue="string" aria-label="Files" SelectionMode="mode" Checkboxes="checkboxes"
+                 SelectedValueChanged="v => onSelect?.Invoke(v)">
+            <BhTreeItem TValue="string" Value="@("src")" Label="src">
+                <span>src</span>
+                <BhTreeGroup TValue="string">
+                    <BhTreeItem TValue="string" Value="@("app")" Label="app.cs">app.cs</BhTreeItem>
+                    <BhTreeItem TValue="string" Value="@("lib")" Label="lib.cs">lib.cs</BhTreeItem>
+                </BhTreeGroup>
+            </BhTreeItem>
+            <BhTreeItem TValue="string" Value="@("docs")" Label="docs" Disabled="true">docs</BhTreeItem>
+            <BhTreeItem TValue="string" Value="@("readme")" Label="readme.md">readme.md</BhTreeItem>
+        </BhTree>;
+
+    private AngleSharp.Dom.IElement Item(IRenderedComponent<Bunit.Rendering.ContainerFragment> cut, string label)
+        => cut.Find($"[role=treeitem][data-bh-text='{label}']");
+
+    [Fact]
+    public void Tree_structure_is_exposed()
+    {
+        var cut = Render(Files());
+        var tree = cut.Find("[role=tree]");
+        Assert.Equal("Files", tree.AccessibleName());
+
+        var src = Item(cut, "src");
+        Assert.Equal("1", src.GetAttribute("aria-level"));
+        Assert.Equal("1", src.GetAttribute("aria-posinset"));
+        Assert.Equal("3", src.GetAttribute("aria-setsize"));
+        Assert.Equal("false", src.GetAttribute("aria-expanded"));
+        Assert.True(cut.Find("[role=group]").HasAttribute("hidden"));
+
+        var app = Item(cut, "app.cs");
+        Assert.Equal("2", app.GetAttribute("aria-level"));
+        Assert.Equal("2", app.GetAttribute("aria-setsize"));
+
+        // Leaf items carry no aria-expanded.
+        Assert.Null(Item(cut, "readme.md").GetAttribute("aria-expanded"));
+        Assert.Equal("true", Item(cut, "docs").GetAttribute("aria-disabled"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Only_one_item_is_in_the_tab_order()
+    {
+        var cut = Render(Files());
+        var stops = cut.TabSequence();
+        Assert.Single(stops);
+        Assert.Equal("src", stops[0].Element.GetAttribute("data-bh-text"));
+    }
+
+    [Fact]
+    public void Right_expands_then_moves_to_the_first_child_and_Left_returns()
+    {
+        var cut = Render(Files());
+        Item(cut, "src").Press("ArrowRight");
+        Assert.Equal("true", Item(cut, "src").GetAttribute("aria-expanded"));
+        Assert.False(cut.Find("[role=group]").HasAttribute("hidden"));
+
+        Item(cut, "src").Press("ArrowRight");
+        Assert.Equal(Item(cut, "app.cs").Id, this.LastFocusRequest());
+        Assert.Equal("0", Item(cut, "app.cs").GetAttribute("tabindex"));
+        Assert.Equal("-1", Item(cut, "src").GetAttribute("tabindex"));
+
+        Item(cut, "app.cs").Press("ArrowLeft");
+        Assert.Equal(Item(cut, "src").Id, this.LastFocusRequest());
+        Item(cut, "src").Press("ArrowLeft");
+        Assert.Equal("false", Item(cut, "src").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Up_and_down_walk_visible_items_skipping_disabled_ones()
+    {
+        var cut = Render(Files());
+        Item(cut, "src").Press("ArrowDown");
+        // Collapsed children and the disabled item are skipped.
+        Assert.Equal(Item(cut, "readme.md").Id, this.LastFocusRequest());
+        Item(cut, "readme.md").Press("Home");
+        Assert.Equal(Item(cut, "src").Id, this.LastFocusRequest());
+        Item(cut, "src").Press("End");
+        Assert.Equal(Item(cut, "readme.md").Id, this.LastFocusRequest());
+    }
+
+    [Fact]
+    public void Asterisk_expands_all_siblings()
+    {
+        var cut = Render(Files());
+        Item(cut, "readme.md").Press("*");
+        Assert.Equal("true", Item(cut, "src").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Typeahead_focuses_by_label()
+    {
+        var cut = Render(Files());
+        Item(cut, "src").Press("r");
+        Assert.Equal(Item(cut, "readme.md").Id, this.LastFocusRequest());
+    }
+
+    [Fact]
+    public void Single_selection_with_Enter_and_click()
+    {
+        string? selected = null;
+        var cut = Render(Files(onSelect: v => selected = v));
+        Item(cut, "readme.md").Press("Enter");
+        Assert.Equal("readme", selected);
+        Assert.Equal("true", Item(cut, "readme.md").GetAttribute("aria-selected"));
+        Assert.Equal("false", Item(cut, "src").GetAttribute("aria-selected"));
+
+        Item(cut, "src").Click();
+        Assert.Equal("src", selected);
+        Assert.Equal("false", Item(cut, "readme.md").GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Multi_selection_marks_the_tree_multiselectable()
+    {
+        var cut = Render(Files(BhTreeSelectionMode.Multiple));
+        Assert.Equal("true", cut.Find("[role=tree]").GetAttribute("aria-multiselectable"));
+        Item(cut, "src").Press(" ");
+        Item(cut, "readme.md").Press(" ");
+        Assert.Equal("true", Item(cut, "src").GetAttribute("aria-selected"));
+        Assert.Equal("true", Item(cut, "readme.md").GetAttribute("aria-selected"));
+        Item(cut, "src").Press(" ");
+        Assert.Equal("false", Item(cut, "src").GetAttribute("aria-selected"));
+    }
+
+    [Fact]
+    public void Checkboxes_cascade_to_descendants_and_show_mixed_parents()
+    {
+        var cut = Render(Files(checkboxes: true));
+        Item(cut, "src").Press("ArrowRight");
+        Item(cut, "app.cs").Press(" ");
+        Assert.Equal("true", Item(cut, "app.cs").GetAttribute("aria-checked"));
+        Assert.Equal("mixed", Item(cut, "src").GetAttribute("aria-checked"));
+
+        Item(cut, "lib.cs").Press(" ");
+        Assert.Equal("true", Item(cut, "src").GetAttribute("aria-checked"));
+
+        Item(cut, "src").Press(" ");
+        Assert.Equal("false", Item(cut, "app.cs").GetAttribute("aria-checked"));
+        Assert.Equal("false", Item(cut, "lib.cs").GetAttribute("aria-checked"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Lazy_children_load_on_expand_and_report_busy()
+    {
+        var gate = new TaskCompletionSource();
+        var loaded = new List<string>();
+        var cut = Render(
+            @<BhTree TValue="string" aria-label="Lazy" LoadChildren="async v => { loaded.Add(v); await gate.Task; }">
+                <BhTreeItem TValue="string" Value="@("root")" Label="root" HasChildren="true">root</BhTreeItem>
+            </BhTree>);
+
+        var root = cut.Find("[role=treeitem]");
+        Assert.Equal("false", root.GetAttribute("aria-expanded"));
+        root.Press("ArrowRight");
+        Assert.Equal(["root"], loaded);
+        Assert.Equal("true", cut.Find("[role=treeitem]").GetAttribute("aria-busy"));
+
+        gate.SetResult();
+        cut.WaitForAssertion(() => Assert.Null(cut.Find("[role=treeitem]").GetAttribute("aria-busy")));
+        Assert.Equal("true", cut.Find("[role=treeitem]").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Template_exposes_item_state()
+    {
+        var cut = Render(
+            @<BhTree TValue="int" aria-label="Numbers" DefaultExpandedValues="@(new[] { 1 })">
+                <BhTreeItem TValue="int" Value="1" Label="One">
+                    <Template Context="i">
+                        <span class="row">@(i.IsExpanded ? "▾" : "▸") One (level @i.Level)</span>
+                        <BhTreeGroup TValue="int">
+                            <BhTreeItem TValue="int" Value="2" Label="Two">
+                                <Template Context="c">Two (level @c.Level)</Template>
+                            </BhTreeItem>
+                        </BhTreeGroup>
+                    </Template>
+                </BhTreeItem>
+            </BhTree>);
+        Assert.Contains("▾ One (level 1)", cut.Markup);
+        Assert.Contains("Two (level 2)", cut.Markup);
+    }
+
+    [Fact]
+    public void Toggle_follows_expansion_and_typeahead_ignores_child_text()
+    {
+        var cut = Render(
+            @<BhTree TValue="string" aria-label="Files">
+                <BhTreeItem TValue="string" Value="@("docs")">
+                    <BhTreeItemToggle TValue="string" /> docs
+                    <BhTreeGroup TValue="string">
+                        <BhTreeItem TValue="string" Value="@("zeta")">zeta.md</BhTreeItem>
+                    </BhTreeGroup>
+                </BhTreeItem>
+                <BhTreeItem TValue="string" Value="@("zoo")">zoo.txt</BhTreeItem>
+            </BhTree>);
+
+        var toggle = cut.Find("[aria-hidden=true]");
+        Assert.Equal("closed", toggle.GetAttribute("data-state"));
+        cut.FindAll("[role=treeitem]")[0].Press("ArrowRight");
+        Assert.Equal("open", cut.Find("[aria-hidden=true]").GetAttribute("data-state"));
+
+        // "z" from "docs" must find zeta.md / zoo.txt by their own text, not "docs zeta.md".
+        cut.FindAll("[role=treeitem]")[0].Press("ArrowLeft");
+        cut.FindAll("[role=treeitem]")[0].Press("z");
+        Assert.Equal(cut.FindAll("[role=treeitem]").Last().Id, this.LastFocusRequest());
+    }
+}

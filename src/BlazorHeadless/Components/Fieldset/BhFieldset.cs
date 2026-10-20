@@ -4,34 +4,22 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless fieldset component that groups a set of form controls together.
-/// Renders as a native <c>&lt;fieldset&gt;</c> by default, providing built-in
-/// browser semantics for grouping and disabling form controls.
+/// Groups related form controls under a <see cref="BhLegend"/>. Renders a native
+/// <c>&lt;fieldset&gt;</c> by default; disabling it disables every
+/// <see cref="BhField"/> and BlazorHeadless control inside.
 ///
-/// <para>
-/// Use with <see cref="BhLegend"/> to provide a title for the group.
-/// The <see cref="Disabled"/> prop cascades to all nested form controls
-/// via both the native <c>disabled</c> attribute and a <see cref="BhFieldsetContext"/>.
-/// </para>
-///
-/// <para><b>Usage:</b></para>
-/// <code>
-/// &lt;BhFieldset&gt;
-///     &lt;BhLegend&gt;Shipping details&lt;/BhLegend&gt;
-///     &lt;BhField&gt;
-///         &lt;BhLabel&gt;Street address&lt;/BhLabel&gt;
-///         &lt;BhInput name="address" /&gt;
-///     &lt;/BhField&gt;
-/// &lt;/BhFieldset&gt;
-/// </code>
+/// <para>When rendered as another element (<c>As="div"</c>) it becomes
+/// <c>role="group"</c> labelled by its legend.</para>
 /// </summary>
 public class BhFieldset : BhComponentBase
 {
-    /// <summary>Disables all form controls inside this fieldset.</summary>
+    private bool _hasLegend;
+
+    /// <summary>Disables every control in the fieldset.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Child content. Should contain an <see cref="BhLegend"/> and one or more <see cref="BhField"/> components.</summary>
+    /// <summary>A legend and fields.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -39,26 +27,20 @@ public class BhFieldset : BhComponentBase
 
     private string LegendId => $"{ComponentId}-legend";
 
+    private bool IsNative => Tag.Equals("fieldset", StringComparison.OrdinalIgnoreCase);
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var context = new BhFieldsetContext(LegendId, Disabled);
+        var context = new BhFieldsetContext(LegendId, Disabled, RegisterLegend);
 
         builder.OpenComponent<CascadingValue<BhFieldsetContext>>(0);
         builder.AddComponentParameter(1, "Value", context);
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
-            inner.AddAttribute(5, "id", ComponentId);
-            inner.AddAttribute(6, "aria-labelledby", LegendId);
-
-            if (Disabled)
-                inner.AddAttribute(7, "disabled", true);
-
+            inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
@@ -68,7 +50,23 @@ public class BhFieldset : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
+        if (!IsNative)
+            attrs["role"] = "group";
+        if (_hasLegend)
+            attrs["aria-labelledby"] = LegendId;
+        if (Disabled)
+        {
+            if (IsNative) attrs["disabled"] = true;
+            else attrs["aria-disabled"] = "true";
+        }
         SetDataFlag(attrs, "disabled", Disabled);
         return attrs;
+    }
+
+    private void RegisterLegend(bool present)
+    {
+        if (_hasLegend == present) return;
+        _hasLegend = present;
+        StateHasChanged();
     }
 }

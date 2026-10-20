@@ -1,0 +1,732 @@
+@page "/tw/menubar"
+@rendermode InteractiveServer
+
+<PageTitle>Menubar — BlazorHeadless · Tailwind</PageTitle>
+
+<div class="mx-auto w-full max-w-3xl px-6 py-12 pb-24">
+    <header class="mb-12">
+        <h1 class="text-3xl font-bold tracking-tight text-zinc-900">Menubar</h1>
+        <p class="mt-2 text-zinc-500">A desktop-style application menu bar — menus, submenus, checkable items and keyboard shortcuts — with zero visual opinion.</p>
+        <TwSectionSwitcher Slug="menubar" />
+    </header>
+
+    <TwDemoBlock Title="Application menubar" Code="@_appCode">
+        <Description>
+            The WAI-ARIA menubar pattern: the bar is a single tab stop, ← / → move between menus (and switch the
+            open one), ↓ / Enter / Space open a menu, ↑ / ↓, Home / End and typeahead move inside it, → / ← open
+            and close submenus, and Escape closes. Once a menu is open, hovering another trigger switches to it.
+            Checkbox (<code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">menuitemcheckbox</code>) and radio (<code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">menuitemradio</code>) items keep the menu
+            open and show their state through <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuItemIndicator</code>; <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuLabel</code> names its
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuGroup</code>. The shortcuts are just text.
+        </Description>
+        <LiveContent>
+            <BhMenubar class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Application">
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">File</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem OnClick='@(() => Log("New Tab"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            New Tab <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘T</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("New Window"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            New Window <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘N</span>
+                        </BhMenuItem>
+                        <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">New Incognito Window</BhMenuItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuSub>
+                            <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                Share <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                            </BhMenuSubTrigger>
+                            <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                <BhMenuItem OnClick='@(() => Log("Email Link"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Email Link</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Messages"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Messages</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Notes"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Notes</BhMenuItem>
+                            </BhMenuSubContent>
+                        </BhMenuSub>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Print"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Print… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘P</span>
+                        </BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Edit</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem OnClick='@(() => Log("Undo"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Undo <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘Z</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Redo"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Redo <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘Z</span>
+                        </BhMenuItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuSub>
+                            <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                Find <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                            </BhMenuSubTrigger>
+                            <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                <BhMenuItem OnClick='@(() => Log("Search the Web"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Search the Web…</BhMenuItem>
+                                <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                                <BhMenuItem OnClick='@(() => Log("Find"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                    Find… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘F</span>
+                                </BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Find Next"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                    Find Next <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘G</span>
+                                </BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Find Previous"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                    Find Previous <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘G</span>
+                                </BhMenuItem>
+                            </BhMenuSubContent>
+                        </BhMenuSub>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Cut"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Cut <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘X</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Copy"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Copy <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘C</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Paste"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Paste <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘V</span>
+                        </BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">View</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuCheckboxItem @bind-Checked="showBookmarks" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                            Always Show Bookmarks Bar <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘B</span>
+                        </BhMenuCheckboxItem>
+                        <BhMenuCheckboxItem @bind-Checked="showFullUrls" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                            Always Show Full URLs
+                        </BhMenuCheckboxItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Reload"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Reload <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘R</span>
+                        </BhMenuItem>
+                        <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Force Reload <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘R</span>
+                        </BhMenuItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Toggle Fullscreen"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Toggle Fullscreen</BhMenuItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Hide Sidebar"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Hide Sidebar</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Profiles</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuGroup>
+                            <BhMenuLabel class="pt-2 pr-2.5 pb-1 pl-7 text-xs font-semibold uppercase tracking-wider text-zinc-500">Switch profile</BhMenuLabel>
+                            <BhMenuRadioGroup @bind-Value="profile">
+                                @foreach (var name in profiles)
+                                {
+                                    <BhMenuRadioItem Value="@name" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                        <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                                        @name
+                                    </BhMenuRadioItem>
+                                }
+                            </BhMenuRadioGroup>
+                        </BhMenuGroup>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Edit profile"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Edit…</BhMenuItem>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Add Profile"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Add Profile…</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+            </BhMenubar>
+
+            <span class="text-sm text-zinc-500">
+                Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong> ·
+                Bookmarks bar: <strong class="text-zinc-900">@(showBookmarks ? "on" : "off")</strong> ·
+                Profile: <strong class="text-zinc-900">@profile</strong>
+            </span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Checkbox and radio items driving the UI" Code="@_editorCode">
+        <Description>
+            Checkable items are just bound state. <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">@@bind-Checked</code> on <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuCheckboxItem</code> and
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">@@bind-Value</code> on <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuRadioGroup</code> drive the editor below — toggle line numbers, word
+            wrap and the status bar, change the zoom or the theme. The menu stays open while you toggle so you can
+            see each change; set <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">CloseOnSelect="true"</code> on an item to close it instead.
+        </Description>
+        <LiveContent>
+            <div class="w-full max-w-xl overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+                <BhMenubar class="flex w-full items-center gap-0.5 border-b border-zinc-200 bg-zinc-50 p-1" aria-label="Editor">
+                    <BhMenu>
+                        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">View</BhMenuButton>
+                        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                            <BhMenuCheckboxItem @bind-Checked="lineNumbers" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                                Line Numbers
+                            </BhMenuCheckboxItem>
+                            <BhMenuCheckboxItem @bind-Checked="wordWrap" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                                Word Wrap <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌥Z</span>
+                            </BhMenuCheckboxItem>
+                            <BhMenuCheckboxItem @bind-Checked="statusBar" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                                Status Bar
+                            </BhMenuCheckboxItem>
+                            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                            <BhMenuGroup>
+                                <BhMenuLabel class="pt-2 pr-2.5 pb-1 pl-7 text-xs font-semibold uppercase tracking-wider text-zinc-500">Zoom</BhMenuLabel>
+                                <BhMenuRadioGroup @bind-Value="zoom">
+                                    @foreach (var level in zoomLevels)
+                                    {
+                                        <BhMenuRadioItem Value="@level" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                            <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                                            @(level)%
+                                        </BhMenuRadioItem>
+                                    }
+                                </BhMenuRadioGroup>
+                            </BhMenuGroup>
+                        </BhMenuItems>
+                    </BhMenu>
+                    <BhMenu>
+                        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Theme</BhMenuButton>
+                        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                            <BhMenuRadioGroup @bind-Value="editorTheme" AriaLabel="Color theme">
+                                @foreach (var option in editorThemes)
+                                {
+                                    <BhMenuRadioItem Value="@option" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                        <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                                        @option
+                                    </BhMenuRadioItem>
+                                }
+                            </BhMenuRadioGroup>
+                        </BhMenuItems>
+                    </BhMenu>
+                </BhMenubar>
+
+                <div class="bg-white text-[0.8rem] text-zinc-800 transition-colors data-[theme=Dark]:bg-zinc-900 data-[theme=Dark]:text-zinc-200 data-[theme=Sepia]:bg-[#f7f0e1] data-[theme=Sepia]:text-[#5b4636]" data-theme="@editorTheme">
+                    <div class="overflow-x-auto px-4 py-3 font-mono leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-blue-600" tabindex="0" role="region" aria-label="Editor preview" style="font-size: @(zoom)%">
+                        @for (var i = 0; i < editorLines.Length; i++)
+                        {
+                            <div class="flex gap-3">
+                                @if (lineNumbers)
+                                {
+                                    <span class="w-5 shrink-0 select-none text-right opacity-40">@(i + 1)</span>
+                                }
+                                <span class="@(wordWrap ? "whitespace-pre-wrap" : "whitespace-pre")">@editorLines[i]</span>
+                            </div>
+                        }
+                    </div>
+                    @if (statusBar)
+                    {
+                        <div class="flex gap-3 border-t border-current/10 px-4 py-1.5 text-xs opacity-70">
+                            <span>Ln 4, Col 18</span><span>UTF-8</span><span>@(zoom)%</span><span>@editorTheme</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Nested submenus" Code="@_submenusCode">
+        <Description>
+            Nest <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuSub</code> (a <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuSubTrigger</code> plus a <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenuSubContent</code>) to any
+            depth. Hovering opens a submenu after <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OpenDelay</code>, and a <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">CloseDelay</code> grace period lets
+            the pointer travel diagonally into it. → / Enter / Space open a submenu and focus its first item, ← / Escape
+            close it and return to the trigger; on an item without a submenu, → moves on to the next menu of the bar.
+            Submenu triggers expose <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-haspopup</code>, <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-expanded</code> and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-state</code>.
+        </Description>
+        <LiveContent>
+            <BhMenubar class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Document">
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Insert</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem OnClick='@(() => Log("Insert image"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Image…</BhMenuItem>
+                        <BhMenuSub>
+                            <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                Table <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                            </BhMenuSubTrigger>
+                            <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                <BhMenuItem OnClick='@(() => Log("Insert 2 × 2 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">2 × 2</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Insert 3 × 3 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">3 × 3</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Insert 4 × 4 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">4 × 4</BhMenuItem>
+                                <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                                <BhMenuItem OnClick='@(() => Log("Insert custom table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Custom size…</BhMenuItem>
+                            </BhMenuSubContent>
+                        </BhMenuSub>
+                        <BhMenuSub>
+                            <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                Shape <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                            </BhMenuSubTrigger>
+                            <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                <BhMenuItem OnClick='@(() => Log("Insert rectangle"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Rectangle</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Insert ellipse"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Ellipse</BhMenuItem>
+                                <BhMenuSub>
+                                    <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                        Arrow <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                                    </BhMenuSubTrigger>
+                                    <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                        <BhMenuItem OnClick='@(() => Log("Insert straight arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Straight</BhMenuItem>
+                                        <BhMenuItem OnClick='@(() => Log("Insert curved arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Curved</BhMenuItem>
+                                        <BhMenuItem OnClick='@(() => Log("Insert elbow arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Elbow</BhMenuItem>
+                                    </BhMenuSubContent>
+                                </BhMenuSub>
+                            </BhMenuSubContent>
+                        </BhMenuSub>
+                        <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                        <BhMenuItem OnClick='@(() => Log("Insert page break"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Page Break <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘↵</span>
+                        </BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Share</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem OnClick='@(() => Log("Copy link"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Copy Link <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘L</span>
+                        </BhMenuItem>
+                        <BhMenuSub OpenDelay="0" CloseDelay="500">
+                            <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                Send To <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                            </BhMenuSubTrigger>
+                            <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                                <BhMenuItem OnClick='@(() => Log("Send by email"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Email</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Send as message"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Messages</BhMenuItem>
+                                <BhMenuItem OnClick='@(() => Log("Send to team chat"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Team Chat</BhMenuItem>
+                            </BhMenuSubContent>
+                        </BhMenuSub>
+                    </BhMenuItems>
+                </BhMenu>
+            </BhMenubar>
+
+            <span class="text-sm text-zinc-500">Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+
+    <TwDemoBlock Title="Disabled menus and items" Code="@_disabledCode">
+        <Description>
+            A disabled <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhMenu</code> can't be opened and ← / → skip over it; disabled items stay visible (with
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">data-disabled</code> and <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">aria-disabled</code>) but arrow keys and typeahead pass them by.
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Loop="false"</code> stops the arrow keys at the first and last menu instead of wrapping. Items can
+            also render as links with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">As="a"</code> — Enter follows the link.
+        </Description>
+        <LiveContent>
+            <BhMenubar Loop="false" class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Read-only document">
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">File</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem OnClick='@(() => Log("Open"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Open… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘O</span>
+                        </BhMenuItem>
+                        <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Save <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘S</span>
+                        </BhMenuItem>
+                        <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Save As… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘S</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("Export PDF"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Export as PDF</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu Disabled="true">
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Edit</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Undo</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+
+                <BhMenu>
+                    <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Help</BhMenuButton>
+                    <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                        <BhMenuItem As="a" href="https://www.w3.org/WAI/ARIA/apg/patterns/menubar/" target="_blank" rel="noopener"
+                                    class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Menubar pattern (APG) <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400" aria-hidden="true">↗</span>
+                        </BhMenuItem>
+                        <BhMenuItem OnClick='@(() => Log("About"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">About</BhMenuItem>
+                    </BhMenuItems>
+                </BhMenu>
+            </BhMenubar>
+
+            <span class="text-sm text-zinc-500">Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong></span>
+        </LiveContent>
+    </TwDemoBlock>
+</div>
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) => lastAction = action;
+
+    // ── Application menubar ────────────────────────────────────────────────────
+
+    private bool showBookmarks;
+    private bool showFullUrls = true;
+    private string? profile = "Benoit";
+    private readonly string[] profiles = ["Andy", "Benoit", "Luis"];
+
+    // ── Editor ─────────────────────────────────────────────────────────────────
+
+    private bool lineNumbers = true;
+    private bool wordWrap;
+    private bool statusBar = true;
+    private string? zoom = "100";
+    private string? editorTheme = "Light";
+    private readonly string[] zoomLevels = ["90", "100", "125"];
+    private readonly string[] editorThemes = ["Light", "Dark", "Sepia"];
+
+    private readonly string[] editorLines =
+    [
+        "// Use the View and Theme menus to restyle this editor.",
+        "public sealed class Greeter",
+        "{",
+        "    public string Greet(string name) => $\"Hello, {name}! This line is long enough to show what Word Wrap does.\";",
+        "}",
+    ];
+
+    // ── Source snippets shown alongside each live demo ─────────────────────────
+
+    private const string _appCode = """
+<BhMenubar class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Application">
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">File</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem OnClick='@(() => Log("New Tab"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                New Tab <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘T</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("New Window"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                New Window <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘N</span>
+            </BhMenuItem>
+            <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">New Incognito Window</BhMenuItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuSub>
+                <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    Share <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                </BhMenuSubTrigger>
+                <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                    <BhMenuItem OnClick='@(() => Log("Email Link"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Email Link</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Messages"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Messages</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Notes"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Notes</BhMenuItem>
+                </BhMenuSubContent>
+            </BhMenuSub>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Print"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Print… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘P</span>
+            </BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Edit</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem OnClick='@(() => Log("Undo"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Undo <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘Z</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("Redo"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Redo <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘Z</span>
+            </BhMenuItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuSub>
+                <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    Find <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                </BhMenuSubTrigger>
+                <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                    <BhMenuItem OnClick='@(() => Log("Search the Web"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Search the Web…</BhMenuItem>
+                    <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                    <BhMenuItem OnClick='@(() => Log("Find"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                        Find… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘F</span>
+                    </BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Find Next"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                        Find Next <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘G</span>
+                    </BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Find Previous"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                        Find Previous <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘G</span>
+                    </BhMenuItem>
+                </BhMenuSubContent>
+            </BhMenuSub>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Cut"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Cut <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘X</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("Copy"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Copy <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘C</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("Paste"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Paste <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘V</span>
+            </BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">View</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuCheckboxItem @bind-Checked="showBookmarks" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                Always Show Bookmarks Bar <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘B</span>
+            </BhMenuCheckboxItem>
+            <BhMenuCheckboxItem @bind-Checked="showFullUrls" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                Always Show Full URLs
+            </BhMenuCheckboxItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Reload"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Reload <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘R</span>
+            </BhMenuItem>
+            <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Force Reload <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘R</span>
+            </BhMenuItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Toggle Fullscreen"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Toggle Fullscreen</BhMenuItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Hide Sidebar"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Hide Sidebar</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Profiles</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuGroup>
+                <BhMenuLabel class="pt-2 pr-2.5 pb-1 pl-7 text-xs font-semibold uppercase tracking-wider text-zinc-500">Switch profile</BhMenuLabel>
+                <BhMenuRadioGroup @bind-Value="profile">
+                    @foreach (var name in profiles)
+                    {
+                        <BhMenuRadioItem Value="@name" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                            @name
+                        </BhMenuRadioItem>
+                    }
+                </BhMenuRadioGroup>
+            </BhMenuGroup>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Edit profile"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Edit…</BhMenuItem>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Add Profile"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Add Profile…</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+</BhMenubar>
+
+<span class="text-sm text-zinc-500">
+    Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong> ·
+    Bookmarks bar: <strong class="text-zinc-900">@(showBookmarks ? "on" : "off")</strong> ·
+    Profile: <strong class="text-zinc-900">@profile</strong>
+</span>
+
+@code {
+    private string? lastAction;
+    private bool showBookmarks;
+    private bool showFullUrls = true;
+    private string? profile = "Benoit";
+    private readonly string[] profiles = ["Andy", "Benoit", "Luis"];
+
+    private void Log(string action) => lastAction = action;
+}
+""";
+
+    private const string _editorCode = """
+<div class="w-full max-w-xl overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+    <BhMenubar class="flex w-full items-center gap-0.5 border-b border-zinc-200 bg-zinc-50 p-1" aria-label="Editor">
+        <BhMenu>
+            <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">View</BhMenuButton>
+            <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                <BhMenuCheckboxItem @bind-Checked="lineNumbers" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                    Line Numbers
+                </BhMenuCheckboxItem>
+                <BhMenuCheckboxItem @bind-Checked="wordWrap" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                    Word Wrap <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌥Z</span>
+                </BhMenuCheckboxItem>
+                <BhMenuCheckboxItem @bind-Checked="statusBar" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600">✓</BhMenuItemIndicator>
+                    Status Bar
+                </BhMenuCheckboxItem>
+                <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                <BhMenuGroup>
+                    <BhMenuLabel class="pt-2 pr-2.5 pb-1 pl-7 text-xs font-semibold uppercase tracking-wider text-zinc-500">Zoom</BhMenuLabel>
+                    <BhMenuRadioGroup @bind-Value="zoom">
+                        @foreach (var level in zoomLevels)
+                        {
+                            <BhMenuRadioItem Value="@level" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                                <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                                @(level)%
+                            </BhMenuRadioItem>
+                        }
+                    </BhMenuRadioGroup>
+                </BhMenuGroup>
+            </BhMenuItems>
+        </BhMenu>
+        <BhMenu>
+            <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Theme</BhMenuButton>
+            <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                <BhMenuRadioGroup @bind-Value="editorTheme" AriaLabel="Color theme">
+                    @foreach (var option in editorThemes)
+                    {
+                        <BhMenuRadioItem Value="@option" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pr-2.5 pl-7 text-sm text-zinc-800 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            <BhMenuItemIndicator class="absolute left-2 inline-flex w-4 justify-center text-xs text-blue-600"><span class="block size-1.5 rounded-full bg-current"></span></BhMenuItemIndicator>
+                            @option
+                        </BhMenuRadioItem>
+                    }
+                </BhMenuRadioGroup>
+            </BhMenuItems>
+        </BhMenu>
+    </BhMenubar>
+
+    <div class="bg-white text-[0.8rem] text-zinc-800 transition-colors data-[theme=Dark]:bg-zinc-900 data-[theme=Dark]:text-zinc-200 data-[theme=Sepia]:bg-[#f7f0e1] data-[theme=Sepia]:text-[#5b4636]" data-theme="@editorTheme">
+        <div class="overflow-x-auto px-4 py-3 font-mono leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-blue-600" tabindex="0" role="region" aria-label="Editor preview" style="font-size: @(zoom)%">
+            @for (var i = 0; i < editorLines.Length; i++)
+            {
+                <div class="flex gap-3">
+                    @if (lineNumbers)
+                    {
+                        <span class="w-5 shrink-0 select-none text-right opacity-40">@(i + 1)</span>
+                    }
+                    <span class="@(wordWrap ? "whitespace-pre-wrap" : "whitespace-pre")">@editorLines[i]</span>
+                </div>
+            }
+        </div>
+        @if (statusBar)
+        {
+            <div class="flex gap-3 border-t border-current/10 px-4 py-1.5 text-xs opacity-70">
+                <span>Ln 4, Col 18</span><span>UTF-8</span><span>@(zoom)%</span><span>@editorTheme</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool lineNumbers = true;
+    private bool wordWrap;
+    private bool statusBar = true;
+    private string? zoom = "100";
+    private string? editorTheme = "Light";
+    private readonly string[] zoomLevels = ["90", "100", "125"];
+    private readonly string[] editorThemes = ["Light", "Dark", "Sepia"];
+
+    private readonly string[] editorLines =
+    [
+        "// Use the View and Theme menus to restyle this editor.",
+        "public sealed class Greeter",
+        "{",
+        "    public string Greet(string name) => $\"Hello, {name}! This line is long enough to show what Word Wrap does.\";",
+        "}",
+    ];
+}
+""";
+
+    private const string _submenusCode = """
+<BhMenubar class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Document">
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Insert</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem OnClick='@(() => Log("Insert image"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Image…</BhMenuItem>
+            <BhMenuSub>
+                <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    Table <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                </BhMenuSubTrigger>
+                <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                    <BhMenuItem OnClick='@(() => Log("Insert 2 × 2 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">2 × 2</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Insert 3 × 3 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">3 × 3</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Insert 4 × 4 table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">4 × 4</BhMenuItem>
+                    <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+                    <BhMenuItem OnClick='@(() => Log("Insert custom table"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Custom size…</BhMenuItem>
+                </BhMenuSubContent>
+            </BhMenuSub>
+            <BhMenuSub>
+                <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    Shape <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                </BhMenuSubTrigger>
+                <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                    <BhMenuItem OnClick='@(() => Log("Insert rectangle"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Rectangle</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Insert ellipse"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Ellipse</BhMenuItem>
+                    <BhMenuSub>
+                        <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                            Arrow <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                        </BhMenuSubTrigger>
+                        <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                            <BhMenuItem OnClick='@(() => Log("Insert straight arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Straight</BhMenuItem>
+                            <BhMenuItem OnClick='@(() => Log("Insert curved arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Curved</BhMenuItem>
+                            <BhMenuItem OnClick='@(() => Log("Insert elbow arrow"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Elbow</BhMenuItem>
+                        </BhMenuSubContent>
+                    </BhMenuSub>
+                </BhMenuSubContent>
+            </BhMenuSub>
+            <BhMenuSeparator class="-mx-1 my-1 h-px bg-zinc-200" />
+            <BhMenuItem OnClick='@(() => Log("Insert page break"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Page Break <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘↵</span>
+            </BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Share</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem OnClick='@(() => Log("Copy link"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Copy Link <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘L</span>
+            </BhMenuItem>
+            <BhMenuSub OpenDelay="0" CloseDelay="500">
+                <BhMenuSubTrigger class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 data-state-open:bg-zinc-100 data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                    Send To <span class="ml-auto pl-6 text-zinc-400" aria-hidden="true">›</span>
+                </BhMenuSubTrigger>
+                <BhMenuSubContent class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+                    <BhMenuItem OnClick='@(() => Log("Send by email"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Email</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Send as message"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Messages</BhMenuItem>
+                    <BhMenuItem OnClick='@(() => Log("Send to team chat"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Team Chat</BhMenuItem>
+                </BhMenuSubContent>
+            </BhMenuSub>
+        </BhMenuItems>
+    </BhMenu>
+</BhMenubar>
+
+<span class="text-sm text-zinc-500">Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong></span>
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) => lastAction = action;
+}
+""";
+
+    private const string _disabledCode = """
+<BhMenubar Loop="false" class="inline-flex items-center gap-0.5 rounded-lg border border-zinc-200 bg-white p-1 shadow-sm" aria-label="Read-only document">
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">File</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem OnClick='@(() => Log("Open"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Open… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘O</span>
+            </BhMenuItem>
+            <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Save <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⌘S</span>
+            </BhMenuItem>
+            <BhMenuItem Disabled="true" class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Save As… <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400">⇧⌘S</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("Export PDF"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Export as PDF</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu Disabled="true">
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Edit</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">Undo</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+
+    <BhMenu>
+        <BhMenuButton class="cursor-pointer select-none rounded-md px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent">Help</BhMenuButton>
+        <BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 6 })" class="z-50 min-w-56 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg outline-none transition-opacity duration-100 ease-out starting:opacity-0">
+            <BhMenuItem As="a" href="https://www.w3.org/WAI/ARIA/apg/patterns/menubar/" target="_blank" rel="noopener"
+                        class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">
+                Menubar pattern (APG) <span class="ml-auto pl-6 text-xs tracking-widest text-zinc-400" aria-hidden="true">↗</span>
+            </BhMenuItem>
+            <BhMenuItem OnClick='@(() => Log("About"))' class="relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-zinc-800 no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40">About</BhMenuItem>
+        </BhMenuItems>
+    </BhMenu>
+</BhMenubar>
+
+<span class="text-sm text-zinc-500">Last action: <strong class="text-zinc-900">@(lastAction ?? "(none)")</strong></span>
+
+@code {
+    private string? lastAction;
+
+    private void Log(string action) => lastAction = action;
+}
+""";
+}

@@ -24,31 +24,42 @@ const outComponents = join(__dirname, 'components');
 // `cls` is the {Class}Page.razor file name; `label` is the display name.
 // ---------------------------------------------------------------------------
 const components = [
-    { slug: 'accordion',        cls: 'AccordionPage',       label: 'Accordion' },
-    { slug: 'alert-dialog',     cls: 'AlertDialogPage',     label: 'Alert Dialog' },
-    { slug: 'aspect-ratio',     cls: 'AspectRatioPage',     label: 'Aspect Ratio' },
-    { slug: 'avatar',           cls: 'AvatarPage',          label: 'Avatar' },
-    { slug: 'button',           cls: 'ButtonPage',          label: 'Button' },
-    { slug: 'checkbox',         cls: 'CheckboxPage',        label: 'Checkbox' },
-    { slug: 'close-button',     cls: 'CloseButtonPage',     label: 'CloseButton' },
-    { slug: 'collapsible',      cls: 'CollapsiblePage',     label: 'Collapsible' },
-    { slug: 'combobox',         cls: 'ComboboxPage',        label: 'Combobox' },
+    { slug: 'accessibility',   cls: 'AccessibilityPage', label: 'Accessibility Utilities' },
+    { slug: 'accordion',       cls: 'AccordionPage',     label: 'Accordion' },
+    { slug: 'alert-dialog',    cls: 'AlertDialogPage',   label: 'Alert Dialog' },
+    { slug: 'aspect-ratio',    cls: 'AspectRatioPage',   label: 'Aspect Ratio' },
+    { slug: 'avatar',          cls: 'AvatarPage',        label: 'Avatar' },
+    { slug: 'button',          cls: 'ButtonPage',        label: 'Button' },
+    { slug: 'checkbox',        cls: 'CheckboxPage',      label: 'Checkbox' },
+    { slug: 'close-button',    cls: 'CloseButtonPage',   label: 'CloseButton' },
+    { slug: 'collapsible',     cls: 'CollapsiblePage',   label: 'Collapsible' },
+    { slug: 'combobox',        cls: 'ComboboxPage',      label: 'Combobox' },
+    { slug: 'command',         cls: 'CommandPage',       label: 'Command Palette' },
     { slug: 'data-interactive', cls: 'DataInteractivePage', label: 'DataInteractive' },
-    { slug: 'dialog',           cls: 'DialogPage',          label: 'Dialog' },
-    { slug: 'disclosure',       cls: 'DisclosurePage',      label: 'Disclosure' },
-    { slug: 'field',            cls: 'FieldPage',           label: 'Field / Input' },
-    { slug: 'fieldset',         cls: 'FieldsetPage',        label: 'Fieldset' },
-    { slug: 'focus-trap',       cls: 'FocusTrapPage',       label: 'FocusTrap' },
-    { slug: 'hover-card',       cls: 'HoverCardPage',       label: 'Hover Card' },
-    { slug: 'listbox',          cls: 'ListboxPage',         label: 'Listbox' },
-    { slug: 'menu',             cls: 'MenuPage',            label: 'Menu' },
-    { slug: 'popover',          cls: 'PopoverPage',         label: 'Popover' },
-    { slug: 'portal',           cls: 'PortalPage',          label: 'Portal' },
-    { slug: 'radiogroup',       cls: 'RadioGroupPage',      label: 'Radio Group' },
-    { slug: 'switch',           cls: 'SwitchPage',          label: 'Switch' },
-    { slug: 'tabs',             cls: 'TabsPage',            label: 'Tabs' },
-    { slug: 'tooltip',          cls: 'TooltipPage',         label: 'Tooltip' },
-    { slug: 'transition',       cls: 'TransitionPage',      label: 'Transition' },
+    { slug: 'dialog',          cls: 'DialogPage',        label: 'Dialog' },
+    { slug: 'disclosure',      cls: 'DisclosurePage',    label: 'Disclosure' },
+    { slug: 'field',           cls: 'FieldPage',         label: 'Field / Input' },
+    { slug: 'fieldset',        cls: 'FieldsetPage',      label: 'Fieldset' },
+    { slug: 'focus-trap',      cls: 'FocusTrapPage',     label: 'FocusTrap' },
+    { slug: 'grid',            cls: 'GridPage',          label: 'Grid / TreeGrid' },
+    { slug: 'hover-card',      cls: 'HoverCardPage',     label: 'Hover Card' },
+    { slug: 'listbox',         cls: 'ListboxPage',       label: 'Listbox' },
+    { slug: 'menu',            cls: 'MenuPage',          label: 'Menu' },
+    { slug: 'menubar',         cls: 'MenubarPage',       label: 'Menubar' },
+    { slug: 'popover',         cls: 'PopoverPage',       label: 'Popover' },
+    { slug: 'portal',          cls: 'PortalPage',        label: 'Portal' },
+    { slug: 'progress',        cls: 'ProgressPage',      label: 'Progress / Meter' },
+    { slug: 'radiogroup',      cls: 'RadioGroupPage',    label: 'Radio Group' },
+    { slug: 'slider',          cls: 'SliderPage',        label: 'Slider' },
+    { slug: 'sortable',        cls: 'SortablePage',      label: 'Sortable' },
+    { slug: 'switch',          cls: 'SwitchPage',        label: 'Switch' },
+    { slug: 'tabs',            cls: 'TabsPage',          label: 'Tabs' },
+    { slug: 'toast',           cls: 'ToastPage',         label: 'Toast' },
+    { slug: 'toggle-group',    cls: 'ToggleGroupPage',   label: 'Toggle / Toggle Group' },
+    { slug: 'toolbar',         cls: 'ToolbarPage',       label: 'Toolbar' },
+    { slug: 'tooltip',         cls: 'TooltipPage',       label: 'Tooltip' },
+    { slug: 'transition',      cls: 'TransitionPage',    label: 'Transition' },
+    { slug: 'tree',            cls: 'TreePage',          label: 'Tree View' },
 ];
 
 // Pager order: Overview → Getting started → all components.
@@ -81,6 +92,68 @@ function cleanCodeClasses(html) {
 // ---------------------------------------------------------------------------
 // Razor file parsing
 // ---------------------------------------------------------------------------
+/**
+ * Evaluates the C# string constants of a page. Supports raw string literals
+ * (dedented by the closing delimiter's indentation, as C# does), regular
+ * literals with simple escapes, and references to other constants, joined by `+`.
+ */
+function parseStringConstants(source) {
+    const text = source.replace(/\r\n/g, '\n');
+    const exprs = {};
+    const declRe = /private\s+const\s+string\s+(\w+)\s*=\s*/g;
+    let m;
+    while ((m = declRe.exec(text)) !== null) {
+        const parts = [];
+        let i = declRe.lastIndex;
+        for (;;) {
+            while (/\s/.test(text[i])) i++;
+            if (text.startsWith('"""', i)) {
+                const open = text.indexOf('\n', i);
+                const close = text.indexOf('"""', open);
+                if (open < 0 || close < 0) break;
+                const lineStart = text.lastIndexOf('\n', close) + 1;
+                const indent = text.slice(lineStart, close);
+                const body = text.slice(open + 1, lineStart > open + 1 ? lineStart - 1 : open + 1);
+                const lines = body.split('\n').map((l) => (l.startsWith(indent) ? l.slice(indent.length) : l.trimStart()));
+                parts.push({ value: lines.join('\n') });
+                i = close + 3;
+            } else if (text[i] === '"') {
+                let j = i + 1;
+                let value = '';
+                while (j < text.length && text[j] !== '"') {
+                    if (text[j] === '\\') {
+                        const e = text[++j];
+                        value += e === 'n' ? '\n' : e === 't' ? '\t' : e;
+                    } else value += text[j];
+                    j++;
+                }
+                parts.push({ value });
+                i = j + 1;
+            } else {
+                const id = /^\w+/.exec(text.slice(i));
+                if (!id) break;
+                parts.push({ ref: id[0] });
+                i += id[0].length;
+            }
+            while (/\s/.test(text[i])) i++;
+            if (text[i] === '+') { i++; continue; }
+            break;
+        }
+        exprs[m[1]] = parts;
+        declRe.lastIndex = i;
+    }
+
+    const values = {};
+    const resolve = (name, depth = 0) => {
+        if (name in values) return values[name];
+        const parts = exprs[name];
+        if (!parts || depth > 20) return '';
+        return (values[name] = parts.map((p) => (p.ref ? resolve(p.ref, depth + 1) : p.value)).join(''));
+    };
+    for (const name of Object.keys(exprs)) resolve(name);
+    return values;
+}
+
 function parsePage(source) {
     // Page header: first <h1>...</h1> and following <p>...</p>.
     const titleMatch = source.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
@@ -88,13 +161,10 @@ function parsePage(source) {
     const pageTitle = titleMatch ? titleMatch[1].trim() : '';
     const pageDescription = descMatch ? descMatch[1].trim() : '';
 
-    // Raw string literals: private const string _xxx = """\n ... \n""";
-    const consts = {};
-    const constRe = /private\s+const\s+string\s+(\w+)\s*=\s*"""\s*\r?\n([\s\S]*?)\r?\n\s*""";/g;
+    // String constants: `private const string _xxx = <expr>;` where <expr> joins raw
+    // string literals ("""…"""), regular literals ("\n\n") and other constants with `+`.
+    const consts = parseStringConstants(source);
     let m;
-    while ((m = constRe.exec(source)) !== null) {
-        consts[m[1]] = m[2];
-    }
 
     // Each demo block: <DemoBlock|TwDemoBlock ...> ... </DemoBlock|TwDemoBlock>
     const blocks = [];
@@ -366,7 +436,7 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
             </a>
             <a class="hero-card" href="components/menu.html">
                 <strong>Browse components →</strong>
-                <span>24 unstyled, accessible primitives ready to wire into any design.</span>
+                <span>${components.length} unstyled, accessible primitives ready to wire into any design.</span>
             </a>
             <a class="hero-card" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">
                 <strong>GitHub →</strong>
@@ -382,12 +452,14 @@ const overviewContent = `        <h1>BlazorHeadless</h1>
             <li><strong>Styling hooks via data attributes.</strong> <code>[data-state]</code>, <code>[data-disabled]</code>, <code>[data-active]</code>, and friends.</li>
             <li><strong>Attribute merging.</strong> <code>class</code> and <code>style</code> concatenate; everything else lets the consumer win.</li>
             <li><strong>Controlled and uncontrolled.</strong> Every stateful component supports both modes.</li>
-            <li><strong>Render-prop context.</strong> Child content receives a typed render context for state-driven UI.</li>
-            <li><strong>Anchor positioning.</strong> Automatic floating panel positioning with flip/shift via JS interop.</li>
+            <li><strong>Composable.</strong> <code>ChildContent</code> is always a plain fragment, so components nest freely inside <code>EditForm</code> and each other; state-dependent markup uses <code>&lt;Template Context="state"&gt;</code>.</li>
+            <li><strong>Robust overlays.</strong> Layered dismissal, focus scopes with restore, inert modals, scroll lock, portals and exit animations.</li>
+            <li><strong>Anchor positioning.</strong> Flip, shift, size and arrows — no Popper / Floating UI dependency.</li>
+            <li><strong>Accessibility tests built in.</strong> <code>BlazorHeadless.Testing</code> audits rendered markup against WAI-ARIA rules, computes accessible names and focus order, and records screen-reader announcements.</li>
         </ul>
 
         <h2 id="components">Components</h2>
-        <p>BlazorHeadless ships 24 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
+        <p>BlazorHeadless ships ${components.length} component families. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
 
         <div class="component-grid">
 ${components
@@ -437,7 +509,7 @@ const gettingStartedContent = `        <h1>Getting started</h1>
 &lt;/ItemGroup&gt;</code></pre>
 
         <h2 id="register">2. Register services</h2>
-        <p>In <code>Program.cs</code>, call <code>AddBlazorHeadless()</code> on the service collection. This registers the JS interop service used by Dialog, Popover, Transition, Portal, FocusTrap, and anchor positioning.</p>
+        <p>In <code>Program.cs</code> (and the client project of a WebAssembly / Auto app), call <code>AddBlazorHeadless()</code>. It registers the JS runtime wrapper, the live-region announcer and the toast queue. The JavaScript runtime itself loads automatically — no script tag needed.</p>
 
         <pre class="code-block"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
 
@@ -453,8 +525,8 @@ var app = builder.Build();
         <p>Add the namespace to your <code>_Imports.razor</code> so components are available everywhere:</p>
         <pre class="code-block"><code class="language-markup">@using BlazorHeadless</code></pre>
 
-        <h2 id="portal-outlet">4. Add a portal outlet (optional)</h2>
-        <p>If you plan to use <a href="components/portal.html"><code>BhPortal</code></a>, add an outlet to your root layout so portalled content has somewhere to land:</p>
+        <h2 id="portal-outlet">4. Choose where portals land (optional)</h2>
+        <p><a href="components/portal.html"><code>BhPortal</code></a> moves content to a root at the end of <code>&lt;body&gt;</code> by default. To pick the spot yourself, add an outlet to your root layout:</p>
         <pre class="code-block"><code class="language-markup">&lt;BhPortalOutlet /&gt;</code></pre>
 
         <h2 id="first-component">5. Use your first component</h2>

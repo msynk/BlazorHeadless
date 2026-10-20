@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -66,12 +77,16 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox class="checkbox" Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox aria-label="Remember me" class="checkbox"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;
 
-&lt;BhCheckbox DefaultChecked="true" class="checkbox" Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;BhCheckbox aria-label="Keep me signed in" DefaultChecked="true" class="checkbox"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -119,15 +134,17 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox aria-label="Remember me" class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;
 
-&lt;BhCheckbox DefaultChecked="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;BhCheckbox aria-label="Keep me signed in" DefaultChecked="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;</code></pre>
                 </div>
             </div>
@@ -143,10 +160,12 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Checked="@acceptedTerms"
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms"
            OnCheckedChange="v =&gt; acceptedTerms = v"
-           class="checkbox" Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+           class="checkbox"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;
 
 @code {
@@ -223,10 +242,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;div class="flex items-center gap-4"&gt;
-    &lt;BhCheckbox Checked="@acceptedTerms" OnCheckedChange="v =&gt; acceptedTerms = v"
-                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                Context="c"&gt;
-        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;BhCheckbox aria-label="Accept the terms" Checked="@acceptedTerms" OnCheckedChange="v =&gt; acceptedTerms = v"
+                class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;Template Context="c"&gt;
+            @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+        &lt;/Template&gt;
     &lt;/BhCheckbox&gt;
     &lt;span class="text-sm text-zinc-500"&gt;
         Terms accepted: &lt;strong class="text-zinc-900"&gt;@(acceptedTerms ? "yes" : "no")&lt;/strong&gt;
@@ -254,12 +274,16 @@
                 <h4 class="panel-label">Razor</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Disabled="true" class="checkbox" Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox aria-label="Unavailable option" Disabled="true" class="checkbox"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;
 
-&lt;BhCheckbox DefaultChecked="true" Disabled="true" class="checkbox" Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+&lt;BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true" class="checkbox"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;</code></pre>
                 </div>
                 <h4 class="panel-label">CSS</h4>
@@ -313,16 +337,18 @@
                 <h4 class="panel-label">Razor + Tailwind</h4>
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
-                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox Disabled="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckbox aria-label="Unavailable option" Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;
 
-&lt;BhCheckbox DefaultChecked="true" Disabled="true"
-            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-            Context="c"&gt;
-    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+&lt;BhCheckbox aria-label="Locked option" DefaultChecked="true" Disabled="true"
+            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+    &lt;Template Context="c"&gt;
+        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;/Template&gt;
 &lt;/BhCheckbox&gt;</code></pre>
                 </div>
             </div>
@@ -343,9 +369,11 @@
         &lt;BhCheckbox Checked="@SelectAllChecked"
                    Indeterminate="@SelectAllIndeterminate"
                    OnCheckedChange="HandleSelectAll"
-                   class="checkbox" Context="c"&gt;
-            @if (c.IsIndeterminate)  { &lt;span class="checkbox-dash"&gt;–&lt;/span&gt; }
-            else if (c.IsChecked)    { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                   class="checkbox"&gt;
+            &lt;Template Context="c"&gt;
+                @if (c.IsIndeterminate)  { &lt;span class="checkbox-dash"&gt;–&lt;/span&gt; }
+                else if (c.IsChecked)    { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhCheckbox&gt;
         &lt;strong&gt;Select all&lt;/strong&gt;
     &lt;/label&gt;
@@ -357,8 +385,10 @@
             &lt;label class="checkbox-label"&gt;
                 &lt;BhCheckbox Checked="@items[captured]"
                            OnCheckedChange="v =&gt; HandleItemChange(captured, v)"
-                           class="checkbox" Context="c"&gt;
-                    @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                           class="checkbox"&gt;
+                    &lt;Template Context="c"&gt;
+                        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                    &lt;/Template&gt;
                 &lt;/BhCheckbox&gt;
                 &lt;span&gt;@($"Item {captured + 1}")&lt;/span&gt;
             &lt;/label&gt;
@@ -445,10 +475,11 @@
                     <pre class="code-block"><code class="language-markup">&lt;div class="flex flex-col gap-2"&gt;
     &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
         &lt;BhCheckbox Checked="@SelectAllChecked" Indeterminate="@SelectAllIndeterminate" OnCheckedChange="HandleSelectAll"
-                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                    Context="c"&gt;
-            @if (c.IsIndeterminate) { &lt;span class="text-base leading-none font-bold"&gt;–&lt;/span&gt; }
-            else if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-state-indeterminate:bg-blue-600 data-state-indeterminate:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="c"&gt;
+                @if (c.IsIndeterminate) { &lt;span class="text-base leading-none font-bold"&gt;–&lt;/span&gt; }
+                else if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhCheckbox&gt;
         &lt;strong&gt;Select all&lt;/strong&gt;
     &lt;/label&gt;
@@ -458,9 +489,10 @@
             var captured = i;
             &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
                 &lt;BhCheckbox Checked="@items[captured]" OnCheckedChange="v =&gt; HandleItemChange(captured, v)"
-                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                            Context="c"&gt;
-                    @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                            class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+                    &lt;Template Context="c"&gt;
+                        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                    &lt;/Template&gt;
                 &lt;/BhCheckbox&gt;
                 &lt;span&gt;Item @(captured + 1)&lt;/span&gt;
             &lt;/label&gt;
@@ -496,8 +528,10 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;label class="checkbox-label"&gt;
-    &lt;BhCheckbox class="checkbox" Context="c"&gt;
-        @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+    &lt;BhCheckbox class="checkbox"&gt;
+        &lt;Template Context="c"&gt;
+            @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+        &lt;/Template&gt;
     &lt;/BhCheckbox&gt;
     &lt;span&gt;Send me product updates&lt;/span&gt;
 &lt;/label&gt;</code></pre>
@@ -558,9 +592,10 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
-    &lt;BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                Context="c"&gt;
-        @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+    &lt;BhCheckbox class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;Template Context="c"&gt;
+            @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+        &lt;/Template&gt;
     &lt;/BhCheckbox&gt;
     &lt;span&gt;Send me product updates&lt;/span&gt;
 &lt;/label&gt;</code></pre>
@@ -581,8 +616,10 @@
                     <pre class="code-block"><code class="language-markup">&lt;form method="post"&gt;
     &lt;label class="checkbox-label"&gt;
         &lt;BhCheckbox Name="agree" Value="yes"
-                   class="checkbox" Context="c"&gt;
-            @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+                   class="checkbox"&gt;
+            &lt;Template Context="c"&gt;
+                @if (c.IsChecked) { &lt;span class="checkbox-tick"&gt;✓&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhCheckbox&gt;
         &lt;span&gt;I agree to the terms&lt;/span&gt;
     &lt;/label&gt;
@@ -686,9 +723,10 @@
       class="flex flex-col items-start gap-2"&gt;
     &lt;label class="inline-flex items-center gap-2 cursor-pointer text-sm select-none"&gt;
         &lt;BhCheckbox Name="agree" Value="yes"
-                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                    Context="c"&gt;
-            @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+                    class="inline-flex h-[1.15rem] w-[1.15rem] flex-shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white cursor-pointer transition-colors outline-none hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-checked:bg-blue-600 data-state-checked:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+            &lt;Template Context="c"&gt;
+                @if (c.IsChecked) { &lt;span class="text-sm leading-none"&gt;✓&lt;/span&gt; }
+            &lt;/Template&gt;
         &lt;/BhCheckbox&gt;
         &lt;span&gt;I agree to the terms&lt;/span&gt;
     &lt;/label&gt;
@@ -707,6 +745,137 @@
 
     private void HandleFormSubmit() =&gt;
         lastSubmitted = "(submitted — when checked, the form posts agree=yes)";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="group-with-select-all">Group with select all</h2>
+        <p><code>BhCheckboxGroup</code> binds one collection with <code>@@bind-Values</code> and renders <code>role="group"</code>; each <code>BhCheckbox</code> with a <code>Value</code> toggles that value. <code>SelectAll="true"</code> turns a checkbox into the tri-state parent — checked when every value is selected, <code>aria-checked="mixed"</code> / <code>data-state="indeterminate"</code> when only some are. <code>BhCheckboxIndicator</code> renders only while its checkbox is checked or mixed, and mirrors its <code>data-state</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="checkbox-group"&gt;
+    @* Tri-state parent: checked / mixed / unchecked from the group's values *@
+    &lt;BhCheckbox SelectAll="true" class="checkbox-row checkbox-row-all"&gt;
+        &lt;span class="checkbox-box"&gt;&lt;BhCheckboxIndicator class="checkbox-indicator" /&gt;&lt;/span&gt;
+        All toppings
+    &lt;/BhCheckbox&gt;
+
+    &lt;div class="checkbox-group-items"&gt;
+        @foreach (var topping in allToppings)
+        {
+            &lt;BhCheckbox Value="@topping" class="checkbox-row"&gt;
+                &lt;span class="checkbox-box"&gt;&lt;BhCheckboxIndicator class="checkbox-indicator" /&gt;&lt;/span&gt;
+                @topping
+            &lt;/BhCheckbox&gt;
+        }
+    &lt;/div&gt;
+&lt;/BhCheckboxGroup&gt;
+
+&lt;span class="demo-output"&gt;
+    Values: &lt;strong&gt;@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))&lt;/strong&gt;
+&lt;/span&gt;
+
+@code {
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection&lt;string&gt; toppings = new[] { "Cheese", "Olives" };
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.checkbox-group       { display: flex; flex-direction: column; gap: 0.5rem; }
+.checkbox-group-items { display: flex; flex-direction: column; gap: 0.4rem; padding-left: 1.6rem; }
+
+/* The checkbox button holds the box and the label text (its accessible name) */
+.checkbox-row {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+}
+.checkbox-row:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.checkbox-row-all           { font-weight: 600; }
+
+.checkbox-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+.checkbox-row:hover .checkbox-box { border-color: #a1a1af; }
+
+/* Hooks emitted by BhCheckbox */
+.checkbox-row[data-state="checked"] .checkbox-box,
+.checkbox-row[data-state="indeterminate"] .checkbox-box {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* BhCheckboxIndicator mirrors the state, so CSS picks the glyph */
+.checkbox-indicator { font-size: 0.8rem; font-weight: 700; line-height: 1; }
+.checkbox-indicator[data-state="checked"]::before       { content: "\2713"; }   /* ✓ */
+.checkbox-indicator[data-state="indeterminate"]::before { content: "\2013"; }   /* – */
+
+.demo-output { font-size: 0.875rem; color: #71717a; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCheckboxGroup @bind-Values="toppings" aria-label="Pizza toppings" class="flex flex-col gap-2"&gt;
+    @* Tri-state parent: checked / mixed / unchecked from the group's values *@
+    &lt;BhCheckbox SelectAll="true"
+                class="group inline-flex items-center gap-2 self-start rounded text-sm font-semibold cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;
+        &lt;span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600 group-data-state-indeterminate:border-blue-600 group-data-state-indeterminate:bg-blue-600"&gt;
+            &lt;BhCheckboxIndicator class="text-xs font-bold leading-none"&gt;
+                &lt;Template Context="state"&gt;@(state.IsIndeterminate ? "–" : "✓")&lt;/Template&gt;
+            &lt;/BhCheckboxIndicator&gt;
+        &lt;/span&gt;
+        All toppings
+    &lt;/BhCheckbox&gt;
+
+    &lt;div class="ml-6 flex flex-col gap-1.5"&gt;
+        @foreach (var topping in allToppings)
+        {
+            &lt;BhCheckbox Value="@topping"
+                        class="group inline-flex items-center gap-2 self-start rounded text-sm cursor-pointer select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;
+                &lt;span class="inline-flex h-[1.15rem] w-[1.15rem] shrink-0 items-center justify-center rounded border border-zinc-300 bg-white text-white transition-colors group-hover:border-zinc-400 group-data-state-checked:border-blue-600 group-data-state-checked:bg-blue-600"&gt;
+                    &lt;BhCheckboxIndicator class="text-xs font-bold leading-none"&gt;✓&lt;/BhCheckboxIndicator&gt;
+                &lt;/span&gt;
+                @topping
+            &lt;/BhCheckbox&gt;
+        }
+    &lt;/div&gt;
+&lt;/BhCheckboxGroup&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;
+    Values: &lt;strong class="text-zinc-900"&gt;@(toppings.Count == 0 ? "(none)" : string.Join(", ", toppings))&lt;/strong&gt;
+&lt;/span&gt;
+
+@code {
+    private string[] allToppings = new[] { "Cheese", "Mushrooms", "Olives", "Peppers" };
+    private IReadOnlyCollection&lt;string&gt; toppings = new[] { "Cheese", "Olives" };
 }</code></pre>
                 </div>
             </div>

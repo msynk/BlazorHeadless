@@ -4,53 +4,53 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A single item within an <see cref="BhAccordion"/>. Represents one collapsible
-/// section and provides the <see cref="BhAccordionItemContext"/> cascaded to its
-/// <see cref="BhAccordionTrigger"/> and <see cref="BhAccordionContent"/> children.
-///
-/// <para><b>Usage:</b></para>
-/// <code>
-/// &lt;BhAccordionItem Value="item-1"&gt;
-///     &lt;BhAccordionTrigger&gt;Section 1&lt;/BhAccordionTrigger&gt;
-///     &lt;BhAccordionContent&gt;Content for section 1.&lt;/BhAccordionContent&gt;
-/// &lt;/BhAccordionItem&gt;
-/// </code>
+/// One section of a <see cref="BhAccordion"/>, identified by <see cref="Value"/>.
+/// Contains a <see cref="BhAccordionHeader"/> (with a <see cref="BhAccordionTrigger"/>)
+/// and a <see cref="BhAccordionContent"/>.
 /// </summary>
 public class BhAccordionItem : BhComponentBase
 {
     [CascadingParameter]
-    private BhAccordionContext BhAccordionContext { get; set; } = default!;
+    private BhAccordionContext? AccordionContext { get; set; }
 
-    /// <summary>The unique string identifier for this item within the accordion.</summary>
+    /// <summary>The item's unique value.</summary>
     [Parameter, EditorRequired]
     public string Value { get; set; } = string.Empty;
 
-    /// <summary>Disables this item independently of the root accordion's disabled state.</summary>
+    /// <summary>Disables this item.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Child content — should contain an <see cref="BhAccordionTrigger"/> and an <see cref="BhAccordionContent"/>.</summary>
+    /// <summary>Header and content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => BhAccordionContext?.IsOpen(Value) ?? false;
-    private bool IsDisabled => Disabled || (BhAccordionContext?.Disabled ?? false);
+    private bool IsOpen => AccordionContext?.IsOpen(Value) ?? false;
+    private bool IsDisabled => Disabled || (AccordionContext?.Disabled ?? false);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var context = new BhAccordionItemContext
+        {
+            Value = Value,
+            IsOpen = IsOpen,
+            Disabled = IsDisabled,
+            TriggerId = $"{ComponentId}-trigger",
+            ContentId = $"{ComponentId}-content",
+            Toggle = () => AccordionContext?.Toggle(Value),
+            Accordion = AccordionContext,
+        };
+
         builder.OpenComponent<CascadingValue<BhAccordionItemContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateItemContext());
+        builder.AddComponentParameter(1, "Value", context);
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
             inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
@@ -62,16 +62,7 @@ public class BhAccordionItem : BhComponentBase
         var attrs = base.BuildComponentAttributes();
         SetDataState(attrs, IsOpen);
         SetDataFlag(attrs, "disabled", IsDisabled);
+        SetDataValue(attrs, "orientation", (AccordionContext?.Orientation ?? BhOrientation.Vertical).ToAttribute());
         return attrs;
     }
-
-    private BhAccordionItemContext CreateItemContext() => new()
-    {
-        Value = Value,
-        IsOpen = IsOpen,
-        Disabled = IsDisabled,
-        TriggerId = $"{ComponentId}-trigger",
-        ContentId = $"{ComponentId}-content",
-        Toggle = () => BhAccordionContext?.Toggle(Value),
-    };
 }

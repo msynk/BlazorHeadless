@@ -1,42 +1,37 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless, accessible Combobox — a typeable text input paired with a filterable
-/// dropdown of options. Implements the WAI-ARIA <c>combobox</c> pattern with the
-/// "list autocomplete" model: focus stays on the input at all times and
-/// <c>aria-activedescendant</c> drives screen-reader announcements of the
-/// highlighted option.
+/// A headless, accessible Combobox (autocomplete) — a text input paired with a
+/// filterable popup of options, implementing the WAI-ARIA <c>combobox</c> pattern
+/// with <c>aria-autocomplete="list"</c>. Focus stays in the input; the highlighted
+/// option is announced via <c>aria-activedescendant</c>.
 ///
-/// <para><b>Filtering is consumer-driven.</b> The combobox emits a
-/// <see cref="OnQueryChange"/> event whenever the user types; the consumer is
-/// responsible for filtering its data and rendering only the matching
-/// <see cref="BhComboboxOption{TValue}"/> children. This keeps the component
-/// agnostic about how filtering happens (sync, async, server-side, fuzzy, …).</para>
+/// <para><b>Filtering is consumer-driven.</b> <see cref="OnQueryChange"/> fires as the
+/// user types; render only the matching options (sync, async, server-side, fuzzy …).
+/// <see cref="BhFilter"/> provides ready-made matchers.</para>
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Single or multi-select</b> via <see cref="Multiple"/>.</item>
-///   <item><b>Uncontrolled and controlled</b> for both selection and the query string.</item>
-///   <item><b>Full keyboard support</b> — arrow keys (with auto-open), Home, End, Enter, Escape, Tab.</item>
-///   <item><b>Display value</b> — pass a <see cref="DisplayValue"/> function to convert the selected value back to the input text.</item>
-///   <item><b>Click-outside closes</b> via a transparent full-viewport overlay.</item>
-///   <item><b>Form submission</b> — when <see cref="Name"/> is set, hidden <c>&lt;input&gt;</c>(s) carry the selected value(s).</item>
+///   <item><b>Single or multi-select</b>; <c>@bind-Value</c> / <c>@bind-Values</c>; <c>EditForm</c> validation; <see cref="BhField"/> wiring.</item>
+///   <item><b>Keyboard</b> — ArrowDown / ArrowUp (open + navigate), Alt+ArrowDown, PageUp / PageDown, Enter, Escape (close, then clear), Tab (accept).</item>
+///   <item><b>Auto-highlight</b> of the first match while typing (<see cref="AutoHighlight"/>).</item>
+///   <item><b>Display value</b> — <see cref="DisplayValue"/> converts the selection back to input text.</item>
+///   <item><b>Large lists</b> — data-driven and virtualized options via <see cref="BhComboboxOptions{TValue}.Items"/>.</item>
+///   <item><b>Empty state</b> — <see cref="BhComboboxEmpty{TValue}"/> renders when nothing matches.</item>
 /// </list>
 ///
 /// <para><b>Usage:</b></para>
 /// <code>
-/// &lt;BhCombobox TValue="string"
-///            Value="@selected"
-///            OnValueChange="v => selected = v"
-///            OnQueryChange="q => query = q"
-///            DisplayValue="v => v ?? string.Empty"&gt;
+/// &lt;BhCombobox TValue="string" @bind-Value="selected" OnQueryChange="q => query = q"&gt;
 ///     &lt;BhComboboxInput TValue="string" /&gt;
-///     &lt;BhComboboxOptions TValue="string"&gt;
-///         @foreach (var item in filtered)
+///     &lt;BhComboboxOptions TValue="string" Anchor="@("bottom start")"&gt;
+///         @foreach (var item in Filtered)
 ///         {
 ///             &lt;BhComboboxOption TValue="string" Value="@item"&gt;@item&lt;/BhComboboxOption&gt;
 ///         }
@@ -45,25 +40,37 @@ namespace BlazorHeadless;
 /// </code>
 /// </summary>
 /// <typeparam name="TValue">The option value type.</typeparam>
-public class BhCombobox<TValue> : BhComponentBase
+public class BhCombobox<TValue> : BhComponentBase, IDisposable
 {
-    private readonly List<BhComboboxOption<TValue>> _options = new();
-
-    private bool _isOpen;
-    private TValue? _singleValue;
-    private List<TValue> _multiValues = new();
-    private int _activeIndex = -1;
+    private BhListState<TValue>? _state;
+    private BhFieldBinding? _binding;
+    private bool _open;
+    private TValue? _value;
+    private bool _hasValue;
+    private List<TValue> _values = new();
     private string _query = string.Empty;
+    private bool _userTyped;
+    private BhMenuFocus? _pendingHighlight;
 
-    private bool _initialized;
+    [CascadingParameter]
+    private BhFieldContext? FieldContext { get; set; }
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
 
-    /// <summary>Single-select controlled value.</summary>
+    /// <summary>The selected value (single-select). Supplying it makes the combobox controlled (use <c>@bind-Value</c>).</summary>
     [Parameter]
     public TValue? Value { get; set; }
 
-    /// <summary>Single-select uncontrolled initial value. Ignored when <see cref="Value"/> is supplied.</summary>
+    /// <summary>Two-way binding callback for <see cref="Value"/>.</summary>
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    /// <summary>Identifies the bound field for <c>EditForm</c> validation (set by <c>@bind-Value</c>).</summary>
+    [Parameter]
+    public Expression<Func<TValue?>>? ValueExpression { get; set; }
+
+    /// <summary>Initial value when uncontrolled (single-select).</summary>
     [Parameter]
     public TValue? DefaultValue { get; set; }
 
@@ -71,11 +78,19 @@ public class BhCombobox<TValue> : BhComponentBase
     [Parameter]
     public EventCallback<TValue?> OnValueChange { get; set; }
 
-    /// <summary>Multi-select controlled values.</summary>
+    /// <summary>The selected values (multi-select). Supplying it makes the combobox controlled (use <c>@bind-Values</c>).</summary>
     [Parameter]
     public IEnumerable<TValue>? Values { get; set; }
 
-    /// <summary>Multi-select uncontrolled initial values. Ignored when <see cref="Values"/> is supplied.</summary>
+    /// <summary>Two-way binding callback for <see cref="Values"/>.</summary>
+    [Parameter]
+    public EventCallback<IReadOnlyCollection<TValue>> ValuesChanged { get; set; }
+
+    /// <summary>Identifies the bound field for <c>EditForm</c> validation (set by <c>@bind-Values</c>).</summary>
+    [Parameter]
+    public Expression<Func<IEnumerable<TValue>?>>? ValuesExpression { get; set; }
+
+    /// <summary>Initial values when uncontrolled (multi-select).</summary>
     [Parameter]
     public IEnumerable<TValue>? DefaultValues { get; set; }
 
@@ -83,358 +98,383 @@ public class BhCombobox<TValue> : BhComponentBase
     [Parameter]
     public EventCallback<IReadOnlyCollection<TValue>> OnValuesChange { get; set; }
 
-    /// <summary>Whether multi-select mode is enabled.</summary>
+    /// <summary>Fires whenever the text typed into the input changes.</summary>
+    [Parameter]
+    public EventCallback<string> OnQueryChange { get; set; }
+
+    /// <summary>Fires when the options panel opens or closes.</summary>
+    [Parameter]
+    public EventCallback<bool> OnOpenChange { get; set; }
+
+    /// <summary>Converts a value to the text shown in the input. Defaults to <c>ToString()</c>.</summary>
+    [Parameter]
+    public Func<TValue?, string>? DisplayValue { get; set; }
+
+    /// <summary>Whether multiple options can be selected.</summary>
     [Parameter]
     public bool Multiple { get; set; }
+
+    /// <summary>Allows clearing the selection by emptying the input (single-select).</summary>
+    [Parameter]
+    public bool Nullable { get; set; }
+
+    /// <summary>Open the options when the input receives focus. Default: false.</summary>
+    [Parameter]
+    public bool OpenOnFocus { get; set; }
+
+    /// <summary>Highlight the first option while typing so Enter selects it. Default: true.</summary>
+    [Parameter]
+    public bool AutoHighlight { get; set; } = true;
 
     /// <summary>Disables the combobox.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>
-    /// Optional form field name. When set, hidden <c>&lt;input&gt;</c>(s) carry the
-    /// selected value(s) for plain HTML form posts.
-    /// </summary>
+    /// <summary>Marks the combobox invalid (in addition to EditContext validation).</summary>
+    [Parameter]
+    public bool Invalid { get; set; }
+
+    /// <summary>Marks the combobox required.</summary>
+    [Parameter]
+    public bool Required { get; set; }
+
+    /// <summary>Compares option values with the selection. Defaults to <see cref="EqualityComparer{T}.Default"/>.</summary>
+    [Parameter]
+    public IEqualityComparer<TValue>? Comparer { get; set; }
+
+    /// <summary>Optional form field name for hidden inputs carrying the selection.</summary>
     [Parameter]
     public string? Name { get; set; }
 
-    /// <summary>
-    /// Function that converts a selected value to its display string for the input field.
-    /// Defaults to <c>value?.ToString() ?? string.Empty</c>. Useful when binding to
-    /// objects whose <c>ToString()</c> isn't suitable.
-    /// </summary>
+    /// <summary>Converts a value to its form-post representation. Defaults to <c>ToString()</c>.</summary>
     [Parameter]
-    public Func<TValue?, string>? DisplayValue { get; set; }
+    public Func<TValue, string?>? FormatValue { get; set; }
 
-    /// <summary>
-    /// Fires whenever the user types into the input. The consumer is responsible for
-    /// filtering its data based on the query and re-rendering with the filtered
-    /// <see cref="BhComboboxOption{TValue}"/> children.
-    /// </summary>
-    [Parameter]
-    public EventCallback<string> OnQueryChange { get; set; }
-
-    /// <summary>Child content. Should contain an <see cref="BhComboboxInput{TValue}"/> followed by an <see cref="BhComboboxOptions{TValue}"/>.</summary>
+    /// <summary>Child content: <see cref="BhComboboxInput{TValue}"/>, optional <see cref="BhComboboxButton{TValue}"/>, <see cref="BhComboboxOptions{TValue}"/>.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    // ── Computed state ───────────────────────────────────────────────────────
+    private IEqualityComparer<TValue> EffectiveComparer => Comparer ?? EqualityComparer<TValue>.Default;
 
-    private TValue? CurrentSingleValue =>
-        Value is not null ? Value : (Values is null ? _singleValue : default);
+    private BhListState<TValue> State
+    {
+        get
+        {
+            if (_state is null)
+            {
+                _state = new BhListState<TValue>(OptionsId, Interop, IsSelected, () => Input?.Refresh());
+                _state.Options.Changed += () => Empty?.Refresh();
+            }
+            return _state;
+        }
+    }
 
-    private IReadOnlyCollection<TValue> CurrentMultiValues =>
-        Values is not null
-            ? Values as IReadOnlyCollection<TValue> ?? Values.ToArray()
-            : _multiValues;
+    internal BhComboboxInput<TValue>? Input { get; set; }
+    internal BhComboboxEmpty<TValue>? Empty { get; set; }
 
-    private string DisplayValueOrDefault(TValue? value) =>
-        DisplayValue is not null
-            ? DisplayValue(value)
-            : (value?.ToString() ?? string.Empty);
+    /// <summary>Whether the options panel is open.</summary>
+    public bool IsOpen => _open;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    /// <summary>The current query (text typed by the user).</summary>
+    public string Query => _query;
+
+    private bool IsDisabled => Disabled || (FieldContext?.Disabled ?? false);
+    private bool IsInvalid => Invalid || (FieldContext?.Invalid ?? false) || (_binding?.IsInvalid ?? false);
+    private bool IsRequired => Required || (FieldContext?.Required ?? false);
+
+    private TValue? CurrentValue => IsProvided(nameof(Value)) ? Value : _value;
+    private bool HasSingleValue => IsProvided(nameof(Value)) ? Value is not null : _hasValue;
+
+    private IReadOnlyCollection<TValue> CurrentValues => IsProvided(nameof(Values))
+        ? Values as IReadOnlyCollection<TValue> ?? Values?.ToArray() ?? []
+        : _values;
+
+    private string InputId => Id is null && FieldContext is not null ? FieldContext.ControlId : $"{ComponentId}-input";
+    private string ButtonId => $"{ComponentId}-button";
+    private string OptionsId => $"{ComponentId}-options";
+
+    private bool IsSelected(TValue value)
+        => Multiple
+            ? CurrentValues.Contains(value, EffectiveComparer)
+            : HasSingleValue && EffectiveComparer.Equals(CurrentValue!, value);
+
+    internal string Display(TValue? value)
+        => DisplayValue is not null ? DisplayValue(value) : value?.ToString() ?? string.Empty;
+
+    /// <summary>The text the input shows: the live query while typing, the selection's display text otherwise.</summary>
+    internal string InputText
+        => _userTyped || Multiple ? _query : HasSingleValue ? Display(CurrentValue) : _query;
 
     protected override void OnInitialized()
     {
-        if (Multiple)
+        if (DefaultValue is not null)
         {
-            if (Values is null && DefaultValues is not null)
-                _multiValues = DefaultValues.ToList();
+            _value = DefaultValue;
+            _hasValue = true;
         }
-        else
-        {
-            if (Value is null && DefaultValue is not null)
-                _singleValue = DefaultValue;
-        }
-        _initialized = true;
+        if (DefaultValues is not null)
+            _values = DefaultValues.ToList();
     }
 
     protected override void OnParametersSet()
     {
-        _ = _initialized;
+        LambdaExpression? expression = Multiple ? ValuesExpression : ValueExpression;
+        if (expression is not null || _binding is not null)
+        {
+            _binding ??= new BhFieldBinding(() => InvokeAsync(StateHasChanged));
+            _binding.Update(EditContext, expression);
+            FieldContext?.ReportValidation(_binding.IsInvalid, _binding.Messages);
+        }
     }
 
-    // ── Rendering ────────────────────────────────────────────────────────────
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_open) return;
+
+        if (_pendingHighlight is { } highlight)
+        {
+            _pendingHighlight = null;
+            await State.EnsureOrderAsync();
+            var selected = State.FirstSelected();
+            var index = highlight switch
+            {
+                BhMenuFocus.First => selected >= 0 ? selected : State.FirstEnabled(),
+                BhMenuFocus.Last => selected >= 0 ? selected : State.LastEnabled(),
+                _ => -1,
+            };
+            if (index >= 0) State.SetActiveIndex(index);
+        }
+    }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenComponent<CascadingValue<BhComboboxContext<TValue>>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
-        builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
+        State.PanelId = OptionsId;
+        var context = new BhComboboxContext<TValue>(this, State, _open, IsDisabled, Multiple, IsInvalid, IsRequired,
+            CurrentValue, HasSingleValue, CurrentValues, _query, ComponentId, InputId, ButtonId, OptionsId, FieldContext);
+
+        builder.OpenComponent<CascadingValue<BhListState<TValue>>>(0);
+        builder.AddComponentParameter(1, "Value", State);
+        builder.AddComponentParameter(2, "IsFixed", true);
+        builder.AddComponentParameter(3, "ChildContent", (RenderFragment)(outer =>
         {
-            inner.OpenElement(0, Tag);
-            inner.AddAttribute(10, "id", ComponentId);
-            inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
-            inner.AddContent(40, ChildContent);
-
-            // Click-outside overlay (only present while open).
-            if (_isOpen)
+            outer.OpenComponent<CascadingValue<BhComboboxContext<TValue>>>(0);
+            outer.AddComponentParameter(1, "Value", context);
+            outer.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
             {
-                inner.OpenElement(50, "div");
-                inner.AddAttribute(51, "data-blazor-headless-overlay", true);
-                inner.AddAttribute(52, "style",
-                    "position:fixed;inset:0;z-index:30;background:transparent;");
-                inner.AddAttribute(53, "onclick",
-                    EventCallback.Factory.Create<MouseEventArgs>(this, async _ => await CloseAsync()));
+                inner.OpenElement(0, Tag);
+                inner.AddAttribute(10, "id", ComponentId);
+                inner.AddMultipleAttributes(20, GetFinalAttributes());
+                inner.AddElementReferenceCapture(30, CaptureElement);
+                inner.AddContent(40, ChildContent);
+                RenderHiddenInputs(inner, 50);
                 inner.CloseElement();
-            }
-
-            // Hidden form fields.
-            if (!string.IsNullOrEmpty(Name))
-            {
-                if (Multiple)
-                {
-                    var seq = 60;
-                    foreach (var v in CurrentMultiValues)
-                    {
-                        inner.OpenElement(seq++, "input");
-                        inner.AddAttribute(seq++, "type", "hidden");
-                        inner.AddAttribute(seq++, "name", Name);
-                        inner.AddAttribute(seq++, "value", v?.ToString() ?? string.Empty);
-                        inner.CloseElement();
-                    }
-                }
-                else if (CurrentSingleValue is not null)
-                {
-                    inner.OpenElement(60, "input");
-                    inner.AddAttribute(61, "type", "hidden");
-                    inner.AddAttribute(62, "name", Name);
-                    inner.AddAttribute(63, "value", CurrentSingleValue.ToString() ?? string.Empty);
-                    inner.CloseElement();
-                }
-            }
-
-            inner.CloseElement();
+            }));
+            outer.CloseComponent();
         }));
         builder.CloseComponent();
+    }
+
+    private void RenderHiddenInputs(RenderTreeBuilder builder, int sequence)
+    {
+        if (string.IsNullOrEmpty(Name)) return;
+        string? Format(TValue v) => FormatValue is not null ? FormatValue(v) : v?.ToString();
+
+        builder.OpenRegion(sequence);
+        if (Multiple)
+        {
+            foreach (var v in CurrentValues)
+            {
+                builder.OpenElement(0, "input");
+                builder.AddAttribute(1, "type", "hidden");
+                builder.AddAttribute(2, "name", Name);
+                builder.AddAttribute(3, "value", Format(v));
+                builder.CloseElement();
+            }
+        }
+        else if (HasSingleValue)
+        {
+            builder.OpenElement(10, "input");
+            builder.AddAttribute(11, "type", "hidden");
+            builder.AddAttribute(12, "name", Name);
+            builder.AddAttribute(13, "value", Format(CurrentValue!));
+            builder.CloseElement();
+        }
+        builder.CloseRegion();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataState(attrs, _isOpen);
-        SetDataFlag(attrs, "disabled", Disabled);
+        SetDataState(attrs, _open);
+        SetDataFlag(attrs, "disabled", IsDisabled);
+        SetDataFlag(attrs, "invalid", IsInvalid);
         return attrs;
     }
 
-    // ── Context assembly ─────────────────────────────────────────────────────
+    // ── Open / close ─────────────────────────────────────────────────────────
 
-    private BhComboboxContext<TValue> CreateContext() => new(
-        isOpen: _isOpen,
-        disabled: Disabled,
-        multiple: Multiple,
-        singleValue: CurrentSingleValue,
-        multiValues: CurrentMultiValues,
-        activeIndex: _activeIndex,
-        query: _query,
-        baseId: ComponentId,
-        registerOption: RegisterOption,
-        unregisterOption: UnregisterOption,
-        selectAsync: SelectAsync,
-        setActiveIndex: SetActiveIndex,
-        handleInputKeyDownAsync: HandleInputKeyDownAsync,
-        handleQueryAsync: HandleQueryAsync,
-        toggleAsync: ToggleAsync,
-        openAsync: OpenAsync,
-        closeAsync: CloseAsync,
-        displayValue: DisplayValueOrDefault);
-
-    // ── Option registration ──────────────────────────────────────────────────
-
-    internal int RegisterOption(BhComboboxOption<TValue> option)
+    internal async Task OpenAsync(BhMenuFocus highlight)
     {
-        if (!_options.Contains(option))
-            _options.Add(option);
-        return _options.IndexOf(option);
+        if (IsDisabled) return;
+        _pendingHighlight = highlight;
+        if (_open)
+        {
+            StateHasChanged();
+            return;
+        }
+        _open = true;
+        StateHasChanged();
+        await OnOpenChange.InvokeAsync(true);
     }
 
-    internal void UnregisterOption(BhComboboxOption<TValue> option)
+    /// <summary>Closes the options panel. The input reverts to the selection's text.</summary>
+    public async Task CloseAsync()
     {
-        _options.Remove(option);
+        if (!_open) return;
+        _open = false;
+        State.SetActiveId(null, scroll: false);
+
+        if (_userTyped && !Multiple)
+        {
+            // Typing without choosing: an emptied input clears a nullable
+            // combobox, anything else reverts to the selected value's text.
+            if (Nullable && string.IsNullOrEmpty(_query) && HasSingleValue)
+                await SetSingleAsync(default);
+            await SetQueryAsync(string.Empty, userTyped: false);
+        }
+
+        StateHasChanged();
+        await OnOpenChange.InvokeAsync(false);
     }
 
-    private void SetActiveIndex(int index)
+    internal Task ToggleAsync() => _open ? CloseAsync() : OpenAsync(BhMenuFocus.None);
+
+    // ── Query ────────────────────────────────────────────────────────────────
+
+    internal async Task HandleInputAsync(string text)
     {
-        if (index == _activeIndex) return;
-        _activeIndex = index;
+        await SetQueryAsync(text, userTyped: true);
+        if (!_open)
+        {
+            _open = true;
+            await OnOpenChange.InvokeAsync(true);
+        }
         StateHasChanged();
     }
+
+    private async Task SetQueryAsync(string text, bool userTyped)
+    {
+        _userTyped = userTyped;
+        if (_query == text) return;
+        _query = text;
+        await OnQueryChange.InvokeAsync(text);
+    }
+
+    /// <summary>Called by the options panel after a render: keeps the highlight valid as results change.</summary>
+    internal void ReconcileHighlight() => State.Reconcile(fallbackToFirst: AutoHighlight && _userTyped);
 
     // ── Selection ────────────────────────────────────────────────────────────
 
-    private async Task SelectAsync(TValue value)
+    internal async Task SelectAsync(TValue value)
     {
-        if (Disabled) return;
+        if (IsDisabled) return;
 
         if (Multiple)
         {
-            // Toggle membership.
-            var list = CurrentMultiValues.ToList();
-            var idx = list.FindIndex(v => EqualityComparer<TValue>.Default.Equals(v, value));
-            if (idx >= 0) list.RemoveAt(idx);
+            var list = CurrentValues.ToList();
+            var index = list.FindIndex(v => EffectiveComparer.Equals(v, value));
+            if (index >= 0) list.RemoveAt(index);
             else list.Add(value);
 
-            if (Values is null) _multiValues = list;
+            if (!IsProvided(nameof(Values)))
+                _values = list;
+            await ValuesChanged.InvokeAsync(list);
             await OnValuesChange.InvokeAsync(list);
-            // Multi-select keeps the panel open and doesn't overwrite the query.
         }
         else
         {
-            if (Value is null) _singleValue = value;
-            await OnValueChange.InvokeAsync(value);
-
-            // Update the input's display text to match the new selection.
-            _query = DisplayValueOrDefault(value);
-            await OnQueryChange.InvokeAsync(_query);
-
+            await SetSingleAsync(value);
+            await SetQueryAsync(string.Empty, userTyped: false);
             await CloseAsync();
         }
 
+        _binding?.NotifyChanged();
+        if (_binding is not null)
+            FieldContext?.ReportValidation(_binding.IsInvalid, _binding.Messages);
         StateHasChanged();
     }
 
-    // ── Open / Close / Toggle ────────────────────────────────────────────────
-
-    private async Task ToggleAsync()
+    private async Task SetSingleAsync(TValue? value)
     {
-        if (Disabled) return;
-        if (_isOpen) await CloseAsync();
-        else await OpenAsync();
-    }
-
-    private Task OpenAsync()
-    {
-        if (Disabled) return Task.CompletedTask;
-        _isOpen = true;
-        _activeIndex = FindInitialActiveIndex();
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    private Task CloseAsync()
-    {
-        if (!_isOpen) return Task.CompletedTask;
-        _isOpen = false;
-        _activeIndex = -1;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    private int FindInitialActiveIndex()
-    {
-        if (_options.Count == 0) return -1;
-
-        if (!Multiple && CurrentSingleValue is not null)
+        if (!IsProvided(nameof(Value)))
         {
-            var idx = _options.FindIndex(o => !o.IsOptionDisabled
-                && EqualityComparer<TValue>.Default.Equals(o.Value, CurrentSingleValue));
-            if (idx >= 0) return idx;
+            _value = value;
+            _hasValue = value is not null;
         }
-        return _options.FindIndex(o => !o.IsOptionDisabled);
+        await ValueChanged.InvokeAsync(value);
+        await OnValueChange.InvokeAsync(value);
     }
 
-    // ── Query / typing ───────────────────────────────────────────────────────
+    // ── Keyboard (focus stays in the input) ──────────────────────────────────
 
-    private async Task HandleQueryAsync(string newQuery)
+    internal async Task HandleKeyDownAsync(KeyboardEventArgs e)
     {
-        _query = newQuery ?? string.Empty;
+        if (IsDisabled) return;
 
-        // Typing implies the user wants to see results.
-        if (!_isOpen)
-            await OpenAsync();
-
-        await OnQueryChange.InvokeAsync(_query);
-
-        // After the consumer re-renders with the filtered set, default the
-        // active index back to the first enabled option. We can't tell exactly
-        // which options will exist after the next render, so we conservatively
-        // reset to the first enabled option that's currently registered.
-        _activeIndex = _options.FindIndex(o => !o.IsOptionDisabled);
-        StateHasChanged();
-    }
-
-    // ── Keyboard handling (input) ────────────────────────────────────────────
-
-    private async Task HandleInputKeyDownAsync(KeyboardEventArgs args)
-    {
-        if (Disabled) return;
-
-        switch (args.Key)
+        switch (e.Key)
         {
             case "ArrowDown":
-                if (!_isOpen) await OpenAsync();
-                else _activeIndex = FindEnabledIndex(_activeIndex + 1, step: +1) ?? _activeIndex;
-                StateHasChanged();
+                if (!_open) await OpenAsync(e.AltKey ? BhMenuFocus.None : BhMenuFocus.First);
+                else State.SetActiveIndex(State.Step(State.ActiveIndex, +1, loop: false));
                 break;
 
             case "ArrowUp":
-                if (!_isOpen) await OpenAsync();
-                else _activeIndex = FindEnabledIndex(_activeIndex < 0 ? _options.Count - 1 : _activeIndex - 1, step: -1) ?? _activeIndex;
-                StateHasChanged();
+                if (!_open) await OpenAsync(BhMenuFocus.Last);
+                else if (e.AltKey) await CloseAsync();
+                else State.SetActiveIndex(State.Step(State.ActiveIndex, -1, loop: false));
                 break;
 
-            case "Home":
-                if (_isOpen)
-                {
-                    _activeIndex = FindEnabledIndex(0, step: +1) ?? _activeIndex;
-                    StateHasChanged();
-                }
+            case "PageDown":
+                if (_open) State.SetActiveIndex(State.Offset(State.ActiveIndex, 10));
                 break;
 
-            case "End":
-                if (_isOpen)
-                {
-                    _activeIndex = FindEnabledIndex(_options.Count - 1, step: -1) ?? _activeIndex;
-                    StateHasChanged();
-                }
+            case "PageUp":
+                if (_open) State.SetActiveIndex(State.Offset(State.ActiveIndex, -10));
                 break;
 
             case "Enter":
-                if (_isOpen && _activeIndex >= 0 && _activeIndex < _options.Count)
-                {
-                    await SelectAsync(_options[_activeIndex].Value);
-                }
+                if (_open && State.TryGetActiveValue(out var value) && !State.DisabledAt(State.ActiveIndex))
+                    await SelectAsync(value);
                 break;
 
             case "Escape":
-                if (_isOpen)
+                if (_open)
+                {
                     await CloseAsync();
+                }
+                else if (!Multiple && (HasSingleValue || _query.Length > 0))
+                {
+                    // Second Escape clears the input (APG).
+                    if (Nullable) await SetSingleAsync(default);
+                    await SetQueryAsync(string.Empty, userTyped: Nullable);
+                    StateHasChanged();
+                }
                 break;
 
             case "Tab":
-                // Headless UI behaviour: in single-select mode Tab also commits the
-                // active option (so focusing away accepts the highlighted item).
-                if (_isOpen && !Multiple
-                    && _activeIndex >= 0 && _activeIndex < _options.Count)
-                {
-                    await SelectAsync(_options[_activeIndex].Value);
-                }
-                else if (_isOpen)
-                {
+                if (_open && !Multiple && State.TryGetActiveValue(out var active) && !State.DisabledAt(State.ActiveIndex))
+                    await SelectAsync(active);
+                else if (_open)
                     await CloseAsync();
-                }
                 break;
         }
     }
 
-    private int? FindEnabledIndex(int start, int step)
-    {
-        if (_options.Count == 0) return null;
+    internal Task HandleFocusAsync() => OpenOnFocus && !_open ? OpenAsync(BhMenuFocus.None) : Task.CompletedTask;
 
-        var i = ((start % _options.Count) + _options.Count) % _options.Count;
-        for (var attempts = 0; attempts < _options.Count; attempts++)
-        {
-            if (!_options[i].IsOptionDisabled)
-                return i;
-            i = ((i + step) % _options.Count + _options.Count) % _options.Count;
-        }
-        return null;
-    }
+    internal ValueTask FocusInputAsync() => new(Interop.FocusAsync(InputId).AsTask());
+
+    public void Dispose() => _binding?.Dispose();
 }

@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Command Palette — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html" class="active">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Command Palette</h1>
+        <p class="lead">A cmdk-style command menu — fuzzy search, groups, nested pages and a ⌘K palette — with zero visual opinion.</p>
+        <h2 id="inline-command-menu">Inline command menu</h2>
+        <p>A search field over a filterable list of actions. The input is a <code>combobox</code> that drives a <code>listbox</code> through <code>aria-activedescendant</code>, so focus never leaves it. Type to fuzzy-filter — "smiley" finds Search emoji through its <code>Keywords</code> — then use ↑ / ↓ (or Ctrl+N / Ctrl+P), Alt+↑ / Alt+↓ to jump between groups, and Enter to run. Empty groups hide, separators disappear while searching, the disabled item is skipped, and the result count is announced.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Command menu" class="cmd"&gt;
+    &lt;div class="cmd-input-row"&gt;
+        &lt;span class="cmd-input-icon" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="cmd-input" placeholder="Type a command or search…" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="cmd-list"&gt;
+        &lt;BhCommandEmpty class="cmd-empty"&gt;No results found.&lt;/BhCommandEmpty&gt;
+        &lt;BhCommandGroup Heading="Suggestions" class="cmd-group"&gt;
+            &lt;BhCommandItem Value="Calendar" OnSelect='@(() =&gt; Run("Calendar"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📅&lt;/span&gt; Calendar
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Search emoji" Keywords='@(["emoji", "smiley", "reaction"])'
+                           OnSelect='@(() =&gt; Run("Search emoji"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;😀&lt;/span&gt; Search emoji
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Calculator" Disabled="true" class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🧮&lt;/span&gt; Calculator
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="cmd-separator" /&gt;
+        &lt;BhCommandGroup Heading="Settings" class="cmd-group"&gt;
+            &lt;BhCommandItem Value="Profile" OnSelect='@(() =&gt; Run("Profile"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;👤&lt;/span&gt; Profile
+                &lt;span class="cmd-item-shortcut"&gt;⌘P&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Billing" Keywords='@(["invoice", "payment", "plan"])'
+                           OnSelect='@(() =&gt; Run("Billing"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;💳&lt;/span&gt; Billing
+                &lt;span class="cmd-item-shortcut"&gt;⌘B&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Settings" Keywords='@(["preferences", "options"])'
+                           OnSelect='@(() =&gt; Run("Settings"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;⚙️&lt;/span&gt; Settings
+                &lt;span class="cmd-item-shortcut"&gt;⌘S&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="demo-output"&gt;Last command: &lt;strong&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.cmd {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Focus stays in the input while navigating, so ring the whole card */
+.cmd:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cmd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.cmd-input-icon { color: #a1a1aa; }
+
+/* BhCommandInput renders &lt;input role="combobox"&gt; */
+.cmd-input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    color: #18181b;
+}
+
+.cmd-input::placeholder { color: #a1a1aa; }
+
+/* BhCommandList renders role="listbox" */
+.cmd-list {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+    scroll-padding-block: 0.375rem;
+}
+
+/* BhCommandEmpty only renders while nothing matches */
+.cmd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+/* Groups get the hidden attribute when none of their items match */
+.cmd-group[hidden] { display: none; }
+
+.cmd-group [data-bh-command-group-heading] {
+    padding: 0.5rem 0.6rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    color: #27272a;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* data-selected marks the highlighted item (the aria-activedescendant target) */
+.cmd-item[data-selected] { background: #eff6ff; color: #1d4ed8; }
+.cmd-item[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.cmd-item-icon { width: 1.25rem; flex-shrink: 0; text-align: center; }
+
+.cmd-item-shortcut {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #71717a;
+}
+
+.cmd-item[data-selected] .cmd-item-shortcut { color: #60a5fa; }
+
+/* BhCommandSeparator is removed while searching */
+.cmd-separator { height: 1px; margin: 0.375rem -0.375rem; background: #e4e4e7; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Command menu" class="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition focus-within:border-blue-600 focus-within:ring-3 focus-within:ring-blue-600/15"&gt;
+    &lt;div class="flex items-center gap-2 border-b border-zinc-200 px-3.5"&gt;
+        &lt;span class="text-zinc-400" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400" placeholder="Type a command or search…" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="max-h-72 scroll-py-1.5 overflow-y-auto overscroll-contain p-1.5"&gt;
+        &lt;BhCommandEmpty class="px-4 py-8 text-center text-sm text-zinc-500"&gt;No results found.&lt;/BhCommandEmpty&gt;
+        &lt;BhCommandGroup Heading="Suggestions" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+            &lt;BhCommandItem Value="Calendar" OnSelect='@(() =&gt; Run("Calendar"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📅&lt;/span&gt; Calendar
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Search emoji" Keywords='@(["emoji", "smiley", "reaction"])'
+                           OnSelect='@(() =&gt; Run("Search emoji"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;😀&lt;/span&gt; Search emoji
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Calculator" Disabled="true" class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🧮&lt;/span&gt; Calculator
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="-mx-1.5 my-1.5 h-px bg-zinc-200" /&gt;
+        &lt;BhCommandGroup Heading="Settings" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+            &lt;BhCommandItem Value="Profile" OnSelect='@(() =&gt; Run("Profile"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;👤&lt;/span&gt; Profile
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘P&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Billing" Keywords='@(["invoice", "payment", "plan"])'
+                           OnSelect='@(() =&gt; Run("Billing"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;💳&lt;/span&gt; Billing
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘B&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Settings" Keywords='@(["preferences", "options"])'
+                           OnSelect='@(() =&gt; Run("Settings"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;⚙️&lt;/span&gt; Settings
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘S&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;Last command: &lt;strong class="text-zinc-900"&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="nested-pages">Nested pages</h2>
+        <p>Turn one menu into a drill-down. Wrap each level in a <code>BhCommandPage</code> (no <code>Name</code> = the root) and navigate with <code>PushPageAsync</code> on the context its <code>Template</code> receives — the search clears on every push. Backspace in an empty input goes back one level, and <code>PageChanged</code> keeps the breadcrumb in sync. Try Settings → Change theme.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Workspace commands" PageChanged="OnPageChanged" class="cmd"&gt;
+    &lt;div class="cmd-breadcrumbs"&gt;
+        &lt;span class="cmd-crumb"&gt;Home&lt;/span&gt;
+        @foreach (var crumb in crumbs)
+        {
+            &lt;span class="cmd-crumb-sep" aria-hidden="true"&gt;›&lt;/span&gt;
+            &lt;span class="cmd-crumb"&gt;@crumb&lt;/span&gt;
+        }
+        @if (crumbs.Count &gt; 0)
+        {
+            &lt;span class="cmd-crumb-hint"&gt;Backspace to go back&lt;/span&gt;
+        }
+    &lt;/div&gt;
+    &lt;div class="cmd-input-row"&gt;
+        &lt;BhCommandInput AutoFocus="false" class="cmd-input" placeholder="@PagePlaceholder" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="cmd-list"&gt;
+        &lt;BhCommandEmpty class="cmd-empty"&gt;No results found.&lt;/BhCommandEmpty&gt;
+
+        &lt;BhCommandPage&gt;
+            &lt;Template Context="cmd"&gt;
+                &lt;BhCommandGroup Heading="Workspace" class="cmd-group"&gt;
+                    &lt;BhCommandItem Value="Search projects" OnSelect='@(() =&gt; cmd.PushPageAsync("Projects"))' class="cmd-item"&gt;
+                        &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📁&lt;/span&gt; Search projects…
+                        &lt;span class="cmd-item-arrow" aria-hidden="true"&gt;›&lt;/span&gt;
+                    &lt;/BhCommandItem&gt;
+                    &lt;BhCommandItem Value="Settings" OnSelect='@(() =&gt; cmd.PushPageAsync("Settings"))' class="cmd-item"&gt;
+                        &lt;span class="cmd-item-icon" aria-hidden="true"&gt;⚙️&lt;/span&gt; Settings…
+                        &lt;span class="cmd-item-arrow" aria-hidden="true"&gt;›&lt;/span&gt;
+                    &lt;/BhCommandItem&gt;
+                    &lt;BhCommandItem Value="Invite teammates" OnSelect='@(() =&gt; CompleteAsync(cmd, "Invite teammates"))' class="cmd-item"&gt;
+                        &lt;span class="cmd-item-icon" aria-hidden="true"&gt;✉️&lt;/span&gt; Invite teammates
+                    &lt;/BhCommandItem&gt;
+                &lt;/BhCommandGroup&gt;
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Projects"&gt;
+            &lt;Template Context="cmd"&gt;
+                @foreach (var project in projects)
+                {
+                    &lt;BhCommandItem Value="@project" OnSelect='@(() =&gt; CompleteAsync(cmd, $"Open {project}"))' class="cmd-item"&gt;
+                        &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📁&lt;/span&gt; @project
+                    &lt;/BhCommandItem&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Settings"&gt;
+            &lt;Template Context="cmd"&gt;
+                &lt;BhCommandItem Value="Change theme" OnSelect='@(() =&gt; cmd.PushPageAsync("Theme"))' class="cmd-item"&gt;
+                    &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🎨&lt;/span&gt; Change theme…
+                    &lt;span class="cmd-item-arrow" aria-hidden="true"&gt;›&lt;/span&gt;
+                &lt;/BhCommandItem&gt;
+                &lt;BhCommandItem Value="Notifications" OnSelect='@(() =&gt; CompleteAsync(cmd, "Notification settings"))' class="cmd-item"&gt;
+                    &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🔔&lt;/span&gt; Notifications
+                &lt;/BhCommandItem&gt;
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Theme"&gt;
+            &lt;Template Context="cmd"&gt;
+                @foreach (var option in themes)
+                {
+                    &lt;BhCommandItem Value="@option" OnSelect='@(() =&gt; SetThemeAsync(cmd, option))' class="cmd-item"&gt;
+                        @option
+                        @if (option == theme)
+                        {
+                            &lt;span class="cmd-item-check" aria-hidden="true"&gt;✓&lt;/span&gt;
+                        }
+                    &lt;/BhCommandItem&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="demo-output"&gt;Last command: &lt;strong&gt;@(lastCommand ?? "(none)")&lt;/strong&gt; · Theme: &lt;strong&gt;@theme&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private readonly List&lt;string&gt; crumbs = new();
+    private readonly string[] projects = ["BlazorHeadless", "Docs site", "Samples app", "Design tokens"];
+    private readonly string[] themes = ["Light", "Dark", "System"];
+    private string theme = "System";
+    private string? lastCommand;
+
+    private string PagePlaceholder =&gt; crumbs.Count == 0
+        ? "What do you need?"
+        : $"Search {crumbs[^1].ToLowerInvariant()}…";
+
+    // PageChanged reports the new current page: a pushed page, the page
+    // Backspace went back to, or null for the root.
+    private void OnPageChanged(string? page)
+    {
+        var index = page is null ? -1 : crumbs.IndexOf(page);
+        if (page is not null &amp;&amp; index &lt; 0) crumbs.Add(page);
+        else crumbs.RemoveRange(index + 1, crumbs.Count - index - 1);
+    }
+
+    // Run the command, then return to the root page.
+    private async Task CompleteAsync(BhCommandContext cmd, string command)
+    {
+        lastCommand = command;
+        await cmd.ClearSearchAsync();
+        while (cmd.Page is not null)
+            await cmd.PopPageAsync();
+    }
+
+    private Task SetThemeAsync(BhCommandContext cmd, string option)
+    {
+        theme = option;
+        return CompleteAsync(cmd, $"Theme: {option}");
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.cmd {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Focus stays in the input while navigating, so ring the whole card */
+.cmd:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cmd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.cmd-input-icon { color: #a1a1aa; }
+
+/* BhCommandInput renders &lt;input role="combobox"&gt; */
+.cmd-input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    color: #18181b;
+}
+
+.cmd-input::placeholder { color: #a1a1aa; }
+
+/* BhCommandList renders role="listbox" */
+.cmd-list {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+    scroll-padding-block: 0.375rem;
+}
+
+/* BhCommandEmpty only renders while nothing matches */
+.cmd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+/* Groups get the hidden attribute when none of their items match */
+.cmd-group[hidden] { display: none; }
+
+.cmd-group [data-bh-command-group-heading] {
+    padding: 0.5rem 0.6rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    color: #27272a;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* data-selected marks the highlighted item (the aria-activedescendant target) */
+.cmd-item[data-selected] { background: #eff6ff; color: #1d4ed8; }
+.cmd-item[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.cmd-item-icon { width: 1.25rem; flex-shrink: 0; text-align: center; }
+
+.cmd-item-shortcut {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #71717a;
+}
+
+.cmd-item[data-selected] .cmd-item-shortcut { color: #60a5fa; }
+
+/* BhCommandSeparator is removed while searching */
+.cmd-separator { height: 1px; margin: 0.375rem -0.375rem; background: #e4e4e7; }
+
+/* Breadcrumb of the page stack, kept in sync through PageChanged */
+.cmd-breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.85rem 0;
+    font-size: 0.75rem;
+    color: #71717a;
+}
+
+.cmd-crumb {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #3f3f46;
+}
+
+.cmd-crumb-sep  { color: #d4d4d8; }
+.cmd-crumb-hint { margin-left: auto; color: #a1a1aa; }
+
+.cmd-item-arrow { margin-left: auto; color: #a1a1aa; }
+.cmd-item-check { margin-left: auto; font-weight: 600; color: #2563eb; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Workspace commands" PageChanged="OnPageChanged" class="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition focus-within:border-blue-600 focus-within:ring-3 focus-within:ring-blue-600/15"&gt;
+    &lt;div class="flex flex-wrap items-center gap-1.5 px-3.5 pt-2.5 text-xs text-zinc-500"&gt;
+        &lt;span class="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700"&gt;Home&lt;/span&gt;
+        @foreach (var crumb in crumbs)
+        {
+            &lt;span class="text-zinc-300" aria-hidden="true"&gt;›&lt;/span&gt;
+            &lt;span class="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700"&gt;@crumb&lt;/span&gt;
+        }
+        @if (crumbs.Count &gt; 0)
+        {
+            &lt;span class="ml-auto text-zinc-400"&gt;Backspace to go back&lt;/span&gt;
+        }
+    &lt;/div&gt;
+    &lt;div class="flex items-center gap-2 border-b border-zinc-200 px-3.5"&gt;
+        &lt;BhCommandInput AutoFocus="false" class="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400" placeholder="@PagePlaceholder" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="max-h-72 scroll-py-1.5 overflow-y-auto overscroll-contain p-1.5"&gt;
+        &lt;BhCommandEmpty class="px-4 py-8 text-center text-sm text-zinc-500"&gt;No results found.&lt;/BhCommandEmpty&gt;
+
+        &lt;BhCommandPage&gt;
+            &lt;Template Context="cmd"&gt;
+                &lt;BhCommandGroup Heading="Workspace" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+                    &lt;BhCommandItem Value="Search projects" OnSelect='@(() =&gt; cmd.PushPageAsync("Projects"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                        &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📁&lt;/span&gt; Search projects…
+                        &lt;span class="ml-auto text-zinc-400" aria-hidden="true"&gt;›&lt;/span&gt;
+                    &lt;/BhCommandItem&gt;
+                    &lt;BhCommandItem Value="Settings" OnSelect='@(() =&gt; cmd.PushPageAsync("Settings"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                        &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;⚙️&lt;/span&gt; Settings…
+                        &lt;span class="ml-auto text-zinc-400" aria-hidden="true"&gt;›&lt;/span&gt;
+                    &lt;/BhCommandItem&gt;
+                    &lt;BhCommandItem Value="Invite teammates" OnSelect='@(() =&gt; CompleteAsync(cmd, "Invite teammates"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                        &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;✉️&lt;/span&gt; Invite teammates
+                    &lt;/BhCommandItem&gt;
+                &lt;/BhCommandGroup&gt;
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Projects"&gt;
+            &lt;Template Context="cmd"&gt;
+                @foreach (var project in projects)
+                {
+                    &lt;BhCommandItem Value="@project" OnSelect='@(() =&gt; CompleteAsync(cmd, $"Open {project}"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                        &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📁&lt;/span&gt; @project
+                    &lt;/BhCommandItem&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Settings"&gt;
+            &lt;Template Context="cmd"&gt;
+                &lt;BhCommandItem Value="Change theme" OnSelect='@(() =&gt; cmd.PushPageAsync("Theme"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                    &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🎨&lt;/span&gt; Change theme…
+                    &lt;span class="ml-auto text-zinc-400" aria-hidden="true"&gt;›&lt;/span&gt;
+                &lt;/BhCommandItem&gt;
+                &lt;BhCommandItem Value="Notifications" OnSelect='@(() =&gt; CompleteAsync(cmd, "Notification settings"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                    &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🔔&lt;/span&gt; Notifications
+                &lt;/BhCommandItem&gt;
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+
+        &lt;BhCommandPage Name="Theme"&gt;
+            &lt;Template Context="cmd"&gt;
+                @foreach (var option in themes)
+                {
+                    &lt;BhCommandItem Value="@option" OnSelect='@(() =&gt; SetThemeAsync(cmd, option))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                        @option
+                        @if (option == theme)
+                        {
+                            &lt;span class="ml-auto font-semibold text-blue-600" aria-hidden="true"&gt;✓&lt;/span&gt;
+                        }
+                    &lt;/BhCommandItem&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhCommandPage&gt;
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;Last command: &lt;strong class="text-zinc-900"&gt;@(lastCommand ?? "(none)")&lt;/strong&gt; · Theme: &lt;strong class="text-zinc-900"&gt;@theme&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private readonly List&lt;string&gt; crumbs = new();
+    private readonly string[] projects = ["BlazorHeadless", "Docs site", "Samples app", "Design tokens"];
+    private readonly string[] themes = ["Light", "Dark", "System"];
+    private string theme = "System";
+    private string? lastCommand;
+
+    private string PagePlaceholder =&gt; crumbs.Count == 0
+        ? "What do you need?"
+        : $"Search {crumbs[^1].ToLowerInvariant()}…";
+
+    // PageChanged reports the new current page: a pushed page, the page
+    // Backspace went back to, or null for the root.
+    private void OnPageChanged(string? page)
+    {
+        var index = page is null ? -1 : crumbs.IndexOf(page);
+        if (page is not null &amp;&amp; index &lt; 0) crumbs.Add(page);
+        else crumbs.RemoveRange(index + 1, crumbs.Count - index - 1);
+    }
+
+    // Run the command, then return to the root page.
+    private async Task CompleteAsync(BhCommandContext cmd, string command)
+    {
+        lastCommand = command;
+        await cmd.ClearSearchAsync();
+        while (cmd.Page is not null)
+            await cmd.PopPageAsync();
+    }
+
+    private Task SetThemeAsync(BhCommandContext cmd, string option)
+    {
+        theme = option;
+        return CompleteAsync(cmd, $"Theme: {option}");
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="k-command-palette">⌘K command palette</h2>
+        <p><code>BhCommandDialog</code> puts a command menu in a modal dialog and registers a global <code>Shortcut</code> (<code>"mod+k"</code> = ⌘K on macOS, Ctrl+K elsewhere — press it anywhere on this page). Running a command closes the palette, Escape or an outside click dismisses it, and focus returns where it was. Drive it with <code>Open</code>; <code>OpenChanged</code> reports the changes the palette makes itself (shortcut, Escape, outside click, running a command).</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;button type="button" class="cmd-trigger" @onclick="() =&gt; paletteOpen = true"&gt;
+    &lt;span class="cmd-input-icon" aria-hidden="true"&gt;⌕&lt;/span&gt;
+    Search or jump to…
+    &lt;span class="cmd-trigger-keys" aria-hidden="true"&gt;
+        &lt;kbd class="cmd-kbd"&gt;Ctrl&lt;/kbd&gt;&lt;kbd class="cmd-kbd"&gt;K&lt;/kbd&gt;
+    &lt;/span&gt;
+&lt;/button&gt;
+
+&lt;BhCommandDialog Open="paletteOpen" OpenChanged="OnPaletteOpenChanged" Shortcut="mod+k"
+                 Label="Command palette" Loop="true"
+                 OverlayClass="cmd-overlay" ContentClass="cmd-dialog" CommandClass="cmd-palette"&gt;
+    &lt;div class="cmd-input-row"&gt;
+        &lt;span class="cmd-input-icon" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput class="cmd-input" placeholder="Type a command or search…" /&gt;
+        &lt;kbd class="cmd-kbd" aria-hidden="true"&gt;Esc&lt;/kbd&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="cmd-list"&gt;
+        &lt;BhCommandEmpty class="cmd-empty"&gt;No results found.&lt;/BhCommandEmpty&gt;
+        &lt;BhCommandGroup Heading="Actions" class="cmd-group"&gt;
+            &lt;BhCommandItem Value="New document" OnSelect='@(() =&gt; Run("New document"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📝&lt;/span&gt; New document
+                &lt;span class="cmd-item-shortcut"&gt;⌘N&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Share" Keywords='@(["invite", "link", "collaborate"])'
+                           OnSelect='@(() =&gt; Run("Share"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🔗&lt;/span&gt; Share…
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Duplicate" OnSelect='@(() =&gt; Run("Duplicate"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📄&lt;/span&gt; Duplicate
+                &lt;span class="cmd-item-shortcut"&gt;⌘D&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="cmd-separator" /&gt;
+        &lt;BhCommandGroup Heading="Appearance" class="cmd-group"&gt;
+            &lt;BhCommandItem Value="Toggle dark mode" Keywords='@(["theme", "night", "light"])'
+                           OnSelect='@(() =&gt; Run("Toggle dark mode"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🌙&lt;/span&gt; Toggle dark mode
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Zoom in" Keywords='@(["bigger", "font size"])'
+                           OnSelect='@(() =&gt; Run("Zoom in"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🔍&lt;/span&gt; Zoom in
+                &lt;span class="cmd-item-shortcut"&gt;⌘+&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Zoom out" Keywords='@(["smaller", "font size"])'
+                           OnSelect='@(() =&gt; Run("Zoom out"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;🔎&lt;/span&gt; Zoom out
+                &lt;span class="cmd-item-shortcut"&gt;⌘−&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="cmd-separator" /&gt;
+        &lt;BhCommandGroup Heading="Help" class="cmd-group"&gt;
+            &lt;BhCommandItem Value="Keyboard shortcuts" OnSelect='@(() =&gt; Run("Keyboard shortcuts"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;⌨️&lt;/span&gt; Keyboard shortcuts
+                &lt;span class="cmd-item-shortcut"&gt;?&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Contact support" Keywords='@(["help", "email", "feedback"])'
+                           OnSelect='@(() =&gt; Run("Contact support"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;💬&lt;/span&gt; Contact support
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+    &lt;/BhCommandList&gt;
+    &lt;div class="cmd-footer" aria-hidden="true"&gt;
+        &lt;span&gt;&lt;kbd class="cmd-kbd"&gt;↑&lt;/kbd&gt;&lt;kbd class="cmd-kbd"&gt;↓&lt;/kbd&gt; navigate&lt;/span&gt;
+        &lt;span&gt;&lt;kbd class="cmd-kbd"&gt;↵&lt;/kbd&gt; run&lt;/span&gt;
+        &lt;span&gt;&lt;kbd class="cmd-kbd"&gt;Esc&lt;/kbd&gt; close&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/BhCommandDialog&gt;
+
+&lt;span class="demo-output"&gt;Last command: &lt;strong&gt;@(lastCommand ?? "(none)")&lt;/strong&gt; · Opened by the palette itself: &lt;strong&gt;@selfOpens&lt;/strong&gt;×&lt;/span&gt;
+
+@code {
+    private bool paletteOpen;
+    private int selfOpens;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+
+    // Fires when the palette changes its own state: the ⌘K / Ctrl+K shortcut,
+    // Escape, an outside click, or running a command (which closes it).
+    private void OnPaletteOpenChanged(bool open)
+    {
+        paletteOpen = open;
+        if (open) selfOpens++;
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.cmd {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Focus stays in the input while navigating, so ring the whole card */
+.cmd:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cmd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.cmd-input-icon { color: #a1a1aa; }
+
+/* BhCommandInput renders &lt;input role="combobox"&gt; */
+.cmd-input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    color: #18181b;
+}
+
+.cmd-input::placeholder { color: #a1a1aa; }
+
+/* BhCommandList renders role="listbox" */
+.cmd-list {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+    scroll-padding-block: 0.375rem;
+}
+
+/* BhCommandEmpty only renders while nothing matches */
+.cmd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+/* Groups get the hidden attribute when none of their items match */
+.cmd-group[hidden] { display: none; }
+
+.cmd-group [data-bh-command-group-heading] {
+    padding: 0.5rem 0.6rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    color: #27272a;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* data-selected marks the highlighted item (the aria-activedescendant target) */
+.cmd-item[data-selected] { background: #eff6ff; color: #1d4ed8; }
+.cmd-item[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.cmd-item-icon { width: 1.25rem; flex-shrink: 0; text-align: center; }
+
+.cmd-item-shortcut {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #71717a;
+}
+
+.cmd-item[data-selected] .cmd-item-shortcut { color: #60a5fa; }
+
+/* BhCommandSeparator is removed while searching */
+.cmd-separator { height: 1px; margin: 0.375rem -0.375rem; background: #e4e4e7; }
+
+.cmd-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.3rem;
+    border: 1px solid #e4e4e7;
+    border-bottom-width: 2px;
+    border-radius: 0.3rem;
+    background: #fafafa;
+    font-family: inherit;
+    font-size: 0.68rem;
+    color: #52525b;
+}
+
+.cmd-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 20rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fff;
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: left;
+    color: #71717a;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+}
+
+.cmd-trigger:hover         { border-color: #a1a1aa; }
+.cmd-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.cmd-trigger-keys          { display: inline-flex; gap: 0.2rem; margin-left: auto; }
+
+/* OverlayClass → BhDialogBackdrop */
+.cmd-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(24, 24, 27, 0.45);
+    backdrop-filter: blur(2px);
+}
+
+/* ContentClass → BhDialogPanel (the dialog root already covers the viewport) */
+.cmd-dialog {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 2rem);
+    max-width: 36rem;
+    margin: 12vh auto 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.85rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+
+.cmd-dialog[data-state="open"] { animation: cmd-dialog-in 140ms ease-out; }
+
+@keyframes cmd-dialog-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+}
+
+/* CommandClass → the BhCommand inside the panel (the panel is the card) */
+.cmd-palette            { display: flex; flex-direction: column; }
+.cmd-palette .cmd-list  { max-height: min(22rem, 50vh); }
+
+.cmd-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.85rem;
+    border-top: 1px solid #e4e4e7;
+    background: #fafafa;
+    font-size: 0.75rem;
+    color: #71717a;
+}
+
+.cmd-footer span { display: inline-flex; align-items: center; gap: 0.25rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;button type="button" class="flex w-full max-w-xs cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 bg-white py-2 pr-2 pl-3 text-left text-sm text-zinc-500 transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" @onclick="() =&gt; paletteOpen = true"&gt;
+    &lt;span class="text-zinc-400" aria-hidden="true"&gt;⌕&lt;/span&gt;
+    Search or jump to…
+    &lt;span class="ml-auto inline-flex gap-0.5" aria-hidden="true"&gt;
+        &lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;Ctrl&lt;/kbd&gt;&lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;K&lt;/kbd&gt;
+    &lt;/span&gt;
+&lt;/button&gt;
+
+&lt;BhCommandDialog Open="paletteOpen" OpenChanged="OnPaletteOpenChanged" Shortcut="mod+k"
+                 Label="Command palette" Loop="true"
+                 OverlayClass="fixed inset-0 bg-zinc-900/45 backdrop-blur-[2px]"
+                 ContentClass="relative z-10 mx-auto mt-[12vh] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl outline-none transition duration-150 ease-out starting:scale-98 starting:opacity-0"
+                 CommandClass="flex flex-col"&gt;
+    &lt;div class="flex items-center gap-2 border-b border-zinc-200 px-3.5"&gt;
+        &lt;span class="text-zinc-400" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput class="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400" placeholder="Type a command or search…" /&gt;
+        &lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600" aria-hidden="true"&gt;Esc&lt;/kbd&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="max-h-[min(22rem,50vh)] scroll-py-1.5 overflow-y-auto overscroll-contain p-1.5"&gt;
+        &lt;BhCommandEmpty class="px-4 py-8 text-center text-sm text-zinc-500"&gt;No results found.&lt;/BhCommandEmpty&gt;
+        &lt;BhCommandGroup Heading="Actions" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+            &lt;BhCommandItem Value="New document" OnSelect='@(() =&gt; Run("New document"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📝&lt;/span&gt; New document
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘N&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Share" Keywords='@(["invite", "link", "collaborate"])'
+                           OnSelect='@(() =&gt; Run("Share"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🔗&lt;/span&gt; Share…
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Duplicate" OnSelect='@(() =&gt; Run("Duplicate"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📄&lt;/span&gt; Duplicate
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘D&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="-mx-1.5 my-1.5 h-px bg-zinc-200" /&gt;
+        &lt;BhCommandGroup Heading="Appearance" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+            &lt;BhCommandItem Value="Toggle dark mode" Keywords='@(["theme", "night", "light"])'
+                           OnSelect='@(() =&gt; Run("Toggle dark mode"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🌙&lt;/span&gt; Toggle dark mode
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Zoom in" Keywords='@(["bigger", "font size"])'
+                           OnSelect='@(() =&gt; Run("Zoom in"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🔍&lt;/span&gt; Zoom in
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘+&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Zoom out" Keywords='@(["smaller", "font size"])'
+                           OnSelect='@(() =&gt; Run("Zoom out"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;🔎&lt;/span&gt; Zoom out
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;⌘−&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+        &lt;BhCommandSeparator class="-mx-1.5 my-1.5 h-px bg-zinc-200" /&gt;
+        &lt;BhCommandGroup Heading="Help" class="[&amp;_[data-bh-command-group-heading]]:px-2.5 [&amp;_[data-bh-command-group-heading]]:pt-2 [&amp;_[data-bh-command-group-heading]]:pb-1 [&amp;_[data-bh-command-group-heading]]:text-xs [&amp;_[data-bh-command-group-heading]]:font-medium [&amp;_[data-bh-command-group-heading]]:text-zinc-500"&gt;
+            &lt;BhCommandItem Value="Keyboard shortcuts" OnSelect='@(() =&gt; Run("Keyboard shortcuts"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;⌨️&lt;/span&gt; Keyboard shortcuts
+                &lt;span class="ml-auto text-xs tracking-widest text-zinc-500"&gt;?&lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+            &lt;BhCommandItem Value="Contact support" Keywords='@(["help", "email", "feedback"])'
+                           OnSelect='@(() =&gt; Run("Contact support"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;💬&lt;/span&gt; Contact support
+            &lt;/BhCommandItem&gt;
+        &lt;/BhCommandGroup&gt;
+    &lt;/BhCommandList&gt;
+    &lt;div class="flex items-center gap-4 border-t border-zinc-200 bg-zinc-50 px-3.5 py-2 text-xs text-zinc-500" aria-hidden="true"&gt;
+        &lt;span class="inline-flex items-center gap-1"&gt;&lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;↑&lt;/kbd&gt;&lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;↓&lt;/kbd&gt; navigate&lt;/span&gt;
+        &lt;span class="inline-flex items-center gap-1"&gt;&lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;↵&lt;/kbd&gt; run&lt;/span&gt;
+        &lt;span class="inline-flex items-center gap-1"&gt;&lt;kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600"&gt;Esc&lt;/kbd&gt; close&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/BhCommandDialog&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;Last command: &lt;strong class="text-zinc-900"&gt;@(lastCommand ?? "(none)")&lt;/strong&gt; · Opened by the palette itself: &lt;strong class="text-zinc-900"&gt;@selfOpens&lt;/strong&gt;×&lt;/span&gt;
+
+@code {
+    private bool paletteOpen;
+    private int selfOpens;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+
+    // Fires when the palette changes its own state: the ⌘K / Ctrl+K shortcut,
+    // Escape, an outside click, or running a command (which closes it).
+    private void OnPaletteOpenChanged(bool open)
+    {
+        paletteOpen = open;
+        if (open) selfOpens++;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="server-side-search">Server-side search</h2>
+        <p>Set <code>ShouldFilter="false"</code> when results come from somewhere else (an API, a database): the menu then renders exactly the items you give it. Handle <code>SearchChanged</code>, fetch, and re-render the list — highlight, keyboard navigation, the empty state and the results announcement keep working. This demo fakes a 350 ms round-trip and drops stale responses.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Search the docs" ShouldFilter="false" SearchChanged="SearchDocsAsync" class="cmd"&gt;
+    &lt;div class="cmd-input-row"&gt;
+        &lt;span class="cmd-input-icon" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="cmd-input" placeholder="Search components…" /&gt;
+        @if (searching)
+        {
+            &lt;span class="cmd-spinner" aria-hidden="true"&gt;&lt;/span&gt;
+        }
+    &lt;/div&gt;
+    &lt;BhCommandList class="cmd-list"&gt;
+        @if (!searching)
+        {
+            &lt;BhCommandEmpty class="cmd-empty"&gt;No components match “@docsQuery”.&lt;/BhCommandEmpty&gt;
+        }
+        @foreach (var doc in docResults)
+        {
+            &lt;BhCommandItem @key="doc.Name" Value="@doc.Name" OnSelect='@(() =&gt; Run($"Open {doc.Name} docs"))' class="cmd-item"&gt;
+                &lt;span class="cmd-item-icon" aria-hidden="true"&gt;📄&lt;/span&gt;
+                &lt;span class="cmd-item-body"&gt;
+                    &lt;span class="cmd-item-title"&gt;@doc.Name&lt;/span&gt;
+                    &lt;span class="cmd-item-description"&gt;@doc.Summary&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        }
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="demo-output"&gt;Last command: &lt;strong&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private sealed record Doc(string Name, string Summary);
+
+    private static readonly Doc[] _docs =
+    [
+        new("Accordion", "Vertically stacked, collapsible sections"),
+        new("Checkbox", "Two- or three-state toggle with a label"),
+        new("Combobox", "Text input with a filterable list of options"),
+        new("Command Palette", "Searchable, keyboard-first list of actions"),
+        new("Dialog", "Modal window with a focus trap"),
+        // …
+    ];
+
+    private IReadOnlyList&lt;Doc&gt; docResults = _docs.Take(6).ToList();
+    private string docsQuery = "";
+    private bool searching;
+    private int searchVersion;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+
+    private async Task SearchDocsAsync(string query)
+    {
+        docsQuery = query;
+        var version = ++searchVersion;
+        searching = true;
+
+        await Task.Delay(350); // pretend this is an HTTP call
+        if (version != searchVersion) return; // a newer keystroke superseded this one
+
+        docResults = string.IsNullOrWhiteSpace(query)
+            ? _docs.Take(6).ToList()
+            : BhFilter.Fuzzy(_docs, query, d =&gt; d.Name).ToList();
+        searching = false;
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.cmd {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Focus stays in the input while navigating, so ring the whole card */
+.cmd:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cmd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.cmd-input-icon { color: #a1a1aa; }
+
+/* BhCommandInput renders &lt;input role="combobox"&gt; */
+.cmd-input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    color: #18181b;
+}
+
+.cmd-input::placeholder { color: #a1a1aa; }
+
+/* BhCommandList renders role="listbox" */
+.cmd-list {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+    scroll-padding-block: 0.375rem;
+}
+
+/* BhCommandEmpty only renders while nothing matches */
+.cmd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+/* Groups get the hidden attribute when none of their items match */
+.cmd-group[hidden] { display: none; }
+
+.cmd-group [data-bh-command-group-heading] {
+    padding: 0.5rem 0.6rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    color: #27272a;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* data-selected marks the highlighted item (the aria-activedescendant target) */
+.cmd-item[data-selected] { background: #eff6ff; color: #1d4ed8; }
+.cmd-item[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.cmd-item-icon { width: 1.25rem; flex-shrink: 0; text-align: center; }
+
+.cmd-item-shortcut {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #71717a;
+}
+
+.cmd-item[data-selected] .cmd-item-shortcut { color: #60a5fa; }
+
+/* BhCommandSeparator is removed while searching */
+.cmd-separator { height: 1px; margin: 0.375rem -0.375rem; background: #e4e4e7; }
+
+.cmd-spinner {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    border: 2px solid #e4e4e7;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: cmd-spin 700ms linear infinite;
+}
+
+@keyframes cmd-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cmd-item-body        { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.cmd-item-title       { font-weight: 500; }
+.cmd-item-description { overflow: hidden; font-size: 0.75rem; color: #52525b; white-space: nowrap; text-overflow: ellipsis; }
+
+.cmd-item[data-selected] .cmd-item-description { color: #1d4ed8; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Search the docs" ShouldFilter="false" SearchChanged="SearchDocsAsync" class="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition focus-within:border-blue-600 focus-within:ring-3 focus-within:ring-blue-600/15"&gt;
+    &lt;div class="flex items-center gap-2 border-b border-zinc-200 px-3.5"&gt;
+        &lt;span class="text-zinc-400" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400" placeholder="Search components…" /&gt;
+        @if (searching)
+        {
+            &lt;span class="size-4 shrink-0 animate-spin rounded-full border-2 border-zinc-200 border-t-blue-600" aria-hidden="true"&gt;&lt;/span&gt;
+        }
+    &lt;/div&gt;
+    &lt;BhCommandList class="max-h-72 scroll-py-1.5 overflow-y-auto overscroll-contain p-1.5"&gt;
+        @if (!searching)
+        {
+            &lt;BhCommandEmpty class="px-4 py-8 text-center text-sm text-zinc-500"&gt;No components match “@docsQuery”.&lt;/BhCommandEmpty&gt;
+        }
+        @foreach (var doc in docResults)
+        {
+            &lt;BhCommandItem @key="doc.Name" Value="@doc.Name" OnSelect='@(() =&gt; Run($"Open {doc.Name} docs"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;📄&lt;/span&gt;
+                &lt;span class="flex min-w-0 flex-col leading-tight"&gt;
+                    &lt;span class="font-medium"&gt;@doc.Name&lt;/span&gt;
+                    &lt;span class="truncate text-xs text-zinc-600"&gt;@doc.Summary&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/BhCommandItem&gt;
+        }
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;Last command: &lt;strong class="text-zinc-900"&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private sealed record Doc(string Name, string Summary);
+
+    private static readonly Doc[] _docs =
+    [
+        new("Accordion", "Vertically stacked, collapsible sections"),
+        new("Checkbox", "Two- or three-state toggle with a label"),
+        new("Combobox", "Text input with a filterable list of options"),
+        new("Command Palette", "Searchable, keyboard-first list of actions"),
+        new("Dialog", "Modal window with a focus trap"),
+        // …
+    ];
+
+    private IReadOnlyList&lt;Doc&gt; docResults = _docs.Take(6).ToList();
+    private string docsQuery = "";
+    private bool searching;
+    private int searchVersion;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+
+    private async Task SearchDocsAsync(string query)
+    {
+        docsQuery = query;
+        var version = ++searchVersion;
+        searching = true;
+
+        await Task.Delay(350); // pretend this is an HTTP call
+        if (version != searchVersion) return; // a newer keystroke superseded this one
+
+        docResults = string.IsNullOrWhiteSpace(query)
+            ? _docs.Take(6).ToList()
+            : BhFilter.Fuzzy(_docs, query, d =&gt; d.Name).ToList();
+        searching = false;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="relevance-sorting-and-highlight-binding">Relevance sorting and highlight binding</h2>
+        <p><code>Sort="true"</code> ranks matches by relevance through the CSS <code>order</code> property (so the list is a flex column) and <code>Loop="true"</code> wraps the arrow keys. <code>@@bind-Value</code> follows the highlighted item, and an item's <code>Template</code> receives whether it is highlighted — here it reveals an ↵ hint. Type "bar" and watch the best matches move to the top.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Go to file" Sort="true" Loop="true" @bind-Value="highlightedFile" class="cmd"&gt;
+    &lt;div class="cmd-input-row"&gt;
+        &lt;span class="cmd-input-icon" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="cmd-input" placeholder="Go to file…" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="cmd-list cmd-list-sorted"&gt;
+        &lt;BhCommandEmpty class="cmd-empty"&gt;No matching files.&lt;/BhCommandEmpty&gt;
+        @foreach (var file in files)
+        {
+            &lt;BhCommandItem Value="@file" OnSelect='@(() =&gt; Run($"Open {file}"))' class="cmd-item"&gt;
+                &lt;Template Context="highlighted"&gt;
+                    &lt;span class="cmd-item-icon" aria-hidden="true"&gt;@(file.EndsWith(".razor") ? "🧩" : "📄")&lt;/span&gt;
+                    @file
+                    @if (highlighted)
+                    {
+                        &lt;kbd class="cmd-kbd cmd-item-enter" aria-hidden="true"&gt;↵&lt;/kbd&gt;
+                    }
+                &lt;/Template&gt;
+            &lt;/BhCommandItem&gt;
+        }
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="demo-output"&gt;Highlighted: &lt;strong&gt;@(highlightedFile ?? "(none)")&lt;/strong&gt; · Last command: &lt;strong&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private readonly string[] files =
+    [
+        "App.razor", "BhAnchorOptions.cs", "BhCommand.cs", "BhCommandDialog.cs",
+        "BhCommandItem.cs", "BhMenubar.cs", "BhToggleGroup.cs", "BhToolbar.cs",
+        "CommandPage.razor", "MenubarPage.razor", "Program.cs", "ToolbarPage.razor",
+    ];
+    private string? highlightedFile;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.cmd {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Focus stays in the input while navigating, so ring the whole card */
+.cmd:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cmd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.cmd-input-icon { color: #a1a1aa; }
+
+/* BhCommandInput renders &lt;input role="combobox"&gt; */
+.cmd-input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    border: 0;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9rem;
+    color: #18181b;
+}
+
+.cmd-input::placeholder { color: #a1a1aa; }
+
+/* BhCommandList renders role="listbox" */
+.cmd-list {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+    scroll-padding-block: 0.375rem;
+}
+
+/* BhCommandEmpty only renders while nothing matches */
+.cmd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+
+/* Groups get the hidden attribute when none of their items match */
+.cmd-group[hidden] { display: none; }
+
+.cmd-group [data-bh-command-group-heading] {
+    padding: 0.5rem 0.6rem 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    color: #27272a;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* data-selected marks the highlighted item (the aria-activedescendant target) */
+.cmd-item[data-selected] { background: #eff6ff; color: #1d4ed8; }
+.cmd-item[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+
+.cmd-item-icon { width: 1.25rem; flex-shrink: 0; text-align: center; }
+
+.cmd-item-shortcut {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #71717a;
+}
+
+.cmd-item[data-selected] .cmd-item-shortcut { color: #60a5fa; }
+
+/* BhCommandSeparator is removed while searching */
+.cmd-separator { height: 1px; margin: 0.375rem -0.375rem; background: #e4e4e7; }
+
+.cmd-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.3rem;
+    border: 1px solid #e4e4e7;
+    border-bottom-width: 2px;
+    border-radius: 0.3rem;
+    background: #fafafa;
+    font-family: inherit;
+    font-size: 0.68rem;
+    color: #52525b;
+}
+
+/* Sort="true" ranks results with the CSS order property —
+   the list (and group item containers) must be flex columns */
+.cmd-list-sorted { display: flex; flex-direction: column; }
+
+.cmd-item-enter { margin-left: auto; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhCommand Label="Go to file" Sort="true" Loop="true" @bind-Value="highlightedFile" class="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition focus-within:border-blue-600 focus-within:ring-3 focus-within:ring-blue-600/15"&gt;
+    &lt;div class="flex items-center gap-2 border-b border-zinc-200 px-3.5"&gt;
+        &lt;span class="text-zinc-400" aria-hidden="true"&gt;⌕&lt;/span&gt;
+        &lt;BhCommandInput AutoFocus="false" class="h-11 min-w-0 flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400" placeholder="Go to file…" /&gt;
+    &lt;/div&gt;
+    &lt;BhCommandList class="flex max-h-72 scroll-py-1.5 flex-col overflow-y-auto overscroll-contain p-1.5"&gt;
+        &lt;BhCommandEmpty class="px-4 py-8 text-center text-sm text-zinc-500"&gt;No matching files.&lt;/BhCommandEmpty&gt;
+        @foreach (var file in files)
+        {
+            &lt;BhCommandItem Value="@file" OnSelect='@(() =&gt; Run($"Open {file}"))' class="flex cursor-pointer select-none items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-zinc-800 data-selected:bg-blue-50 data-selected:text-blue-700 data-disabled:cursor-not-allowed data-disabled:opacity-40"&gt;
+                &lt;Template Context="highlighted"&gt;
+                    &lt;span class="w-5 shrink-0 text-center" aria-hidden="true"&gt;@(file.EndsWith(".razor") ? "🧩" : "📄")&lt;/span&gt;
+                    @file
+                    @if (highlighted)
+                    {
+                        &lt;kbd class="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded border border-b-2 border-zinc-200 bg-zinc-50 px-1 font-sans text-[0.68rem] text-zinc-600" aria-hidden="true"&gt;↵&lt;/kbd&gt;
+                    }
+                &lt;/Template&gt;
+            &lt;/BhCommandItem&gt;
+        }
+    &lt;/BhCommandList&gt;
+&lt;/BhCommand&gt;
+
+&lt;span class="text-sm text-zinc-500"&gt;Highlighted: &lt;strong class="text-zinc-900"&gt;@(highlightedFile ?? "(none)")&lt;/strong&gt; · Last command: &lt;strong class="text-zinc-900"&gt;@(lastCommand ?? "(none)")&lt;/strong&gt;&lt;/span&gt;
+
+@code {
+    private readonly string[] files =
+    [
+        "App.razor", "BhAnchorOptions.cs", "BhCommand.cs", "BhCommandDialog.cs",
+        "BhCommandItem.cs", "BhMenubar.cs", "BhToggleGroup.cs", "BhToolbar.cs",
+        "CommandPage.razor", "MenubarPage.razor", "Program.cs", "ToolbarPage.razor",
+    ];
+    private string? highlightedFile;
+    private string? lastCommand;
+
+    private void Run(string command) =&gt; lastCommand = command;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="combobox.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Combobox</span>
+        </a>
+            <a class="next" href="data-interactive.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">DataInteractive</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

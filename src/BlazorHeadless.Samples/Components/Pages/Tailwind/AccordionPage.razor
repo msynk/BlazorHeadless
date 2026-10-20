@@ -17,10 +17,11 @@
         <LiveContent>
             <BhAccordion DefaultValue="item-1" class="w-full overflow-hidden rounded-lg border border-zinc-200">
                 <BhAccordionItem Value="item-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        What is BlazorHeadless?
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            What is BlazorHeadless?
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -31,10 +32,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="item-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        Why headless?
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            Why headless?
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -44,10 +46,11 @@
                 </BhAccordionItem>
 
                 <BhAccordionItem Value="item-3" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        How do I style it?
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            How do I style it?
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -64,20 +67,22 @@
         <LiveContent>
             <BhAccordion Type="BhAccordionType.Multiple" class="w-full overflow-hidden rounded-lg border border-zinc-200">
                 <BhAccordionItem Value="faq-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        Can I open multiple panels?
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            Can I open multiple panels?
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">Yes — every panel is independent. Try opening both!</div>
                     </BhAccordionContent>
                 </BhAccordionItem>
                 <BhAccordionItem Value="faq-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        Does this one close when I open another?
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            Does this one close when I open another?
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">No — both can be open at once.</div>
@@ -92,20 +97,22 @@
         <LiveContent>
             <BhAccordion class="w-full overflow-hidden rounded-lg border border-zinc-200">
                 <BhAccordionItem Value="d-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        I am enabled
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            I am enabled
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">This item works normally.</div>
                     </BhAccordionContent>
                 </BhAccordionItem>
                 <BhAccordionItem Value="d-2" Disabled="true" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                        Context="t">
-                        I am disabled
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                    <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                        <Template Context="t">
+                            I am disabled
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhAccordionTrigger>
                     <BhAccordionContent>
                         <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">You should not be able to open this.</div>
@@ -129,20 +136,22 @@
 
                 <BhAccordion Value="@controlledValue" OnValueChange="v => controlledValue = v" class="w-full overflow-hidden rounded-lg border border-zinc-200">
                     <BhAccordionItem Value="ctrl-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                            Context="t">
-                            Panel 1
-                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                            <Template Context="t">
+                                Panel 1
+                                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                            </Template>
                         </BhAccordionTrigger>
                         <BhAccordionContent>
                             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">Controlled by external state.</div>
                         </BhAccordionContent>
                     </BhAccordionItem>
                     <BhAccordionItem Value="ctrl-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-                        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                            Context="t">
-                            Panel 2
-                            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                            <Template Context="t">
+                                Panel 2
+                                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                            </Template>
                         </BhAccordionTrigger>
                         <BhAccordionContent>
                             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">This panel is toggled by the button above.</div>
@@ -165,10 +174,11 @@
     private const string _basicCode = """
 <BhAccordion DefaultValue="item-1" class="w-full overflow-hidden rounded-lg border border-zinc-200">
     <BhAccordionItem Value="item-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            What is BlazorHeadless?
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                What is BlazorHeadless?
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -179,10 +189,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="item-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            Why headless?
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                Why headless?
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -192,10 +203,11 @@
     </BhAccordionItem>
 
     <BhAccordionItem Value="item-3" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            How do I style it?
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                How do I style it?
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">
@@ -209,20 +221,22 @@
     private const string _multipleCode = """
 <BhAccordion Type="BhAccordionType.Multiple" class="w-full overflow-hidden rounded-lg border border-zinc-200">
     <BhAccordionItem Value="faq-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            Can I open multiple panels?
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                Can I open multiple panels?
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">Yes — every panel is independent. Try opening both!</div>
         </BhAccordionContent>
     </BhAccordionItem>
     <BhAccordionItem Value="faq-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            Does this one close when I open another?
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                Does this one close when I open another?
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">No — both can be open at once.</div>
@@ -234,20 +248,22 @@
     private const string _disabledCode = """
 <BhAccordion class="w-full overflow-hidden rounded-lg border border-zinc-200">
     <BhAccordionItem Value="d-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            I am enabled
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                I am enabled
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">This item works normally.</div>
         </BhAccordionContent>
     </BhAccordionItem>
     <BhAccordionItem Value="d-2" Disabled="true" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                            Context="t">
-            I am disabled
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+        <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+            <Template Context="t">
+                I am disabled
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhAccordionTrigger>
         <BhAccordionContent>
             <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">You should not be able to open this.</div>
@@ -268,20 +284,22 @@
 
     <BhAccordion Value="@controlledValue" OnValueChange="v => controlledValue = v" class="w-full overflow-hidden rounded-lg border border-zinc-200">
         <BhAccordionItem Value="ctrl-1" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-            <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                Context="t">
-                Panel 1
-                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                <Template Context="t">
+                    Panel 1
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </Template>
             </BhAccordionTrigger>
             <BhAccordionContent>
                 <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">Controlled by external state.</div>
             </BhAccordionContent>
         </BhAccordionItem>
         <BhAccordionItem Value="ctrl-2" class="border-b border-zinc-200 last:border-b-0 data-disabled:bg-zinc-50">
-            <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none"
-                                Context="t">
-                Panel 2
-                <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+            <BhAccordionTrigger class="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-5 py-4 text-base font-medium outline-none box-border hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 data-state-open:bg-zinc-100 data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:pointer-events-none">
+                <Template Context="t">
+                    Panel 2
+                    <span class="@($"text-zinc-500 transition-transform duration-200 {(t.IsOpen ? "rotate-180" : "")}")">▾</span>
+                </Template>
             </BhAccordionTrigger>
             <BhAccordionContent>
                 <div class="border-t border-zinc-200 px-5 py-3.5 text-sm text-zinc-500">This panel is toggled by the button above.</div>

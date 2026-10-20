@@ -4,173 +4,155 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless Transition component that manages CSS class-based enter/leave
-/// animations. Keeps the element rendered during the leave phase so the exit
-/// animation can play, then unmounts it.
+/// A headless Transition that animates its element in and out — with CSS class
+/// lists (Tailwind style) and/or data attributes (plain CSS) — and keeps it
+/// rendered until the leave transition has finished.
 ///
-/// <para><b>How it works:</b></para>
-/// <list type="bullet">
-///   <item><b>Enter</b>: element renders → <c>Enter</c> + <c>EnterFrom</c> applied → next frame: swap to <c>EnterTo</c> → after transition: apply <c>Entered</c>.</item>
-///   <item><b>Leave</b>: <c>Leave</c> + <c>LeaveFrom</c> applied → next frame: swap to <c>LeaveTo</c> → after transition: element unmounts.</item>
-/// </list>
+/// <para><b>Classes:</b> <c>Enter</c> + <c>EnterFrom</c> on the first frame → <c>EnterTo</c>
+/// until the transition ends → <c>Entered</c>. Leave mirrors it.</para>
+/// <para><b>Data attributes:</b> <c>data-transition</c>, <c>data-enter</c> /
+/// <c>data-leave</c> while running and <c>data-closed</c> for the hidden state, so
+/// <c>.panel { transition: opacity .2s } .panel[data-closed] { opacity: 0 }</c> just works.</para>
+/// <para>Interrupting a transition (toggling <see cref="Show"/> mid-way) reverses it
+/// smoothly; reduced-motion users get instant changes when your CSS disables the motion.</para>
 ///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup.</b></para>
-///
-/// <para><b>Usage:</b></para>
 /// <code>
 /// &lt;BhTransition Show="@isOpen"
-///              Enter="transition duration-200 ease-out"
-///              EnterFrom="opacity-0 scale-95"
-///              EnterTo="opacity-100 scale-100"
-///              Leave="transition duration-150 ease-in"
-///              LeaveFrom="opacity-100 scale-100"
-///              LeaveTo="opacity-0 scale-95"&gt;
+///              Enter="transition duration-200 ease-out" EnterFrom="opacity-0 scale-95" EnterTo="opacity-100 scale-100"
+///              Leave="transition duration-150 ease-in" LeaveFrom="opacity-100 scale-100" LeaveTo="opacity-0 scale-95"&gt;
 ///     &lt;div class="panel"&gt;Content&lt;/div&gt;
 /// &lt;/BhTransition&gt;
 /// </code>
 /// </summary>
 public class BhTransition : BhComponentBase
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
+    private enum Phase { Hidden, Entering, Shown, Leaving }
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    private Phase _phase = Phase.Hidden;
+    private bool _pendingJs;
+    private int _run;
 
-    /// <summary>Whether the content should be shown. Drives the enter/leave lifecycle.</summary>
+    /// <summary>Whether the content is shown. Drives the enter / leave lifecycle.</summary>
     [Parameter]
     public bool Show { get; set; }
 
-    /// <summary>Whether to run the enter transition on initial mount when <see cref="Show"/> is true. Defaults to false.</summary>
+    /// <summary>Run the enter transition on first render when <see cref="Show"/> is true. Default: false.</summary>
     [Parameter]
     public bool Appear { get; set; }
 
-    /// <summary>CSS class(es) applied during the entire enter phase.</summary>
+    /// <summary>Remove the element from the DOM when hidden (default). When false it stays with the <c>hidden</c> attribute.</summary>
     [Parameter]
-    public string? Enter { get; set; }
+    public bool Unmount { get; set; } = true;
 
-    /// <summary>CSS class(es) applied on the first frame of enter (the "from" state).</summary>
-    [Parameter]
-    public string? EnterFrom { get; set; }
+    /// <summary>Classes applied during the whole enter phase.</summary>
+    [Parameter] public string? Enter { get; set; }
 
-    /// <summary>CSS class(es) applied on the second frame of enter (the "to" state, triggers the transition).</summary>
-    [Parameter]
-    public string? EnterTo { get; set; }
+    /// <summary>Classes applied on the first frame of enter.</summary>
+    [Parameter] public string? EnterFrom { get; set; }
 
-    /// <summary>CSS class(es) applied after the enter transition completes and while the element is shown.</summary>
-    [Parameter]
-    public string? Entered { get; set; }
+    /// <summary>Classes applied from the second frame of enter until it ends.</summary>
+    [Parameter] public string? EnterTo { get; set; }
 
-    /// <summary>CSS class(es) applied during the entire leave phase.</summary>
-    [Parameter]
-    public string? Leave { get; set; }
+    /// <summary>Classes applied once entered, while shown.</summary>
+    [Parameter] public string? Entered { get; set; }
 
-    /// <summary>CSS class(es) applied on the first frame of leave (the "from" state).</summary>
-    [Parameter]
-    public string? LeaveFrom { get; set; }
+    /// <summary>Classes applied during the whole leave phase.</summary>
+    [Parameter] public string? Leave { get; set; }
 
-    /// <summary>CSS class(es) applied on the second frame of leave (the "to" state, triggers the transition).</summary>
-    [Parameter]
-    public string? LeaveTo { get; set; }
+    /// <summary>Classes applied on the first frame of leave.</summary>
+    [Parameter] public string? LeaveFrom { get; set; }
+
+    /// <summary>Classes applied from the second frame of leave until it ends.</summary>
+    [Parameter] public string? LeaveTo { get; set; }
 
     /// <summary>Fires before the enter transition starts.</summary>
-    [Parameter]
-    public EventCallback BeforeEnter { get; set; }
+    [Parameter] public EventCallback BeforeEnter { get; set; }
 
     /// <summary>Fires after the enter transition completes.</summary>
-    [Parameter]
-    public EventCallback AfterEnter { get; set; }
+    [Parameter] public EventCallback AfterEnter { get; set; }
 
     /// <summary>Fires before the leave transition starts.</summary>
-    [Parameter]
-    public EventCallback BeforeLeave { get; set; }
+    [Parameter] public EventCallback BeforeLeave { get; set; }
 
-    /// <summary>Fires after the leave transition completes (element is about to unmount).</summary>
-    [Parameter]
-    public EventCallback AfterLeave { get; set; }
+    /// <summary>Fires after the leave transition completes.</summary>
+    [Parameter] public EventCallback AfterLeave { get; set; }
 
-    /// <summary>Child content to transition.</summary>
+    /// <summary>The transitioned content.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    // ── State ─────────────────────────────────────────────────────────────────
-
-    private enum Phase { Hidden, Entering, Shown, Leaving }
-
-    private Phase _phase = Phase.Hidden;
-    private bool _previousShow;
-    private bool _firstRender = true;
-    private ElementReference _elementRef;
-    private bool _hasElementRef;
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private BhTransitionClasses Classes => new()
+    {
+        Enter = Enter,
+        EnterFrom = EnterFrom,
+        EnterTo = EnterTo,
+        Entered = Entered,
+        Leave = Leave,
+        LeaveFrom = LeaveFrom,
+        LeaveTo = LeaveTo,
+    };
 
     protected override void OnInitialized()
     {
-        _previousShow = Show;
         if (Show)
         {
             _phase = Appear ? Phase.Entering : Phase.Shown;
+            _pendingJs = Appear;
         }
     }
 
     protected override void OnParametersSet()
     {
-        if (Show && !_previousShow)
+        if (Show && _phase is Phase.Hidden or Phase.Leaving)
         {
-            // Transition from hidden → entering.
             _phase = Phase.Entering;
+            _pendingJs = true;
         }
-        else if (!Show && _previousShow)
+        else if (!Show && _phase is Phase.Shown or Phase.Entering)
         {
-            // Transition from shown → leaving.
             _phase = Phase.Leaving;
+            _pendingJs = true;
         }
-
-        _previousShow = Show;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _firstRender = firstRender;
+        if (!_pendingJs) return;
+        _pendingJs = false;
+        var run = ++_run;
 
-        if (_phase == Phase.Entering && _hasElementRef)
+        if (_phase == Phase.Entering)
         {
             await BeforeEnter.InvokeAsync();
-            await Interop.TransitionEnterAsync(_elementRef, Enter, EnterFrom, EnterTo, Entered);
+            var completed = await Interop.TransitionEnterAsync(ComponentId, Classes);
+            if (run != _run || _phase != Phase.Entering) return;
             _phase = Phase.Shown;
-            await AfterEnter.InvokeAsync();
+            if (completed) await AfterEnter.InvokeAsync();
             StateHasChanged();
         }
-        else if (_phase == Phase.Leaving && _hasElementRef)
+        else if (_phase == Phase.Leaving)
         {
             await BeforeLeave.InvokeAsync();
-            await Interop.TransitionLeaveAsync(_elementRef, Leave, LeaveFrom, LeaveTo, Entered);
+            var completed = await Interop.TransitionLeaveAsync(ComponentId, Classes);
+            if (run != _run || _phase != Phase.Leaving) return;
             _phase = Phase.Hidden;
-            await AfterLeave.InvokeAsync();
+            if (completed) await AfterLeave.InvokeAsync();
             StateHasChanged();
         }
     }
 
-    // ── Rendering ────────────────────────────────────────────────────────────
-
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        // Don't render anything when fully hidden.
-        if (_phase == Phase.Hidden)
-            return;
+        if (_phase == Phase.Hidden && Unmount) return;
 
         builder.OpenElement(0, Tag);
         builder.AddAttribute(10, "id", ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        builder.AddElementReferenceCapture(30, e =>
-        {
-            _elementRef = e;
-            _hasElementRef = true;
-            Ref?.Invoke(e);
-        });
-
+        if (_phase == Phase.Hidden)
+            builder.AddAttribute(25, "hidden", true);
+        builder.AddElementReferenceCapture(30, CaptureElement);
         builder.AddContent(40, ChildContent);
         builder.CloseElement();
     }
@@ -178,7 +160,25 @@ public class BhTransition : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        SetDataState(attrs, _phase == Phase.Shown || _phase == Phase.Entering);
+        SetDataState(attrs, _phase is Phase.Shown or Phase.Entering);
+
+        // First paint of an enter already shows the "from" state, so there is
+        // no flash of the final state before the runtime takes over.
+        switch (_phase)
+        {
+            case Phase.Entering:
+                attrs["class"] = BhAttributeUtilities.JoinClasses(Enter, EnterFrom);
+                attrs["data-closed"] = "";
+                attrs["data-enter"] = "";
+                attrs["data-transition"] = "";
+                break;
+            case Phase.Shown when !string.IsNullOrWhiteSpace(Entered):
+                attrs["class"] = Entered!;
+                break;
+            case Phase.Hidden:
+                attrs["data-closed"] = "";
+                break;
+        }
         return attrs;
     }
 }

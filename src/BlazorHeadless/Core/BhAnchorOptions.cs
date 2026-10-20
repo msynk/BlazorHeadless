@@ -1,28 +1,32 @@
 namespace BlazorHeadless;
 
 /// <summary>
-/// Configuration for anchoring a floating panel (dropdown, popover, etc.)
-/// relative to a reference element (button, trigger).
+/// Configuration for anchoring a floating panel (dropdown, popover, tooltip …)
+/// relative to a reference element (button, trigger) or a point.
 ///
 /// <para>
-/// Mirrors the Headless UI <c>anchor</c> prop API. Supports placement strings
-/// like <c>"bottom"</c>, <c>"bottom start"</c>, <c>"top end"</c>, etc., plus
-/// gap, offset, and padding values.
+/// Mirrors the Headless UI <c>anchor</c> prop and the Floating UI middleware set:
+/// placement (<see cref="To"/>), gap, offset, viewport padding, flip, shift,
+/// size (exposed as CSS variables), arrow positioning and hide-when-detached.
 /// </para>
 ///
 /// <para><b>Usage:</b></para>
 /// <code>
 /// &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"&gt;
-///     ...
-/// &lt;/BhMenuItems&gt;
+/// </code>
+/// Or with the implicit string conversion:
+/// <code>
+/// &lt;BhMenuItems Anchor="@("bottom start")"&gt;
 /// </code>
 ///
-/// Or using the shorthand string constructor:
-/// <code>
-/// &lt;BhMenuItems Anchor="@BhAnchorOptions.Parse("bottom start")"&gt;
-///     ...
-/// &lt;/BhMenuItems&gt;
-/// </code>
+/// <para><b>CSS variables set on the floating element:</b></para>
+/// <list type="bullet">
+///   <item><c>--bh-anchor-width</c> / <c>--bh-anchor-height</c> — size of the reference (<c>--button-width</c> is an alias).</item>
+///   <item><c>--bh-available-width</c> / <c>--bh-available-height</c> — space left on the chosen side (use for <c>max-height</c>).</item>
+///   <item><c>--bh-transform-origin</c> — origin pointing at the reference, for scale animations.</item>
+///   <item><c>--anchor-gap</c>, <c>--anchor-offset</c>, <c>--anchor-padding</c> — the configured values.</item>
+/// </list>
+/// <para>Data attributes: <c>data-side</c>, <c>data-align</c>, <c>data-anchor</c>, <c>data-reference-hidden</c>.</para>
 /// </summary>
 public sealed class BhAnchorOptions
 {
@@ -30,54 +34,62 @@ public sealed class BhAnchorOptions
     /// Where to position the floating panel relative to the reference element.
     /// Use <c>"top"</c>, <c>"right"</c>, <c>"bottom"</c>, or <c>"left"</c> to center
     /// along the appropriate edge. Combine with <c>"start"</c> or <c>"end"</c> for
-    /// corner alignment, e.g. <c>"bottom start"</c>, <c>"top end"</c>.
+    /// corner alignment, e.g. <c>"bottom start"</c>, <c>"top end"</c>. <c>start</c> /
+    /// <c>end</c> follow the writing direction (they flip in RTL).
     /// Default: <c>"bottom"</c>.
     /// </summary>
     public string To { get; set; } = "bottom";
 
-    /// <summary>
-    /// The space (in pixels) between the reference element and the floating panel.
-    /// Equivalent to the <c>--anchor-gap</c> CSS variable in Headless UI.
-    /// Default: 0.
-    /// </summary>
+    /// <summary>The space (px) between the reference element and the floating panel. Default: 0.</summary>
     public int Gap { get; set; }
 
-    /// <summary>
-    /// The distance (in pixels) the floating panel should be nudged along the
-    /// alignment axis from its natural position. Equivalent to the
-    /// <c>--anchor-offset</c> CSS variable in Headless UI.
-    /// Default: 0.
-    /// </summary>
+    /// <summary>The distance (px) the floating panel is nudged along the alignment axis. Default: 0.</summary>
     public int Offset { get; set; }
 
-    /// <summary>
-    /// The minimum space (in pixels) between the floating panel and the viewport
-    /// edges. Equivalent to the <c>--anchor-padding</c> CSS variable in Headless UI.
-    /// Default: 8.
-    /// </summary>
+    /// <summary>The minimum space (px) between the floating panel and the viewport edges. Default: 8.</summary>
     public int Padding { get; set; } = 8;
 
-    /// <summary>
-    /// Creates an <see cref="BhAnchorOptions"/> from a placement string.
-    /// </summary>
-    /// <param name="placement">
-    /// A placement string like <c>"bottom"</c>, <c>"bottom start"</c>, <c>"top end"</c>.
-    /// </param>
+    /// <summary>Flip to the opposite side when there isn't enough room. Default: true.</summary>
+    public bool Flip { get; set; } = true;
+
+    /// <summary>Shift along the alignment axis to stay inside the viewport. Default: true.</summary>
+    public bool Shift { get; set; } = true;
+
+    /// <summary>Make the panel at least as wide as the reference element. Default: false.</summary>
+    public bool MatchReferenceWidth { get; set; }
+
+    /// <summary>Hide the panel (<c>visibility:hidden</c>) when the reference scrolls out of view. Default: false.</summary>
+    public bool HideWhenDetached { get; set; }
+
+    /// <summary>Minimum distance (px) between an arrow and the panel's corners. Default: 0.</summary>
+    public int ArrowPadding { get; set; }
+
+    /// <summary>Creates an <see cref="BhAnchorOptions"/> from a placement string.</summary>
+    /// <param name="placement">A placement string like <c>"bottom"</c>, <c>"bottom start"</c>, <c>"top end"</c>.</param>
     public static BhAnchorOptions Parse(string placement) => new() { To = placement };
 
-    /// <summary>
-    /// Implicit conversion from string to <see cref="BhAnchorOptions"/> for ergonomic usage.
-    /// </summary>
+    /// <summary>Implicit conversion from a placement string.</summary>
     public static implicit operator BhAnchorOptions(string placement) => Parse(placement);
 
-    /// <summary>
-    /// Converts to the anonymous object shape expected by the JS interop layer.
-    /// </summary>
-    internal object ToJsOptions() => new
+    /// <summary>Returns a copy with <see cref="To"/> replaced.</summary>
+    public BhAnchorOptions WithPlacement(string placement)
     {
-        to = To,
-        gap = Gap,
-        offset = Offset,
-        padding = Padding,
+        var copy = (BhAnchorOptions)MemberwiseClone();
+        copy.To = placement;
+        return copy;
+    }
+
+    internal Dictionary<string, object?> ToJs(string? arrowId = null) => new()
+    {
+        ["to"] = To,
+        ["gap"] = Gap,
+        ["offset"] = Offset,
+        ["padding"] = Padding,
+        ["flip"] = Flip,
+        ["shift"] = Shift,
+        ["matchWidth"] = MatchReferenceWidth,
+        ["hideWhenDetached"] = HideWhenDetached,
+        ["arrowPadding"] = ArrowPadding,
+        ["arrowId"] = arrowId,
     };
 }

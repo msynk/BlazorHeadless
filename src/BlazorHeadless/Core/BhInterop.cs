@@ -1,294 +1,349 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// Lazy wrapper around the library's JS interop module. Imported once per
-/// circuit and reused for the lifetime of the application.
+/// Thin, typed wrapper around the library's JS runtime (<c>blazor-headless.js</c>).
+/// The module is imported lazily once per scope (circuit / WebAssembly app) and
+/// reused. Every call is resilient to the circuit disconnecting and to running
+/// without a browser (prerendering, unit tests), so components can call it from
+/// <c>OnAfterRenderAsync</c> and <c>DisposeAsync</c> without guarding.
 ///
 /// <para>
-/// Components don't typically use this directly. Each component family (Dialog,
-/// Popover, future Combobox positioning) exposes a higher-level method that
-/// internally calls into this service.
+/// Components normally use higher-level helpers such as
+/// <see cref="BhFloatingController"/>; the methods here are public so design
+/// systems built on BlazorHeadless can reuse the same primitives.
 /// </para>
 /// </summary>
-public sealed class BhInterop : IAsyncDisposable
+public sealed class BhInterop : IAsyncDisposable, IDisposable
 {
-    private const string ModulePath = "./_content/BlazorHeadless/headlessui.js";
+    private const string ModulePath = "./_content/BlazorHeadless/blazor-headless.js";
+    private const DynamicallyAccessedMemberTypes JsonSerialized =
+        DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties;
 
-    private readonly Lazy<Task<IJSObjectReference>> _module;
+    private readonly IJSRuntime _js;
+    private Task<IJSObjectReference>? _module;
+    private bool _disposed;
 
+    /// <summary>Creates the interop wrapper. Registered as a scoped service by <c>AddBlazorHeadless()</c>.</summary>
     public BhInterop(IJSRuntime js)
     {
-        _module = new Lazy<Task<IJSObjectReference>>(
-            () => js.InvokeAsync<IJSObjectReference>("import", ModulePath).AsTask());
+        _js = js;
     }
 
-    /// <summary>
-    /// Locks focus inside <paramref name="panel"/>, locks body scroll, and marks
-    /// background siblings <c>inert</c>. Returns a handle that must be passed to
-    /// <see cref="DialogUnlockAsync"/> to undo.
-    /// </summary>
-    /// <param name="panel">The dialog panel element (the <c>role="dialog"</c> surface).</param>
-    /// <param name="initialFocus">Optional element that should receive focus on lock.</param>
-    /// <param name="returnFocus">Optional element to receive focus on unlock; defaults to whatever was active at lock time.</param>
-    public async Task<int> DialogLockAsync(
-        ElementReference panel,
-        ElementReference? initialFocus = null,
-        ElementReference? returnFocus = null)
-    {
-        var module = await _module.Value;
-        var options = new
-        {
-            initialFocus = (object?)initialFocus,
-            returnFocus = (object?)returnFocus,
-        };
-        return await module.InvokeAsync<int>("dialog.lock", panel, options);
-    }
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<IJSRuntime, BhInterop> Fallback = new();
 
-    /// <summary>Releases the locks and restores the captured focus target.</summary>
-    public async ValueTask DialogUnlockAsync(int handle)
-    {
-        if (handle <= 0) return;
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("dialog.unlock", handle);
-    }
+    /// <summary>Returns the registered instance, or a shared one per JS runtime when <c>AddBlazorHeadless()</c> wasn't called.</summary>
+    internal static BhInterop Resolve(IServiceProvider services, IJSRuntime js)
+        => (BhInterop?)services.GetService(typeof(BhInterop)) ?? Fallback.GetValue(js, static r => new BhInterop(r));
 
-    // ── FocusTrap ─────────────────────────────────────────────────────────────
+    private Task<IJSObjectReference> Module => _module ??= _js.InvokeAsync<IJSObjectReference>("import", ModulePath).AsTask();
 
-    /// <summary>
-    /// Traps keyboard focus inside <paramref name="container"/> by intercepting
-    /// Tab/Shift+Tab and cycling through focusable elements. Unlike
-    /// <see cref="DialogLockAsync"/>, this does NOT lock body scroll or mark
-    /// siblings inert — it only manages focus cycling.
-    /// Returns a handle that must be passed to <see cref="FocusTrapUnlockAsync"/> to release.
-    /// </summary>
-    /// <param name="container">The container element to trap focus within.</param>
-    /// <param name="initialFocus">Optional element that should receive focus on lock.</param>
-    /// <param name="returnFocus">Optional element to receive focus on unlock; defaults to whatever was active at lock time.</param>
-    public async Task<int> FocusTrapLockAsync(
-        ElementReference container,
-        ElementReference? initialFocus = null,
-        ElementReference? returnFocus = null)
+    private async ValueTask<T> InvokeAsync<[DynamicallyAccessedMembers(JsonSerialized)] T>(string identifier, params object?[] args)
     {
-        var module = await _module.Value;
-        var options = new
-        {
-            initialFocus = (object?)initialFocus,
-            returnFocus = (object?)returnFocus,
-        };
-        return await module.InvokeAsync<int>("focusTrap.lock", container, options);
-    }
-
-    /// <summary>Releases the focus trap and restores the captured focus target.</summary>
-    public async ValueTask FocusTrapUnlockAsync(int handle)
-    {
-        if (handle <= 0) return;
+        if (_disposed) return default!;
         try
         {
-            var module = await _module.Value;
-            await module.InvokeVoidAsync("focusTrap.unlock", handle);
+            var module = await Module;
+            if (module is null) return default!;
+            return await module.InvokeAsync<T>(identifier, args);
         }
-        catch (JSDisconnectedException) { /* circuit gone */ }
+        catch (Exception ex) when (IsBenign(ex))
+        {
+            return default!;
+        }
     }
 
-    // ── Popover ──────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Moves focus to the first focusable element inside <paramref name="panel"/>.
-    /// Returns a reference to the element that had focus before the call, so the
-    /// caller can restore it when the popover closes.
-    /// </summary>
-    public async Task<IJSObjectReference?> PopoverFocusPanelAsync(ElementReference panel)
+    private async ValueTask InvokeVoidAsync(string identifier, params object?[] args)
     {
-        var module = await _module.Value;
-        return await module.InvokeAsync<IJSObjectReference?>("popover.focusPanel", panel);
-    }
-
-    /// <summary>Restores focus to the element captured by <see cref="PopoverFocusPanelAsync"/>.</summary>
-    public async ValueTask PopoverRestoreFocusAsync(IJSObjectReference? element)
-    {
-        if (element is null) return;
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("popover.restoreFocus", element);
-    }
-
-    // ── Anchor / Positioning ─────────────────────────────────────────────────
-
-    /// <summary>
-    /// Starts positioning the <paramref name="floating"/> element relative to the
-    /// <paramref name="reference"/> element. Sets up auto-update listeners for
-    /// scroll, resize, and element size changes.
-    /// Returns a handle that must be passed to <see cref="AnchorStopAsync"/> to clean up.
-    /// </summary>
-    /// <param name="reference">The trigger/button element to anchor against.</param>
-    /// <param name="floating">The floating panel element to position.</param>
-    /// <param name="options">Positioning options (placement, gap, offset, padding).</param>
-    public async Task<int> AnchorStartAsync(
-        ElementReference reference,
-        ElementReference floating,
-        BhAnchorOptions options)
-    {
-        var module = await _module.Value;
-        return await module.InvokeAsync<int>("anchor.start", reference, floating, options.ToJsOptions());
-    }
-
-    /// <summary>
-    /// Starts positioning using element IDs instead of ElementReferences.
-    /// More reliable when element refs may not be captured yet.
-    /// </summary>
-    public async Task<int> AnchorStartByIdAsync(
-        string referenceId,
-        string floatingId,
-        BhAnchorOptions options)
-    {
-        var module = await _module.Value;
-        return await module.InvokeAsync<int>("anchor.start", referenceId, floatingId, options.ToJsOptions());
-    }
-
-    /// <summary>
-    /// Stops auto-updating and cleans up listeners for the given anchor handle.
-    /// </summary>
-    public async ValueTask AnchorStopAsync(int handle)
-    {
-        if (handle <= 0) return;
+        if (_disposed) return;
         try
         {
-            var module = await _module.Value;
-            await module.InvokeVoidAsync("anchor.stop", handle);
+            var module = await Module;
+            if (module is null) return;
+            await module.InvokeVoidAsync(identifier, args);
         }
-        catch (JSDisconnectedException) { /* circuit gone */ }
-    }
-
-    /// <summary>
-    /// Forces an immediate reposition for the given anchor handle.
-    /// </summary>
-    public async ValueTask AnchorUpdateAsync(int handle)
-    {
-        if (handle <= 0) return;
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("anchor.update", handle);
-    }
-
-    // ── Context Menu / point positioning ────────────────────────────────────
-
-    /// <summary>
-    /// Positions the floating element identified by <paramref name="floatingId"/>
-    /// at the viewport coordinates (<paramref name="x"/>, <paramref name="y"/>) with
-    /// collision handling so it stays inside the viewport. Sets <c>data-side</c>
-    /// and <c>data-align</c> on the element to reflect the resolved placement.
-    /// </summary>
-    /// <param name="floatingId">The id of the floating panel element to position.</param>
-    /// <param name="x">Viewport X coordinate (px), e.g. the pointer's clientX.</param>
-    /// <param name="y">Viewport Y coordinate (px), e.g. the pointer's clientY.</param>
-    /// <param name="padding">Minimum space (px) from the viewport edges.</param>
-    public async ValueTask ContextMenuPositionAsync(string floatingId, double x, double y, int padding = 8)
-    {
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("contextMenu.position", floatingId, x, y, new { padding });
-    }
-
-    /// <summary>
-    /// Clears the inline positioning styles applied by
-    /// <see cref="ContextMenuPositionAsync"/> for the given element id.
-    /// </summary>
-    public async ValueTask ContextMenuResetAsync(string floatingId)
-    {
-        try
+        catch (Exception ex) when (IsBenign(ex))
         {
-            var module = await _module.Value;
-            await module.InvokeVoidAsync("contextMenu.reset", floatingId);
         }
-        catch (JSDisconnectedException) { /* circuit gone */ }
-    }
-
-    // ── Portal ─────────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Moves the element with the given <paramref name="elementId"/> to a target
-    /// container (or the default body-level portal root). A placeholder is left
-    /// at the original position so the element can be restored later.
-    /// Returns a handle that must be passed to <see cref="PortalRestoreAsync"/>.
-    /// </summary>
-    /// <param name="elementId">The id of the element to teleport.</param>
-    /// <param name="targetId">Optional id of the target container. If null, uses the default portal root appended to body.</param>
-    public async Task<int> PortalMoveByIdAsync(string elementId, string? targetId = null)
-    {
-        var module = await _module.Value;
-        return await module.InvokeAsync<int>("portal.move", elementId, targetId);
     }
 
     /// <summary>
-    /// Moves the given element to a target container (or the default body-level
-    /// portal root). Returns a handle that must be passed to
-    /// <see cref="PortalRestoreAsync"/> to move the element back.
+    /// Exceptions that are expected when the browser is gone or not available
+    /// (a disconnected circuit, a cancelled call, a disposed runtime, calling
+    /// during static prerendering), plus JS errors: a failed DOM enhancement must
+    /// never tear down the circuit, so it is reported to the debugger and ignored.
     /// </summary>
-    /// <param name="element">The element to teleport.</param>
-    /// <param name="targetId">Optional id of the target container. If null, uses the default portal root appended to body.</param>
-    public async Task<int> PortalMoveAsync(ElementReference element, string? targetId = null)
+    private static bool IsBenign(Exception ex)
     {
-        var module = await _module.Value;
-        return await module.InvokeAsync<int>("portal.move", element, targetId);
-    }
-
-    /// <summary>
-    /// Restores the element to its original position in the DOM (before the placeholder).
-    /// </summary>
-    public async ValueTask PortalRestoreAsync(int handle)
-    {
-        if (handle <= 0) return;
-        try
+        switch (ex)
         {
-            var module = await _module.Value;
-            await module.InvokeVoidAsync("portal.restore", handle);
+            case JSDisconnectedException:
+            case OperationCanceledException:
+            case ObjectDisposedException:
+            case InvalidOperationException:
+                return true;
+            case JSException js:
+                System.Diagnostics.Debug.WriteLine($"[BlazorHeadless] JS error: {js.Message}");
+                return true;
+            default:
+                return false;
         }
-        catch (JSDisconnectedException) { /* circuit gone */ }
     }
 
-    // ── Transition ───────────────────────────────────────────────────────────
+    // ── Floating surfaces ────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Runs the CSS enter transition on <paramref name="element"/>.
-    /// Applies the class sequence: enter+enterFrom → (next frame) enterTo → (after transition) entered.
-    /// </summary>
-    public async ValueTask TransitionEnterAsync(
-        ElementReference element,
-        string? enter,
-        string? enterFrom,
-        string? enterTo,
-        string? entered)
+    /// <summary>Opens a floating surface (popover, menu, dialog …). Returns a handle, or 0 when unavailable.</summary>
+    public ValueTask<int> FloatingOpenAsync(object? dotNetRef, string contentId, IDictionary<string, object?> options)
+        => InvokeAsync<int>("floating.open", dotNetRef, contentId, options);
+
+    /// <summary>Re-applies positioning / branch ids for an open surface.</summary>
+    public ValueTask FloatingUpdateAsync(int handle, IDictionary<string, object?>? options = null)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("floating.update", handle, options);
+
+    /// <summary>Moves the virtual anchor point of an open surface (context menus).</summary>
+    public ValueTask FloatingSetPointAsync(int handle, double x, double y)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("floating.setPoint", handle, x, y);
+
+    /// <summary>Closes a floating surface, optionally waiting for its CSS exit animation.</summary>
+    public ValueTask FloatingCloseAsync(int handle, bool restoreFocus = true, bool waitForExit = true)
+        => handle <= 0
+            ? ValueTask.CompletedTask
+            : InvokeVoidAsync("floating.close", handle, new Dictionary<string, object?>
+            {
+                ["restoreFocus"] = restoreFocus,
+                ["waitForExit"] = waitForExit,
+            });
+
+    // ── Anchor positioning ───────────────────────────────────────────────────
+
+    /// <summary>Starts anchoring <paramref name="floatingId"/> to <paramref name="referenceId"/>.</summary>
+    public ValueTask<int> AnchorStartAsync(string referenceId, string floatingId, BhAnchorOptions options)
+        => InvokeAsync<int>("anchor.start", referenceId, floatingId, options.ToJs());
+
+    /// <summary>Stops an anchor handle and clears the inline positioning styles.</summary>
+    public ValueTask AnchorStopAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("anchor.stop", handle, true);
+
+    /// <summary>Forces an immediate reposition.</summary>
+    public ValueTask AnchorUpdateAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("anchor.update", handle);
+
+    // ── Focus ────────────────────────────────────────────────────────────────
+
+    /// <summary>Focuses the element with the given id.</summary>
+    public ValueTask<bool> FocusAsync(string id, bool preventScroll = true, bool select = false)
+        => InvokeAsync<bool>("focus.focus", id, preventScroll, select);
+
+    /// <summary>Focuses the first tabbable element inside the element with the given id.</summary>
+    public ValueTask<bool> FocusFirstAsync(string containerId, bool preventScroll = true)
+        => InvokeAsync<bool>("focus.focusFirst", containerId, preventScroll);
+
+    /// <summary>Focuses the last tabbable element inside the element with the given id.</summary>
+    public ValueTask<bool> FocusLastAsync(string containerId, bool preventScroll = true)
+        => InvokeAsync<bool>("focus.focusLast", containerId, preventScroll);
+
+    /// <summary>Moves focus to the next (or previous) tabbable element after the element with the given id.</summary>
+    public ValueTask<bool> FocusAdjacentAsync(string id, bool backwards = false)
+        => InvokeAsync<bool>("focus.focusAdjacent", id, backwards);
+
+    /// <summary>Returns whether the focused element is inside the element with the given id.</summary>
+    public ValueTask<bool> ContainsFocusAsync(string id)
+        => InvokeAsync<bool>("focus.contains", id);
+
+    /// <summary>Creates a focus scope (trap / loop / auto-focus / restore). Returns a handle.</summary>
+    public ValueTask<int> CreateFocusScopeAsync(string containerId, BhFocusScopeOptions options)
+        => InvokeAsync<int>("focus.createScope", containerId, options.ToJs());
+
+    /// <summary>Destroys a focus scope and optionally restores focus.</summary>
+    public ValueTask DestroyFocusScopeAsync(int handle, bool restoreFocus = true)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("focus.destroyScope", handle, restoreFocus);
+
+    // ── Modal ────────────────────────────────────────────────────────────────
+
+    /// <summary>Locks document scrolling (stack-aware). Pair with <see cref="UnlockScrollAsync"/>.</summary>
+    public ValueTask LockScrollAsync() => InvokeVoidAsync("modal.lockScroll");
+
+    /// <summary>Releases one scroll lock.</summary>
+    public ValueTask UnlockScrollAsync() => InvokeVoidAsync("modal.unlockScroll");
+
+    // ── Collections / DOM ────────────────────────────────────────────────────
+
+    /// <summary>Returns <c>[id, text]</c> pairs for the elements tagged <c>data-bh-item="key"</c>, in document order.</summary>
+    public ValueTask<string[][]?> CollectionOrderAsync(string key)
+        => InvokeAsync<string[][]?>("collection.order", key);
+
+    /// <summary>Scrolls the element into view within its nearest scrolling ancestor.</summary>
+    public ValueTask ScrollIntoViewAsync(string id)
+        => InvokeVoidAsync("dom.scrollIntoView", id, "nearest");
+
+    /// <summary>Scrolls a virtualized container so the item at <paramref name="index"/> becomes visible.</summary>
+    public ValueTask ScrollToIndexAsync(string containerId, int index, float itemSize, string? itemId)
+        => InvokeVoidAsync("dom.scrollToIndex", containerId, index, itemSize, itemId);
+
+    /// <summary>Clicks the element (keyboard activation of link-like items).</summary>
+    public ValueTask ClickAsync(string id) => InvokeVoidAsync("dom.click", id);
+
+    /// <summary>Returns the bounding client rect of an element.</summary>
+    public ValueTask<BhRect?> GetRectAsync(string id) => InvokeAsync<BhRect?>("dom.rect", id);
+
+    // ── Portal ───────────────────────────────────────────────────────────────
+
+    /// <summary>Moves the element to the portal root (or <paramref name="target"/>). Returns a handle.</summary>
+    public ValueTask<int> PortalMoveAsync(string elementId, string? target = null)
+        => InvokeAsync<int>("portal.move", elementId, (object?)target ?? true);
+
+    /// <summary>Moves a portalled element back to its original position.</summary>
+    public ValueTask PortalRestoreAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("portal.restore", handle);
+
+    // ── Presence / transitions ───────────────────────────────────────────────
+
+    /// <summary>Resolves once the element's running exit animation / transition has finished.</summary>
+    public ValueTask WaitForExitAsync(string id) => InvokeVoidAsync("presence.waitForExit", id);
+
+    /// <summary>Runs the class-based enter transition. Returns false when interrupted.</summary>
+    public ValueTask<bool> TransitionEnterAsync(string id, BhTransitionClasses classes)
+        => InvokeAsync<bool>("transition.enter", id, classes.ToJs());
+
+    /// <summary>Runs the class-based leave transition. Returns false when interrupted.</summary>
+    public ValueTask<bool> TransitionLeaveAsync(string id, BhTransitionClasses classes)
+        => InvokeAsync<bool>("transition.leave", id, classes.ToJs());
+
+    // ── Announcer ────────────────────────────────────────────────────────────
+
+    /// <summary>Announces a message through a visually hidden live region.</summary>
+    public ValueTask AnnounceAsync(string message, BhPoliteness politeness = BhPoliteness.Polite, int clearAfterMs = 7000)
+        => InvokeVoidAsync("announcer.announce", message, politeness == BhPoliteness.Assertive ? "assertive" : "polite", clearAfterMs);
+
+    // ── Hotkeys ──────────────────────────────────────────────────────────────
+
+    internal ValueTask<int> HotkeyRegisterAsync(object dotNetRef, string[] combos, bool allowInInputs)
+        => InvokeAsync<int>("hotkeys.register", dotNetRef, combos, new Dictionary<string, object?> { ["allowInInputs"] = allowInInputs });
+
+    internal ValueTask HotkeyUnregisterAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("hotkeys.unregister", handle);
+
+    // ── Sortable / slider ────────────────────────────────────────────────────
+
+    internal ValueTask<int> SortableAttachAsync(object dotNetRef, string containerId, IDictionary<string, object?> options)
+        => InvokeAsync<int>("sortable.attach", dotNetRef, containerId, options);
+
+    internal ValueTask SortableUpdateAsync(int handle, IDictionary<string, object?> options)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("sortable.update", handle, options);
+
+    internal ValueTask SortableDetachAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("sortable.detach", handle);
+
+    internal ValueTask<int> SliderAttachAsync(object dotNetRef, string rootId, string? trackId, IDictionary<string, object?> options)
+        => InvokeAsync<int>("slider.attach", dotNetRef, rootId, trackId, options);
+
+    internal ValueTask SliderUpdateAsync(int handle, IDictionary<string, object?> options)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("slider.update", handle, options);
+
+    internal ValueTask SliderDetachAsync(int handle)
+        => handle <= 0 ? ValueTask.CompletedTask : InvokeVoidAsync("slider.detach", handle);
+
+    /// <inheritdoc />
+    public void Dispose()
     {
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("transition.enter", element, new { enter, enterFrom, enterTo, entered });
+        // Synchronous disposal (e.g. a test host): release the module without waiting.
+        if (_disposed) return;
+        _ = DisposeAsync().AsTask();
     }
 
-    /// <summary>
-    /// Runs the CSS leave transition on <paramref name="element"/>.
-    /// Applies the class sequence: leave+leaveFrom → (next frame) leaveTo → (after transition) done.
-    /// </summary>
-    public async ValueTask TransitionLeaveAsync(
-        ElementReference element,
-        string? leave,
-        string? leaveFrom,
-        string? leaveTo,
-        string? entered)
-    {
-        var module = await _module.Value;
-        await module.InvokeVoidAsync("transition.leave", element, new { leave, leaveFrom, leaveTo, entered });
-    }
-
+    /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        if (_module.IsValueCreated)
+        if (_disposed) return;
+        _disposed = true;
+        if (_module is null) return;
+        try
         {
-            try
-            {
-                var module = await _module.Value;
-                await module.DisposeAsync();
-            }
-            catch (JSDisconnectedException) { /* circuit gone */ }
-            catch (Exception) { /* best effort */ }
+            var module = await _module;
+            await module.DisposeAsync();
+        }
+        catch (Exception ex) when (IsBenign(ex))
+        {
         }
     }
+}
+
+/// <summary>A DOM rectangle in CSS pixels.</summary>
+public sealed record BhRect(double X, double Y, double Width, double Height);
+
+/// <summary>Live-region politeness.</summary>
+public enum BhPoliteness
+{
+    /// <summary>Announced when the user is idle (<c>aria-live="polite"</c>).</summary>
+    Polite,
+
+    /// <summary>Interrupts the user (<c>aria-live="assertive"</c>). Use sparingly.</summary>
+    Assertive,
+}
+
+/// <summary>Options for <see cref="BhInterop.CreateFocusScopeAsync"/>.</summary>
+public sealed class BhFocusScopeOptions
+{
+    /// <summary>Keep focus inside the container (Tab / Shift+Tab wrap, focus is pulled back).</summary>
+    public bool Trap { get; set; }
+
+    /// <summary>Wrap Tab / Shift+Tab at the edges without pulling focus back.</summary>
+    public bool Loop { get; set; }
+
+    /// <summary><c>"first"</c> (default), <c>"container"</c>, <c>"none"</c>, or the id of an element to focus.</summary>
+    public string AutoFocus { get; set; } = "first";
+
+    /// <summary>Restore focus to the previously focused element when the scope is destroyed.</summary>
+    public bool RestoreFocus { get; set; } = true;
+
+    /// <summary>Optional id of the element to receive focus when the scope is destroyed.</summary>
+    public string? ReturnFocusId { get; set; }
+
+    /// <summary>Optional element to focus first (takes precedence over <see cref="AutoFocus"/>).</summary>
+    public ElementReference? AutoFocusElement { get; set; }
+
+    /// <summary>Optional element to receive focus when the scope is destroyed (takes precedence over <see cref="ReturnFocusId"/>).</summary>
+    public ElementReference? ReturnFocusElement { get; set; }
+
+    internal Dictionary<string, object?> ToJs() => new()
+    {
+        ["trap"] = Trap,
+        ["loop"] = Loop,
+        ["autoFocus"] = AutoFocusElement is { Id: not null } af ? af : AutoFocus,
+        ["restore"] = RestoreFocus,
+        ["returnFocusId"] = ReturnFocusElement is { Id: not null } rf ? rf : ReturnFocusId,
+    };
+}
+
+/// <summary>CSS class sets for <see cref="BhTransition"/>.</summary>
+public sealed class BhTransitionClasses
+{
+    /// <summary>Classes applied during the whole enter phase.</summary>
+    public string? Enter { get; set; }
+    /// <summary>Classes applied on the first frame of enter.</summary>
+    public string? EnterFrom { get; set; }
+    /// <summary>Classes applied from the second frame of enter until it ends.</summary>
+    public string? EnterTo { get; set; }
+    /// <summary>Classes applied once the enter phase completed.</summary>
+    public string? Entered { get; set; }
+    /// <summary>Classes applied during the whole leave phase.</summary>
+    public string? Leave { get; set; }
+    /// <summary>Classes applied on the first frame of leave.</summary>
+    public string? LeaveFrom { get; set; }
+    /// <summary>Classes applied from the second frame of leave until it ends.</summary>
+    public string? LeaveTo { get; set; }
+
+    internal Dictionary<string, object?> ToJs() => new()
+    {
+        ["enter"] = Enter,
+        ["enterFrom"] = EnterFrom,
+        ["enterTo"] = EnterTo,
+        ["entered"] = Entered,
+        ["leave"] = Leave,
+        ["leaveFrom"] = LeaveFrom,
+        ["leaveTo"] = LeaveTo,
+    };
 }

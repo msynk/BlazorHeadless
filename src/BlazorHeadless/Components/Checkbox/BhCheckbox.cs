@@ -1,217 +1,138 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless, accessible Checkbox primitive supporting the standard
-/// checked / unchecked / indeterminate tri-state.
+/// A headless, accessible Checkbox (<c>role="checkbox"</c>) with tri-state support.
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Tri-state</b> — checked, unchecked, or <see cref="Indeterminate"/> (mixed). Clicking an indeterminate checkbox advances it to checked.</item>
-///   <item><b>Uncontrolled and controlled</b> — seed with <see cref="DefaultChecked"/> or drive with <see cref="Checked"/> + <see cref="OnCheckedChange"/>.</item>
-///   <item><b>Polymorphic</b> — renders as <c>&lt;button&gt;</c> by default; override with <see cref="BhComponentBase.As"/>.</item>
-///   <item><b>Accessible</b> — emits <c>role="checkbox"</c> and <c>aria-checked="true|false|mixed"</c>. Space toggles (per ARIA spec; Enter does not).</item>
-///   <item><b>Form submission</b> — when <see cref="Name"/> is set the component renders a sibling <c>&lt;input type="hidden"&gt;</c> while checked, so the value participates in plain HTML form posts.</item>
-///   <item><b>Data attributes</b> — emits <c>data-state="checked"|"unchecked"|"indeterminate"</c> and <c>data-disabled</c>.</item>
+///   <item><b>Binding</b> — <c>@bind-Checked</c> with <c>EditForm</c> validation, or uncontrolled with <see cref="BhCheckableBase.DefaultChecked"/>.</item>
+///   <item><b>Indeterminate</b> — <see cref="Indeterminate"/> renders <c>aria-checked="mixed"</c> / <c>data-state="indeterminate"</c>; activating it checks the box.</item>
+///   <item><b>Groups</b> — inside a <see cref="BhCheckboxGroup"/> the checkbox toggles its <see cref="BhCheckableBase.Value"/> in the group's values;
+///     <see cref="SelectAll"/> turns it into the group's tri-state "select all" box.</item>
+///   <item><b>Keyboard</b> — Space toggles; Enter doesn't (APG).</item>
+///   <item><b>Forms</b> — <see cref="BhField"/> wiring and a hidden input for plain posts.</item>
 /// </list>
 ///
-/// <para><b>Usage (uncontrolled):</b></para>
 /// <code>
-/// &lt;BhCheckbox class="checkbox" Context="c"&gt;
-///     @if (c.IsIndeterminate) { &lt;span class="dash"&gt;–&lt;/span&gt; }
-///     else if (c.IsChecked)   { &lt;span class="tick"&gt;✓&lt;/span&gt; }
-/// &lt;/BhCheckbox&gt;
+/// &lt;BhField&gt;
+///     &lt;BhCheckbox @bind-Checked="accepted"&gt;&lt;BhCheckboxIndicator&gt;✓&lt;/BhCheckboxIndicator&gt;&lt;/BhCheckbox&gt;
+///     &lt;BhLabel&gt;I accept the terms&lt;/BhLabel&gt;
+/// &lt;/BhField&gt;
 /// </code>
 /// </summary>
-public class BhCheckbox : BhComponentBase
+public class BhCheckbox : BhCheckableBase
 {
-    private bool _isChecked;
-    private bool _initialized;
+    [CascadingParameter]
+    private BhCheckboxGroupContext? Group { get; set; }
 
-    /// <summary>Initial checked value when uncontrolled. Ignored when <see cref="Checked"/> is supplied.</summary>
-    [Parameter]
-    public bool DefaultChecked { get; set; }
-
-    /// <summary>
-    /// Controlled checked value. When non-null the component runs in controlled mode
-    /// and <see cref="OnCheckedChange"/> must update this value.
-    /// </summary>
-    [Parameter]
-    public bool? Checked { get; set; }
-
-    /// <summary>Fires whenever the checked state changes.</summary>
-    [Parameter]
-    public EventCallback<bool> OnCheckedChange { get; set; }
-
-    /// <summary>
-    /// Whether the checkbox is in the mixed (indeterminate) state. Display-only — clicking
-    /// an indeterminate checkbox advances it to <c>checked = true</c> and clears indeterminate.
-    /// Indeterminate takes visual precedence over <see cref="Checked"/>; <c>aria-checked="mixed"</c> is emitted.
-    /// </summary>
+    /// <summary>Shows the mixed state (<c>aria-checked="mixed"</c>). Activating checks the box.</summary>
     [Parameter]
     public bool Indeterminate { get; set; }
 
-    /// <summary>Disables the checkbox.</summary>
-    [Parameter]
-    public bool Disabled { get; set; }
-
-    /// <summary>Marks the checkbox as required (sets <c>aria-required="true"</c> for assistive tech).</summary>
-    [Parameter]
-    public bool Required { get; set; }
-
     /// <summary>
-    /// Optional form field name. When set the component renders an adjacent
-    /// <c>&lt;input type="hidden"&gt;</c> with this name and <see cref="Value"/>
-    /// while checked, so plain HTML form posts include the checkbox's state.
+    /// Inside a <see cref="BhCheckboxGroup"/>: makes this the group's "select all" box. It is
+    /// checked when every value is checked, mixed when some are, and toggling it checks or
+    /// clears them all.
     /// </summary>
     [Parameter]
-    public string? Name { get; set; }
+    public bool SelectAll { get; set; }
+
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Value sent in the hidden form input when checked. Defaults to <c>"on"</c>,
-    /// matching native <c>&lt;input type="checkbox"&gt;</c>.
+    /// Content that receives the render state (<c>BhCheckboxRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public string Value { get; set; } = "on";
+    public RenderFragment<BhCheckboxRenderContext>? Template { get; set; }
 
-    /// <summary>
-    /// Content template receiving <see cref="BhCheckboxRenderContext"/> for state-driven rendering
-    /// of check marks, indeterminate dashes, etc.
-    /// </summary>
-    [Parameter]
-    public RenderFragment<BhCheckboxRenderContext>? ChildContent { get; set; }
+    protected override string Role => "checkbox";
 
-    protected override string DefaultTag => "button";
+    private bool IsSelectAll => SelectAll && Group is not null;
+    private bool InGroup => Group is not null && !SelectAll && IsProvided(nameof(Value));
 
-    private bool IsChecked => Checked ?? _isChecked;
+    /// <summary>Whether the box is checked (from the group when inside a <see cref="BhCheckboxGroup"/>).</summary>
+    public bool IsCheckedEffective => IsSelectAll ? Group!.AllChecked : InGroup ? Group!.IsChecked(Value) : IsChecked;
 
-    private bool IsNativeButton =>
-        Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
+    private bool EffectiveIndeterminate => IsSelectAll ? Group!.SomeChecked : Indeterminate;
 
-    private BhCheckboxRenderContext RenderContext => new()
-    {
-        IsChecked = IsChecked,
-        IsIndeterminate = Indeterminate,
-        Disabled = Disabled,
-    };
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private bool EffectiveDisabled => IsDisabled || (Group?.Disabled ?? false);
 
     protected override void OnInitialized()
     {
-        if (Checked is null)
-            _isChecked = DefaultChecked;
-        _initialized = true;
+        base.OnInitialized();
+        if (InGroup) Group!.Register(Value);
     }
 
-    protected override void OnParametersSet()
+    protected override bool NextChecked() => EffectiveIndeterminate || !IsCheckedEffective;
+
+    protected override bool ShouldSubmit => !IsSelectAll && (IsCheckedEffective || Indeterminate);
+
+    protected override async Task SetCheckedAsync(bool value)
     {
-        _ = _initialized;
+        if (EffectiveDisabled) return;
+        if (IsSelectAll)
+        {
+            await Group!.SetAll(value);
+            await OnCheckedChange.InvokeAsync(value);
+            return;
+        }
+        if (InGroup)
+        {
+            await Group!.SetAsync(Value, value);
+            await OnCheckedChange.InvokeAsync(value);
+            return;
+        }
+        await base.SetCheckedAsync(value);
     }
 
-    // ── Rendering ────────────────────────────────────────────────────────────
-
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    protected override void RenderContent(RenderTreeBuilder builder, int sequence)
     {
-        builder.OpenElement(0, Tag);
-
-        builder.AddAttribute(10, "id", ComponentId);
-        builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        builder.AddAttribute(30, "onclick",
-            EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
-
-        if (!IsNativeButton)
+        var context = new BhCheckboxRenderContext
         {
-            // Native buttons handle Space natively — only attach a keydown handler
-            // for non-native elements. (Enter does not toggle a checkbox per ARIA spec.)
-            builder.AddAttribute(40, "onkeydown",
-                EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-        }
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(50, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(60, ChildContent(RenderContext));
-
-        builder.CloseElement();
-
-        // Hidden input so checkbox state participates in plain HTML form posts.
-        // Per native <input type="checkbox"> behaviour, indeterminate values still
-        // submit (they're effectively "checked" until interacted with).
-        if (!string.IsNullOrEmpty(Name) && (IsChecked || Indeterminate))
-        {
-            builder.OpenElement(70, "input");
-            builder.AddAttribute(71, "type", "hidden");
-            builder.AddAttribute(72, "name", Name);
-            builder.AddAttribute(73, "value", Value);
-            builder.CloseElement();
-        }
+            IsChecked = IsCheckedEffective,
+            IsIndeterminate = EffectiveIndeterminate,
+            Disabled = EffectiveDisabled,
+        };
+        builder.OpenComponent<CascadingValue<BhCheckboxRenderContext>>(sequence);
+        builder.AddComponentParameter(sequence + 1, "Value", context);
+        builder.AddComponentParameter(sequence + 2, "ChildContent", BhContent.Pick(Template, ChildContent, context));
+        builder.CloseComponent();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
-        attrs["role"] = "checkbox";
-        attrs["aria-checked"] = Indeterminate ? "mixed" : (IsChecked ? "true" : "false");
-
-        if (Required)
-            attrs["aria-required"] = "true";
-
-        if (IsNativeButton)
-        {
-            attrs["type"] = "button";
-            if (Disabled)
-                attrs["disabled"] = true;
-        }
-        else
-        {
-            attrs["tabindex"] = Disabled ? -1 : 0;
-            if (Disabled)
-                attrs["aria-disabled"] = "true";
-        }
-
-        if (Indeterminate)
+        attrs["aria-checked"] = EffectiveIndeterminate ? "mixed" : IsCheckedEffective ? "true" : "false";
+        if (EffectiveIndeterminate)
             SetDataValue(attrs, "state", "indeterminate");
         else
-            SetDataState(attrs, IsChecked, "checked", "unchecked");
-
-        SetDataFlag(attrs, "disabled", Disabled);
-
+            SetDataState(attrs, IsCheckedEffective, "checked", "unchecked");
+        if (EffectiveDisabled && !IsDisabled)
+        {
+            if (IsNativeButton) attrs["disabled"] = true;
+            else attrs["aria-disabled"] = "true";
+            SetDataFlag(attrs, "disabled", true);
+        }
         return attrs;
     }
+}
 
-    // ── State changes ────────────────────────────────────────────────────────
+/// <summary>Render-fragment context exposed by <see cref="BhCheckbox"/> (and cascaded to <see cref="BhCheckboxIndicator"/>).</summary>
+public sealed record BhCheckboxRenderContext
+{
+    /// <summary>Whether the box is checked.</summary>
+    public required bool IsChecked { get; init; }
 
-    private Task HandleClick(MouseEventArgs _)
-    {
-        if (Disabled) return Task.CompletedTask;
-        return Toggle();
-    }
+    /// <summary>Whether the box shows the mixed state.</summary>
+    public required bool IsIndeterminate { get; init; }
 
-    private Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        if (Disabled) return Task.CompletedTask;
-        // ARIA spec: Space toggles role="checkbox". Enter does not.
-        if (args.Key == " ")
-            return Toggle();
-        return Task.CompletedTask;
-    }
-
-    private Task Toggle()
-    {
-        // From indeterminate → checked, otherwise flip current value.
-        var next = Indeterminate ? true : !IsChecked;
-
-        if (Checked is null)
-            _isChecked = next;
-
-        StateHasChanged();
-        return OnCheckedChange.InvokeAsync(next);
-    }
+    /// <summary>Whether the box is disabled.</summary>
+    public required bool Disabled { get; init; }
 }

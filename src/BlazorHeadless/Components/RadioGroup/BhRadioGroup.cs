@@ -1,118 +1,149 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless, accessible Radio Group implementing the WAI-ARIA Radio pattern.
+/// A headless, accessible Radio Group implementing the WAI-ARIA Radio Group pattern.
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Roving tabindex</b> — only the selected radio (or the first enabled one) is in the tab order; arrow keys move within the group.</item>
-///   <item><b>Arrow-key selection</b> — Left/Right (or Up/Down for vertical) move and select. Disabled radios are skipped.</item>
-///   <item><b>Uncontrolled and controlled</b> — seed via <see cref="DefaultValue"/> or drive externally with <see cref="Value"/> + <see cref="OnValueChange"/>.</item>
-///   <item><b>Form submission</b> — when <see cref="Name"/> is set the group renders a hidden <c>&lt;input&gt;</c> with the selected value, so plain HTML form posts include the group's selection.</item>
-///   <item><b>Data attributes</b> — emits <c>data-orientation</c>, <c>data-disabled</c>; each <see cref="BhRadio"/> emits <c>data-state="checked"|"unchecked"</c>.</item>
+///   <item><b>Roving tabindex</b> — the checked radio (or the first enabled one) is the group's single tab stop.</item>
+///   <item><b>Keyboard</b> — every arrow key moves and checks (Down / Right next, Up / Left previous, mirrored in RTL), wrapping; Space checks the focused radio; disabled radios are skipped.</item>
+///   <item><b>Forms</b> — <c>@bind-Value</c> with <c>EditForm</c> validation, <see cref="BhField"/> labels / descriptions, a hidden input for plain posts (<see cref="Name"/>).</item>
+///   <item><b>Data attributes</b> — <c>data-orientation</c>, <c>data-disabled</c>; radios emit <c>data-state="checked|unchecked"</c>.</item>
 /// </list>
 ///
-/// <para><b>Usage:</b></para>
 /// <code>
-/// &lt;BhRadioGroup DefaultValue="medium" class="radio-group"&gt;
-///     &lt;BhRadio Value="small"  class="radio"&gt;Small&lt;/BhRadio&gt;
-///     &lt;BhRadio Value="medium" class="radio"&gt;Medium&lt;/BhRadio&gt;
-///     &lt;BhRadio Value="large"  class="radio"&gt;Large&lt;/BhRadio&gt;
+/// &lt;BhRadioGroup @bind-Value="size" aria-label="Size"&gt;
+///     &lt;BhRadio Value="s"&gt;Small&lt;/BhRadio&gt;
+///     &lt;BhRadio Value="m"&gt;Medium&lt;/BhRadio&gt;
 /// &lt;/BhRadioGroup&gt;
 /// </code>
 /// </summary>
-public class BhRadioGroup : BhComponentBase
+public class BhRadioGroup : BhComponentBase, IDisposable
 {
-    private readonly List<BhRadio> _radios = new();
+    private readonly BhCollection<BhRadio> _radios = new(BhId.New("bh-radios"));
+    private BhFieldBinding? _binding;
+    private string? _value;
 
-    private string? _selectedValue;
-    private bool _initialized;
+    [CascadingParameter]
+    private BhDirection CascadedDir { get; set; }
 
-    /// <summary>Initial selected value when uncontrolled. Ignored when <see cref="Value"/> is supplied.</summary>
-    [Parameter]
-    public string? DefaultValue { get; set; }
+    [CascadingParameter]
+    private BhFieldContext? FieldContext { get; set; }
 
-    /// <summary>
-    /// Controlled selected value. When non-null the component runs in controlled mode
-    /// and <see cref="OnValueChange"/> must update this value.
-    /// </summary>
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
+
+    /// <summary>The checked value. Supplying it makes the group controlled (use <c>@bind-Value</c>).</summary>
     [Parameter]
     public string? Value { get; set; }
 
-    /// <summary>Fires whenever the selected value changes.</summary>
+    /// <summary>Initial value when uncontrolled.</summary>
+    [Parameter]
+    public string? DefaultValue { get; set; }
+
+    /// <summary>Two-way binding callback for <see cref="Value"/>.</summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>Identifies the bound field for <c>EditForm</c> validation (set by <c>@bind-Value</c>).</summary>
+    [Parameter]
+    public Expression<Func<string?>>? ValueExpression { get; set; }
+
+    /// <summary>Fires whenever the value changes.</summary>
     [Parameter]
     public EventCallback<string?> OnValueChange { get; set; }
 
-    /// <summary>Whether the entire group is disabled. Individual <see cref="BhRadio"/> components can also be disabled independently.</summary>
+    /// <summary>Disables every radio.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Whether the group is marked required (sets <c>aria-required="true"</c>).</summary>
+    /// <summary>Marks the group required (<c>aria-required</c>).</summary>
     [Parameter]
     public bool Required { get; set; }
 
-    /// <summary>
-    /// Renders the group vertically. Switches arrow-key navigation to Up/Down and emits
-    /// <c>aria-orientation="vertical"</c>. Defaults to vertical, the more common layout for radios.
-    /// </summary>
+    /// <summary>Marks the group invalid (in addition to EditContext validation).</summary>
+    [Parameter]
+    public bool Invalid { get; set; }
+
+    /// <summary>Vertical layout (default). Only affects <c>aria-orientation</c> / <c>data-orientation</c> — all arrows work.</summary>
     [Parameter]
     public bool Vertical { get; set; } = true;
 
-    /// <summary>
-    /// Optional form field name. When set the group renders a hidden
-    /// <c>&lt;input type="hidden"&gt;</c> carrying the selected value, so plain
-    /// HTML form posts include the group's selection.
-    /// </summary>
+    /// <summary>Whether arrow keys wrap. Default: true.</summary>
+    [Parameter]
+    public bool Loop { get; set; } = true;
+
+    /// <summary>Reading direction (mirrors Left / Right). Inherits from <see cref="BhDirectionProvider"/>.</summary>
+    [Parameter]
+    public BhDirection? Dir { get; set; }
+
+    /// <summary>Form field name: renders a hidden input carrying the value.</summary>
     [Parameter]
     public string? Name { get; set; }
 
-    /// <summary>Child content. Should contain one or more <see cref="BhRadio"/> components.</summary>
+    /// <summary>The radios.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private BhRadioGroupOrientation Orientation =>
-        Vertical ? BhRadioGroupOrientation.Vertical : BhRadioGroupOrientation.Horizontal;
-
-    private string? SelectedValue => Value ?? _selectedValue;
-
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private string? SelectedValue => IsProvided(nameof(Value)) ? Value : _value;
+    private bool IsDisabled => Disabled || (FieldContext?.Disabled ?? false);
+    private bool IsInvalid => Invalid || (FieldContext?.Invalid ?? false) || (_binding?.IsInvalid ?? false);
+    private bool IsRequired => Required || (FieldContext?.Required ?? false);
+    private BhDirection EffectiveDir => Dir ?? CascadedDir;
 
     protected override void OnInitialized()
     {
-        if (Value is null)
-            _selectedValue = DefaultValue;
-        _initialized = true;
+        _value = DefaultValue;
+        FieldContext?.SetControlFocus(FocusAsync);
+    }
+
+    /// <summary>Focuses the checked radio, or the first enabled one.</summary>
+    public async Task FocusAsync()
+    {
+        await _radios.EnsureOrderAsync(Interop);
+        if (_radios.Items.FirstOrDefault(IsTabStop) is { } radio)
+            await Interop.FocusAsync(radio.ItemId);
     }
 
     protected override void OnParametersSet()
     {
-        _ = _initialized;
+        if (ValueExpression is not null || _binding is not null)
+        {
+            _binding ??= new BhFieldBinding(() => InvokeAsync(StateHasChanged));
+            _binding.Update(EditContext, ValueExpression);
+            FieldContext?.ReportValidation(_binding.IsInvalid, _binding.Messages);
+        }
     }
 
-    // ── Rendering ────────────────────────────────────────────────────────────
+    protected override Task OnAfterRenderAsync(bool firstRender) => _radios.EnsureOrderAsync(Interop);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        var context = new BhRadioGroupContext(
+            selectedValue: SelectedValue,
+            disabled: IsDisabled,
+            required: IsRequired,
+            orientation: Vertical ? BhRadioGroupOrientation.Vertical : BhRadioGroupOrientation.Horizontal,
+            group: this,
+            radios: _radios);
+
         builder.OpenComponent<CascadingValue<BhRadioGroupContext>>(0);
-        builder.AddComponentParameter(1, "Value", CreateContext());
+        builder.AddComponentParameter(1, "Value", context);
         builder.AddComponentParameter(2, "ChildContent", (RenderFragment)(inner =>
         {
             inner.OpenElement(0, Tag);
-            inner.AddAttribute(10, "id", ComponentId);
+            inner.AddAttribute(10, "id", Id is null && FieldContext is not null ? FieldContext.ControlId : ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
-
-            // Hidden form field carrying the current selection.
             if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(SelectedValue))
             {
                 inner.OpenElement(50, "input");
@@ -121,7 +152,6 @@ public class BhRadioGroup : BhComponentBase
                 inner.AddAttribute(53, "value", SelectedValue);
                 inner.CloseElement();
             }
-
             inner.CloseElement();
         }));
         builder.CloseComponent();
@@ -130,120 +160,64 @@ public class BhRadioGroup : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
         attrs["role"] = "radiogroup";
         attrs["aria-orientation"] = Vertical ? "vertical" : "horizontal";
-
-        if (Required)
-            attrs["aria-required"] = "true";
-
-        if (Disabled)
-            attrs["aria-disabled"] = "true";
-
+        if (FieldContext?.LabelledBy is { } label) attrs["aria-labelledby"] = label;
+        if (FieldContext?.DescribedBy is { } describedBy) attrs["aria-describedby"] = describedBy;
+        if (IsRequired) attrs["aria-required"] = "true";
+        if (IsInvalid) attrs["aria-invalid"] = "true";
+        if (IsDisabled) attrs["aria-disabled"] = "true";
+        if (Dir is { } dir) attrs["dir"] = dir.ToAttribute();
         SetDataValue(attrs, "orientation", Vertical ? "vertical" : "horizontal");
-        SetDataFlag(attrs, "disabled", Disabled);
-
+        SetDataFlag(attrs, "disabled", IsDisabled);
+        SetDataFlag(attrs, "invalid", IsInvalid);
         return attrs;
     }
 
-    // ── Registration ─────────────────────────────────────────────────────────
-
-    internal int RegisterRadio(BhRadio radio)
+    internal bool IsTabStop(BhRadio radio)
     {
-        if (!_radios.Contains(radio))
-            _radios.Add(radio);
-        return _radios.IndexOf(radio);
+        var checkedRadio = _radios.Items.FirstOrDefault(r => r.Value == SelectedValue && !r.IsItemDisabled);
+        return checkedRadio is not null ? checkedRadio == radio : _radios.First() == radio;
     }
 
-    internal void UnregisterRadio(BhRadio radio)
+    internal async Task SelectAsync(string value)
     {
-        _radios.Remove(radio);
-    }
+        if (IsDisabled || value == SelectedValue) return;
+        if (_radios.Items.FirstOrDefault(r => r.Value == value) is { IsItemDisabled: true }) return;
 
-    /// <summary>
-    /// Returns true when the radio at <paramref name="index"/> should be the
-    /// member of the group that participates in the document tab order.
-    /// The selected radio takes precedence; otherwise the first enabled radio.
-    /// </summary>
-    internal bool IsTabStop(int index)
-    {
-        if (index < 0 || index >= _radios.Count) return false;
-
-        // Selected radio is always the tab stop.
-        var selectedIdx = _radios.FindIndex(r => r.Value == SelectedValue && !r.IsRadioDisabled);
-        if (selectedIdx >= 0)
-            return index == selectedIdx;
-
-        // Otherwise the first enabled radio.
-        var firstEnabled = _radios.FindIndex(r => !r.IsRadioDisabled);
-        return index == firstEnabled;
-    }
-
-    // ── Selection and keyboard handling ──────────────────────────────────────
-
-    private BhRadioGroupContext CreateContext() => new(
-        selectedValue: SelectedValue,
-        disabled: Disabled,
-        required: Required,
-        orientation: Orientation,
-        registerRadio: RegisterRadio,
-        unregisterRadio: UnregisterRadio,
-        isTabStop: IsTabStop,
-        selectAsync: SelectAsync,
-        handleKeyDownAsync: HandleKeyDownAsync);
-
-    private async Task SelectAsync(string? value)
-    {
-        if (Disabled) return;
-        if (value == SelectedValue) return;
-
-        // Refuse to select a disabled radio.
-        var radio = _radios.FirstOrDefault(r => r.Value == value);
-        if (radio is { IsRadioDisabled: true }) return;
-
-        if (Value is null)
-            _selectedValue = value;
-
+        if (!IsProvided(nameof(Value)))
+            _value = value;
+        await ValueChanged.InvokeAsync(value);
         await OnValueChange.InvokeAsync(value);
+        _binding?.NotifyChanged();
+        if (_binding is not null)
+            FieldContext?.ReportValidation(_binding.IsInvalid, _binding.Messages);
         StateHasChanged();
     }
 
-    private async Task HandleKeyDownAsync(int currentIndex, KeyboardEventArgs args)
+    internal async Task HandleKeyDownAsync(BhRadio radio, KeyboardEventArgs e)
     {
-        if (Disabled) return;
-        if (_radios.Count == 0) return;
+        if (IsDisabled) return;
+        var rtl = EffectiveDir == BhDirection.Rtl;
 
-        var prevKey = Vertical ? "ArrowUp" : "ArrowLeft";
-        var nextKey = Vertical ? "ArrowDown" : "ArrowRight";
-
-        int? targetIndex = args.Key switch
+        BhRadio? target = e.Key switch
         {
-            var k when k == prevKey => FindEnabledIndex(currentIndex - 1, step: -1),
-            var k when k == nextKey => FindEnabledIndex(currentIndex + 1, step: +1),
-            " " => currentIndex, // Space selects the focused radio
+            "ArrowDown" => _radios.Next(radio, Loop),
+            "ArrowUp" => _radios.Previous(radio, Loop),
+            "ArrowRight" => rtl ? _radios.Previous(radio, Loop) : _radios.Next(radio, Loop),
+            "ArrowLeft" => rtl ? _radios.Next(radio, Loop) : _radios.Previous(radio, Loop),
+            " " => radio,
             _ => null,
         };
 
-        if (targetIndex is null) return;
-
-        // Move focus and (per ARIA Radio pattern) select the target.
-        await _radios[targetIndex.Value].FocusAsync();
-        await SelectAsync(_radios[targetIndex.Value].Value);
+        if (target is null) return;
+        if (target != radio) await Interop.FocusAsync(target.ItemId);
+        await SelectAsync(target.Value);
     }
 
-    private int? FindEnabledIndex(int start, int step)
+    public void Dispose()
     {
-        if (_radios.Count == 0) return null;
-
-        var i = ((start % _radios.Count) + _radios.Count) % _radios.Count;
-
-        for (var attempts = 0; attempts < _radios.Count; attempts++)
-        {
-            if (!_radios[i].IsRadioDisabled)
-                return i;
-            i = ((i + step) % _radios.Count + _radios.Count) % _radios.Count;
-        }
-
-        return null;
+        _binding?.Dispose();
+        FieldContext?.SetControlFocus(null);
     }
 }

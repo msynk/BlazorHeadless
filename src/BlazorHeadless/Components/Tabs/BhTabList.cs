@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The container for the set of <see cref="BhTab"/> elements. Renders a
-/// <c>&lt;div role="tablist"&gt;</c> with the proper <c>aria-orientation</c>.
+/// The container of the <see cref="BhTab"/>s (<c>role="tablist"</c>). Give it an
+/// accessible name with <c>aria-label</c> when the tabs' purpose isn't obvious.
 /// </summary>
 public class BhTabList : BhComponentBase
 {
     [CascadingParameter]
-    private BhTabsContext BhTabsContext { get; set; } = default!;
+    private BhTabsContext? TabsContext { get; set; }
 
-    /// <summary>Child content. Should contain one or more <see cref="BhTab"/> components.</summary>
+    /// <summary>The tabs.</summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
@@ -23,10 +23,7 @@ public class BhTabList : BhComponentBase
         builder.OpenElement(0, Tag);
         builder.AddAttribute(10, "id", ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(30, Ref);
-
+        builder.AddElementReferenceCapture(30, CaptureElement);
         builder.AddContent(40, ChildContent);
         builder.CloseElement();
     }
@@ -34,9 +31,10 @@ public class BhTabList : BhComponentBase
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
+        var orientation = TabsContext?.LayoutOrientation ?? BhOrientation.Horizontal;
         attrs["role"] = "tablist";
-        attrs["aria-orientation"] = BhTabsContext?.Orientation == BhTabsOrientation.Vertical ? "vertical" : "horizontal";
-        SetDataValue(attrs, "orientation", BhTabsContext?.Orientation == BhTabsOrientation.Vertical ? "vertical" : "horizontal");
+        attrs["aria-orientation"] = orientation.ToAttribute();
+        SetDataValue(attrs, "orientation", orientation.ToAttribute());
         return attrs;
     }
 }

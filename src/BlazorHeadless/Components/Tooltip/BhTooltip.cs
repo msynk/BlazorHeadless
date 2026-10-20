@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless, accessible Tooltip — a small popup that surfaces information
-/// about a control when it is hovered or focused. Mirrors the
-/// <a href="https://www.radix-ui.com/primitives/docs/components/tooltip">Radix UI
-/// Tooltip</a> primitive.
+/// A headless, accessible Tooltip — a small popup that describes a control when
+/// it is hovered or focused (WAI-ARIA Tooltip pattern, Radix-style API).
 ///
 /// <para><b>Anatomy:</b></para>
 /// <code>
@@ -23,55 +21,50 @@ namespace BlazorHeadless;
 ///
 /// <para><b>Key features:</b></para>
 /// <list type="bullet">
-///   <item><b>Pointer and keyboard</b> — opens on hover or focus, closes on leave/blur or Escape.</item>
-///   <item><b>Delay coordination</b> — uses <see cref="BhTooltipProvider"/>'s
-///     <c>DelayDuration</c> / <c>SkipDelayDuration</c> so quickly traversing
-///     siblings shows them instantly.</item>
-///   <item><b>Hoverable content</b> — the pointer can move from trigger into
-///     content without closing (disable via <see cref="DisableHoverableContent"/>).</item>
-///   <item><b>Controlled or uncontrolled</b> — seed with <see cref="DefaultOpen"/>
-///     or drive with <see cref="Open"/> + <see cref="OnOpenChange"/>.</item>
-///   <item><b>Data attributes</b> — emits
-///     <c>data-state="closed" | "delayed-open" | "instant-open"</c>.</item>
-///   <item><b>Anchor positioning</b> — set <see cref="BhAnchorOptions"/> on
-///     <see cref="BhTooltipContent"/> for automatic flip / shift placement.</item>
+///   <item><b>Pointer and keyboard</b> — opens on hover (after a delay) or keyboard focus; not on the focus caused by a click.</item>
+///   <item><b>WCAG 1.4.13</b> — dismissable with Escape without moving the pointer or focus, hoverable (the pointer can move into the content), persistent while hovered.</item>
+///   <item><b>Delay coordination</b> — <see cref="BhTooltipProvider"/> skips the delay when moving quickly between triggers.</item>
+///   <item><b>Accessible description</b> — the trigger references the content through <c>aria-describedby</c>.</item>
+///   <item><b>Data attributes</b> — <c>data-state="closed" | "delayed-open" | "instant-open"</c>, plus <c>data-side</c> / <c>data-align</c> when anchored.</item>
 /// </list>
-///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup.</b></para>
 /// </summary>
 public class BhTooltip : BhComponentBase, IDisposable
 {
+    private bool _open;
+    private bool _delayedOpen;
+    private bool _hasContent;
+    private BhDelayedAction? _timer;
+
     [CascadingParameter]
     private BhTooltipProviderContext? ProviderContext { get; set; }
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    /// <summary>Whether the tooltip is open. Supplying it makes the tooltip controlled (use <c>@bind-Open</c>).</summary>
+    [Parameter]
+    public bool Open { get; set; }
 
-    /// <summary>Initial open state (uncontrolled). Ignored when <see cref="Open"/> is supplied.</summary>
+    /// <summary>Initial open state when uncontrolled.</summary>
     [Parameter]
     public bool DefaultOpen { get; set; }
 
-    /// <summary>Controlled open state. When non-null, <see cref="OnOpenChange"/> must update this value.</summary>
+    /// <summary>Two-way binding callback for <see cref="Open"/>.</summary>
     [Parameter]
-    public bool? Open { get; set; }
+    public EventCallback<bool> OpenChanged { get; set; }
 
     /// <summary>Fires whenever the open state changes.</summary>
     [Parameter]
     public EventCallback<bool> OnOpenChange { get; set; }
 
-    /// <summary>
-    /// Override the delay (in milliseconds) before the tooltip opens. Falls back
-    /// to the enclosing <see cref="BhTooltipProvider"/>, then to 700ms.
-    /// Set to 0 to open instantly.
-    /// </summary>
+    /// <summary>Delay (ms) before opening on hover. Falls back to the provider, then 700.</summary>
     [Parameter]
     public int? DelayDuration { get; set; }
 
-    /// <summary>
-    /// Override the provider's <c>DisableHoverableContent</c>. When <c>true</c>,
-    /// pointer leaving the trigger immediately schedules a close.
-    /// </summary>
+    /// <summary>When true, moving the pointer from the trigger towards the content closes the tooltip.</summary>
     [Parameter]
     public bool? DisableHoverableContent { get; set; }
+
+    /// <summary>Prevents the tooltip from opening.</summary>
+    [Parameter]
+    public bool Disabled { get; set; }
 
     /// <summary>Child content. Should contain a <see cref="BhTooltipTrigger"/> and a <see cref="BhTooltipContent"/>.</summary>
     [Parameter]
@@ -79,41 +72,28 @@ public class BhTooltip : BhComponentBase, IDisposable
 
     protected override string DefaultTag => "div";
 
-    // ── State ─────────────────────────────────────────────────────────────────
-
-    private bool _isOpen;
-    private bool _delayedOpen;
-    private CancellationTokenSource? _openCts;
-    private CancellationTokenSource? _closeCts;
-    private ElementReference _triggerRef;
-
-    private bool IsOpen => Open ?? _isOpen;
+    private bool IsOpen => IsProvided(nameof(Open)) ? Open : _open;
     private int EffectiveDelay => DelayDuration ?? ProviderContext?.DelayDuration ?? 700;
-    private bool EffectiveDisableHoverableContent =>
-        DisableHoverableContent ?? ProviderContext?.DisableHoverableContent ?? false;
+    private bool EffectiveDisableHoverable => DisableHoverableContent ?? ProviderContext?.DisableHoverableContent ?? false;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    private BhDelayedAction Timer => _timer ??= new BhDelayedAction(a => InvokeAsync(a));
 
-    protected override void OnInitialized()
-    {
-        if (Open is null)
-            _isOpen = DefaultOpen;
-        // A controlled-open or default-open tooltip is "instant" — no delay was
-        // observed; this matches Radix' data-state semantics for forced open.
-        _delayedOpen = false;
-    }
+    protected override void OnInitialized() => _open = DefaultOpen;
 
-    public void Dispose()
-    {
-        CancelOpenTimer();
-        CancelCloseTimer();
-    }
-
-    // ── Rendering ────────────────────────────────────────────────────────────
+    public void Dispose() => _timer?.Dispose();
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        var context = CreateContext();
+        var context = new BhTooltipContext(
+            isOpen: IsOpen,
+            delayedOpen: _delayedOpen,
+            baseId: ComponentId,
+            disableHoverableContent: EffectiveDisableHoverable,
+            hasContent: _hasContent,
+            setOpenAsync: open => SetOpenAsync(open, delayed: false),
+            scheduleOpenAsync: ScheduleOpenAsync,
+            scheduleCloseAsync: ScheduleCloseAsync,
+            registerContent: RegisterContent);
 
         builder.OpenComponent<CascadingValue<BhTooltipContext>>(0);
         builder.AddComponentParameter(1, "Value", context);
@@ -122,10 +102,7 @@ public class BhTooltip : BhComponentBase, IDisposable
             inner.OpenElement(0, Tag);
             inner.AddAttribute(10, "id", ComponentId);
             inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-            if (Ref is not null)
-                inner.AddElementReferenceCapture(30, Ref);
-
+            inner.AddElementReferenceCapture(30, CaptureElement);
             inner.AddContent(40, ChildContent);
             inner.CloseElement();
         }));
@@ -135,133 +112,60 @@ public class BhTooltip : BhComponentBase, IDisposable
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-        attrs["data-state"] = ResolveStateValue();
+        attrs["data-state"] = !IsOpen ? "closed" : _delayedOpen ? "delayed-open" : "instant-open";
+        // Wrapper only; doesn't affect layout of inline triggers.
+        if (GetAdditionalAttribute("style") is null && GetAdditionalAttribute("class") is null)
+            attrs["style"] = "display:contents";
         return attrs;
     }
 
-    // ── Context ───────────────────────────────────────────────────────────────
-
-    private BhTooltipContext CreateContext()
+    private void RegisterContent(bool present)
     {
-        var ctx = new BhTooltipContext(
-            isOpen: IsOpen,
-            delayedOpen: _delayedOpen,
-            baseId: ComponentId,
-            disableHoverableContent: EffectiveDisableHoverableContent,
-            setOpenAsync: SetOpenAsync,
-            scheduleOpenAsync: ScheduleOpenAsync,
-            scheduleCloseAsync: ScheduleCloseAsync,
-            registerTrigger: RegisterTriggerRef);
-        return ctx;
-    }
-
-    private void RegisterTriggerRef(ElementReference trigger) => _triggerRef = trigger;
-
-    private string ResolveStateValue()
-    {
-        if (!IsOpen) return "closed";
-        return _delayedOpen ? "delayed-open" : "instant-open";
-    }
-
-    // ── Open / Close scheduling ───────────────────────────────────────────────
-
-    private async Task ScheduleOpenAsync()
-    {
-        CancelCloseTimer();
-        if (IsOpen) return;
-
-        // If the provider says we recently closed another tooltip, skip the delay.
-        var skipDelay = ProviderContext?.IsRecentlyClosed() == true;
-        var delay = skipDelay ? 0 : EffectiveDelay;
-
-        if (delay <= 0)
-        {
-            await SetOpenInternalAsync(true, delayed: false);
-            return;
-        }
-
-        CancelOpenTimer();
-        _openCts = new CancellationTokenSource();
-        var token = _openCts.Token;
-
-        try
-        {
-            await Task.Delay(delay, token);
-        }
-        catch (TaskCanceledException)
-        {
-            return;
-        }
-
-        if (token.IsCancellationRequested) return;
-        await InvokeAsync(() => SetOpenInternalAsync(true, delayed: true));
-    }
-
-    private async Task ScheduleCloseAsync()
-    {
-        CancelOpenTimer();
-        if (!IsOpen) return;
-
-        // A short grace period lets the pointer travel from trigger to content
-        // without flicker. Skipped when hoverable content is disabled.
-        var grace = EffectiveDisableHoverableContent ? 0 : 100;
-        if (grace <= 0)
-        {
-            await SetOpenInternalAsync(false, delayed: false);
-            return;
-        }
-
-        CancelCloseTimer();
-        _closeCts = new CancellationTokenSource();
-        var token = _closeCts.Token;
-
-        try
-        {
-            await Task.Delay(grace, token);
-        }
-        catch (TaskCanceledException)
-        {
-            return;
-        }
-
-        if (token.IsCancellationRequested) return;
-        await InvokeAsync(() => SetOpenInternalAsync(false, delayed: false));
-    }
-
-    private Task SetOpenAsync(bool open)
-    {
-        CancelOpenTimer();
-        CancelCloseTimer();
-        return SetOpenInternalAsync(open, delayed: false);
-    }
-
-    private async Task SetOpenInternalAsync(bool value, bool delayed)
-    {
-        if (IsOpen == value && _delayedOpen == delayed) return;
-
-        _delayedOpen = value && delayed;
-
-        if (Open is null)
-            _isOpen = value;
-
-        if (!value)
-            ProviderContext?.NotifyClosed();
-
-        await OnOpenChange.InvokeAsync(value);
+        if (_hasContent == present) return;
+        _hasContent = present;
         StateHasChanged();
     }
 
-    private void CancelOpenTimer()
+    private Task ScheduleOpenAsync()
     {
-        _openCts?.Cancel();
-        _openCts?.Dispose();
-        _openCts = null;
+        if (Disabled) return Task.CompletedTask;
+        if (IsOpen)
+        {
+            Timer.Cancel();
+            return Task.CompletedTask;
+        }
+        // Skip the delay when another tooltip closed a moment ago.
+        var delay = ProviderContext?.IsRecentlyClosed() == true ? 0 : EffectiveDelay;
+        Timer.Schedule(delay, () => SetOpenAsync(true, delayed: delay > 0));
+        return Task.CompletedTask;
     }
 
-    private void CancelCloseTimer()
+    private Task ScheduleCloseAsync()
     {
-        _closeCts?.Cancel();
-        _closeCts?.Dispose();
-        _closeCts = null;
+        if (!IsOpen)
+        {
+            Timer.Cancel();
+            return Task.CompletedTask;
+        }
+        // A short grace period lets the pointer travel into hoverable content.
+        Timer.Schedule(EffectiveDisableHoverable ? 0 : 120, () => SetOpenAsync(false, delayed: false));
+        return Task.CompletedTask;
+    }
+
+    private async Task SetOpenAsync(bool value, bool delayed)
+    {
+        Timer.Cancel();
+        if (value && Disabled) return;
+        if (IsOpen == value && _delayedOpen == (value && delayed)) return;
+
+        _delayedOpen = value && delayed;
+        if (!IsProvided(nameof(Open)))
+            _open = value;
+        if (!value)
+            ProviderContext?.NotifyClosed();
+
+        await OpenChanged.InvokeAsync(value);
+        await OnOpenChange.InvokeAsync(value);
+        StateHasChanged();
     }
 }

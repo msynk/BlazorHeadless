@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toast — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html" class="active">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Toast</h1>
+        <p class="lead">Short, non-blocking notifications — queued from anywhere, announced to screen readers, dismissed automatically.</p>
+        <h2 id="simple-toast">Simple toast</h2>
+        <p>Inject <code>BhToaster</code> (registered by <code>AddBlazorHeadless()</code>) and call <code>Show</code>. Toasts appear in a <code>BhToastViewport</code> — a <code>role="region"</code> landmark labelled "Notifications (F8)"; press <code>F8</code> to jump to it. Every toast is announced through the shared live region, auto-dismisses after the viewport's <code>Duration</code> (paused while hovered or focused) and closes with <code>Escape</code> or a <code>BhToastClose</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@inject BhToaster Toaster
+
+&lt;BhButton OnClick="ShowSimple" class="btn"&gt;Show toast&lt;/BhButton&gt;
+
+@* Place ONE viewport in your layout (e.g. MainLayout.razor). *@
+&lt;BhToastViewport Context="t" Duration="5000" class="toast-viewport"&gt;
+    &lt;BhToast Item="t" data-variant="@(t.Data ?? "info")" class="toast"&gt;
+        @if (t.Data is "success" or "error")
+        {
+            &lt;span class="toast-icon" aria-hidden="true"&gt;@(t.Data is "error" ? "!" : "✓")&lt;/span&gt;
+        }
+        &lt;div class="toast-body"&gt;
+            &lt;BhToastTitle class="toast-title"&gt;@t.Title&lt;/BhToastTitle&gt;
+            @if (t.Description is not null)
+            {
+                &lt;BhToastDescription class="toast-description"&gt;@t.Description&lt;/BhToastDescription&gt;
+            }
+        &lt;/div&gt;
+        @if (t.Options.ActionLabel is not null)
+        {
+            &lt;BhToastAction class="toast-action" /&gt;  @* shows ActionLabel *@
+        }
+        &lt;BhToastClose aria-label="Dismiss notification" class="toast-close"&gt;×&lt;/BhToastClose&gt;
+    &lt;/BhToast&gt;
+&lt;/BhToastViewport&gt;
+
+@code {
+    private void ShowSimple() =&gt; Toaster.Show("Event created");
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* The viewport's class lands on the &lt;ol&gt; inside the "Notifications (F8)" region */
+.toast-viewport {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(22rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+}
+.toast-viewport:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; border-radius: 0.75rem; }
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0.75rem 0.85rem 1rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.06);
+    font-size: 0.875rem;
+}
+.toast:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Enter / exit: BhToast emits data-state="open|closed"; the exit animation
+   is awaited before the toast is removed. */
+.toast[data-state="open"]   { animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+.toast[data-state="closed"] { animation: toast-out 180ms ease-in forwards; }
+
+@keyframes toast-in  { from { opacity: 0; transform: translateY(0.75rem) scale(0.97); } }
+@keyframes toast-out { to   { opacity: 0; transform: translateX(calc(100% + 1rem)); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .toast[data-state] { animation: none; }
+}
+
+.toast-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+.toast[data-variant="success"] .toast-icon { background: #16a34a; }
+
+.toast-body        { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.toast-title       { font-weight: 600; }
+.toast-description { color: #52525b; }
+
+.toast-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: transparent;
+    color: #71717a;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.toast-close:hover         { background: #f4f4f5; color: #18181b; }
+.toast-close:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">@inject BhToaster Toaster
+
+&lt;BhButton OnClick="ShowSimple" class="... rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium"&gt;
+    Show toast
+&lt;/BhButton&gt;
+
+@* Place ONE viewport in your layout (e.g. MainLayout.razor). *@
+&lt;BhToastViewport Context="t" Duration="5000"
+                 class="fixed bottom-4 right-4 z-100 m-0 flex w-[min(22rem,calc(100vw-2rem))] list-none flex-col gap-2 p-0 outline-none focus-visible:outline-2 focus-visible:outline-blue-600"&gt;
+    &lt;BhToast Item="t" data-variant="@(t.Data ?? "info")"
+             class="group flex items-start gap-3 rounded-xl border border-zinc-200 bg-white py-3.5 pl-4 pr-3 text-sm text-zinc-900 shadow-lg outline-none
+                    transition duration-200 ease-out
+                    starting:translate-y-3 starting:opacity-0
+                    data-state-closed:translate-x-[calc(100%+1rem)] data-state-closed:opacity-0 data-state-closed:duration-150 data-state-closed:ease-in
+                    data-[variant=error]:border-red-200 data-[variant=error]:bg-red-50
+                    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none"&gt;
+        @if (t.Data is "success" or "error")
+        {
+            &lt;span aria-hidden="true" class="mt-px inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-green-600 text-[0.7rem] font-bold text-white group-data-[variant=error]:bg-red-600"&gt;
+                @(t.Data is "error" ? "!" : "✓")
+            &lt;/span&gt;
+        }
+        &lt;div class="flex min-w-0 flex-1 flex-col gap-0.5"&gt;
+            &lt;BhToastTitle class="font-semibold group-data-[variant=error]:text-red-800"&gt;@t.Title&lt;/BhToastTitle&gt;
+            @if (t.Description is not null)
+            {
+                &lt;BhToastDescription class="text-zinc-600"&gt;@t.Description&lt;/BhToastDescription&gt;
+            }
+        &lt;/div&gt;
+        @if (t.Options.ActionLabel is not null)
+        {
+            &lt;BhToastAction class="shrink-0 self-center rounded-md border border-zinc-300 bg-white px-2.5 py-1 text-xs font-semibold hover:bg-zinc-100" /&gt;
+        }
+        &lt;BhToastClose aria-label="Dismiss notification"
+                      class="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-lg leading-none text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"&gt;
+            ×
+        &lt;/BhToastClose&gt;
+    &lt;/BhToast&gt;
+&lt;/BhToastViewport&gt;
+
+@code {
+    private void ShowSimple() =&gt; Toaster.Show("Event created");
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-a-description">With a description</h2>
+        <p>Pass a description and render it with <code>BhToastDescription</code>. Title and description are announced together ("Changes saved. Your profile is now visible…"). <code>Data</code> carries anything your template needs — here a variant that picks the icon.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ShowWithDescription" class="btn btn-primary"&gt;Save profile&lt;/BhButton&gt;
+
+@* Rendered by the BhToastViewport from the "Simple toast" demo. *@
+
+@code {
+    private void ShowWithDescription() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Changes saved",
+        Description = "Your profile is now visible to your team.",
+        Data = "success",   // read by the template: t.Data
+    });
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* The viewport's class lands on the &lt;ol&gt; inside the "Notifications (F8)" region */
+.toast-viewport {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(22rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+}
+.toast-viewport:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; border-radius: 0.75rem; }
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0.75rem 0.85rem 1rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.06);
+    font-size: 0.875rem;
+}
+.toast:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Enter / exit: BhToast emits data-state="open|closed"; the exit animation
+   is awaited before the toast is removed. */
+.toast[data-state="open"]   { animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+.toast[data-state="closed"] { animation: toast-out 180ms ease-in forwards; }
+
+@keyframes toast-in  { from { opacity: 0; transform: translateY(0.75rem) scale(0.97); } }
+@keyframes toast-out { to   { opacity: 0; transform: translateX(calc(100% + 1rem)); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .toast[data-state] { animation: none; }
+}
+
+.toast-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+.toast[data-variant="success"] .toast-icon { background: #16a34a; }
+
+.toast-body        { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.toast-title       { font-weight: 600; }
+.toast-description { color: #52525b; }
+
+.toast-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: transparent;
+    color: #71717a;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.toast-close:hover         { background: #f4f4f5; color: #18181b; }
+.toast-close:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ShowWithDescription"
+          class="inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"&gt;
+    Save profile
+&lt;/BhButton&gt;
+
+@* Rendered by the BhToastViewport from the "Simple toast" demo. *@
+
+@code {
+    private void ShowWithDescription() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Changes saved",
+        Description = "Your profile is now visible to your team.",
+        Data = "success",   // read by the template: t.Data
+    });
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="with-an-action">With an action</h2>
+        <p>Set <code>ActionLabel</code> and <code>OnAction</code>; <code>BhToastAction</code> renders the button, runs the callback and dismisses the toast. Toasts disappear, so keep the action reachable elsewhere too — here "Restore all" stays on the page.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;ul class="toast-inbox"&gt;
+    @foreach (var message in inbox)
+    {
+        &lt;li class="toast-inbox-item" @key="message"&gt;
+            &lt;span&gt;@message&lt;/span&gt;
+            &lt;BhButton OnClick="() =&gt; Archive(message)" class="btn"&gt;Archive&lt;/BhButton&gt;
+        &lt;/li&gt;
+    }
+&lt;/ul&gt;
+
+@code {
+    private readonly List&lt;string&gt; inbox = new() { "Quarterly report", "Team offsite plan", "Invoice #1042" };
+
+    private void Archive(string message)
+    {
+        var index = inbox.IndexOf(message);
+        inbox.RemoveAt(index);
+
+        Toaster.Show(new BhToastOptions
+        {
+            Title = "Conversation archived",
+            Description = message,
+            ActionLabel = "Undo",                 // rendered by &lt;BhToastAction /&gt;
+            OnAction = () =&gt;
+            {
+                inbox.Insert(Math.Min(index, inbox.Count), message);
+                return InvokeAsync(StateHasChanged); // runs from the toast, so re-render this page
+            },
+        });
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Builds on the base .toast styles from the "Simple toast" demo */
+.toast-action {
+    align-self: center;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.4rem;
+    background: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.toast-action:hover         { background: #f4f4f5; }
+.toast-action:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* The demo inbox */
+.toast-inbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: 24rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.toast-inbox-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.85rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.875rem;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;ul class="m-0 flex w-full max-w-sm list-none flex-col gap-1.5 p-0"&gt;
+    @foreach (var message in inbox)
+    {
+        &lt;li class="flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white py-2 pl-3.5 pr-2 text-sm" @key="message"&gt;
+            &lt;span&gt;@message&lt;/span&gt;
+            &lt;BhButton OnClick="() =&gt; Archive(message)"
+                      class="rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium hover:bg-zinc-100"&gt;
+                Archive
+            &lt;/BhButton&gt;
+        &lt;/li&gt;
+    }
+&lt;/ul&gt;
+
+@code {
+    private readonly List&lt;string&gt; inbox = new() { "Quarterly report", "Team offsite plan", "Invoice #1042" };
+
+    private void Archive(string message)
+    {
+        var index = inbox.IndexOf(message);
+        inbox.RemoveAt(index);
+
+        Toaster.Show(new BhToastOptions
+        {
+            Title = "Conversation archived",
+            Description = message,
+            ActionLabel = "Undo",                 // rendered by &lt;BhToastAction /&gt;
+            OnAction = () =&gt;
+            {
+                inbox.Insert(Math.Min(index, inbox.Count), message);
+                return InvokeAsync(StateHasChanged); // runs from the toast, so re-render this page
+            },
+        });
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="foreground-assertive-error">Foreground (assertive) error</h2>
+        <p>Toasts are background (<code>role="status"</code>, announced politely) by default. Set <code>Foreground = true</code> for the direct result of a user action that needs attention: it is announced assertively and the toast gets <code>data-type="foreground"</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ShowError" class="btn"&gt;Pay $49.00&lt;/BhButton&gt;
+
+@code {
+    private void ShowError() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Payment failed",
+        Description = "Your card was declined. Try another payment method.",
+        Foreground = true,   // role="alert", announced assertively, data-type="foreground"
+        Data = "error",
+    });
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Builds on the base .toast styles from the "Simple toast" demo.
+   data-variant comes from BhToastOptions.Data via the template;
+   you could also key off [data-type="foreground"]. */
+.toast[data-variant="error"] {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+.toast[data-variant="error"] .toast-title { color: #991b1b; }
+.toast[data-variant="error"] .toast-icon  { background: #dc2626; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="ShowError" class="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"&gt;
+    Pay $49.00
+&lt;/BhButton&gt;
+
+@code {
+    private void ShowError() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Payment failed",
+        Description = "Your card was declined. Try another payment method.",
+        Foreground = true,   // role="alert", announced assertively, data-type="foreground"
+        Data = "error",      // styled with data-[variant=error]: in the template
+    });
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="custom-duration-and-persistent-toasts">Custom duration and persistent toasts</h2>
+        <p><code>Duration</code> (ms) on a toast overrides the viewport's default (5000 ms). <code>Duration = 0</code> keeps the toast until it is dismissed. <code>Clear()</code> dismisses every toast.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; ShowTimed(2000)" class="btn"&gt;2 seconds&lt;/BhButton&gt;
+&lt;BhButton OnClick="() =&gt; ShowTimed(10000)" class="btn"&gt;10 seconds&lt;/BhButton&gt;
+&lt;BhButton OnClick="ShowPersistent" class="btn"&gt;Persistent&lt;/BhButton&gt;
+&lt;BhButton OnClick="() =&gt; Toaster.Clear()" class="btn btn-link"&gt;Dismiss all&lt;/BhButton&gt;
+
+@code {
+    private void ShowTimed(int milliseconds) =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = $"Closes in {milliseconds / 1000} seconds",
+        Description = "Hover or focus it to pause the timer.",
+        Duration = milliseconds,            // overrides &lt;BhToastViewport Duration="5000"&gt;
+    });
+
+    private void ShowPersistent() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Update available",
+        Description = "This toast stays until you dismiss it.",
+        Duration = 0,                       // 0 or less: never auto-dismiss
+    });
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* The viewport's class lands on the &lt;ol&gt; inside the "Notifications (F8)" region */
+.toast-viewport {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(22rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+}
+.toast-viewport:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; border-radius: 0.75rem; }
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0.75rem 0.85rem 1rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.06);
+    font-size: 0.875rem;
+}
+.toast:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* Enter / exit: BhToast emits data-state="open|closed"; the exit animation
+   is awaited before the toast is removed. */
+.toast[data-state="open"]   { animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+.toast[data-state="closed"] { animation: toast-out 180ms ease-in forwards; }
+
+@keyframes toast-in  { from { opacity: 0; transform: translateY(0.75rem) scale(0.97); } }
+@keyframes toast-out { to   { opacity: 0; transform: translateX(calc(100% + 1rem)); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .toast[data-state] { animation: none; }
+}
+
+.toast-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+.toast[data-variant="success"] .toast-icon { background: #16a34a; }
+
+.toast-body        { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.toast-title       { font-weight: 600; }
+.toast-description { color: #52525b; }
+
+.toast-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: transparent;
+    color: #71717a;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.toast-close:hover         { background: #f4f4f5; color: #18181b; }
+.toast-close:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="() =&gt; ShowTimed(2000)" class="..."&gt;2 seconds&lt;/BhButton&gt;
+&lt;BhButton OnClick="() =&gt; ShowTimed(10000)" class="..."&gt;10 seconds&lt;/BhButton&gt;
+&lt;BhButton OnClick="ShowPersistent" class="..."&gt;Persistent&lt;/BhButton&gt;
+&lt;BhButton OnClick="() =&gt; Toaster.Clear()" class="..."&gt;Dismiss all&lt;/BhButton&gt;
+
+@code {
+    private void ShowTimed(int milliseconds) =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = $"Closes in {milliseconds / 1000} seconds",
+        Description = "Hover or focus it to pause the timer.",
+        Duration = milliseconds,            // overrides &lt;BhToastViewport Duration="5000"&gt;
+    });
+
+    private void ShowPersistent() =&gt; Toaster.Show(new BhToastOptions
+    {
+        Title = "Update available",
+        Description = "This toast stays until you dismiss it.",
+        Duration = 0,                       // 0 or less: never auto-dismiss
+    });
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="stacking-with-limit">Stacking with Limit</h2>
+        <p><code>BhToaster.Limit</code> (default 5) caps how many toasts are kept — the oldest is dropped when a new one arrives. This demo creates its own toaster with <code>Limit = 3</code> and renders it in a second viewport (passed through <code>Toaster</code>, bottom-left, <code>Shift+F8</code>) styled as a stack that fans out on hover or keyboard focus.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="AddStacked" class="btn"&gt;Add notification&lt;/BhButton&gt;
+
+@* A second viewport bound to its own toaster. *@
+&lt;BhToastViewport Toaster="stackToaster" Label="Stacked notifications" Hotkey="shift+F8"
+                 Context="t" Duration="8000" class="toast-stack"&gt;
+    &lt;BhToast Item="t" class="toast"&gt;
+        &lt;div class="toast-body"&gt;
+            &lt;BhToastTitle class="toast-title"&gt;@t.Title&lt;/BhToastTitle&gt;
+            &lt;BhToastDescription class="toast-description"&gt;@t.Description&lt;/BhToastDescription&gt;
+        &lt;/div&gt;
+        &lt;BhToastClose aria-label="Dismiss notification" class="toast-close"&gt;×&lt;/BhToastClose&gt;
+    &lt;/BhToast&gt;
+&lt;/BhToastViewport&gt;
+
+@code {
+    private readonly BhToaster stackToaster = new() { Limit = 3 };   // oldest dropped beyond 3
+    private int stackCount;
+
+    private void AddStacked()
+    {
+        stackCount++;
+        stackToaster.Show(new BhToastOptions
+        {
+            Title = $"Notification {stackCount}",
+            Description = $"Received at {DateTime.Now:HH:mm:ss}.",
+        });
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* Builds on the base .toast styles from the "Simple toast" demo.
+   Toasts overlap in one grid cell; older ones peek out behind the newest,
+   and the stack fans out on hover or keyboard focus. */
+.toast-stack {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 100;
+    display: grid;
+    width: min(20rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    outline: none;
+}
+
+.toast-stack &gt; .toast {
+    grid-area: 1 / 1;
+    align-self: end;
+    transform-origin: bottom center;
+    transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.toast-stack &gt; .toast:nth-last-child(2) { transform: translateY(-0.7rem) scale(0.95); opacity: 0.85; }
+.toast-stack &gt; .toast:nth-last-child(3) { transform: translateY(-1.4rem) scale(0.9); opacity: 0.7; }
+
+.toast-stack:hover,
+.toast-stack:focus-within { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.toast-stack:hover &gt; .toast,
+.toast-stack:focus-within &gt; .toast { transform: none; opacity: 1; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhButton OnClick="AddStacked" class="..."&gt;Add notification&lt;/BhButton&gt;
+
+@* A second viewport bound to its own toaster; children overlap in one grid cell
+   and the list switches to a flex column on hover / focus-within. *@
+&lt;BhToastViewport Toaster="stackToaster" Label="Stacked notifications" Hotkey="shift+F8"
+                 Context="t" Duration="8000"
+                 class="group/stack fixed bottom-4 left-4 z-100 m-0 grid w-80 list-none p-0
+                        hover:flex hover:flex-col hover:gap-2 focus-within:flex focus-within:flex-col focus-within:gap-2"&gt;
+    &lt;BhToast Item="t"
+             class="@($"col-start-1 row-start-1 self-end origin-bottom flex items-start gap-3 rounded-xl border border-zinc-200 bg-white py-3.5 pl-4 pr-3 text-sm shadow-lg transition duration-200 starting:translate-y-3 starting:opacity-0 data-state-closed:translate-x-[calc(100%+1rem)] data-state-closed:opacity-0 {StackClass(StackDepth(t))}")"&gt;
+        &lt;div class="flex min-w-0 flex-1 flex-col gap-0.5"&gt;
+            &lt;BhToastTitle class="font-semibold"&gt;@t.Title&lt;/BhToastTitle&gt;
+            &lt;BhToastDescription class="text-zinc-600"&gt;@t.Description&lt;/BhToastDescription&gt;
+        &lt;/div&gt;
+        &lt;BhToastClose aria-label="Dismiss notification" class="..."&gt;×&lt;/BhToastClose&gt;
+    &lt;/BhToast&gt;
+&lt;/BhToastViewport&gt;
+
+@code {
+    private readonly BhToaster stackToaster = new() { Limit = 3 };   // oldest dropped beyond 3
+    private int stackCount;
+
+    private void AddStacked()
+    {
+        stackCount++;
+        stackToaster.Show(new BhToastOptions
+        {
+            Title = $"Notification {stackCount}",
+            Description = $"Received at {DateTime.Now:HH:mm:ss}.",
+        });
+    }
+
+    // 0 = newest (front of the stack)
+    private int StackDepth(BhToastItem toast)
+    {
+        var toasts = stackToaster.Toasts;
+        for (var i = 0; i &lt; toasts.Count; i++)
+            if (ReferenceEquals(toasts[i], toast)) return toasts.Count - 1 - i;
+        return 0;
+    }
+
+    private static string StackClass(int depth) =&gt; depth switch
+    {
+        0 =&gt; "",
+        1 =&gt; "-translate-y-3 scale-95 opacity-90 group-hover/stack:translate-y-0 group-hover/stack:scale-100 group-hover/stack:opacity-100 group-focus-within/stack:translate-y-0 ...",
+        _ =&gt; "-translate-y-6 scale-90 opacity-75 group-hover/stack:translate-y-0 group-hover/stack:scale-100 group-hover/stack:opacity-100 group-focus-within/stack:translate-y-0 ...",
+    };
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="tabs.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Tabs</span>
+        </a>
+            <a class="next" href="toggle-group.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Toggle / Toggle Group</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

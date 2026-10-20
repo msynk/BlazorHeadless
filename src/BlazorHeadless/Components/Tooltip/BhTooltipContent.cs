@@ -1,89 +1,87 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// The popup that appears when the tooltip is open. Hidden via the HTML
-/// <c>hidden</c> attribute when the tooltip is closed.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Renders with <c>role="tooltip"</c> for assistive technologies.</item>
-///   <item>By default the content is hoverable — moving the pointer from the
-///     trigger into the content keeps it open. Disable on the parent
-///     <see cref="BhTooltip"/> via <c>DisableHoverableContent</c>.</item>
-///   <item>Escape closes the tooltip while focus is inside the content.</item>
-///   <item>Emits <c>data-state="closed" | "delayed-open" | "instant-open"</c>.</item>
-/// </list>
-///
-/// <para>
-/// When <see cref="Anchor"/> is set, the content is automatically positioned
-/// relative to the trigger using the anchor positioning system (with flip and
-/// shift to stay inside the viewport).
-/// </para>
+/// The popup of a <see cref="BhTooltip"/> (<c>role="tooltip"</c>). Hidden while closed.
+/// Set <see cref="BhFloatingContentBase.Anchor"/> (e.g. <c>"top"</c>) for automatic
+/// positioning with flip / shift, and add a <see cref="BhTooltipArrow"/> for an arrow.
+/// Escape dismisses it from anywhere (WCAG 1.4.13).
 /// </summary>
-public class BhTooltipContent : BhComponentBase, IAsyncDisposable
+public class BhTooltipContent : BhFloatingContentBase
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
-
     [CascadingParameter]
-    private BhTooltipContext TooltipContext { get; set; } = default!;
+    private BhTooltipContext? TooltipContext { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhTooltipRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhTooltipRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Configures automatic positioning of the content relative to the
-    /// <see cref="BhTooltipTrigger"/>. When set, the content is positioned using
-    /// fixed positioning and auto-updates on scroll / resize. Default placement:
-    /// <c>"top"</c> with an 8px gap.
+    /// Content that receives the render state (<c>BhTooltipRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public BhAnchorOptions? Anchor { get; set; }
-
-    private int _anchorHandle;
-    private bool _wasOpen;
-    private bool _positioned;
+    public RenderFragment<BhTooltipRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => TooltipContext?.IsOpen ?? false;
+    protected override bool IsOpen => TooltipContext?.IsOpen ?? false;
 
-    private BhTooltipRenderContext RenderContext => new()
+    private string ContentId => TooltipContext?.ContentId ?? ComponentId;
+
+    protected override void OnInitialized() => TooltipContext?.RegisterContent(true);
+
+    public override ValueTask DisposeAsync()
     {
-        IsOpen = IsOpen,
-        DelayedOpen = TooltipContext?.DelayedOpen ?? false,
-    };
+        TooltipContext?.RegisterContent(false);
+        return base.DisposeAsync();
+    }
+
+    protected override BhFloatingRequest CreateFloatingRequest()
+    {
+        var layer = new BhLayerOptions { Hover = true, PointerDownOutside = false, ParentHandle = ParentLayerHandle };
+        layer.BranchIds.Add(TooltipContext?.TriggerId);
+        return new BhFloatingRequest
+        {
+            ContentId = ContentId,
+            ReferenceId = TooltipContext?.TriggerId,
+            Anchor = EffectiveAnchor,
+            ArrowId = ArrowId,
+            Portal = EffectivePortal,
+            PortalTarget = PortalTarget,
+            Layer = layer,
+        };
+    }
+
+    protected override Task OnDismissAsync(BhDismissReason reason)
+        => TooltipContext?.SetOpenAsync(false) ?? Task.CompletedTask;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!ShouldRenderContent) return;
+
+        Scope.Owner = ContentId;
+
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", TooltipContext?.ContentId ?? ComponentId);
+        builder.AddAttribute(10, "id", ContentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Keep the content hidden while it's open but not yet positioned by the
-        // anchor engine. This prevents a flash at the unpositioned location
-        // before OnAfterRenderAsync runs the JS positioning.
-        if (!IsOpen || (Anchor is not null && !_positioned))
+        if (IsHidden)
             builder.AddAttribute(30, "hidden", true);
-
         builder.AddAttribute(31, "onpointerenter",
             EventCallback.Factory.Create<PointerEventArgs>(this, HandlePointerEnter));
         builder.AddAttribute(32, "onpointerleave",
             EventCallback.Factory.Create<PointerEventArgs>(this, HandlePointerLeave));
-        builder.AddAttribute(33, "onkeydown",
-            EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            BhFloatingScope.Render(builder, 50, Scope, BhContent.Pick(Template, ChildContent, new BhTooltipRenderContext
+            {
+                IsOpen = IsOpen,
+                DelayedOpen = TooltipContext?.DelayedOpen ?? false,
+            }));
         builder.CloseElement();
     }
 
@@ -91,69 +89,17 @@ public class BhTooltipContent : BhComponentBase, IAsyncDisposable
     {
         var attrs = base.BuildComponentAttributes();
         attrs["role"] = "tooltip";
-        attrs["data-state"] = ResolveStateValue();
+        attrs["data-state"] = TooltipContext?.DataState ?? "closed";
         return attrs;
-    }
-
-    private string ResolveStateValue()
-    {
-        if (TooltipContext is null || !TooltipContext.IsOpen) return "closed";
-        return TooltipContext.DelayedOpen ? "delayed-open" : "instant-open";
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (Anchor is null) return;
-
-        if (IsOpen && !_wasOpen)
-        {
-            var triggerId = TooltipContext.TriggerId;
-            var contentId = TooltipContext.ContentId;
-            _anchorHandle = await Interop.AnchorStartByIdAsync(triggerId, contentId, Anchor);
-            _wasOpen = true;
-            // JS has positioned and revealed the element; reflect that in the
-            // render so a subsequent render won't re-add the hidden attribute.
-            _positioned = true;
-            StateHasChanged();
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            await Interop.AnchorStopAsync(_anchorHandle);
-            _anchorHandle = 0;
-            _wasOpen = false;
-            _positioned = false;
-        }
     }
 
     private Task HandlePointerEnter(PointerEventArgs args)
     {
-        if (TooltipContext is null) return Task.CompletedTask;
-        // Cancel any pending close — the user moved into hoverable content.
-        return TooltipContext.DisableHoverableContent
-            ? Task.CompletedTask
-            : TooltipContext.ScheduleOpenAsync();
+        // Hoverable content: entering it cancels the pending close.
+        if (TooltipContext is null || TooltipContext.DisableHoverableContent) return Task.CompletedTask;
+        return TooltipContext.ScheduleOpenAsync();
     }
 
     private Task HandlePointerLeave(PointerEventArgs args)
         => TooltipContext?.ScheduleCloseAsync() ?? Task.CompletedTask;
-
-    private Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        if (TooltipContext is null) return Task.CompletedTask;
-        if (args.Key == "Escape")
-            return TooltipContext.SetOpenAsync(false);
-        return Task.CompletedTask;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_anchorHandle > 0)
-        {
-            try
-            {
-                await Interop.AnchorStopAsync(_anchorHandle);
-            }
-            catch (JSDisconnectedException) { /* circuit gone */ }
-        }
-    }
 }

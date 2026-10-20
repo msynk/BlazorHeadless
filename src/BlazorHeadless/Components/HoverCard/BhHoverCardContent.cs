@@ -1,86 +1,78 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
-/// The floating card that appears when the hover card is open. Hidden via the
-/// HTML <c>hidden</c> attribute when closed.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>The content is hoverable — moving the pointer from the trigger into
-///     the content keeps the card open; leaving it schedules a close.</item>
-///   <item>Pressing Escape while focus is inside the content closes the card.</item>
-///   <item>Emits <c>data-state="open" | "closed"</c>.</item>
-/// </list>
-///
-/// <para>
-/// When <see cref="Anchor"/> is set, the content is automatically positioned
-/// relative to the trigger using the anchor positioning system (with flip and
-/// shift to stay inside the viewport). Default placement: <c>"bottom"</c>.
-/// </para>
+/// The card shown by a <see cref="BhHoverCard"/>. Hidden while closed. Set
+/// <see cref="BhFloatingContentBase.Anchor"/> for automatic positioning and add a
+/// <see cref="BhHoverCardArrow"/> for an arrow. Keeping the pointer over it keeps it open.
 /// </summary>
-public class BhHoverCardContent : BhComponentBase, IAsyncDisposable
+public class BhHoverCardContent : BhFloatingContentBase
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
-
     [CascadingParameter]
-    private BhHoverCardContext HoverCardContext { get; set; } = default!;
+    private BhHoverCardContext? HoverCardContext { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhHoverCardRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhHoverCardRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Configures automatic positioning of the content relative to the
-    /// <see cref="BhHoverCardTrigger"/>. When set, the content is positioned with
-    /// fixed positioning and auto-updates on scroll / resize. Default placement:
-    /// <c>"bottom"</c> with an 8px gap.
+    /// Content that receives the render state (<c>BhHoverCardRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public BhAnchorOptions? Anchor { get; set; }
-
-    private int _anchorHandle;
-    private bool _wasOpen;
-    private bool _positioned;
+    public RenderFragment<BhHoverCardRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => HoverCardContext?.IsOpen ?? false;
+    protected override bool IsOpen => HoverCardContext?.IsOpen ?? false;
 
-    private BhHoverCardRenderContext RenderContext => new()
+    private string ContentId => HoverCardContext?.ContentId ?? ComponentId;
+
+    protected override BhFloatingRequest CreateFloatingRequest()
     {
-        IsOpen = IsOpen,
-    };
+        var layer = new BhLayerOptions { Hover = true, ParentHandle = ParentLayerHandle };
+        layer.BranchIds.Add(HoverCardContext?.TriggerId);
+        return new BhFloatingRequest
+        {
+            ContentId = ContentId,
+            ReferenceId = HoverCardContext?.TriggerId,
+            Anchor = EffectiveAnchor,
+            ArrowId = ArrowId,
+            Portal = EffectivePortal,
+            PortalTarget = PortalTarget,
+            Layer = layer,
+        };
+    }
+
+    protected override Task OnDismissAsync(BhDismissReason reason)
+        => HoverCardContext?.SetOpenAsync(false) ?? Task.CompletedTask;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!ShouldRenderContent) return;
+
+        Scope.Owner = ContentId;
+
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", HoverCardContext?.ContentId ?? ComponentId);
+        builder.AddAttribute(10, "id", ContentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        // Keep the content hidden while it's open but not yet positioned by the
-        // anchor engine. This prevents a flash at the unpositioned location
-        // before OnAfterRenderAsync runs the JS positioning.
-        if (!IsOpen || (Anchor is not null && !_positioned))
+        if (IsHidden)
             builder.AddAttribute(30, "hidden", true);
-
         builder.AddAttribute(31, "onpointerenter",
             EventCallback.Factory.Create<PointerEventArgs>(this, HandlePointerEnter));
         builder.AddAttribute(32, "onpointerleave",
             EventCallback.Factory.Create<PointerEventArgs>(this, HandlePointerLeave));
-        builder.AddAttribute(33, "onkeydown",
-            EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddAttribute(33, "onfocusin",
+            EventCallback.Factory.Create<FocusEventArgs>(this, HandlePointerEnter));
+        builder.AddAttribute(34, "onfocusout",
+            EventCallback.Factory.Create<FocusEventArgs>(this, HandlePointerLeave));
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            BhFloatingScope.Render(builder, 50, Scope, BhContent.Pick(Template, ChildContent, new BhHoverCardRenderContext { IsOpen = IsOpen }));
         builder.CloseElement();
     }
 
@@ -91,61 +83,7 @@ public class BhHoverCardContent : BhComponentBase, IAsyncDisposable
         return attrs;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (Anchor is null) return;
+    private Task HandlePointerEnter() => HoverCardContext?.ScheduleOpenAsync() ?? Task.CompletedTask;
 
-        if (IsOpen && !_wasOpen)
-        {
-            _anchorHandle = await Interop.AnchorStartByIdAsync(
-                HoverCardContext.TriggerId, HoverCardContext.ContentId, Anchor);
-            _wasOpen = true;
-            // JS has positioned and revealed the element; reflect that in the
-            // render so a subsequent render won't re-add the hidden attribute.
-            _positioned = true;
-            StateHasChanged();
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            await Interop.AnchorStopAsync(_anchorHandle);
-            _anchorHandle = 0;
-            _wasOpen = false;
-            _positioned = false;
-        }
-    }
-
-    private Task HandlePointerEnter(PointerEventArgs args)
-    {
-        if (string.Equals(args.PointerType, "touch", StringComparison.OrdinalIgnoreCase))
-            return Task.CompletedTask;
-        // Cancel any pending close — the pointer moved into hoverable content.
-        return HoverCardContext?.ScheduleOpenAsync() ?? Task.CompletedTask;
-    }
-
-    private Task HandlePointerLeave(PointerEventArgs args)
-    {
-        if (string.Equals(args.PointerType, "touch", StringComparison.OrdinalIgnoreCase))
-            return Task.CompletedTask;
-        return HoverCardContext?.ScheduleCloseAsync() ?? Task.CompletedTask;
-    }
-
-    private Task HandleKeyDown(KeyboardEventArgs args)
-    {
-        if (HoverCardContext is null) return Task.CompletedTask;
-        if (args.Key == "Escape")
-            return HoverCardContext.SetOpenAsync(false);
-        return Task.CompletedTask;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_anchorHandle > 0)
-        {
-            try
-            {
-                await Interop.AnchorStopAsync(_anchorHandle);
-            }
-            catch (JSDisconnectedException) { /* circuit gone */ }
-        }
-    }
+    private Task HandlePointerLeave() => HoverCardContext?.ScheduleCloseAsync() ?? Task.CompletedTask;
 }

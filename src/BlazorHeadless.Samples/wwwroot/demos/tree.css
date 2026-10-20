@@ -1,0 +1,148 @@
+/* tree demo styles — plain CSS section. The library ships zero CSS. */
+
+/* ── Demo layout ───────────────────────────────────────────────────────── */
+.tree-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+.tree-actions { display: flex; gap: 0.5rem; }
+
+.tree-button {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.375rem;
+    background: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #18181b;
+    cursor: pointer;
+}
+.tree-button:hover         { background: #f4f4f5; }
+.tree-button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* ── Tree ──────────────────────────────────────────────────────────────── */
+/* BhTree renders <ul role="tree">, BhTreeGroup <ul role="group">. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* <li role="treeitem"> wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused <li> draws its ring on its own row. */
+.tree-item:focus-visible > .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] > .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] > .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+.tree-meta { margin-inline-start: auto; font-size: 0.75rem; color: #a1a1aa; }
+
+.tree-count {
+    margin-inline-start: auto;
+    min-width: 1.25rem;
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #71717a;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+/* ── Hierarchical checkboxes ───────────────────────────────────────────── */
+/* With Checkboxes="true" every item carries aria-checked and
+   data-checked="true|false|mixed"; a parent is mixed when only some of its
+   leaves are checked. The box itself is decoration (aria-hidden). */
+.tree-check {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid #a1a1aa;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.tree-item[data-checked="true"]  > .tree-row .tree-check,
+.tree-item[data-checked="mixed"] > .tree-row .tree-check { background: #2563eb; border-color: #2563eb; }
+.tree-item[data-checked="true"]  > .tree-row .tree-check::after { content: "✓"; }
+.tree-item[data-checked="mixed"] > .tree-row .tree-check::after { content: "–"; }
+
+/* ── Lazy loading ──────────────────────────────────────────────────────── */
+/* aria-busy="true" is set while LoadChildren runs. */
+.tree-item[aria-busy="true"] > .tree-row { color: #71717a; cursor: progress; }
+
+.tree-spinner {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid #dbeafe;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: tree-spin 0.7s linear infinite;
+}
+
+@keyframes tree-spin { to { transform: rotate(360deg); } }

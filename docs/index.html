@@ -25,6 +25,7 @@
         <li><a href="getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="components/accordion.html">Accordion</a></li>
             <li><a href="components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="components/close-button.html">CloseButton</a></li>
             <li><a href="components/collapsible.html">Collapsible</a></li>
             <li><a href="components/combobox.html">Combobox</a></li>
+            <li><a href="components/command.html">Command Palette</a></li>
             <li><a href="components/data-interactive.html">DataInteractive</a></li>
             <li><a href="components/dialog.html">Dialog</a></li>
             <li><a href="components/disclosure.html">Disclosure</a></li>
             <li><a href="components/field.html">Field / Input</a></li>
             <li><a href="components/fieldset.html">Fieldset</a></li>
             <li><a href="components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="components/hover-card.html">Hover Card</a></li>
             <li><a href="components/listbox.html">Listbox</a></li>
             <li><a href="components/menu.html">Menu</a></li>
+            <li><a href="components/menubar.html">Menubar</a></li>
             <li><a href="components/popover.html">Popover</a></li>
             <li><a href="components/portal.html">Portal</a></li>
+            <li><a href="components/progress.html">Progress / Meter</a></li>
             <li><a href="components/radiogroup.html">Radio Group</a></li>
+            <li><a href="components/slider.html">Slider</a></li>
+            <li><a href="components/sortable.html">Sortable</a></li>
             <li><a href="components/switch.html">Switch</a></li>
             <li><a href="components/tabs.html">Tabs</a></li>
+            <li><a href="components/toast.html">Toast</a></li>
+            <li><a href="components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="components/toolbar.html">Toolbar</a></li>
             <li><a href="components/tooltip.html">Tooltip</a></li>
             <li><a href="components/transition.html">Transition</a></li>
+            <li><a href="components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -63,7 +74,7 @@
             </a>
             <a class="hero-card" href="components/menu.html">
                 <strong>Browse components →</strong>
-                <span>24 unstyled, accessible primitives ready to wire into any design.</span>
+                <span>36 unstyled, accessible primitives ready to wire into any design.</span>
             </a>
             <a class="hero-card" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">
                 <strong>GitHub →</strong>
@@ -79,14 +90,17 @@
             <li><strong>Styling hooks via data attributes.</strong> <code>[data-state]</code>, <code>[data-disabled]</code>, <code>[data-active]</code>, and friends.</li>
             <li><strong>Attribute merging.</strong> <code>class</code> and <code>style</code> concatenate; everything else lets the consumer win.</li>
             <li><strong>Controlled and uncontrolled.</strong> Every stateful component supports both modes.</li>
-            <li><strong>Render-prop context.</strong> Child content receives a typed render context for state-driven UI.</li>
-            <li><strong>Anchor positioning.</strong> Automatic floating panel positioning with flip/shift via JS interop.</li>
+            <li><strong>Composable.</strong> <code>ChildContent</code> is always a plain fragment, so components nest freely inside <code>EditForm</code> and each other; state-dependent markup uses <code>&lt;Template Context="state"&gt;</code>.</li>
+            <li><strong>Robust overlays.</strong> Layered dismissal, focus scopes with restore, inert modals, scroll lock, portals and exit animations.</li>
+            <li><strong>Anchor positioning.</strong> Flip, shift, size and arrows — no Popper / Floating UI dependency.</li>
+            <li><strong>Accessibility tests built in.</strong> <code>BlazorHeadless.Testing</code> audits rendered markup against WAI-ARIA rules, computes accessible names and focus order, and records screen-reader announcements.</li>
         </ul>
 
         <h2 id="components">Components</h2>
-        <p>BlazorHeadless ships 24 primitives. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
+        <p>BlazorHeadless ships 36 component families. Browse the docs for examples styled with both plain CSS and Tailwind utilities.</p>
 
         <div class="component-grid">
+            <a href="components/accessibility.html">Accessibility Utilities</a>
             <a href="components/accordion.html">Accordion</a>
             <a href="components/alert-dialog.html">Alert Dialog</a>
             <a href="components/aspect-ratio.html">Aspect Ratio</a>
@@ -96,22 +110,32 @@
             <a href="components/close-button.html">CloseButton</a>
             <a href="components/collapsible.html">Collapsible</a>
             <a href="components/combobox.html">Combobox</a>
+            <a href="components/command.html">Command Palette</a>
             <a href="components/data-interactive.html">DataInteractive</a>
             <a href="components/dialog.html">Dialog</a>
             <a href="components/disclosure.html">Disclosure</a>
             <a href="components/field.html">Field / Input</a>
             <a href="components/fieldset.html">Fieldset</a>
             <a href="components/focus-trap.html">FocusTrap</a>
+            <a href="components/grid.html">Grid / TreeGrid</a>
             <a href="components/hover-card.html">Hover Card</a>
             <a href="components/listbox.html">Listbox</a>
             <a href="components/menu.html">Menu</a>
+            <a href="components/menubar.html">Menubar</a>
             <a href="components/popover.html">Popover</a>
             <a href="components/portal.html">Portal</a>
+            <a href="components/progress.html">Progress / Meter</a>
             <a href="components/radiogroup.html">Radio Group</a>
+            <a href="components/slider.html">Slider</a>
+            <a href="components/sortable.html">Sortable</a>
             <a href="components/switch.html">Switch</a>
             <a href="components/tabs.html">Tabs</a>
+            <a href="components/toast.html">Toast</a>
+            <a href="components/toggle-group.html">Toggle / Toggle Group</a>
+            <a href="components/toolbar.html">Toolbar</a>
             <a href="components/tooltip.html">Tooltip</a>
             <a href="components/transition.html">Transition</a>
+            <a href="components/tree.html">Tree View</a>
         </div>
 
         <h2 id="styling">Styling philosophy</h2>

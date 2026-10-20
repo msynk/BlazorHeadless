@@ -5,93 +5,142 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The trigger button that opens the menu. Renders as
-/// <c>&lt;button&gt;</c> with <c>aria-haspopup="menu"</c>,
-/// <c>aria-expanded</c>, <c>aria-controls</c>, and <c>aria-activedescendant</c>
-/// (while the menu is open).
-///
-/// <para>
-/// Focus stays on this button while the menu is open; keyboard navigation
-/// is handled here and forwarded to the parent <see cref="BhMenu"/>.
-/// </para>
+/// The trigger button that opens the menu. Renders as <c>&lt;button&gt;</c> with
+/// <c>aria-haspopup="menu"</c>, <c>aria-expanded</c> and <c>aria-controls</c>.
+/// Inside a <see cref="BhMenubar"/> it becomes a <c>role="menuitem"</c> that takes
+/// part in the bar's roving focus.
 /// </summary>
 public class BhMenuButton : BhComponentBase
 {
     [CascadingParameter]
-    private BhMenuContext BhMenuContext { get; set; } = default!;
+    private BhMenuContext? MenuContext { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhMenuButtonRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhMenuButtonRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Content that receives the render state (<c>BhMenuButtonRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<BhMenuButtonRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "button";
 
+    private bool IsOpen => MenuContext?.IsOpen ?? false;
+    private bool IsDisabled => MenuContext?.Disabled ?? false;
+    private BhMenubarContext? Menubar => MenuContext?.Menubar;
+
     private BhMenuButtonRenderContext RenderContext => new()
     {
-        IsOpen = BhMenuContext?.IsOpen ?? false,
-        Disabled = BhMenuContext?.Disabled ?? false,
+        IsOpen = IsOpen,
+        Disabled = IsDisabled,
     };
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhMenuContext?.ButtonId ?? ComponentId);
+        builder.AddAttribute(10, "id", MenuContext?.ButtonId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
         builder.AddAttribute(31, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
+        if (Menubar is not null)
         {
-            BhMenuContext?.RegisterButton(e);
-            Ref?.Invoke(e);
-        });
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+            builder.AddAttribute(32, "onpointerenter",
+                EventCallback.Factory.Create<PointerEventArgs>(this, HandlePointerEnter));
+            builder.AddAttribute(33, "onfocus",
+                EventCallback.Factory.Create<FocusEventArgs>(this, HandleFocus));
+        }
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, RenderContext));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
+        var isButton = Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
 
-        var isOpen = BhMenuContext?.IsOpen ?? false;
-        var isDisabled = BhMenuContext?.Disabled ?? false;
+        if (isButton)
+            attrs["type"] = "button";
 
-        attrs["type"] = "button";
-        attrs["aria-haspopup"] = "menu";
-        attrs["aria-expanded"] = isOpen ? "true" : "false";
-
-        if (BhMenuContext is not null)
+        if (Menubar is not null && MenuContext is not null)
         {
-            attrs["aria-controls"] = BhMenuContext.ItemsId;
-
-            if (isOpen && BhMenuContext.ActiveIndex >= 0)
-                attrs["aria-activedescendant"] = BhMenuContext.GetItemId(BhMenuContext.ActiveIndex);
+            attrs["role"] = "menuitem";
+            attrs["tabindex"] = Menubar.IsTabStop(MenuContext.Menu) ? 0 : -1;
+            attrs[BhKeyboard.KeysAttribute] = "Enter Space ArrowDown ArrowUp ArrowLeft ArrowRight Home End";
+        }
+        else
+        {
+            if (!isButton)
+            {
+                attrs["role"] = "button";
+                attrs["tabindex"] = IsDisabled ? -1 : 0;
+            }
+            attrs[BhKeyboard.KeysAttribute] = "Enter Space ArrowDown ArrowUp";
         }
 
-        if (isDisabled)
-            attrs["disabled"] = true;
+        attrs["aria-haspopup"] = "menu";
+        SetAriaBool(attrs, "aria-expanded", IsOpen);
+        if (IsOpen && MenuContext is not null)
+            attrs["aria-controls"] = MenuContext.ItemsId;
 
-        SetDataState(attrs, isOpen);
-        SetDataFlag(attrs, "disabled", isDisabled);
+        if (IsDisabled)
+        {
+            if (isButton) attrs["disabled"] = true;
+            else attrs["aria-disabled"] = "true";
+        }
 
+        SetDataState(attrs, IsOpen);
+        SetDataFlag(attrs, "disabled", IsDisabled);
         return attrs;
     }
 
-    private Task HandleClick(MouseEventArgs _)
-        => BhMenuContext?.ToggleAsync() ?? Task.CompletedTask;
-
-    private Task HandleKeyDown(KeyboardEventArgs args)
+    private Task HandleClick(MouseEventArgs args)
     {
-        // While open, forward all nav keys to the menu handler.
-        if (BhMenuContext?.IsOpen == true)
-            return BhMenuContext.HandleMenuKeyDownAsync(args);
+        if (IsDisabled || MenuContext is null) return Task.CompletedTask;
+        // Enter / Space are handled on keydown (their default click is suppressed
+        // through data-bh-keys), so a click here comes from a pointer.
+        return MenuContext.ToggleAsync(BhMenuFocus.Container);
+    }
 
-        return BhMenuContext?.HandleButtonKeyDownAsync(args) ?? Task.CompletedTask;
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (IsDisabled || MenuContext is null) return;
+
+        switch (args.Key)
+        {
+            case "Enter":
+            case " ":
+                if (MenuContext.IsOpen) await MenuContext.CloseAsync();
+                else await MenuContext.OpenAsync(BhMenuFocus.First);
+                break;
+            case "ArrowDown":
+                await MenuContext.OpenAsync(BhMenuFocus.First);
+                break;
+            case "ArrowUp":
+                await MenuContext.OpenAsync(BhMenuFocus.Last);
+                break;
+            default:
+                if (Menubar is not null)
+                    await Menubar.HandleTriggerKeyDownAsync(MenuContext.Menu, args);
+                break;
+        }
+    }
+
+    private Task HandlePointerEnter(PointerEventArgs args)
+        => Menubar is not null && MenuContext is not null
+            ? Menubar.OnTriggerPointerEnterAsync(MenuContext.Menu)
+            : Task.CompletedTask;
+
+    private void HandleFocus(FocusEventArgs args)
+    {
+        if (Menubar is not null && MenuContext is not null)
+            Menubar.SetTabStop(MenuContext.Menu);
     }
 }

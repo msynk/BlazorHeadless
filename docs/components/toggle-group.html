@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toggle / Toggle Group — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html" class="active">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Toggle / Toggle Group</h1>
+        <p class="lead">Two-state buttons on their own, or grouped for formatting, alignment and view switchers.</p>
+        <h2 id="toggle-button">Toggle button</h2>
+        <p><code>BhToggle</code> is the APG Button pattern's toggle variant: a native <code>&lt;button&gt;</code> with <code>aria-pressed</code> and <code>data-state="on|off"</code>. <kbd>Space</kbd> / <kbd>Enter</kbd> or a click flips it. Use <code>@@bind-Pressed</code>, <code>DefaultPressed</code> for uncontrolled use, and <code>Disabled</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle aria-label="Bold" class="toggle-btn"&gt;&lt;strong&gt;B&lt;/strong&gt;&lt;/BhToggle&gt;
+
+&lt;BhToggle @bind-Pressed="muted" class="toggle-btn"&gt;Mute&lt;/BhToggle&gt;
+
+&lt;BhToggle DefaultPressed="true" Disabled="true" class="toggle-btn"&gt;Pinned&lt;/BhToggle&gt;
+
+&lt;p class="toggle-output"&gt;Muted: &lt;strong&gt;@(muted ? "yes" : "no")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private bool muted;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #3f3f46;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.toggle-btn:hover:enabled { background: #f4f4f5; }
+.toggle-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" / data-state="on" while pressed */
+.toggle-btn[data-state="on"] {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.toggle-btn[data-state="on"]:hover:enabled { background: #dbeafe; }
+
+.toggle-btn[data-disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Demo layout */
+.toggle-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+
+.toggle-output { margin: 0; font-size: 0.85rem; color: #71717a; }
+.toggle-output strong { color: #18181b; font-weight: 600; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle aria-label="Bold"
+          class="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 outline-none transition-colors enabled:hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:border-blue-200 aria-pressed:bg-blue-50 aria-pressed:text-blue-700 enabled:aria-pressed:hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"&gt;&lt;strong&gt;B&lt;/strong&gt;&lt;/BhToggle&gt;
+
+&lt;BhToggle @bind-Pressed="muted"
+          class="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 outline-none transition-colors enabled:hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:border-blue-200 aria-pressed:bg-blue-50 aria-pressed:text-blue-700 enabled:aria-pressed:hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"&gt;Mute&lt;/BhToggle&gt;
+
+&lt;BhToggle DefaultPressed="true" Disabled="true"
+          class="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 outline-none transition-colors enabled:hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:border-blue-200 aria-pressed:bg-blue-50 aria-pressed:text-blue-700 enabled:aria-pressed:hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"&gt;Pinned&lt;/BhToggle&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;Muted: &lt;strong class="font-semibold text-zinc-900"&gt;@(muted ? "yes" : "no")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private bool muted;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="state-aware-content-with-template">State-aware content with Template</h2>
+        <p>When the content depends on the pressed state, use <code>Template</code> instead of child content — its context is the <code>bool</code> pressed state. Keep the label itself constant (APG): only the icon swaps here, <code>aria-pressed</code> conveys the state.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle DefaultPressed="true" class="toggle-btn"&gt;
+    &lt;Template Context="pressed"&gt;
+        &lt;span class="toggle-icon" aria-hidden="true"&gt;@(pressed ? "★" : "☆")&lt;/span&gt;
+        Star
+    &lt;/Template&gt;
+&lt;/BhToggle&gt;
+
+&lt;BhToggle class="toggle-btn"&gt;
+    &lt;Template Context="pressed"&gt;
+        &lt;span class="toggle-icon" aria-hidden="true"&gt;@(pressed ? "✓" : "+")&lt;/span&gt;
+        Follow
+    &lt;/Template&gt;
+&lt;/BhToggle&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #3f3f46;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.toggle-btn:hover:enabled { background: #f4f4f5; }
+.toggle-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-pressed="true" / data-state="on" while pressed */
+.toggle-btn[data-state="on"] {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.toggle-btn[data-state="on"]:hover:enabled { background: #dbeafe; }
+
+.toggle-icon { font-size: 1rem; line-height: 1; }
+
+.toggle-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggle DefaultPressed="true"
+          class="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 outline-none transition-colors enabled:hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:border-blue-200 aria-pressed:bg-blue-50 aria-pressed:text-blue-700 enabled:aria-pressed:hover:bg-blue-100"&gt;
+    &lt;Template Context="pressed"&gt;
+        &lt;span class="text-base leading-none" aria-hidden="true"&gt;@(pressed ? "★" : "☆")&lt;/span&gt;
+        Star
+    &lt;/Template&gt;
+&lt;/BhToggle&gt;
+
+&lt;BhToggle class="inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 outline-none transition-colors enabled:hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 aria-pressed:border-blue-200 aria-pressed:bg-blue-50 aria-pressed:text-blue-700 enabled:aria-pressed:hover:bg-blue-100"&gt;
+    &lt;Template Context="pressed"&gt;
+        &lt;span class="text-base leading-none" aria-hidden="true"&gt;@(pressed ? "✓" : "+")&lt;/span&gt;
+        Follow
+    &lt;/Template&gt;
+&lt;/BhToggle&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multiple-text-formatting">Multiple: text formatting</h2>
+        <p><code>Type="BhToggleGroupType.Multiple"</code> renders a <code>role="group"</code> of <code>aria-pressed</code> buttons bound with <code>@@bind-Values</code>. The group is a single tab stop: <kbd>←</kbd> / <kbd>→</kbd> move focus (wrapping), <kbd>Home</kbd> / <kbd>End</kbd> jump, <kbd>Space</kbd> / <kbd>Enter</kbd> toggle.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup Type="BhToggleGroupType.Multiple" @bind-Values="textStyles"
+               aria-label="Text formatting" class="toggle-group"&gt;
+    &lt;BhToggleGroupItem Value="bold" aria-label="Bold" class="toggle-item"&gt;&lt;strong&gt;B&lt;/strong&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="italic" aria-label="Italic" class="toggle-item"&gt;&lt;em&gt;I&lt;/em&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="underline" aria-label="Underline" class="toggle-item"&gt;&lt;u&gt;U&lt;/u&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="strike" aria-label="Strikethrough" class="toggle-item"&gt;&lt;s&gt;S&lt;/s&gt;&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;p class="toggle-preview" style="@PreviewStyle()"&gt;The quick brown fox jumps over the lazy dog.&lt;/p&gt;
+
+&lt;p class="toggle-output"&gt;
+    Values: &lt;strong&gt;@(textStyles.Count == 0 ? "none" : string.Join(", ", textStyles))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private IReadOnlyCollection&lt;string&gt; textStyles = ["bold"];
+
+    private string PreviewStyle()
+    {
+        var decorations = textStyles
+            .Where(s =&gt; s is "underline" or "strike")
+            .Select(s =&gt; s == "strike" ? "line-through" : s)
+            .ToList();
+        return $"font-weight: {(textStyles.Contains("bold") ? 700 : 400)}; " +
+               $"font-style: {(textStyles.Contains("italic") ? "italic" : "normal")}; " +
+               $"text-decoration: {(decorations.Count &gt; 0 ? string.Join(" ", decorations) : "none")}";
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-group {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.6rem;
+    background: #f4f4f5;
+}
+
+.toggle-item {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.25rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.toggle-item:hover:enabled:not([data-state="on"]) { background: #e4e4e7; color: #18181b; }
+.toggle-item:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* data-state="on": aria-checked="true" (Single) or aria-pressed="true" (Multiple) */
+.toggle-item[data-state="on"] {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.12);
+}
+
+/* Demo layout */
+.toggle-demo {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    justify-items: start;
+}
+
+.toggle-preview {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.95rem;
+    color: #27272a;
+}
+
+.toggle-output { margin: 0; font-size: 0.85rem; color: #71717a; }
+.toggle-output strong { color: #18181b; font-weight: 600; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup Type="BhToggleGroupType.Multiple" @bind-Values="textStyles"
+               aria-label="Text formatting"
+               class="inline-flex gap-1 rounded-[0.6rem] border border-zinc-200 bg-zinc-100 p-1"&gt;
+    &lt;BhToggleGroupItem Value="bold" aria-label="Bold"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;&lt;strong&gt;B&lt;/strong&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="italic" aria-label="Italic"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;&lt;em&gt;I&lt;/em&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="underline" aria-label="Underline"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;&lt;u&gt;U&lt;/u&gt;&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="strike" aria-label="Strikethrough"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;&lt;s&gt;S&lt;/s&gt;&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;p class="m-0 w-full max-w-md rounded-lg border border-zinc-200 bg-white px-4 py-3 text-[0.95rem] text-zinc-800"
+   style="@PreviewStyle()"&gt;The quick brown fox jumps over the lazy dog.&lt;/p&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;
+    Values: &lt;strong class="font-semibold text-zinc-900"&gt;@(textStyles.Count == 0 ? "none" : string.Join(", ", textStyles))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private IReadOnlyCollection&lt;string&gt; textStyles = ["bold"];
+
+    private string PreviewStyle()
+    {
+        var decorations = textStyles
+            .Where(s =&gt; s is "underline" or "strike")
+            .Select(s =&gt; s == "strike" ? "line-through" : s)
+            .ToList();
+        return $"font-weight: {(textStyles.Contains("bold") ? 700 : 400)}; " +
+               $"font-style: {(textStyles.Contains("italic") ? "italic" : "normal")}; " +
+               $"text-decoration: {(decorations.Count &gt; 0 ? string.Join(" ", decorations) : "none")}";
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="single-alignment">Single: alignment</h2>
+        <p>The default <code>Type="BhToggleGroupType.Single"</code> behaves like a radio group (<code>role="radiogroup"</code> of <code>role="radio"</code> items with <code>aria-checked</code>); the pressed item is the tab stop. Clicking the pressed item normally clears the value — <code>AllowEmpty="false"</code> keeps one alignment selected at all times.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup @bind-Value="align" AllowEmpty="false"
+               aria-label="Text alignment" class="toggle-group"&gt;
+    &lt;BhToggleGroupItem Value="left" aria-label="Align left" class="toggle-item"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M2 6.5h8M2 10h12M2 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="center" aria-label="Align center" class="toggle-item"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M4 6.5h8M2 10h12M4 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="right" aria-label="Align right" class="toggle-item"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M6 6.5h8M2 10h12M6 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="justify" aria-label="Justify" class="toggle-item"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M2 6.5h12M2 10h12M2 13.5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;p class="toggle-preview" style="text-align: @align"&gt;
+    Headless components ship behavior and accessibility, and leave every pixel of
+    the presentation to you — so this paragraph can be aligned however you like.
+&lt;/p&gt;
+
+@code {
+    private string? align = "left";
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-group {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.6rem;
+    background: #f4f4f5;
+}
+
+.toggle-item {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.25rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.toggle-item:hover:enabled:not([data-state="on"]) { background: #e4e4e7; color: #18181b; }
+.toggle-item:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* data-state="on": aria-checked="true" (Single) or aria-pressed="true" (Multiple) */
+.toggle-item[data-state="on"] {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.12);
+}
+
+/* Demo layout */
+.toggle-demo {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    justify-items: start;
+}
+
+.toggle-preview {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fff;
+    font-size: 0.95rem;
+    color: #27272a;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup @bind-Value="align" AllowEmpty="false" aria-label="Text alignment"
+               class="inline-flex gap-1 rounded-[0.6rem] border border-zinc-200 bg-zinc-100 p-1"&gt;
+    &lt;BhToggleGroupItem Value="left" aria-label="Align left"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M2 6.5h8M2 10h12M2 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="center" aria-label="Align center"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M4 6.5h8M2 10h12M4 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="right" aria-label="Align right"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M6 6.5h8M2 10h12M6 13.5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="justify" aria-label="Justify"
+                       class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;
+        &lt;svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"&gt;&lt;path d="M2 3h12M2 6.5h12M2 10h12M2 13.5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /&gt;&lt;/svg&gt;
+    &lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;p class="m-0 w-full max-w-md rounded-lg border border-zinc-200 bg-white px-4 py-3 text-[0.95rem] text-zinc-800"
+   style="text-align: @align"&gt;
+    Headless components ship behavior and accessibility, and leave every pixel of
+    the presentation to you — so this paragraph can be aligned however you like.
+&lt;/p&gt;
+
+@code {
+    private string? align = "left";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="vertical-orientation">Vertical orientation</h2>
+        <p><code>Orientation="BhRovingOrientation.Vertical"</code> switches navigation to <kbd>↑</kbd> / <kbd>↓</kbd> and sets <code>data-orientation="vertical"</code> for styling. This group is uncontrolled (<code>DefaultValue</code>) and each item's <code>Template</code> receives its pressed state to draw a check mark.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup Orientation="BhRovingOrientation.Vertical" DefaultValue="week"
+               aria-label="Calendar view" class="toggle-group"&gt;
+    @foreach (var view in views)
+    {
+        &lt;BhToggleGroupItem Value="@view.ToLowerInvariant()" class="toggle-item"&gt;
+            &lt;Template Context="isOn"&gt;
+                &lt;span class="toggle-check" aria-hidden="true"&gt;@(isOn ? "✓" : "")&lt;/span&gt;
+                @view
+            &lt;/Template&gt;
+        &lt;/BhToggleGroupItem&gt;
+    }
+&lt;/BhToggleGroup&gt;
+
+@code {
+    private readonly string[] views = ["Day", "Week", "Month", "Year"];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-group {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.6rem;
+    background: #f4f4f5;
+}
+
+.toggle-item {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.25rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.toggle-item:hover:enabled:not([data-state="on"]) { background: #e4e4e7; color: #18181b; }
+.toggle-item:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* data-state="on": aria-checked="true" (Single) or aria-pressed="true" (Multiple) */
+.toggle-item[data-state="on"] {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.12);
+}
+
+/* data-orientation="vertical" when Orientation="BhRovingOrientation.Vertical" */
+.toggle-group[data-orientation="vertical"] { flex-direction: column; min-width: 9rem; }
+.toggle-group[data-orientation="vertical"] .toggle-item { justify-content: flex-start; }
+
+.toggle-check { display: inline-block; width: 1rem; color: #2563eb; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup Orientation="BhRovingOrientation.Vertical" DefaultValue="week"
+               aria-label="Calendar view"
+               class="inline-flex gap-1 rounded-[0.6rem] border border-zinc-200 bg-zinc-100 p-1 data-orientation-vertical:min-w-36 data-orientation-vertical:flex-col"&gt;
+    @foreach (var view in views)
+    {
+        &lt;BhToggleGroupItem Value="@view.ToLowerInvariant()"
+                           class="inline-flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white"&gt;
+            &lt;Template Context="isOn"&gt;
+                &lt;span class="inline-block w-4 text-blue-600" aria-hidden="true"&gt;@(isOn ? "✓" : "")&lt;/span&gt;
+                @view
+            &lt;/Template&gt;
+        &lt;/BhToggleGroupItem&gt;
+    }
+&lt;/BhToggleGroup&gt;
+
+@code {
+    private readonly string[] views = ["Day", "Week", "Month", "Year"];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled-items">Disabled items</h2>
+        <p><code>Disabled="true"</code> on an item renders the native <code>disabled</code> attribute and <code>data-disabled</code>; arrow keys skip it. On the group it disables every item.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup @bind-Value="size" aria-label="Size" class="toggle-group"&gt;
+    &lt;BhToggleGroupItem Value="s" class="toggle-item"&gt;S&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="m" class="toggle-item"&gt;M&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="l" class="toggle-item"&gt;L&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="xl" Disabled="true" class="toggle-item"&gt;XL&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;BhToggleGroup DefaultValue="m" Disabled="true" aria-label="Size (sold out)" class="toggle-group"&gt;
+    &lt;BhToggleGroupItem Value="s" class="toggle-item"&gt;S&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="m" class="toggle-item"&gt;M&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="l" class="toggle-item"&gt;L&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+@code {
+    private string? size = "m";
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.toggle-group {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.6rem;
+    background: #f4f4f5;
+}
+
+.toggle-item {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.25rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    color: #52525b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.toggle-item:hover:enabled:not([data-state="on"]) { background: #e4e4e7; color: #18181b; }
+.toggle-item:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+/* data-state="on": aria-checked="true" (Single) or aria-pressed="true" (Multiple) */
+.toggle-item[data-state="on"] {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.12);
+}
+
+/* Hooks emitted for disabled items / groups */
+.toggle-group[data-disabled]      { opacity: 0.6; }
+.toggle-item[data-disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.toggle-demo { display: grid; gap: 1rem; width: 100%; justify-items: start; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhToggleGroup @bind-Value="size" aria-label="Size"
+               class="inline-flex gap-1 rounded-[0.6rem] border border-zinc-200 bg-zinc-100 p-1"&gt;
+    &lt;BhToggleGroupItem Value="s" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent data-disabled:hover:text-zinc-600"&gt;S&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="m" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent data-disabled:hover:text-zinc-600"&gt;M&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="l" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent data-disabled:hover:text-zinc-600"&gt;L&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="xl" Disabled="true" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none transition hover:bg-zinc-200 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-blue-600 data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-[state=on]:hover:bg-white data-disabled:cursor-not-allowed data-disabled:opacity-40 data-disabled:hover:bg-transparent data-disabled:hover:text-zinc-600"&gt;XL&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+&lt;BhToggleGroup DefaultValue="m" Disabled="true" aria-label="Size (sold out)"
+               class="inline-flex gap-1 rounded-[0.6rem] border border-zinc-200 bg-zinc-100 p-1 data-disabled:opacity-60"&gt;
+    &lt;BhToggleGroupItem Value="s" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-disabled:cursor-not-allowed"&gt;S&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="m" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-disabled:cursor-not-allowed"&gt;M&lt;/BhToggleGroupItem&gt;
+    &lt;BhToggleGroupItem Value="l" class="inline-flex h-8 min-w-9 cursor-pointer items-center justify-center rounded-md px-2.5 text-sm font-medium text-zinc-600 outline-none data-[state=on]:bg-white data-[state=on]:text-blue-600 data-[state=on]:shadow-sm data-disabled:cursor-not-allowed"&gt;L&lt;/BhToggleGroupItem&gt;
+&lt;/BhToggleGroup&gt;
+
+@code {
+    private string? size = "m";
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="toast.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Toast</span>
+        </a>
+            <a class="next" href="toolbar.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Toolbar</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

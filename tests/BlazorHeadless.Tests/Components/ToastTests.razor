@@ -1,0 +1,93 @@
+@inherits TestBase
+
+@code {
+    private RenderFragment Viewport(BhToaster toaster) =>
+        @<BhToastViewport Toaster="toaster" Duration="0" Context="toast">
+            <BhToast Item="toast">
+                <BhToastTitle>@toast.Title</BhToastTitle>
+                @if (toast.Description is not null)
+                {
+                    <BhToastDescription>@toast.Description</BhToastDescription>
+                }
+                @if (toast.Options.ActionLabel is not null)
+                {
+                    <BhToastAction>@toast.Options.ActionLabel</BhToastAction>
+                }
+                <BhToastClose aria-label="Dismiss">×</BhToastClose>
+            </BhToast>
+        </BhToastViewport>;
+
+    [Fact]
+    public void Viewport_is_a_labelled_landmark_with_a_hotkey_hint()
+    {
+        var cut = Render(Viewport(new BhToaster()));
+        var region = cut.Find("[role=region]");
+        Assert.Equal("Notifications (F8)", region.AccessibleName());
+        // The list inside keeps its semantics and is the F8 focus target.
+        Assert.Equal("-1", region.QuerySelector("ol")!.GetAttribute("tabindex"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public async Task Showing_a_toast_renders_and_announces_it()
+    {
+        var toaster = new BhToaster();
+        var cut = Render(Viewport(toaster));
+        await cut.InvokeAsync(() => toaster.Show("Saved", "Your changes were saved."));
+
+        Assert.Single(cut.FindAll("li"));
+        Assert.Contains("Your changes were saved.", cut.Markup);
+        await Announcer.WaitForAsync("Saved. Your changes were saved.");
+        Assert.Equal(BhPoliteness.Polite, Announcer.Announcements[^1].Politeness);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public async Task Foreground_toasts_are_assertive()
+    {
+        var toaster = new BhToaster();
+        var cut = Render(Viewport(toaster));
+        await cut.InvokeAsync(() => toaster.Show(new BhToastOptions { Title = "Connection lost", Foreground = true }));
+        await Announcer.WaitForAsync("Connection lost");
+        Assert.Equal(BhPoliteness.Assertive, Announcer.Announcements[^1].Politeness);
+    }
+
+    [Fact]
+    public async Task Close_button_Escape_and_action_dismiss()
+    {
+        var toaster = new BhToaster();
+        var acted = false;
+        var cut = Render(Viewport(toaster));
+        await cut.InvokeAsync(() =>
+        {
+            toaster.Show("One");
+            toaster.Show("Two");
+            toaster.Show(new BhToastOptions { Title = "Three", ActionLabel = "Undo", OnAction = () => { acted = true; return Task.CompletedTask; } });
+        });
+        Assert.Equal(3, cut.FindAll("li").Count);
+
+        cut.FindAll("li")[0].QuerySelector("[aria-label=Dismiss]")!.Click();
+        cut.WaitForAssertion(() => Assert.Equal(2, cut.FindAll("li").Count));
+
+        cut.FindAll("li")[0].Press("Escape");
+        cut.WaitForAssertion(() => Assert.Single(cut.FindAll("li")));
+
+        cut.Find("li").QuerySelectorAll("button").First(b => b.TextContent == "Undo").Click();
+        cut.WaitForAssertion(() => Assert.Empty(cut.FindAll("li")));
+        Assert.True(acted);
+    }
+
+    [Fact]
+    public async Task Limit_drops_the_oldest_toasts()
+    {
+        var toaster = new BhToaster { Limit = 2 };
+        var cut = Render(Viewport(toaster));
+        await cut.InvokeAsync(() =>
+        {
+            toaster.Show("1");
+            toaster.Show("2");
+            toaster.Show("3");
+        });
+        Assert.Equal(["2", "3"], toaster.Toasts.Select(t => t.Title));
+    }
+}

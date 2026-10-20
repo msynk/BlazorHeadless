@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tree View — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html" class="active">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Tree View</h1>
+        <p class="lead">A hierarchical list — file explorers, navigation, nested settings — with expand / collapse, single, multiple and checkbox selection, lazy loading and typeahead.</p>
+        <h2 id="file-explorer">File explorer</h2>
+        <p>The WAI-ARIA Tree View pattern. Click a row to select it (<code>@@bind-SelectedValue</code>) or the chevron (<code>BhTreeItemToggle</code>) to expand without selecting. Keyboard: Up / Down move, Right expands or enters a folder, Left collapses or returns to the parent, Home / End jump, <code>*</code> expands every sibling, Enter (or double click) fires <code>OnItemActivate</code>, and typing a name jumps to it (typeahead, matched against <code>Label</code>). <code>aria-level</code>, <code>aria-setsize</code>, <code>aria-posinset</code> and the roving <code>tabindex</code> are computed for you; disabled items are skipped.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Project files" class="tree"
+        @bind-SelectedValue="selectedFile"
+        DefaultExpandedValues="@(new[] { "src/", "src/components/" })"
+        OnItemActivate="v =&gt; openedFile = v"&gt;
+    &lt;BhTreeItem TValue="string" Value="@("src/")" Label="src" class="tree-item"&gt;
+        &lt;Template Context="srcDir"&gt;
+            &lt;div class="tree-row"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="tree-icon"&gt;@(srcDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                &lt;span&gt;src&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/components/")" Label="components" class="tree-item"&gt;
+                    &lt;Template Context="componentsDir"&gt;
+                        &lt;div class="tree-row"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="tree-icon"&gt;@(componentsDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                            &lt;span&gt;components&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/components/Button.razor")" Label="Button.razor" class="tree-item"&gt;
+                                &lt;div class="tree-row"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;Button.razor&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/components/Tree.razor")" Label="Tree.razor" class="tree-item"&gt;
+                                &lt;div class="tree-row"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;Tree.razor&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                        &lt;/BhTreeGroup&gt;
+                    &lt;/Template&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/services/")" Label="services" class="tree-item"&gt;
+                    &lt;Template Context="servicesDir"&gt;
+                        &lt;div class="tree-row"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="tree-icon"&gt;@(servicesDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                            &lt;span&gt;services&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/services/ApiClient.cs")" Label="ApiClient.cs" class="tree-item"&gt;
+                                &lt;div class="tree-row"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;ApiClient.cs&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/services/AuthService.cs")" Label="AuthService.cs" class="tree-item"&gt;
+                                &lt;div class="tree-row"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;AuthService.cs&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                        &lt;/BhTreeGroup&gt;
+                    &lt;/Template&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/Program.cs")" Label="Program.cs" class="tree-item"&gt;
+                    &lt;div class="tree-row"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+                        &lt;span&gt;Program.cs&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+            &lt;/BhTreeGroup&gt;
+        &lt;/Template&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("wwwroot/")" Label="wwwroot" class="tree-item"&gt;
+        &lt;Template Context="wwwDir"&gt;
+            &lt;div class="tree-row"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="tree-icon"&gt;@(wwwDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                &lt;span&gt;wwwroot&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                &lt;BhTreeItem TValue="string" Value="@("wwwroot/app.css")" Label="app.css" class="tree-item"&gt;
+                    &lt;div class="tree-row"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="tree-icon"&gt;🎨&lt;/span&gt;
+                        &lt;span&gt;app.css&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("wwwroot/favicon.png")" Label="favicon.png" class="tree-item"&gt;
+                    &lt;div class="tree-row"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="tree-icon"&gt;🖼️&lt;/span&gt;
+                        &lt;span&gt;favicon.png&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+            &lt;/BhTreeGroup&gt;
+        &lt;/Template&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("secrets.json")" Label="secrets.json" Disabled="true" class="tree-item"&gt;
+        &lt;div class="tree-row"&gt;
+            &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+            &lt;span class="tree-icon"&gt;🔒&lt;/span&gt;
+            &lt;span&gt;secrets.json&lt;/span&gt;
+            &lt;span class="tree-meta"&gt;locked&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("README.md")" Label="README.md" class="tree-item"&gt;
+        &lt;div class="tree-row"&gt;
+            &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+            &lt;span class="tree-icon"&gt;📄&lt;/span&gt;
+            &lt;span&gt;README.md&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/BhTreeItem&gt;
+&lt;/BhTree&gt;
+
+&lt;p class="tree-output"&gt;
+    Selected: &lt;strong&gt;@(selectedFile ?? "(none)")&lt;/strong&gt; ·
+    Last activated: &lt;strong&gt;@(openedFile ?? "—")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private string? selectedFile = "src/components/Tree.razor";
+    private string? openedFile;
+}
+
+@* Label feeds typeahead: the item's text content would also include the
+   chevron and every descendant's name. *@</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tree-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+/* BhTree renders &lt;ul role="tree"&gt;, BhTreeGroup &lt;ul role="group"&gt;. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* &lt;li role="treeitem"&gt; wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused &lt;li&gt; draws its ring on its own row. */
+.tree-item:focus-visible &gt; .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] &gt; .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] &gt; .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+.tree-meta { margin-inline-start: auto; font-size: 0.75rem; color: #a1a1aa; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Project files"
+        @bind-SelectedValue="selectedFile"
+        DefaultExpandedValues="@(new[] { "src/", "src/components/" })"
+        OnItemActivate="v =&gt; openedFile = v"
+        class="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-1.5 text-sm text-zinc-900 [&amp;_[role=treeitem]]:outline-none [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:-outline-offset-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-blue-600 [&amp;_[aria-selected=true]&gt;div]:bg-blue-50 [&amp;_[aria-selected=true]&gt;div]:font-medium [&amp;_[aria-selected=true]&gt;div]:text-blue-700 [&amp;_[data-disabled]&gt;div]:cursor-not-allowed [&amp;_[data-disabled]&gt;div]:bg-transparent [&amp;_[data-disabled]&gt;div]:opacity-50"&gt;
+    &lt;BhTreeItem TValue="string" Value="@("src/")" Label="src"&gt;
+        &lt;Template Context="srcDir"&gt;
+            &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="w-5 flex-none text-center"&gt;@(srcDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                &lt;span&gt;src&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string"&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/components/")" Label="components"&gt;
+                    &lt;Template Context="componentsDir"&gt;
+                        &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="w-5 flex-none text-center"&gt;@(componentsDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                            &lt;span&gt;components&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;BhTreeGroup TValue="string"&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/components/Button.razor")" Label="Button.razor"&gt;
+                                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;Button.razor&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/components/Tree.razor")" Label="Tree.razor"&gt;
+                                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;Tree.razor&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                        &lt;/BhTreeGroup&gt;
+                    &lt;/Template&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/services/")" Label="services"&gt;
+                    &lt;Template Context="servicesDir"&gt;
+                        &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="w-5 flex-none text-center"&gt;@(servicesDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                            &lt;span&gt;services&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;BhTreeGroup TValue="string"&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/services/ApiClient.cs")" Label="ApiClient.cs"&gt;
+                                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;ApiClient.cs&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                            &lt;BhTreeItem TValue="string" Value="@("src/services/AuthService.cs")" Label="AuthService.cs"&gt;
+                                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                                    &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+                                    &lt;span&gt;AuthService.cs&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/BhTreeItem&gt;
+                        &lt;/BhTreeGroup&gt;
+                    &lt;/Template&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("src/Program.cs")" Label="Program.cs"&gt;
+                    &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+                        &lt;span&gt;Program.cs&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+            &lt;/BhTreeGroup&gt;
+        &lt;/Template&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("wwwroot/")" Label="wwwroot"&gt;
+        &lt;Template Context="wwwDir"&gt;
+            &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="w-5 flex-none text-center"&gt;@(wwwDir.IsExpanded ? "📂" : "📁")&lt;/span&gt;
+                &lt;span&gt;wwwroot&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string"&gt;
+                &lt;BhTreeItem TValue="string" Value="@("wwwroot/app.css")" Label="app.css"&gt;
+                    &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="w-5 flex-none text-center"&gt;🎨&lt;/span&gt;
+                        &lt;span&gt;app.css&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+                &lt;BhTreeItem TValue="string" Value="@("wwwroot/favicon.png")" Label="favicon.png"&gt;
+                    &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                        &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                        &lt;span class="w-5 flex-none text-center"&gt;🖼️&lt;/span&gt;
+                        &lt;span&gt;favicon.png&lt;/span&gt;
+                    &lt;/div&gt;
+                &lt;/BhTreeItem&gt;
+            &lt;/BhTreeGroup&gt;
+        &lt;/Template&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("secrets.json")" Label="secrets.json" Disabled="true"&gt;
+        &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+            &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+            &lt;span class="w-5 flex-none text-center"&gt;🔒&lt;/span&gt;
+            &lt;span&gt;secrets.json&lt;/span&gt;
+            &lt;span class="ml-auto text-xs text-zinc-400"&gt;locked&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/BhTreeItem&gt;
+    &lt;BhTreeItem TValue="string" Value="@("README.md")" Label="README.md"&gt;
+        &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+            &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+            &lt;span class="w-5 flex-none text-center"&gt;📄&lt;/span&gt;
+            &lt;span&gt;README.md&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/BhTreeItem&gt;
+&lt;/BhTree&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;
+    Selected: &lt;strong class="font-semibold text-zinc-900"&gt;@(selectedFile ?? "(none)")&lt;/strong&gt; ·
+    Last activated: &lt;strong class="font-semibold text-zinc-900"&gt;@(openedFile ?? "—")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private string? selectedFile = "src/components/Tree.razor";
+    private string? openedFile;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="data-driven-recursive">Data-driven (recursive)</h2>
+        <p>Render the tree from a model with a recursive <code>RenderFragment&lt;Node&gt;</code> helper. Each <code>BhTreeItem</code> works out its depth from where it is rendered, so the markup is the same at every level. Supplying <code>@@bind-ExpandedValues</code> makes expansion controlled, so plain buttons can expand or collapse everything.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="tree-actions"&gt;
+    &lt;button type="button" class="tree-button" @onclick="ExpandAllDocs"&gt;Expand all&lt;/button&gt;
+    &lt;button type="button" class="tree-button" @onclick="CollapseAllDocs"&gt;Collapse all&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;BhTree TValue="string" aria-label="Documentation" class="tree"
+        @bind-SelectedValue="selectedDoc"
+        @bind-ExpandedValues="expandedDocs"&gt;
+    @foreach (var node in docs)
+    {
+        @DocItem(node)
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="tree-output"&gt;
+    Selected: &lt;strong&gt;@(selectedDoc ?? "(none)")&lt;/strong&gt; ·
+    Expanded: &lt;strong&gt;@expandedDocs.Count&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private sealed record Node(string Id, string Name, Node[] Children);
+
+    private readonly Node[] docs =
+    [
+        new("start", "Getting started",
+        [
+            new("installation", "Installation", []),
+            new("quick-start", "Quick start", []),
+        ]),
+        new("components", "Components",
+        [
+            new("overlays", "Overlays",
+            [
+                new("dialog", "Dialog", []),
+                new("popover", "Popover", []),
+                new("tooltip", "Tooltip", []),
+            ]),
+            new("collections", "Collections",
+            [
+                new("listbox", "Listbox", []),
+                new("tree", "Tree View", []),
+                new("grid", "Grid", []),
+            ]),
+        ]),
+        new("styling", "Styling",
+        [
+            new("plain-css", "Plain CSS", []),
+            new("tailwind", "Tailwind", []),
+        ]),
+    ];
+
+    private string? selectedDoc = "tree";
+    private IReadOnlyCollection&lt;string&gt; expandedDocs = ["components", "collections"];
+
+    private void ExpandAllDocs() =&gt; expandedDocs = Branches(docs).ToArray();
+
+    private void CollapseAllDocs() =&gt; expandedDocs = [];
+
+    private static IEnumerable&lt;string&gt; Branches(IEnumerable&lt;Node&gt; nodes) =&gt;
+        nodes.Where(n =&gt; n.Children.Length &gt; 0).SelectMany(n =&gt; Branches(n.Children).Prepend(n.Id));
+
+    // One template renders every level — it simply calls itself for the children.
+    private RenderFragment&lt;Node&gt; DocItem =&gt; node =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@node.Id" Label="@node.Name" class="tree-item"&gt;
+            &lt;div class="tree-row"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span&gt;@node.Name&lt;/span&gt;
+                @if (node.Children.Length &gt; 0)
+                {
+                    &lt;span class="tree-count"&gt;@node.Children.Length&lt;/span&gt;
+                }
+            &lt;/div&gt;
+            @if (node.Children.Length &gt; 0)
+            {
+                &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                    @foreach (var child in node.Children)
+                    {
+                        @DocItem(child)
+                    }
+                &lt;/BhTreeGroup&gt;
+            }
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tree-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+/* BhTree renders &lt;ul role="tree"&gt;, BhTreeGroup &lt;ul role="group"&gt;. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* &lt;li role="treeitem"&gt; wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused &lt;li&gt; draws its ring on its own row. */
+.tree-item:focus-visible &gt; .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] &gt; .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] &gt; .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+.tree-count {
+    margin-inline-start: auto;
+    min-width: 1.25rem;
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #71717a;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.tree-actions { display: flex; gap: 0.5rem; }
+
+.tree-button {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.375rem;
+    background: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #18181b;
+    cursor: pointer;
+}
+.tree-button:hover         { background: #f4f4f5; }
+.tree-button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex gap-2"&gt;
+    &lt;button type="button" @onclick="ExpandAllDocs"
+            class="cursor-pointer rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;Expand all&lt;/button&gt;
+    &lt;button type="button" @onclick="CollapseAllDocs"
+            class="cursor-pointer rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;Collapse all&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;BhTree TValue="string" aria-label="Documentation"
+        @bind-SelectedValue="selectedDoc"
+        @bind-ExpandedValues="expandedDocs"
+        class="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-1.5 text-sm text-zinc-900 [&amp;_[role=treeitem]]:outline-none [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:-outline-offset-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-blue-600 [&amp;_[aria-selected=true]&gt;div]:bg-blue-50 [&amp;_[aria-selected=true]&gt;div]:font-medium [&amp;_[aria-selected=true]&gt;div]:text-blue-700"&gt;
+    @foreach (var node in docs)
+    {
+        @DocItem(node)
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;
+    Selected: &lt;strong class="font-semibold text-zinc-900"&gt;@(selectedDoc ?? "(none)")&lt;/strong&gt; ·
+    Expanded: &lt;strong class="font-semibold text-zinc-900"&gt;@expandedDocs.Count&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private sealed record Node(string Id, string Name, Node[] Children);
+
+    private readonly Node[] docs =
+    [
+        new("start", "Getting started",
+        [
+            new("installation", "Installation", []),
+            new("quick-start", "Quick start", []),
+        ]),
+        new("components", "Components",
+        [
+            new("overlays", "Overlays",
+            [
+                new("dialog", "Dialog", []),
+                new("popover", "Popover", []),
+                new("tooltip", "Tooltip", []),
+            ]),
+            new("collections", "Collections",
+            [
+                new("listbox", "Listbox", []),
+                new("tree", "Tree View", []),
+                new("grid", "Grid", []),
+            ]),
+        ]),
+        new("styling", "Styling",
+        [
+            new("plain-css", "Plain CSS", []),
+            new("tailwind", "Tailwind", []),
+        ]),
+    ];
+
+    private string? selectedDoc = "tree";
+    private IReadOnlyCollection&lt;string&gt; expandedDocs = ["components", "collections"];
+
+    private void ExpandAllDocs() =&gt; expandedDocs = Branches(docs).ToArray();
+
+    private void CollapseAllDocs() =&gt; expandedDocs = [];
+
+    private static IEnumerable&lt;string&gt; Branches(IEnumerable&lt;Node&gt; nodes) =&gt;
+        nodes.Where(n =&gt; n.Children.Length &gt; 0).SelectMany(n =&gt; Branches(n.Children).Prepend(n.Id));
+
+    // One template renders every level — it simply calls itself for the children.
+    private RenderFragment&lt;Node&gt; DocItem =&gt; node =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@node.Id" Label="@node.Name"&gt;
+            &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span&gt;@node.Name&lt;/span&gt;
+                @if (node.Children.Length &gt; 0)
+                {
+                    &lt;span class="ml-auto min-w-5 rounded-full bg-zinc-100 px-1.5 text-center text-[0.7rem] text-zinc-500"&gt;@node.Children.Length&lt;/span&gt;
+                }
+            &lt;/div&gt;
+            @if (node.Children.Length &gt; 0)
+            {
+                &lt;BhTreeGroup TValue="string"&gt;
+                    @foreach (var child in node.Children)
+                    {
+                        @DocItem(child)
+                    }
+                &lt;/BhTreeGroup&gt;
+            }
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multiple-selection">Multiple selection</h2>
+        <p><code>SelectionMode="BhTreeSelectionMode.Multiple"</code> sets <code>aria-multiselectable</code> and binds with <code>@@bind-SelectedValues</code>. Click selects one item, Ctrl / ⌘ + click toggles, Shift + click selects a range. Keyboard: Space toggles the focused item, Shift + Up / Down extends the selection, Ctrl + A selects everything.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Mailboxes" class="tree"
+        SelectionMode="BhTreeSelectionMode.Multiple"
+        @bind-SelectedValues="selectedBoxes"
+        DefaultExpandedValues="@(new[] { "Inbox", "Projects" })"&gt;
+    @foreach (var (icon, name, children) in mailboxes)
+    {
+        &lt;BhTreeItem TValue="string" Value="@name" Label="@name" class="tree-item"&gt;
+            &lt;div class="tree-row"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="tree-icon"&gt;@icon&lt;/span&gt;
+                &lt;span&gt;@name&lt;/span&gt;
+                &lt;span class="tree-count"&gt;@children.Length&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                @foreach (var child in children)
+                {
+                    &lt;BhTreeItem TValue="string" Value="@($"{name}/{child}")" Label="@child" class="tree-item"&gt;
+                        &lt;div class="tree-row"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="tree-icon"&gt;📁&lt;/span&gt;
+                            &lt;span&gt;@child&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/BhTreeItem&gt;
+                }
+            &lt;/BhTreeGroup&gt;
+        &lt;/BhTreeItem&gt;
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="tree-output"&gt;
+    @selectedBoxes.Count selected: &lt;strong&gt;@(selectedBoxes.Count == 0 ? "—" : string.Join(", ", selectedBoxes))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private readonly (string Icon, string Name, string[] Children)[] mailboxes =
+    [
+        ("📥", "Inbox", ["Work", "Personal", "Receipts"]),
+        ("🗂️", "Projects", ["Apollo", "Gemini", "Mercury"]),
+        ("🗄️", "Archive", ["2024", "2025"]),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedBoxes = [];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tree-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+/* BhTree renders &lt;ul role="tree"&gt;, BhTreeGroup &lt;ul role="group"&gt;. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* &lt;li role="treeitem"&gt; wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused &lt;li&gt; draws its ring on its own row. */
+.tree-item:focus-visible &gt; .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] &gt; .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] &gt; .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+.tree-count {
+    margin-inline-start: auto;
+    min-width: 1.25rem;
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #71717a;
+    font-size: 0.7rem;
+    text-align: center;
+}</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Mailboxes"
+        SelectionMode="BhTreeSelectionMode.Multiple"
+        @bind-SelectedValues="selectedBoxes"
+        DefaultExpandedValues="@(new[] { "Inbox", "Projects" })"
+        class="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-1.5 text-sm text-zinc-900 [&amp;_[role=treeitem]]:outline-none [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:-outline-offset-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-blue-600 [&amp;_[aria-selected=true]&gt;div]:bg-blue-50 [&amp;_[aria-selected=true]&gt;div]:font-medium [&amp;_[aria-selected=true]&gt;div]:text-blue-700"&gt;
+    @foreach (var (icon, name, children) in mailboxes)
+    {
+        &lt;BhTreeItem TValue="string" Value="@name" Label="@name"&gt;
+            &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="w-5 flex-none text-center"&gt;@icon&lt;/span&gt;
+                &lt;span&gt;@name&lt;/span&gt;
+                &lt;span class="ml-auto min-w-5 rounded-full bg-zinc-100 px-1.5 text-center text-[0.7rem] text-zinc-500"&gt;@children.Length&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;BhTreeGroup TValue="string"&gt;
+                @foreach (var child in children)
+                {
+                    &lt;BhTreeItem TValue="string" Value="@($"{name}/{child}")" Label="@child"&gt;
+                        &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                            &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                            &lt;span class="w-5 flex-none text-center"&gt;📁&lt;/span&gt;
+                            &lt;span&gt;@child&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/BhTreeItem&gt;
+                }
+            &lt;/BhTreeGroup&gt;
+        &lt;/BhTreeItem&gt;
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;
+    @selectedBoxes.Count selected: &lt;strong class="font-semibold text-zinc-900"&gt;@(selectedBoxes.Count == 0 ? "—" : string.Join(", ", selectedBoxes))&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private readonly (string Icon, string Name, string[] Children)[] mailboxes =
+    [
+        ("📥", "Inbox", ["Work", "Personal", "Receipts"]),
+        ("🗂️", "Projects", ["Apollo", "Gemini", "Mercury"]),
+        ("🗄️", "Archive", ["2024", "2025"]),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedBoxes = [];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="hierarchical-checkboxes">Hierarchical checkboxes</h2>
+        <p><code>Checkboxes="true"</code> turns the tree into a hierarchical picker: checking a parent checks all of its descendants, and a parent whose leaves are only partly checked reports <code>aria-checked="mixed"</code>. Every item also emits <code>data-checked="true|false|mixed"</code>, so the box below is drawn with CSS alone. Click a row or press Space to toggle it.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Features to install" class="tree"
+        Checkboxes="true"
+        @bind-SelectedValues="checkedFeatures"
+        DefaultExpandedValues="@(new[] { "app", "app-themes" })"&gt;
+    @foreach (var node in features)
+    {
+        @FeatureItem(node)
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="tree-output"&gt;
+    Installing: &lt;strong&gt;@(InstalledFeatures.Any() ? string.Join(", ", InstalledFeatures) : "nothing")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private sealed record Node(string Id, string Name, Node[] Children);
+
+    private readonly Node[] features =
+    [
+        new("app", "Desktop app",
+        [
+            new("app-core", "Core runtime", []),
+            new("app-spellcheck", "Spell checker", []),
+            new("app-themes", "Themes",
+            [
+                new("theme-light", "Light", []),
+                new("theme-dark", "Dark", []),
+                new("theme-contrast", "High contrast", []),
+            ]),
+        ]),
+        new("cli", "Command-line tools",
+        [
+            new("cli-core", "CLI", []),
+            new("cli-completions", "Shell completions", []),
+        ]),
+        new("offline-docs", "Offline documentation", []),
+    ];
+
+    // Parents are added / removed automatically as their leaves change.
+    private IReadOnlyCollection&lt;string&gt; checkedFeatures = ["app-core", "theme-light", "theme-dark"];
+
+    private IEnumerable&lt;string&gt; InstalledFeatures =&gt;
+        Leaves(features).Where(n =&gt; checkedFeatures.Contains(n.Id)).Select(n =&gt; n.Name);
+
+    private static IEnumerable&lt;Node&gt; Leaves(IEnumerable&lt;Node&gt; nodes) =&gt;
+        nodes.SelectMany(n =&gt; n.Children.Length == 0 ? new[] { n } : Leaves(n.Children));
+
+    private RenderFragment&lt;Node&gt; FeatureItem =&gt; node =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@node.Id" Label="@node.Name" class="tree-item"&gt;
+            &lt;div class="tree-row"&gt;
+                &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                &lt;span class="tree-check" aria-hidden="true"&gt;&lt;/span&gt;
+                &lt;span&gt;@node.Name&lt;/span&gt;
+            &lt;/div&gt;
+            @if (node.Children.Length &gt; 0)
+            {
+                &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                    @foreach (var child in node.Children)
+                    {
+                        @FeatureItem(child)
+                    }
+                &lt;/BhTreeGroup&gt;
+            }
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tree-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+/* BhTree renders &lt;ul role="tree"&gt;, BhTreeGroup &lt;ul role="group"&gt;. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* &lt;li role="treeitem"&gt; wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused &lt;li&gt; draws its ring on its own row. */
+.tree-item:focus-visible &gt; .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] &gt; .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] &gt; .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+/* With Checkboxes="true" every item carries aria-checked and
+   data-checked="true|false|mixed"; a parent is mixed when only some of its
+   leaves are checked. The box itself is decoration (aria-hidden). */
+.tree-check {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid #a1a1aa;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.tree-item[data-checked="true"]  &gt; .tree-row .tree-check,
+.tree-item[data-checked="mixed"] &gt; .tree-row .tree-check { background: #2563eb; border-color: #2563eb; }
+.tree-item[data-checked="true"]  &gt; .tree-row .tree-check::after { content: "✓"; }
+.tree-item[data-checked="mixed"] &gt; .tree-row .tree-check::after { content: "–"; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Features to install"
+        Checkboxes="true"
+        @bind-SelectedValues="checkedFeatures"
+        DefaultExpandedValues="@(new[] { "app", "app-themes" })"
+        class="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-1.5 text-sm text-zinc-900 [&amp;_[role=treeitem]]:outline-none [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:-outline-offset-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-blue-600"&gt;
+    @foreach (var node in features)
+    {
+        @FeatureItem(node)
+    }
+&lt;/BhTree&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;
+    Installing: &lt;strong class="font-semibold text-zinc-900"&gt;@(InstalledFeatures.Any() ? string.Join(", ", InstalledFeatures) : "nothing")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private sealed record Node(string Id, string Name, Node[] Children);
+
+    private readonly Node[] features =
+    [
+        new("app", "Desktop app",
+        [
+            new("app-core", "Core runtime", []),
+            new("app-spellcheck", "Spell checker", []),
+            new("app-themes", "Themes",
+            [
+                new("theme-light", "Light", []),
+                new("theme-dark", "Dark", []),
+                new("theme-contrast", "High contrast", []),
+            ]),
+        ]),
+        new("cli", "Command-line tools",
+        [
+            new("cli-core", "CLI", []),
+            new("cli-completions", "Shell completions", []),
+        ]),
+        new("offline-docs", "Offline documentation", []),
+    ];
+
+    // Parents are added / removed automatically as their leaves change.
+    private IReadOnlyCollection&lt;string&gt; checkedFeatures = ["app-core", "theme-light", "theme-dark"];
+
+    private IEnumerable&lt;string&gt; InstalledFeatures =&gt;
+        Leaves(features).Where(n =&gt; checkedFeatures.Contains(n.Id)).Select(n =&gt; n.Name);
+
+    private static IEnumerable&lt;Node&gt; Leaves(IEnumerable&lt;Node&gt; nodes) =&gt;
+        nodes.SelectMany(n =&gt; n.Children.Length == 0 ? new[] { n } : Leaves(n.Children));
+
+    // The item itself emits data-checked; the Template's Checked (true / false / null) mirrors it.
+    private static string CheckedAttr(bool? state) =&gt; state switch
+    {
+        true =&gt; "true",
+        false =&gt; "false",
+        null =&gt; "mixed",
+    };
+
+    private RenderFragment&lt;Node&gt; FeatureItem =&gt; node =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@node.Id" Label="@node.Name"&gt;
+            &lt;Template Context="state"&gt;
+                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                    &lt;span data-checked="@CheckedAttr(state.Checked)" aria-hidden="true"
+                          class="inline-flex size-4 flex-none items-center justify-center rounded border-[1.5px] border-zinc-400 bg-white text-[0.7rem] font-bold leading-none text-white data-[checked=true]:border-blue-600 data-[checked=true]:bg-blue-600 data-[checked=mixed]:border-blue-600 data-[checked=mixed]:bg-blue-600"&gt;@(state.Checked switch { true =&gt; "✓", null =&gt; "–", _ =&gt; "" })&lt;/span&gt;
+                    &lt;span&gt;@node.Name&lt;/span&gt;
+                &lt;/div&gt;
+                @if (node.Children.Length &gt; 0)
+                {
+                    &lt;BhTreeGroup TValue="string"&gt;
+                        @foreach (var child in node.Children)
+                        {
+                            @FeatureItem(child)
+                        }
+                    &lt;/BhTreeGroup&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="lazy-loading">Lazy loading</h2>
+        <p>Mark folders whose children are not loaded yet with <code>HasChildren="true"</code> and supply <code>LoadChildren</code>. It runs the first time a folder expands; meanwhile the item reports <code>aria-busy="true"</code> (and <code>IsLoading</code> in its <code>Template</code>) so you can show a spinner. The folder opens once the children are rendered.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Cloud storage" class="tree"
+        LoadChildren="LoadChildrenAsync"&gt;
+    @foreach (var bucket in buckets)
+    {
+        @RemoteItem(bucket)
+    }
+&lt;/BhTree&gt;
+
+@code {
+    private sealed record RemoteEntry(string Path, string Name, bool IsFolder);
+
+    private readonly RemoteEntry[] buckets =
+    [
+        new("media", "media-bucket", true),
+        new("logs", "logs-bucket", true),
+        new("backups", "backups-bucket", true),
+    ];
+
+    private readonly Dictionary&lt;string, RemoteEntry[]&gt; loadedChildren = new();
+
+    // Called once per folder, the first time it expands.
+    private async Task LoadChildrenAsync(string path)
+    {
+        await Task.Delay(800); // simulate a network round-trip
+
+        if (path.Contains('/'))
+        {
+            loadedChildren[path] =
+            [
+                new($"{path}/january.csv", "january.csv", false),
+                new($"{path}/february.csv", "february.csv", false),
+            ];
+        }
+        else
+        {
+            loadedChildren[path] =
+            [
+                new($"{path}/2025", "2025", true),
+                new($"{path}/2026", "2026", true),
+                new($"{path}/manifest.json", "manifest.json", false),
+            ];
+        }
+
+        StateHasChanged();
+    }
+
+    private RenderFragment&lt;RemoteEntry&gt; RemoteItem =&gt; entry =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@entry.Path" Label="@entry.Name" HasChildren="entry.IsFolder" class="tree-item"&gt;
+            &lt;Template Context="state"&gt;
+                &lt;div class="tree-row"&gt;
+                    &lt;BhTreeItemToggle TValue="string" class="tree-toggle"&gt;▸&lt;/BhTreeItemToggle&gt;
+                    &lt;span class="tree-icon"&gt;@(entry.IsFolder ? (state.IsExpanded ? "📂" : "📁") : "📄")&lt;/span&gt;
+                    &lt;span&gt;@entry.Name&lt;/span&gt;
+                    @if (state.IsLoading)
+                    {
+                        &lt;span class="tree-meta"&gt;Loading…&lt;/span&gt;
+                        &lt;span class="tree-spinner" aria-hidden="true"&gt;&lt;/span&gt;
+                    }
+                &lt;/div&gt;
+                @if (loadedChildren.TryGetValue(entry.Path, out var children))
+                {
+                    &lt;BhTreeGroup TValue="string" class="tree-group"&gt;
+                        @foreach (var child in children)
+                        {
+                            @RemoteItem(child)
+                        }
+                    &lt;/BhTreeGroup&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.tree-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.tree-output { font-size: 0.875rem; color: #71717a; }
+.tree-output strong { color: #18181b; font-weight: 600; }
+
+/* BhTree renders &lt;ul role="tree"&gt;, BhTreeGroup &lt;ul role="group"&gt;. */
+.tree,
+.tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tree {
+    width: 100%;
+    max-width: 22rem;
+    padding: 0.375rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+/* &lt;li role="treeitem"&gt; wraps its own row AND its child group, so state styles
+   target the item's direct .tree-row child — a selected folder must not tint
+   the rows of its children. */
+.tree-item { outline: none; }
+
+.tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 1.875rem;
+    padding: 0.2rem 0.5rem;
+    /* --bh-tree-level (1, 2, 3, …) is emitted on every BhTreeItem. */
+    padding-inline-start: calc((var(--bh-tree-level, 1) - 1) * 1.25rem + 0.375rem);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    user-select: none;
+}
+.tree-row:hover { background: #f4f4f5; }
+
+/* Roving focus: the focused &lt;li&gt; draws its ring on its own row. */
+.tree-item:focus-visible &gt; .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* aria-selected is emitted in single / multiple selection mode. */
+.tree-item[aria-selected="true"] &gt; .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+
+.tree-item[data-disabled] &gt; .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
+
+/* BhTreeItemToggle: data-state="open|closed" on branches, data-leaf on leaves. */
+.tree-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    transition: transform 150ms ease;
+}
+.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle[data-state="open"] { transform: rotate(90deg); }
+.tree-toggle[data-leaf]         { visibility: hidden; }
+
+.tree-icon { flex: none; width: 1.25rem; text-align: center; }
+
+.tree-meta { margin-inline-start: auto; font-size: 0.75rem; color: #a1a1aa; }
+
+/* aria-busy="true" is set while LoadChildren runs. */
+.tree-item[aria-busy="true"] &gt; .tree-row { color: #71717a; cursor: progress; }
+
+.tree-spinner {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid #dbeafe;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: tree-spin 0.7s linear infinite;
+}
+
+@keyframes tree-spin { to { transform: rotate(360deg); } }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhTree TValue="string" aria-label="Cloud storage"
+        LoadChildren="LoadChildrenAsync"
+        class="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-1.5 text-sm text-zinc-900 [&amp;_[role=treeitem]]:outline-none [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:-outline-offset-2 [&amp;_[role=treeitem]:focus-visible&gt;div]:outline-blue-600 [&amp;_[aria-selected=true]&gt;div]:bg-blue-50 [&amp;_[aria-selected=true]&gt;div]:font-medium [&amp;_[aria-selected=true]&gt;div]:text-blue-700 [&amp;_[aria-busy=true]&gt;div]:cursor-progress [&amp;_[aria-busy=true]&gt;div]:text-zinc-500"&gt;
+    @foreach (var bucket in buckets)
+    {
+        @RemoteItem(bucket)
+    }
+&lt;/BhTree&gt;
+
+@code {
+    private sealed record RemoteEntry(string Path, string Name, bool IsFolder);
+
+    private readonly RemoteEntry[] buckets =
+    [
+        new("media", "media-bucket", true),
+        new("logs", "logs-bucket", true),
+        new("backups", "backups-bucket", true),
+    ];
+
+    private readonly Dictionary&lt;string, RemoteEntry[]&gt; loadedChildren = new();
+
+    // Called once per folder, the first time it expands.
+    private async Task LoadChildrenAsync(string path)
+    {
+        await Task.Delay(800); // simulate a network round-trip
+
+        if (path.Contains('/'))
+        {
+            loadedChildren[path] =
+            [
+                new($"{path}/january.csv", "january.csv", false),
+                new($"{path}/february.csv", "february.csv", false),
+            ];
+        }
+        else
+        {
+            loadedChildren[path] =
+            [
+                new($"{path}/2025", "2025", true),
+                new($"{path}/2026", "2026", true),
+                new($"{path}/manifest.json", "manifest.json", false),
+            ];
+        }
+
+        StateHasChanged();
+    }
+
+    private RenderFragment&lt;RemoteEntry&gt; RemoteItem =&gt; entry =&gt;
+        @&lt;BhTreeItem TValue="string" Value="@entry.Path" Label="@entry.Name" HasChildren="entry.IsFolder"&gt;
+            &lt;Template Context="state"&gt;
+                &lt;div class="flex min-h-8 cursor-pointer select-none items-center gap-1.5 rounded-md py-1 pr-2 pl-[calc((var(--bh-tree-level)_-_1)_*_1.25rem_+_0.375rem)] hover:bg-zinc-100"&gt;
+                    &lt;BhTreeItemToggle TValue="string" class="inline-flex size-5 flex-none items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 data-state-open:rotate-90 data-[leaf]:invisible"&gt;▸&lt;/BhTreeItemToggle&gt;
+                    &lt;span class="w-5 flex-none text-center"&gt;@(entry.IsFolder ? (state.IsExpanded ? "📂" : "📁") : "📄")&lt;/span&gt;
+                    &lt;span&gt;@entry.Name&lt;/span&gt;
+                    @if (state.IsLoading)
+                    {
+                        &lt;span class="ml-auto text-xs text-zinc-400"&gt;Loading…&lt;/span&gt;
+                        &lt;span class="size-3.5 flex-none animate-spin rounded-full border-2 border-blue-100 border-t-blue-600" aria-hidden="true"&gt;&lt;/span&gt;
+                    }
+                &lt;/div&gt;
+                @if (loadedChildren.TryGetValue(entry.Path, out var children))
+                {
+                    &lt;BhTreeGroup TValue="string"&gt;
+                        @foreach (var child in children)
+                        {
+                            @RemoteItem(child)
+                        }
+                    &lt;/BhTreeGroup&gt;
+                }
+            &lt;/Template&gt;
+        &lt;/BhTreeItem&gt;;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="transition.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Transition</span>
+        </a>
+            
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

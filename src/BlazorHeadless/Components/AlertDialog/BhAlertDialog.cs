@@ -11,23 +11,15 @@ namespace BlazorHeadless;
 ///
 /// <para><b>Key differences from <see cref="BhDialog"/>:</b></para>
 /// <list type="bullet">
-///   <item><b>Built-in trigger</b> — opens via an <see cref="BhAlertDialogTrigger"/> and supports controlled/uncontrolled state.</item>
+///   <item><b>Built-in trigger</b> — opens via an <see cref="BhAlertDialogTrigger"/>; supports <c>@bind-Open</c> and uncontrolled use.</item>
 ///   <item><b><c>role="alertdialog"</c></b> instead of <c>role="dialog"</c>.</item>
 ///   <item><b>No dismiss on overlay click</b> — the user must explicitly choose <see cref="BhAlertDialogCancel"/> or <see cref="BhAlertDialogAction"/>.</item>
 ///   <item><b>Default focus on Cancel</b> — focus lands on the <see cref="BhAlertDialogCancel"/> button when present, the safest choice.</item>
 /// </list>
 ///
-/// <para><b>Key features (shared with <see cref="BhDialog"/>):</b></para>
-/// <list type="bullet">
-///   <item><b>Focus trap</b> — Tab and Shift+Tab cycle within the content.</item>
-///   <item><b>Focus return</b> — restores focus to the trigger on close.</item>
-///   <item><b>Scroll lock</b> — body scrolling is locked while open. Stack-aware.</item>
-///   <item><b>Inert background</b> — non-dialog body children are marked <c>inert</c>.</item>
-///   <item><b>Escape closes</b> — fires <see cref="OnOpenChange"/> with <c>false</c>.</item>
-///   <item><b>Auto-wired ARIA</b> — <c>role="alertdialog"</c>, <c>aria-modal="true"</c>, <c>aria-labelledby</c>, and <c>aria-describedby</c>.</item>
-/// </list>
-///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup.</b></para>
+/// <para><b>Shared with <see cref="BhDialog"/>:</b> focus trap, focus return to the trigger,
+/// scroll lock, page isolation (inert + aria-hidden), portal, exit animations and
+/// auto-wired <c>aria-labelledby</c> / <c>aria-describedby</c>.</para>
 ///
 /// <para><b>Usage:</b></para>
 /// <code>
@@ -36,9 +28,7 @@ namespace BlazorHeadless;
 ///     &lt;BhAlertDialogOverlay class="overlay" /&gt;
 ///     &lt;BhAlertDialogContent class="content"&gt;
 ///         &lt;BhAlertDialogTitle&gt;Are you absolutely sure?&lt;/BhAlertDialogTitle&gt;
-///         &lt;BhAlertDialogDescription&gt;
-///             This action cannot be undone. This will permanently delete your account.
-///         &lt;/BhAlertDialogDescription&gt;
+///         &lt;BhAlertDialogDescription&gt;This action cannot be undone.&lt;/BhAlertDialogDescription&gt;
 ///         &lt;BhAlertDialogCancel&gt;Cancel&lt;/BhAlertDialogCancel&gt;
 ///         &lt;BhAlertDialogAction OnClick="DeleteAccount"&gt;Yes, delete account&lt;/BhAlertDialogAction&gt;
 ///     &lt;/BhAlertDialogContent&gt;
@@ -47,75 +37,96 @@ namespace BlazorHeadless;
 /// </summary>
 public class BhAlertDialog : BhComponentBase, IAsyncDisposable
 {
-    [Inject] private BhInterop Interop { get; set; } = default!;
+    private BhFloatingController? _floating;
+    private bool _open;
+    private bool _hasTitle;
+    private bool _hasDescription;
+    private bool _hasOverlay;
+    private bool _hasCancel;
+    private BhFloatingScope? _scope;
 
-    // ── Parameters ────────────────────────────────────────────────────────────
+    [CascadingParameter]
+    private BhFloatingScope? ParentScope { get; set; }
 
-    /// <summary>Initial open state (uncontrolled). Ignored when <see cref="Open"/> is supplied.</summary>
+    private BhFloatingScope Scope => _scope ??= new BhFloatingScope(() => _floating?.Handle ?? 0);
+
+    /// <summary>Whether the alert dialog is open. Supplying it makes the component controlled (use <c>@bind-Open</c>).</summary>
+    [Parameter]
+    public bool Open { get; set; }
+
+    /// <summary>Initial open state when uncontrolled.</summary>
     [Parameter]
     public bool DefaultOpen { get; set; }
 
-    /// <summary>Controlled open state. When non-null, <see cref="OnOpenChange"/> must update this value.</summary>
+    /// <summary>Two-way binding callback for <see cref="Open"/>.</summary>
     [Parameter]
-    public bool? Open { get; set; }
+    public EventCallback<bool> OpenChanged { get; set; }
 
     /// <summary>Fires whenever the open state changes (trigger, Escape, Cancel, or Action).</summary>
     [Parameter]
     public EventCallback<bool> OnOpenChange { get; set; }
 
+    /// <summary>Raised before Escape dismisses the dialog. Set <see cref="BhDismissRequest.Cancel"/> to keep it open.</summary>
+    [Parameter]
+    public EventCallback<BhDismissRequest> OnDismissRequest { get; set; }
+
+    /// <summary>Whether Escape closes the alert dialog. Default: true.</summary>
+    [Parameter]
+    public bool DismissOnEscape { get; set; } = true;
+
+    /// <summary>Render the overlay and content at the end of <c>&lt;body&gt;</c> while open. Default: true.</summary>
+    [Parameter]
+    public bool Portal { get; set; } = true;
+
+    /// <summary>Optional id or CSS selector of the portal container.</summary>
+    [Parameter]
+    public string? PortalTarget { get; set; }
+
     /// <summary>
     /// Child content. Should contain an <see cref="BhAlertDialogTrigger"/> and an
-    /// <see cref="BhAlertDialogContent"/>, optionally an
-    /// <see cref="BhAlertDialogOverlay"/>.
+    /// <see cref="BhAlertDialogContent"/>, optionally an <see cref="BhAlertDialogOverlay"/>.
     /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
     protected override string DefaultTag => "div";
 
-    // ── State ─────────────────────────────────────────────────────────────────
+    private bool IsOpen => IsProvided(nameof(Open)) ? Open : _open;
 
-    private bool _isOpen;
-    private bool _wasOpen;
-    private int _lockHandle = -1;
-    private ElementReference _contentRef;
-    private ElementReference _triggerRef;
-    private ElementReference _cancelRef;
-    private bool _hasContentRef;
-    private bool _hasTriggerRef;
-    private bool _hasCancelRef;
+    private BhFloatingController Floating => _floating ??= new BhFloatingController(Interop, DismissAsync, StateHasChanged);
 
-    private bool IsOpen => Open ?? _isOpen;
+    protected override void OnInitialized() => _open = DefaultOpen;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    protected override Task OnAfterRenderAsync(bool firstRender)
+        => Floating.SyncAsync(() => IsOpen, CreateRequest);
 
-    protected override void OnInitialized()
+    private BhFloatingRequest CreateRequest()
     {
-        if (Open is null)
-            _isOpen = DefaultOpen;
+        var ids = new List<string?>();
+        if (_hasOverlay) ids.Add(OverlayId);
+        ids.Add(ContentId);
+        return new BhFloatingRequest
+        {
+            ContentId = ContentId,
+            SurfaceIds = ids,
+            Portal = Portal,
+            PortalTarget = PortalTarget,
+            Modal = true,
+            Layer = new BhLayerOptions { Escape = DismissOnEscape, PointerDownOutside = false, Modal = true, ParentHandle = ParentScope?.Handle ?? 0 },
+            Focus = new BhFocusScopeOptions
+            {
+                Trap = true,
+                AutoFocus = _hasCancel ? CancelId : "first",
+                RestoreFocus = true,
+                ReturnFocusId = TriggerId,
+            },
+        };
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // Lock when transitioning from closed → open, unlock on the reverse.
-        if (IsOpen && !_wasOpen && _hasContentRef)
-        {
-            ElementReference? initialFocus = _hasCancelRef ? _cancelRef : null;
-            ElementReference? returnFocus = _hasTriggerRef ? _triggerRef : null;
-            _lockHandle = await Interop.DialogLockAsync(_contentRef, initialFocus, returnFocus);
-            _wasOpen = true;
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            await Interop.DialogUnlockAsync(_lockHandle);
-            _lockHandle = -1;
-            _wasOpen = false;
-            _hasContentRef = false;
-            _hasCancelRef = false;
-        }
-    }
-
-    // ── Rendering ────────────────────────────────────────────────────────────
+    private string TriggerId => $"{ComponentId}-trigger";
+    private string ContentId => $"{ComponentId}-content";
+    private string OverlayId => $"{ComponentId}-overlay";
+    private string CancelId => $"{ComponentId}-cancel";
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
@@ -132,12 +143,8 @@ public class BhAlertDialog : BhComponentBase, IAsyncDisposable
                 inner.OpenElement(0, Tag);
                 inner.AddAttribute(10, "id", ComponentId);
                 inner.AddMultipleAttributes(20, GetFinalAttributes());
-
-                if (Ref is not null)
-                    inner.AddElementReferenceCapture(30, Ref);
-
-                inner.AddContent(40, ChildContent);
-
+                inner.AddElementReferenceCapture(30, CaptureElement);
+                BhFloatingScope.Render(inner, 40, Scope, ChildContent);
                 inner.CloseElement();
             }));
             closeOuter.CloseComponent();
@@ -152,62 +159,67 @@ public class BhAlertDialog : BhComponentBase, IAsyncDisposable
         return attrs;
     }
 
-    // ── Context plumbing ─────────────────────────────────────────────────────
-
     private BhAlertDialogContext CreateContext() => new(
         isOpen: IsOpen,
+        isPresent: Floating.IsPresent(IsOpen),
+        isHidden: Floating.ShouldHide(IsOpen, Portal),
         baseId: ComponentId,
+        hasTitle: _hasTitle,
+        hasDescription: _hasDescription,
         openAsync: OpenAsync,
         closeAsync: CloseAsync,
-        registerContent: RegisterContentRef,
-        registerTrigger: RegisterTriggerRef,
-        registerCancel: RegisterCancelRef);
+        dismissAsync: DismissAsync,
+        register: Register);
 
-    private void RegisterContentRef(ElementReference content)
+    private void Register(BhAlertDialogPart part, bool present)
     {
-        _contentRef = content;
-        _hasContentRef = true;
+        ref var field = ref _hasTitle;
+        switch (part)
+        {
+            case BhAlertDialogPart.Description: field = ref _hasDescription; break;
+            case BhAlertDialogPart.Overlay: field = ref _hasOverlay; break;
+            case BhAlertDialogPart.Cancel: field = ref _hasCancel; break;
+        }
+        if (field == present) return;
+        field = present;
+        StateHasChanged();
     }
 
-    private void RegisterTriggerRef(ElementReference trigger)
+    private async Task DismissAsync(BhDismissReason reason)
     {
-        _triggerRef = trigger;
-        _hasTriggerRef = true;
+        if (!IsOpen) return;
+        if (reason != BhDismissReason.EscapeKey || !DismissOnEscape) return;
+        if (OnDismissRequest.HasDelegate)
+        {
+            var request = new BhDismissRequest(reason);
+            await OnDismissRequest.InvokeAsync(request);
+            if (request.Cancel) return;
+        }
+        await CloseAsync();
     }
 
-    private void RegisterCancelRef(ElementReference cancel)
-    {
-        _cancelRef = cancel;
-        _hasCancelRef = true;
-    }
+    /// <summary>Opens the alert dialog.</summary>
+    public Task OpenAsync() => SetOpenAsync(true);
 
-    // ── Open / Close ───────────────────────────────────────────────────────────
+    /// <summary>Closes the alert dialog.</summary>
+    public Task CloseAsync() => SetOpenAsync(false);
 
-    internal Task OpenAsync()
+    private async Task SetOpenAsync(bool value)
     {
-        if (IsOpen) return Task.CompletedTask;
-        SetOpen(true);
-        return Task.CompletedTask;
-    }
-
-    internal Task CloseAsync()
-    {
-        if (!IsOpen) return Task.CompletedTask;
-        SetOpen(false);
-        return Task.CompletedTask;
-    }
-
-    private void SetOpen(bool value)
-    {
-        if (Open is null)
-            _isOpen = value;
-        _ = OnOpenChange.InvokeAsync(value);
+        if (IsOpen == value) return;
+        if (!IsProvided(nameof(Open)))
+            _open = value;
+        await OpenChanged.InvokeAsync(value);
+        await OnOpenChange.InvokeAsync(value);
         StateHasChanged();
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (_lockHandle > 0)
-            await Interop.DialogUnlockAsync(_lockHandle);
+        if (_floating is not null)
+            await _floating.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }
+
+internal enum BhAlertDialogPart { Title, Description, Overlay, Cancel }

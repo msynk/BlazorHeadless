@@ -50,3 +50,9 @@
 @layer utilities {
     [hidden] { display: none !important; }
 }
+
+/* Inline code in demo descriptions: darker than the muted paragraph text so it
+   keeps a 4.5:1 contrast ratio on its zinc-100 background (WCAG 1.4.3). */
+@layer base {
+    code.bg-zinc-100 { color: var(--color-zinc-700); }
+}

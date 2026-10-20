@@ -4,109 +4,89 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// A headless component that renders its children into a different part of the
-/// DOM tree — by default, the <see cref="BhPortalOutlet"/> placed in your root
-/// layout. This is useful for tooltips, dropdowns, modals, and any UI that needs
-/// to escape overflow/z-index stacking contexts.
+/// Renders its children into a different part of the DOM — by default a portal
+/// root at the end of <c>&lt;body&gt;</c> (or the <see cref="BhPortalOutlet"/>, or
+/// <see cref="Target"/>) — to escape <c>overflow: hidden</c> and stacking contexts.
 ///
-/// <para><b>Key features:</b></para>
-/// <list type="bullet">
-///   <item><b>DOM teleportation</b> — Content is rendered at the outlet location, escaping stacking contexts.</item>
-///   <item><b>Enable/disable</b> — Toggle portalling on and off via <see cref="Enabled"/>; when disabled, content renders in place.</item>
-///   <item><b>PortalGroup support</b> — When nested inside a <see cref="BhPortalGroup"/>, content renders in place within the group (already escaped from the original stacking context).</item>
-///   <item><b>Cleanup</b> — Content is automatically removed from the outlet when the component disposes.</item>
-/// </list>
+/// <para>
+/// Unlike re-rendering content elsewhere, the content stays in its place in the
+/// <em>component</em> tree: cascading values (contexts of dialogs, menus, forms),
+/// event handlers and re-renders keep working. Only the DOM node is moved.
+/// During prerendering (no JS yet) the content renders in place.
+/// </para>
 ///
-/// <para><b>Requires <c>builder.Services.AddBlazorHeadless()</c> at startup and
-/// a <see cref="BhPortalOutlet"/> in your root layout.</b></para>
-///
-/// <para><b>Usage:</b></para>
 /// <code>
 /// &lt;BhPortal&gt;
-///     &lt;div class="tooltip"&gt;I render at the outlet (end of layout)!&lt;/div&gt;
+///     &lt;div class="toast"&gt;Saved!&lt;/div&gt;
 /// &lt;/BhPortal&gt;
 /// </code>
 /// </summary>
-public class BhPortal : ComponentBase, IDisposable
+public class BhPortal : BhComponentBase, IAsyncDisposable
 {
-    [Inject] private BhPortalService PortalService { get; set; } = default!;
+    private int _handle;
+    private string? _movedTo;
 
-    /// <summary>
-    /// Whether the portal is enabled. When true (default), content is teleported
-    /// to the outlet (or rendered in place if inside a PortalGroup).
-    /// When false, content renders in its natural DOM position.
-    /// </summary>
-    [Parameter]
-    public bool Enabled { get; set; } = true;
-
-    /// <summary>
-    /// Child content rendered inside the portal.
-    /// </summary>
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    /// <summary>
-    /// Receives the portal group context from an ancestor <see cref="BhPortalGroup"/>.
-    /// When present, content renders in place (within the group) rather than teleporting to the outlet.
-    /// </summary>
     [CascadingParameter]
     private BhPortalContext? GroupContext { get; set; }
 
-    private string? _entryId;
+    /// <summary>Whether to teleport the content. When false it renders in place. Default: true.</summary>
+    [Parameter]
+    public bool Enabled { get; set; } = true;
 
-    /// <summary>
-    /// Whether this portal should teleport to the outlet (true) or render in place (false).
-    /// Renders in place when: disabled, or inside a PortalGroup.
-    /// </summary>
-    private bool ShouldTeleport => Enabled && GroupContext is null;
+    /// <summary>Id or CSS selector of the destination container. Defaults to the enclosing <see cref="BhPortalGroup"/>, the <see cref="BhPortalOutlet"/>, or a root appended to <c>&lt;body&gt;</c>.</summary>
+    [Parameter]
+    public string? Target { get; set; }
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    /// <summary>The teleported content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
-    protected override void OnParametersSet()
+    protected override string DefaultTag => "div";
+
+    private string? EffectiveTarget => Target ?? GroupContext?.TargetId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (ShouldTeleport && ChildContent is not null)
+        var target = EffectiveTarget ?? string.Empty;
+        if (Enabled && (_handle == 0 || _movedTo != target))
         {
-            if (_entryId is null)
-            {
-                // Register with the service — content will be rendered by the outlet.
-                _entryId = PortalService.Register(ChildContent);
-            }
-            else
-            {
-                // Already registered — update content.
-                PortalService.Update(_entryId, ChildContent);
-            }
+            if (_handle > 0) await Interop.PortalRestoreAsync(_handle);
+            _handle = await Interop.PortalMoveAsync(ComponentId, EffectiveTarget);
+            _movedTo = target;
         }
-        else if (!ShouldTeleport && _entryId is not null)
+        else if (!Enabled && _handle > 0)
         {
-            // No longer teleporting — unregister so content renders in place.
-            PortalService.Unregister(_entryId);
-            _entryId = null;
+            await Interop.PortalRestoreAsync(_handle);
+            _handle = 0;
+            _movedTo = null;
         }
     }
-
-    // ── Rendering ────────────────────────────────────────────────────────────
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (ChildContent is null) return;
-
-        if (!ShouldTeleport)
-        {
-            // Render in place: disabled, or inside a PortalGroup.
-            builder.AddContent(0, ChildContent);
-        }
-        // When teleporting, content is rendered by the BhPortalOutlet — nothing here.
+        builder.OpenElement(0, Tag);
+        builder.AddAttribute(10, "id", ComponentId);
+        builder.AddMultipleAttributes(20, GetFinalAttributes());
+        builder.AddElementReferenceCapture(30, CaptureElement);
+        builder.AddContent(40, ChildContent);
+        builder.CloseElement();
     }
 
-    // ── Cleanup ──────────────────────────────────────────────────────────────
-
-    public void Dispose()
+    protected override Dictionary<string, object> BuildComponentAttributes()
     {
-        if (_entryId is not null)
-        {
-            PortalService.Unregister(_entryId);
-            _entryId = null;
-        }
+        var attrs = base.BuildComponentAttributes();
+        attrs["data-bh-portal"] = "";
+        if (GetAdditionalAttribute("style") is null && GetAdditionalAttribute("class") is null)
+            attrs["style"] = "display:contents";
+        return attrs;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        // Blazor removes the node wherever it lives; just drop the placeholder.
+        if (_handle > 0)
+            await Interop.PortalRestoreAsync(_handle);
+        _handle = 0;
+        GC.SuppressFinalize(this);
     }
 }

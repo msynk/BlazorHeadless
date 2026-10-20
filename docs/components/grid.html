@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Grid / TreeGrid — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html" class="active">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Grid / TreeGrid</h1>
+        <p class="lead">An interactive two-dimensional widget — data tables, spreadsheets-lite, file trees with columns, calendars — with roving cell focus, row selection, sorting and expandable rows.</p>
+        <h2 id="sortable-data-grid">Sortable data grid</h2>
+        <p>The WAI-ARIA Data Grid pattern on a real <code>&lt;table&gt;</code> (<code>As="table"</code> / <code>"thead"</code> / <code>"tbody"</code> / <code>"tr"</code> / <code>"th"</code> / <code>"td"</code>). The grid is a single tab stop: arrow keys move between cells, Home / End jump to the ends of the row, Ctrl + Home / End to the corners, PageUp / PageDown move by <code>PageSize</code> rows. Column headers are cells too — click one or press Enter on it and its <code>OnActivate</code> toggles the sort, which <code>Sort</code> announces as <code>aria-sort</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="datagrid-frame"&gt;
+    &lt;BhGrid As="table" aria-label="Planets" class="datagrid"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" class="datagrid-sortable"
+                            Sort="@(SortOf("name"))" OnActivate="@(() =&gt; SortBy("name"))"&gt;
+                    Planet&lt;span class="datagrid-sort" aria-hidden="true"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="datagrid-sortable"
+                            Sort="@(SortOf("type"))" OnActivate="@(() =&gt; SortBy("type"))"&gt;
+                    Type&lt;span class="datagrid-sort" aria-hidden="true"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="datagrid-sortable num"
+                            Sort="@(SortOf("diameter"))" OnActivate="@(() =&gt; SortBy("diameter"))"&gt;
+                    Diameter&lt;span class="datagrid-sort" aria-hidden="true"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="datagrid-sortable num"
+                            Sort="@(SortOf("moons"))" OnActivate="@(() =&gt; SortBy("moons"))"&gt;
+                    Moons&lt;span class="datagrid-sort" aria-hidden="true"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody"&gt;
+            @foreach (var planet in SortedPlanets)
+            {
+                &lt;BhGridRow As="tr" @key="planet.Name" Key="@planet.Name"&gt;
+                    &lt;BhGridCell As="th" RowHeader="true"&gt;@planet.Name&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;@planet.Type&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="num"&gt;@planet.DiameterKm.ToString("N0") km&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="num"&gt;@planet.Moons&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@code {
+    private sealed record Planet(string Name, string Type, int DiameterKm, int Moons);
+
+    private readonly Planet[] planets =
+    [
+        new("Mercury", "Terrestrial", 4_879, 0),
+        new("Venus", "Terrestrial", 12_104, 0),
+        new("Earth", "Terrestrial", 12_756, 1),
+        new("Mars", "Terrestrial", 6_792, 2),
+        new("Jupiter", "Gas giant", 142_984, 95),
+        new("Saturn", "Gas giant", 120_536, 146),
+        new("Uranus", "Ice giant", 51_118, 28),
+        new("Neptune", "Ice giant", 49_528, 16),
+    ];
+
+    private string sortColumn = "name";
+    private BhSortDirection sortDirection = BhSortDirection.Ascending;
+
+    // The sorted column announces aria-sort; the others pass None.
+    private BhSortDirection SortOf(string column) =&gt; sortColumn == column ? sortDirection : BhSortDirection.None;
+
+    private void SortBy(string column)
+    {
+        sortDirection = sortColumn == column &amp;&amp; sortDirection == BhSortDirection.Ascending
+            ? BhSortDirection.Descending
+            : BhSortDirection.Ascending;
+        sortColumn = column;
+    }
+
+    private IEnumerable&lt;Planet&gt; SortedPlanets
+    {
+        get
+        {
+            Func&lt;Planet, object&gt; key = sortColumn switch
+            {
+                "type" =&gt; p =&gt; p.Type,
+                "diameter" =&gt; p =&gt; p.DiameterKm,
+                "moons" =&gt; p =&gt; p.Moons,
+                _ =&gt; p =&gt; p.Name,
+            };
+            return sortDirection == BhSortDirection.Descending ? planets.OrderByDescending(key) : planets.OrderBy(key);
+        }
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.datagrid-demo { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+.datagrid-output { font-size: 0.875rem; color: #71717a; }
+.datagrid-output strong { color: #18181b; font-weight: 600; }
+
+.datagrid-frame {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+}
+
+.datagrid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+.datagrid th,
+.datagrid td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f4f4f5;
+    text-align: start;
+    white-space: nowrap;
+    outline: none;
+}
+
+.datagrid thead th {
+    background: #fafafa;
+    border-bottom-color: #e4e4e7;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.datagrid tbody th { font-weight: 600; }               /* row headers */
+.datagrid tbody tr:last-child &gt; * { border-bottom: 0; }
+.datagrid .num { text-align: end; font-variant-numeric: tabular-nums; }
+
+/* Cells are the focus targets: one tab stop, arrow keys move it. */
+.datagrid th:focus-visible,
+.datagrid td:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* BhGridCell Sort="…" emits aria-sort="ascending|descending". */
+.datagrid-sortable       { cursor: pointer; user-select: none; }
+.datagrid-sortable:hover { color: #18181b; }
+.datagrid th[aria-sort]  { color: #18181b; }
+
+.datagrid-sort {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    color: #2563eb;
+    opacity: 0;
+    transition: transform 150ms ease, opacity 150ms ease;
+}
+.datagrid-sortable:hover .datagrid-sort             { opacity: 0.35; }
+.datagrid th[aria-sort] .datagrid-sort              { opacity: 1; }
+.datagrid th[aria-sort="descending"] .datagrid-sort { transform: rotate(180deg); }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="w-full overflow-x-auto rounded-lg border border-zinc-200 bg-white"&gt;
+    &lt;BhGrid As="table" aria-label="Planets" class="w-full border-collapse text-sm text-zinc-900"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" Sort="@(SortOf("name"))" OnActivate="@(() =&gt; SortBy("name"))"
+                            class="group cursor-pointer select-none border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none hover:text-zinc-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 aria-[sort=ascending]:text-zinc-900 aria-[sort=descending]:text-zinc-900"&gt;
+                    Planet&lt;span aria-hidden="true" class="ml-1 inline-block text-blue-600 opacity-0 transition group-hover:opacity-40 group-aria-[sort=ascending]:opacity-100 group-aria-[sort=descending]:rotate-180 group-aria-[sort=descending]:opacity-100"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" Sort="@(SortOf("type"))" OnActivate="@(() =&gt; SortBy("type"))"
+                            class="group cursor-pointer select-none border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none hover:text-zinc-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 aria-[sort=ascending]:text-zinc-900 aria-[sort=descending]:text-zinc-900"&gt;
+                    Type&lt;span aria-hidden="true" class="ml-1 inline-block text-blue-600 opacity-0 transition group-hover:opacity-40 group-aria-[sort=ascending]:opacity-100 group-aria-[sort=descending]:rotate-180 group-aria-[sort=descending]:opacity-100"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" Sort="@(SortOf("diameter"))" OnActivate="@(() =&gt; SortBy("diameter"))"
+                            class="group cursor-pointer select-none border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-end text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none hover:text-zinc-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 aria-[sort=ascending]:text-zinc-900 aria-[sort=descending]:text-zinc-900"&gt;
+                    Diameter&lt;span aria-hidden="true" class="ml-1 inline-block text-blue-600 opacity-0 transition group-hover:opacity-40 group-aria-[sort=ascending]:opacity-100 group-aria-[sort=descending]:rotate-180 group-aria-[sort=descending]:opacity-100"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" Sort="@(SortOf("moons"))" OnActivate="@(() =&gt; SortBy("moons"))"
+                            class="group cursor-pointer select-none border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-end text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none hover:text-zinc-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600 aria-[sort=ascending]:text-zinc-900 aria-[sort=descending]:text-zinc-900"&gt;
+                    Moons&lt;span aria-hidden="true" class="ml-1 inline-block text-blue-600 opacity-0 transition group-hover:opacity-40 group-aria-[sort=ascending]:opacity-100 group-aria-[sort=descending]:rotate-180 group-aria-[sort=descending]:opacity-100"&gt;▲&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody" class="[&amp;&gt;tr:last-child&gt;*]:border-b-0"&gt;
+            @foreach (var planet in SortedPlanets)
+            {
+                &lt;BhGridRow As="tr" @key="planet.Name" Key="@planet.Name"&gt;
+                    &lt;BhGridCell As="th" RowHeader="true" class="border-b border-zinc-100 px-3 py-2 text-start font-semibold whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@planet.Name&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@planet.Type&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 text-end tabular-nums whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@planet.DiameterKm.ToString("N0") km&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 text-end tabular-nums whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@planet.Moons&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@code {
+    private sealed record Planet(string Name, string Type, int DiameterKm, int Moons);
+
+    private readonly Planet[] planets =
+    [
+        new("Mercury", "Terrestrial", 4_879, 0),
+        new("Venus", "Terrestrial", 12_104, 0),
+        new("Earth", "Terrestrial", 12_756, 1),
+        new("Mars", "Terrestrial", 6_792, 2),
+        new("Jupiter", "Gas giant", 142_984, 95),
+        new("Saturn", "Gas giant", 120_536, 146),
+        new("Uranus", "Ice giant", 51_118, 28),
+        new("Neptune", "Ice giant", 49_528, 16),
+    ];
+
+    private string sortColumn = "name";
+    private BhSortDirection sortDirection = BhSortDirection.Ascending;
+
+    private BhSortDirection SortOf(string column) =&gt; sortColumn == column ? sortDirection : BhSortDirection.None;
+
+    private void SortBy(string column)
+    {
+        sortDirection = sortColumn == column &amp;&amp; sortDirection == BhSortDirection.Ascending
+            ? BhSortDirection.Descending
+            : BhSortDirection.Ascending;
+        sortColumn = column;
+    }
+
+    private IEnumerable&lt;Planet&gt; SortedPlanets
+    {
+        get
+        {
+            Func&lt;Planet, object&gt; key = sortColumn switch
+            {
+                "type" =&gt; p =&gt; p.Type,
+                "diameter" =&gt; p =&gt; p.DiameterKm,
+                "moons" =&gt; p =&gt; p.Moons,
+                _ =&gt; p =&gt; p.Name,
+            };
+            return sortDirection == BhSortDirection.Descending ? planets.OrderByDescending(key) : planets.OrderBy(key);
+        }
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="multi-row-selection">Multi-row selection</h2>
+        <p><code>SelectionMode="BhGridSelectionMode.Multiple"</code> with <code>@@bind-SelectedKeys</code> (every data row needs a <code>Key</code>). Click toggles a row and Shift + click selects a range; Space toggles the focused row, Shift + Space or Shift + Up / Down extend the selection, Ctrl + A selects every row. Rows get <code>aria-selected</code>, so the check boxes are pure CSS; the header box uses <code>OnActivate</code> to select or clear everything.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="datagrid-toolbar"&gt;
+    &lt;span&gt;&lt;strong&gt;@selectedInvoices.Count&lt;/strong&gt; selected · total &lt;strong&gt;@FormatMoney(SelectedTotal)&lt;/strong&gt;&lt;/span&gt;
+    &lt;button type="button" class="datagrid-button" disabled="@(selectedInvoices.Count == 0)"
+            @onclick="ClearInvoices"&gt;Clear selection&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="datagrid-frame"&gt;
+    &lt;BhGrid As="table" aria-label="Invoices" class="datagrid datagrid-selectable"
+            SelectionMode="BhGridSelectionMode.Multiple"
+            @bind-SelectedKeys="selectedInvoices"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" class="datagrid-check-cell" OnActivate="ToggleAllInvoices"&gt;
+                    &lt;BhVisuallyHidden&gt;Select all&lt;/BhVisuallyHidden&gt;
+                    &lt;span class="datagrid-check" data-checked="@AllInvoicesState" aria-hidden="true"&gt;&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Invoice&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Customer&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Status&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="num"&gt;Amount&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody"&gt;
+            @foreach (var invoice in invoices)
+            {
+                &lt;BhGridRow As="tr" @key="invoice.Id" Key="@invoice.Id"&gt;
+                    &lt;BhGridCell As="td" class="datagrid-check-cell"&gt;
+                        &lt;span class="datagrid-check" aria-hidden="true"&gt;&lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;@invoice.Id&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;@invoice.Customer&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;
+                        &lt;span class="datagrid-badge" data-status="@invoice.Status.ToLowerInvariant()"&gt;@invoice.Status&lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="num"&gt;@FormatMoney(invoice.Amount)&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@code {
+    private sealed record Invoice(string Id, string Customer, string Status, decimal Amount);
+
+    private readonly Invoice[] invoices =
+    [
+        new("INV-1042", "Acme Corp", "Paid", 1_250.00m),
+        new("INV-1043", "Globex", "Pending", 830.50m),
+        new("INV-1044", "Initech", "Overdue", 4_200.00m),
+        new("INV-1045", "Umbrella", "Paid", 615.75m),
+        new("INV-1046", "Hooli", "Pending", 2_980.00m),
+        new("INV-1047", "Stark Industries", "Paid", 12_400.00m),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedInvoices = [];
+
+    private decimal SelectedTotal =&gt; invoices.Where(i =&gt; selectedInvoices.Contains(i.Id)).Sum(i =&gt; i.Amount);
+
+    private string AllInvoicesState =&gt;
+        selectedInvoices.Count == 0 ? "false" : selectedInvoices.Count == invoices.Length ? "true" : "mixed";
+
+    private void ToggleAllInvoices() =&gt;
+        selectedInvoices = selectedInvoices.Count == invoices.Length ? [] : invoices.Select(i =&gt; i.Id).ToArray();
+
+    private void ClearInvoices() =&gt; selectedInvoices = [];
+
+    private static string FormatMoney(decimal amount) =&gt;
+        amount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.datagrid-demo { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+.datagrid-output { font-size: 0.875rem; color: #71717a; }
+.datagrid-output strong { color: #18181b; font-weight: 600; }
+
+.datagrid-frame {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+}
+
+.datagrid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+.datagrid th,
+.datagrid td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f4f4f5;
+    text-align: start;
+    white-space: nowrap;
+    outline: none;
+}
+
+.datagrid thead th {
+    background: #fafafa;
+    border-bottom-color: #e4e4e7;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.datagrid tbody th { font-weight: 600; }               /* row headers */
+.datagrid tbody tr:last-child &gt; * { border-bottom: 0; }
+.datagrid .num { text-align: end; font-variant-numeric: tabular-nums; }
+
+/* Cells are the focus targets: one tab stop, arrow keys move it. */
+.datagrid th:focus-visible,
+.datagrid td:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* Rows carry aria-selected="true|false" (and data-selected) when selectable. */
+.datagrid-selectable tbody tr       { cursor: pointer; user-select: none; }
+.datagrid-selectable tbody tr:hover { background: #fafafa; }
+.datagrid tbody tr[aria-selected="true"]       { background: #eff6ff; }
+.datagrid tbody tr[aria-selected="true"]:hover { background: #dbeafe; }
+
+.datagrid-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+    color: #71717a;
+}
+.datagrid-toolbar strong { color: #18181b; font-weight: 600; }
+
+.datagrid-button {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.375rem;
+    background: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #18181b;
+    cursor: pointer;
+}
+.datagrid-button:hover         { background: #f4f4f5; }
+.datagrid-button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.datagrid-button:disabled      { opacity: 0.5; cursor: not-allowed; }
+
+.datagrid .datagrid-check-cell { width: 2.5rem; }
+.datagrid thead .datagrid-check-cell { cursor: pointer; }
+
+/* Row boxes follow the row's aria-selected; the header box its data-checked. */
+.datagrid-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid #a1a1aa;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+}
+.datagrid tr[aria-selected="true"] .datagrid-check,
+.datagrid-check[data-checked="true"],
+.datagrid-check[data-checked="mixed"] { background: #2563eb; border-color: #2563eb; }
+.datagrid tr[aria-selected="true"] .datagrid-check::after,
+.datagrid-check[data-checked="true"]::after  { content: "✓"; }
+.datagrid-check[data-checked="mixed"]::after { content: "–"; }
+
+.datagrid-badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: #f4f4f5;
+    color: #52525b;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.datagrid-badge[data-status="paid"]    { background: #dcfce7; color: #166534; }
+.datagrid-badge[data-status="pending"] { background: #fef9c3; color: #854d0e; }
+.datagrid-badge[data-status="overdue"] { background: #fee2e2; color: #991b1b; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex min-h-8 items-center justify-between gap-3 text-sm text-zinc-500"&gt;
+    &lt;span&gt;&lt;strong class="font-semibold text-zinc-900"&gt;@selectedInvoices.Count&lt;/strong&gt; selected · total &lt;strong class="font-semibold text-zinc-900"&gt;@FormatMoney(SelectedTotal)&lt;/strong&gt;&lt;/span&gt;
+    &lt;button type="button" disabled="@(selectedInvoices.Count == 0)" @onclick="ClearInvoices"
+            class="cursor-pointer rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50"&gt;Clear selection&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="w-full overflow-x-auto rounded-lg border border-zinc-200 bg-white"&gt;
+    &lt;BhGrid As="table" aria-label="Invoices" class="w-full border-collapse text-sm text-zinc-900"
+            SelectionMode="BhGridSelectionMode.Multiple"
+            @bind-SelectedKeys="selectedInvoices"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" OnActivate="ToggleAllInvoices"
+                            class="w-10 cursor-pointer border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;
+                    &lt;BhVisuallyHidden&gt;Select all&lt;/BhVisuallyHidden&gt;
+                    &lt;span data-checked="@AllInvoicesState" aria-hidden="true"
+                          class="inline-flex size-4 items-center justify-center rounded border-[1.5px] border-zinc-400 bg-white align-middle text-[0.7rem] font-bold leading-none text-transparent data-[checked=true]:border-blue-600 data-[checked=true]:bg-blue-600 data-[checked=true]:text-white data-[checked=mixed]:border-blue-600 data-[checked=mixed]:bg-blue-600 data-[checked=mixed]:text-white"&gt;@(AllInvoicesState == "mixed" ? "–" : "✓")&lt;/span&gt;
+                &lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Invoice&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Customer&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Status&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-end text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Amount&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody" class="[&amp;&gt;tr:last-child&gt;*]:border-b-0"&gt;
+            @foreach (var invoice in invoices)
+            {
+                &lt;BhGridRow As="tr" @key="invoice.Id" Key="@invoice.Id"
+                           class="group cursor-pointer select-none hover:bg-zinc-50 aria-selected:bg-blue-50 aria-selected:hover:bg-blue-100"&gt;
+                    &lt;BhGridCell As="td" class="w-10 border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;
+                        &lt;span aria-hidden="true"
+                              class="inline-flex size-4 items-center justify-center rounded border-[1.5px] border-zinc-400 bg-white align-middle text-[0.7rem] font-bold leading-none text-transparent group-aria-selected:border-blue-600 group-aria-selected:bg-blue-600 group-aria-selected:text-white"&gt;✓&lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@invoice.Id&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@invoice.Customer&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;
+                        &lt;span data-status="@invoice.Status.ToLowerInvariant()"
+                              class="inline-block rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 data-[status=paid]:bg-green-100 data-[status=paid]:text-green-800 data-[status=pending]:bg-yellow-100 data-[status=pending]:text-yellow-800 data-[status=overdue]:bg-red-100 data-[status=overdue]:text-red-800"&gt;@invoice.Status&lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 text-end tabular-nums whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@FormatMoney(invoice.Amount)&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@code {
+    private sealed record Invoice(string Id, string Customer, string Status, decimal Amount);
+
+    private readonly Invoice[] invoices =
+    [
+        new("INV-1042", "Acme Corp", "Paid", 1_250.00m),
+        new("INV-1043", "Globex", "Pending", 830.50m),
+        new("INV-1044", "Initech", "Overdue", 4_200.00m),
+        new("INV-1045", "Umbrella", "Paid", 615.75m),
+        new("INV-1046", "Hooli", "Pending", 2_980.00m),
+        new("INV-1047", "Stark Industries", "Paid", 12_400.00m),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedInvoices = [];
+
+    private decimal SelectedTotal =&gt; invoices.Where(i =&gt; selectedInvoices.Contains(i.Id)).Sum(i =&gt; i.Amount);
+
+    private string AllInvoicesState =&gt;
+        selectedInvoices.Count == 0 ? "false" : selectedInvoices.Count == invoices.Length ? "true" : "mixed";
+
+    private void ToggleAllInvoices() =&gt;
+        selectedInvoices = selectedInvoices.Count == invoices.Length ? [] : invoices.Select(i =&gt; i.Id).ToArray();
+
+    private void ClearInvoices() =&gt; selectedInvoices = [];
+
+    private static string FormatMoney(decimal amount) =&gt;
+        amount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="row-activation">Row activation</h2>
+        <p><code>OnRowActivate</code> fires with the row's <code>Key</code> when the user presses Enter on any of its cells or double-clicks it — open a message, navigate to a record, start editing. Here <code>BhGridSelectionMode.Single</code> marks the current row, and opening a message marks it as read.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="datagrid-frame"&gt;
+    &lt;BhGrid As="table" aria-label="Inbox" class="datagrid datagrid-selectable"
+            SelectionMode="BhGridSelectionMode.Single"
+            @bind-SelectedKeys="selectedMessage"
+            OnRowActivate="OpenMessage"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;From&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Subject&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="num"&gt;Received&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody"&gt;
+            @foreach (var message in messages)
+            {
+                &lt;BhGridRow As="tr" @key="message.Id" Key="@message.Id"
+                           data-unread="@(!readMessages.Contains(message.Id))"&gt;
+                    &lt;BhGridCell As="td"&gt;&lt;span class="datagrid-dot" aria-hidden="true"&gt;&lt;/span&gt;@message.From&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;@message.Subject&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="num"&gt;@message.Received&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@if (OpenedMessage is { } opened)
+{
+    &lt;div class="datagrid-preview"&gt;
+        &lt;strong&gt;@opened.Subject&lt;/strong&gt;
+        From @opened.From — @opened.Body
+    &lt;/div&gt;
+}
+else
+{
+    &lt;p class="datagrid-output"&gt;Press Enter on a row, or double-click it, to open the message.&lt;/p&gt;
+}
+
+@code {
+    private sealed record Message(string Id, string From, string Subject, string Received, string Body);
+
+    private readonly Message[] messages =
+    [
+        new("m1", "Ada Lovelace", "Notes on the Analytical Engine", "09:24", "I have attached my notes — see note G."),
+        new("m2", "Grace Hopper", "Found a bug (an actual moth)", "08:51", "Taped it into the logbook for posterity."),
+        new("m3", "Alan Turing", "Can machines think?", "Yesterday", "Let us play the imitation game this Friday."),
+        new("m4", "Margaret Hamilton", "Priority displays", "Mon", "The guidance computer recovered beautifully."),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedMessage = [];
+    private readonly HashSet&lt;string&gt; readMessages = ["m3"];
+    private string? openedMessageId;
+
+    private Message? OpenedMessage =&gt; messages.FirstOrDefault(m =&gt; m.Id == openedMessageId);
+
+    // Enter on any cell of the row, or a double click, passes the row's Key.
+    private void OpenMessage(string id)
+    {
+        openedMessageId = id;
+        readMessages.Add(id);
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.datagrid-demo { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+.datagrid-output { font-size: 0.875rem; color: #71717a; }
+.datagrid-output strong { color: #18181b; font-weight: 600; }
+
+.datagrid-frame {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+}
+
+.datagrid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+.datagrid th,
+.datagrid td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f4f4f5;
+    text-align: start;
+    white-space: nowrap;
+    outline: none;
+}
+
+.datagrid thead th {
+    background: #fafafa;
+    border-bottom-color: #e4e4e7;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.datagrid tbody th { font-weight: 600; }               /* row headers */
+.datagrid tbody tr:last-child &gt; * { border-bottom: 0; }
+.datagrid .num { text-align: end; font-variant-numeric: tabular-nums; }
+
+/* Cells are the focus targets: one tab stop, arrow keys move it. */
+.datagrid th:focus-visible,
+.datagrid td:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* Rows carry aria-selected="true|false" (and data-selected) when selectable. */
+.datagrid-selectable tbody tr       { cursor: pointer; user-select: none; }
+.datagrid-selectable tbody tr:hover { background: #fafafa; }
+.datagrid tbody tr[aria-selected="true"]       { background: #eff6ff; }
+.datagrid tbody tr[aria-selected="true"]:hover { background: #dbeafe; }
+
+.datagrid tr[data-unread] td { font-weight: 600; }
+
+.datagrid-dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-inline-end: 0.5rem;
+    border-radius: 50%;
+    background: #2563eb;
+    vertical-align: middle;
+}
+.datagrid tr:not([data-unread]) .datagrid-dot { visibility: hidden; }
+
+.datagrid-preview {
+    padding: 0.875rem 1rem;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    font-size: 0.875rem;
+    color: #52525b;
+}
+.datagrid-preview strong { display: block; margin-bottom: 0.25rem; color: #18181b; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="w-full overflow-x-auto rounded-lg border border-zinc-200 bg-white"&gt;
+    &lt;BhGrid As="table" aria-label="Inbox" class="w-full border-collapse text-sm text-zinc-900"
+            SelectionMode="BhGridSelectionMode.Single"
+            @bind-SelectedKeys="selectedMessage"
+            OnRowActivate="OpenMessage"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;From&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Subject&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-end text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Received&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody" class="[&amp;&gt;tr:last-child&gt;*]:border-b-0"&gt;
+            @foreach (var message in messages)
+            {
+                &lt;BhGridRow As="tr" @key="message.Id" Key="@message.Id"
+                           data-unread="@(!readMessages.Contains(message.Id))"
+                           class="group cursor-pointer select-none hover:bg-zinc-50 aria-selected:bg-blue-50 aria-selected:hover:bg-blue-100 data-[unread]:font-semibold"&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;&lt;span aria-hidden="true" class="invisible mr-2 inline-block size-2 rounded-full bg-blue-600 align-middle group-data-[unread]:visible"&gt;&lt;/span&gt;@message.From&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@message.Subject&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 text-end tabular-nums whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@message.Received&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+@if (OpenedMessage is { } opened)
+{
+    &lt;div class="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-600"&gt;
+        &lt;strong class="mb-1 block text-zinc-900"&gt;@opened.Subject&lt;/strong&gt;
+        From @opened.From — @opened.Body
+    &lt;/div&gt;
+}
+else
+{
+    &lt;p class="text-sm text-zinc-500"&gt;Press Enter on a row, or double-click it, to open the message.&lt;/p&gt;
+}
+
+@code {
+    private sealed record Message(string Id, string From, string Subject, string Received, string Body);
+
+    private readonly Message[] messages =
+    [
+        new("m1", "Ada Lovelace", "Notes on the Analytical Engine", "09:24", "I have attached my notes — see note G."),
+        new("m2", "Grace Hopper", "Found a bug (an actual moth)", "08:51", "Taped it into the logbook for posterity."),
+        new("m3", "Alan Turing", "Can machines think?", "Yesterday", "Let us play the imitation game this Friday."),
+        new("m4", "Margaret Hamilton", "Priority displays", "Mon", "The guidance computer recovered beautifully."),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedMessage = [];
+    private readonly HashSet&lt;string&gt; readMessages = ["m3"];
+    private string? openedMessageId;
+
+    private Message? OpenedMessage =&gt; messages.FirstOrDefault(m =&gt; m.Id == openedMessageId);
+
+    // Enter on any cell of the row, or a double click, passes the row's Key.
+    private void OpenMessage(string id)
+    {
+        openedMessageId = id;
+        readMessages.Add(id);
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="treegrid">TreeGrid</h2>
+        <p><code>TreeGrid="true"</code> renders <code>role="treegrid"</code>. Give each row its <code>Level</code>, <code>HasChildren</code> and <code>ParentKey</code>: rows under a collapsed folder get the <code>hidden</code> attribute and are skipped by the keyboard. On a row's first cell, Right expands it (then moves into the row) and Left collapses it (then jumps to the parent row). The chevron is a <code>BhGridRowToggle</code>: a mouse shortcut, hidden from assistive tech, that toggles the row (synced through <code>@@bind-ExpandedKeys</code>); indentation comes from the <code>--bh-grid-level</code> variable on each row.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="datagrid-frame"&gt;
+    &lt;BhGrid As="table" TreeGrid="true" aria-label="Project files" class="datagrid datagrid-selectable"
+            SelectionMode="BhGridSelectionMode.Single"
+            @bind-SelectedKeys="selectedEntry"
+            @bind-ExpandedKeys="expandedFolders"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Name&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true"&gt;Kind&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="num"&gt;Size&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody"&gt;
+            @foreach (var entry in fileSystem)
+            {
+                &lt;BhGridRow As="tr" @key="entry.Path" Key="@entry.Path"
+                           Level="entry.Level" ParentKey="@entry.Parent" HasChildren="entry.IsFolder"&gt;
+                    &lt;BhGridCell As="td"&gt;
+                        &lt;span class="treegrid-name"&gt;
+                            @if (entry.IsFolder)
+                            {
+                                &lt;BhGridRowToggle class="treegrid-toggle"&gt;▸&lt;/BhGridRowToggle&gt;
+                                &lt;span&gt;@(expandedFolders.Contains(entry.Path) ? "📂" : "📁")&lt;/span&gt;
+                            }
+                            else
+                            {
+                                &lt;span class="treegrid-spacer"&gt;&lt;/span&gt;
+                                &lt;span&gt;📄&lt;/span&gt;
+                            }
+                            @entry.Name
+                        &lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td"&gt;@entry.Kind&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="num"&gt;@FormatSize(SizeOf(entry))&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+&lt;p class="datagrid-output"&gt;Selected: &lt;strong&gt;@(selectedEntry.FirstOrDefault() ?? "(none)")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private sealed record FsEntry(string Path, string Name, string Kind, long Bytes, int Level, string? Parent, bool IsFolder);
+
+    // Flattened in document (depth-first) order.
+    private readonly FsEntry[] fileSystem =
+    [
+        new("project", "project", "Folder", 0, 1, null, true),
+        new("project/src", "src", "Folder", 0, 2, "project", true),
+        new("project/src/app.ts", "app.ts", "TypeScript", 14_236, 3, "project/src", false),
+        new("project/src/router.ts", "router.ts", "TypeScript", 6_812, 3, "project/src", false),
+        new("project/src/styles.css", "styles.css", "Stylesheet", 3_154, 3, "project/src", false),
+        new("project/assets", "assets", "Folder", 0, 2, "project", true),
+        new("project/assets/logo.svg", "logo.svg", "SVG image", 2_048, 3, "project/assets", false),
+        new("project/assets/hero.png", "hero.png", "PNG image", 482_113, 3, "project/assets", false),
+        new("project/package.json", "package.json", "JSON", 1_240, 2, "project", false),
+        new("project/README.md", "README.md", "Markdown", 4_502, 2, "project", false),
+        new("notes.txt", "notes.txt", "Text", 1_024, 1, null, false),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedEntry = [];
+    private IReadOnlyCollection&lt;string&gt; expandedFolders = ["project", "project/src"];
+
+
+    private long SizeOf(FsEntry entry) =&gt;
+        entry.IsFolder ? fileSystem.Where(e =&gt; e.Parent == entry.Path).Sum(e =&gt; SizeOf(e)) : entry.Bytes;
+
+    private static string FormatSize(long bytes) =&gt; bytes switch
+    {
+        &lt; 1024 =&gt; $"{bytes} B",
+        &lt; 1024 * 1024 =&gt; $"{bytes / 1024.0:0.#} KB",
+        _ =&gt; $"{bytes / (1024.0 * 1024):0.#} MB",
+    };
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.datagrid-demo { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+.datagrid-output { font-size: 0.875rem; color: #71717a; }
+.datagrid-output strong { color: #18181b; font-weight: 600; }
+
+.datagrid-frame {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+}
+
+.datagrid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+.datagrid th,
+.datagrid td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f4f4f5;
+    text-align: start;
+    white-space: nowrap;
+    outline: none;
+}
+
+.datagrid thead th {
+    background: #fafafa;
+    border-bottom-color: #e4e4e7;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #71717a;
+}
+
+.datagrid tbody th { font-weight: 600; }               /* row headers */
+.datagrid tbody tr:last-child &gt; * { border-bottom: 0; }
+.datagrid .num { text-align: end; font-variant-numeric: tabular-nums; }
+
+/* Cells are the focus targets: one tab stop, arrow keys move it. */
+.datagrid th:focus-visible,
+.datagrid td:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+
+/* Rows carry aria-selected="true|false" (and data-selected) when selectable. */
+.datagrid-selectable tbody tr       { cursor: pointer; user-select: none; }
+.datagrid-selectable tbody tr:hover { background: #fafafa; }
+.datagrid tbody tr[aria-selected="true"]       { background: #eff6ff; }
+.datagrid tbody tr[aria-selected="true"]:hover { background: #dbeafe; }
+
+/* Rows carry aria-level, data-level and --bh-grid-level; rows under a
+   collapsed parent get the hidden attribute. */
+.treegrid-name {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-inline-start: calc((var(--bh-grid-level, 1) - 1) * 1.25rem);
+}
+
+.treegrid-toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    color: #a1a1aa;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 150ms ease;
+}
+.treegrid-toggle:hover { background: #e4e4e7; color: #18181b; }
+.datagrid tr[data-state="open"] .treegrid-toggle { transform: rotate(90deg); }
+
+.treegrid-spacer { flex: none; width: 1.25rem; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="w-full overflow-x-auto rounded-lg border border-zinc-200 bg-white"&gt;
+    &lt;BhGrid As="table" TreeGrid="true" aria-label="Project files" class="w-full border-collapse text-sm text-zinc-900"
+            SelectionMode="BhGridSelectionMode.Single"
+            @bind-SelectedKeys="selectedEntry"
+            @bind-ExpandedKeys="expandedFolders"&gt;
+        &lt;BhGridRowGroup As="thead"&gt;
+            &lt;BhGridRow As="tr" IsHeaderRow="true"&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Name&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Kind&lt;/BhGridCell&gt;
+                &lt;BhGridCell As="th" Header="true" class="border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-end text-xs font-semibold uppercase tracking-wide whitespace-nowrap text-zinc-500 outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;Size&lt;/BhGridCell&gt;
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup As="tbody" class="[&amp;&gt;tr:last-child&gt;*]:border-b-0"&gt;
+            @foreach (var entry in fileSystem)
+            {
+                &lt;BhGridRow As="tr" @key="entry.Path" Key="@entry.Path"
+                           Level="entry.Level" ParentKey="@entry.Parent" HasChildren="entry.IsFolder"
+                           class="group cursor-pointer select-none hover:bg-zinc-50 aria-selected:bg-blue-50 aria-selected:hover:bg-blue-100"&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;
+                        &lt;span class="flex items-center gap-1.5 pl-[calc((var(--bh-grid-level,1)_-_1)_*_1.25rem)]"&gt;
+                            @if (entry.IsFolder)
+                            {
+                                &lt;BhGridRowToggle class="inline-flex size-5 flex-none cursor-pointer items-center justify-center rounded text-xs text-zinc-400 transition-transform duration-150 hover:bg-zinc-200 hover:text-zinc-900 group-data-[state=open]:rotate-90"&gt;▸&lt;/BhGridRowToggle&gt;
+                                &lt;span&gt;@(expandedFolders.Contains(entry.Path) ? "📂" : "📁")&lt;/span&gt;
+                            }
+                            else
+                            {
+                                &lt;span class="w-5 flex-none"&gt;&lt;/span&gt;
+                                &lt;span&gt;📄&lt;/span&gt;
+                            }
+                            @entry.Name
+                        &lt;/span&gt;
+                    &lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@entry.Kind&lt;/BhGridCell&gt;
+                    &lt;BhGridCell As="td" class="border-b border-zinc-100 px-3 py-2 text-end tabular-nums whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-600"&gt;@FormatSize(SizeOf(entry))&lt;/BhGridCell&gt;
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;Selected: &lt;strong class="font-semibold text-zinc-900"&gt;@(selectedEntry.FirstOrDefault() ?? "(none)")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private sealed record FsEntry(string Path, string Name, string Kind, long Bytes, int Level, string? Parent, bool IsFolder);
+
+    // Flattened in document (depth-first) order.
+    private readonly FsEntry[] fileSystem =
+    [
+        new("project", "project", "Folder", 0, 1, null, true),
+        new("project/src", "src", "Folder", 0, 2, "project", true),
+        new("project/src/app.ts", "app.ts", "TypeScript", 14_236, 3, "project/src", false),
+        new("project/src/router.ts", "router.ts", "TypeScript", 6_812, 3, "project/src", false),
+        new("project/src/styles.css", "styles.css", "Stylesheet", 3_154, 3, "project/src", false),
+        new("project/assets", "assets", "Folder", 0, 2, "project", true),
+        new("project/assets/logo.svg", "logo.svg", "SVG image", 2_048, 3, "project/assets", false),
+        new("project/assets/hero.png", "hero.png", "PNG image", 482_113, 3, "project/assets", false),
+        new("project/package.json", "package.json", "JSON", 1_240, 2, "project", false),
+        new("project/README.md", "README.md", "Markdown", 4_502, 2, "project", false),
+        new("notes.txt", "notes.txt", "Text", 1_024, 1, null, false),
+    ];
+
+    private IReadOnlyCollection&lt;string&gt; selectedEntry = [];
+    private IReadOnlyCollection&lt;string&gt; expandedFolders = ["project", "project/src"];
+
+
+    private long SizeOf(FsEntry entry) =&gt;
+        entry.IsFolder ? fileSystem.Where(e =&gt; e.Parent == entry.Path).Sum(e =&gt; SizeOf(e)) : entry.Bytes;
+
+    private static string FormatSize(long bytes) =&gt; bytes switch
+    {
+        &lt; 1024 =&gt; $"{bytes} B",
+        &lt; 1024 * 1024 =&gt; $"{bytes / 1024.0:0.#} KB",
+        _ =&gt; $"{bytes / (1024.0 * 1024):0.#} MB",
+    };
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="div-based-grid-calendar">Div-based grid (calendar)</h2>
+        <p><code>BhGrid</code>, <code>BhGridRowGroup</code>, <code>BhGridRow</code> and <code>BhGridCell</code> render <code>&lt;div&gt;</code>s with <code>role="grid"</code> / <code>"rowgroup"</code> / <code>"row"</code> / <code>"gridcell"</code> by default, so any layout works — here each row is a 7-column CSS grid. Arrow keys move by day and week, Home / End go to the start / end of the week, and Enter or a click picks a date through each cell's <code>OnActivate</code>. <code>aria-selected</code>, <code>aria-current</code> and <code>aria-disabled</code> on the cells are plain attributes set by the page.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="calendar-card"&gt;
+    &lt;div id="grid-calendar-title" class="calendar-title"&gt;@MonthStart.ToString("MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture)&lt;/div&gt;
+    &lt;BhGrid aria-labelledby="grid-calendar-title" class="calendar"&gt;
+        &lt;BhGridRowGroup&gt;
+            &lt;BhGridRow IsHeaderRow="true" class="calendar-row"&gt;
+                @foreach (var (shortName, longName) in weekdays)
+                {
+                    &lt;BhGridCell Header="true" class="calendar-weekday"&gt;
+                        &lt;abbr title="@longName"&gt;@shortName&lt;/abbr&gt;
+                    &lt;/BhGridCell&gt;
+                }
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup class="calendar-weeks"&gt;
+            @foreach (var week in Weeks)
+            {
+                &lt;BhGridRow class="calendar-row"&gt;
+                    @foreach (var day in week)
+                    {
+                        &lt;BhGridCell class="calendar-day"
+                                    aria-selected="@(day == pickedDate ? "true" : null)"
+                                    aria-current="@(day == today ? "date" : null)"
+                                    aria-disabled="@(day.Month != MonthStart.Month ? "true" : null)"
+                                    OnActivate="() =&gt; PickDate(day)"&gt;@day.Day&lt;/BhGridCell&gt;
+                    }
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+&lt;p class="datagrid-output"&gt;
+    Picked: &lt;strong&gt;@(pickedDate?.ToString("dddd, MMMM d", System.Globalization.CultureInfo.InvariantCulture) ?? "(none)")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private readonly DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly? pickedDate;
+
+    private readonly (string Short, string Long)[] weekdays =
+    [
+        ("Su", "Sunday"), ("Mo", "Monday"), ("Tu", "Tuesday"), ("We", "Wednesday"),
+        ("Th", "Thursday"), ("Fr", "Friday"), ("Sa", "Saturday"),
+    ];
+
+    private DateOnly MonthStart =&gt; new(today.Year, today.Month, 1);
+
+    // Whole weeks (Sunday → Saturday) covering the current month.
+    private IEnumerable&lt;DateOnly[]&gt; Weeks
+    {
+        get
+        {
+            var monthEnd = MonthStart.AddMonths(1).AddDays(-1);
+            for (var start = MonthStart.AddDays(-(int)MonthStart.DayOfWeek); start &lt;= monthEnd; start = start.AddDays(7))
+            {
+                var weekStart = start;
+                yield return Enumerable.Range(0, 7).Select(i =&gt; weekStart.AddDays(i)).ToArray();
+            }
+        }
+    }
+
+    // Days of the neighbouring months are aria-disabled and can't be picked.
+    private void PickDate(DateOnly day)
+    {
+        if (day.Month == MonthStart.Month) pickedDate = day;
+    }
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+.datagrid-demo { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+.datagrid-output { font-size: 0.875rem; color: #71717a; }
+.datagrid-output strong { color: #18181b; font-weight: 600; }
+
+.calendar-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-self: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #18181b;
+}
+
+.calendar-title { font-weight: 600; }
+
+/* BhGrid, BhGridRowGroup and BhGridRow render plain &lt;div&gt;s by default. */
+.calendar,
+.calendar-weeks { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.calendar-row {
+    display: grid;
+    grid-template-columns: repeat(7, 2.25rem);
+    gap: 0.25rem;
+}
+
+.calendar-weekday,
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    outline: none;
+}
+
+.calendar-weekday { height: 2rem; font-size: 0.75rem; font-weight: 600; color: #71717a; }
+.calendar-weekday abbr { text-decoration: none; }
+
+.calendar-day { height: 2.25rem; cursor: pointer; user-select: none; }
+.calendar-day:hover { background: #f4f4f5; }
+
+.calendar-weekday:focus-visible,
+.calendar-day:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+/* aria-current / aria-selected / aria-disabled are set by the page on each cell. */
+.calendar-day[aria-current="date"]  { font-weight: 700; box-shadow: inset 0 0 0 1px #93c5fd; }
+.calendar-day[aria-selected="true"] { background: #2563eb; color: #fff; }
+.calendar-day[aria-disabled="true"] { color: #d4d4d8; cursor: default; background: transparent; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="inline-flex flex-col gap-2 self-start rounded-lg border border-zinc-200 bg-white p-3 text-sm text-zinc-900"&gt;
+    &lt;div id="tw-grid-calendar-title" class="font-semibold"&gt;@MonthStart.ToString("MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture)&lt;/div&gt;
+    &lt;BhGrid aria-labelledby="tw-grid-calendar-title" class="flex flex-col gap-1"&gt;
+        &lt;BhGridRowGroup&gt;
+            &lt;BhGridRow IsHeaderRow="true" class="grid grid-cols-[repeat(7,2.25rem)] gap-1"&gt;
+                @foreach (var (shortName, longName) in weekdays)
+                {
+                    &lt;BhGridCell Header="true"
+                                class="flex h-8 items-center justify-center rounded-md text-xs font-semibold text-zinc-500 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"&gt;
+                        &lt;abbr title="@longName" class="no-underline"&gt;@shortName&lt;/abbr&gt;
+                    &lt;/BhGridCell&gt;
+                }
+            &lt;/BhGridRow&gt;
+        &lt;/BhGridRowGroup&gt;
+        &lt;BhGridRowGroup class="flex flex-col gap-1"&gt;
+            @foreach (var week in Weeks)
+            {
+                &lt;BhGridRow class="grid grid-cols-[repeat(7,2.25rem)] gap-1"&gt;
+                    @foreach (var day in week)
+                    {
+                        &lt;BhGridCell aria-selected="@(day == pickedDate ? "true" : null)"
+                                    aria-current="@(day == today ? "date" : null)"
+                                    aria-disabled="@(day.Month != MonthStart.Month ? "true" : null)"
+                                    OnActivate="() =&gt; PickDate(day)"
+                                    class="flex h-9 cursor-pointer select-none items-center justify-center rounded-md outline-none hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 aria-[current=date]:font-bold aria-[current=date]:ring-1 aria-[current=date]:ring-inset aria-[current=date]:ring-blue-300 aria-selected:bg-blue-600 aria-selected:text-white aria-disabled:cursor-default aria-disabled:text-zinc-300 aria-disabled:hover:bg-transparent"&gt;@day.Day&lt;/BhGridCell&gt;
+                    }
+                &lt;/BhGridRow&gt;
+            }
+        &lt;/BhGridRowGroup&gt;
+    &lt;/BhGrid&gt;
+&lt;/div&gt;
+
+&lt;p class="text-sm text-zinc-500"&gt;
+    Picked: &lt;strong class="font-semibold text-zinc-900"&gt;@(pickedDate?.ToString("dddd, MMMM d", System.Globalization.CultureInfo.InvariantCulture) ?? "(none)")&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private readonly DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly? pickedDate;
+
+    private readonly (string Short, string Long)[] weekdays =
+    [
+        ("Su", "Sunday"), ("Mo", "Monday"), ("Tu", "Tuesday"), ("We", "Wednesday"),
+        ("Th", "Thursday"), ("Fr", "Friday"), ("Sa", "Saturday"),
+    ];
+
+    private DateOnly MonthStart =&gt; new(today.Year, today.Month, 1);
+
+    // Whole weeks (Sunday → Saturday) covering the current month.
+    private IEnumerable&lt;DateOnly[]&gt; Weeks
+    {
+        get
+        {
+            var monthEnd = MonthStart.AddMonths(1).AddDays(-1);
+            for (var start = MonthStart.AddDays(-(int)MonthStart.DayOfWeek); start &lt;= monthEnd; start = start.AddDays(7))
+            {
+                var weekStart = start;
+                yield return Enumerable.Range(0, 7).Select(i =&gt; weekStart.AddDays(i)).ToArray();
+            }
+        }
+    }
+
+    // Days of the neighbouring months are aria-disabled and can't be picked.
+    private void PickDate(DateOnly day)
+    {
+        if (day.Month == MonthStart.Month) pickedDate = day;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="focus-trap.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">FocusTrap</span>
+        </a>
+            <a class="next" href="hover-card.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Hover Card</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

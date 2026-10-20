@@ -4,63 +4,51 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The collapsible content panel for an <see cref="BhDisclosure"/>. Always rendered
-/// but hidden via the HTML <c>hidden</c> attribute when the disclosure is closed.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Sets its <c>id</c> to match <c>aria-controls</c> on the button.</item>
-///   <item>Sets <c>aria-labelledby</c> pointing at the button.</item>
-///   <item>Emits <c>data-state="open"|"closed"</c> for CSS-driven transitions.</item>
-///   <item>
-///     Receives the <see cref="BhDisclosureRenderContext"/> so consumers can render
-///     a "Close" link or any state-driven UI from inside the panel.
-///   </item>
-/// </list>
-///
-/// <para>
-/// To animate height transitions, override the default <c>hidden</c> behaviour
-/// with CSS like
-/// <c>[data-state="closed"] { display: block; height: 0; overflow: hidden; }</c>.
-/// </para>
+/// The panel of a <see cref="BhDisclosure"/>. Hidden while closed (visible during
+/// exit animations) and exposes <c>--bh-content-height</c> / <c>--bh-content-width</c>
+/// for size animations. Receives <see cref="BhDisclosureRenderContext"/> so it can
+/// render a "Close" link.
 /// </summary>
 public class BhDisclosurePanel : BhComponentBase
 {
     [CascadingParameter]
-    private BhDisclosureContext BhDisclosureContext { get; set; } = default!;
+    private BhDisclosureContext? DisclosureContext { get; set; }
 
     /// <summary>
-    /// Content template receiving <see cref="BhDisclosureRenderContext"/>.
-    /// Plain content works equally well.
+    /// Use <c>hidden="until-found"</c> while closed so the browser's find-in-page can
+    /// search the content and open the disclosure when it finds a match.
     /// </summary>
     [Parameter]
-    public RenderFragment<BhDisclosureRenderContext>? ChildContent { get; set; }
+    public bool HiddenUntilFound { get; set; }
+
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Content that receives the render state (<c>BhDisclosureRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<BhDisclosureRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "div";
 
-    private bool IsOpen => BhDisclosureContext?.IsOpen ?? false;
-
-    private BhDisclosureRenderContext RenderContext => new()
-    {
-        IsOpen = IsOpen,
-        Close = BhDisclosureContext?.Close ?? (() => { }),
-    };
+    private bool IsOpen => DisclosureContext?.IsOpen ?? false;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhDisclosureContext?.PanelId ?? ComponentId);
+        builder.AddAttribute(10, "id", DisclosureContext?.PanelId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
-        if (!IsOpen)
-            builder.AddAttribute(30, "hidden", true);
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, new BhDisclosureRenderContext
+            {
+                IsOpen = IsOpen,
+                Close = DisclosureContext?.Close ?? (() => { }),
+            }));
         builder.CloseElement();
     }
 
@@ -68,10 +56,7 @@ public class BhDisclosurePanel : BhComponentBase
     {
         var attrs = base.BuildComponentAttributes();
         SetDataState(attrs, IsOpen);
-
-        if (BhDisclosureContext?.ButtonId is not null)
-            attrs["aria-labelledby"] = BhDisclosureContext.ButtonId;
-
+        BhToggleAttributes.ApplyPanel(attrs, IsOpen, HiddenUntilFound, DisclosureContext?.ButtonId);
         return attrs;
     }
 }

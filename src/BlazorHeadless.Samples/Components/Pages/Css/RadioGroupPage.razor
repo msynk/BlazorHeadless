@@ -21,20 +21,26 @@
         <LiveContent>
             <BhRadioGroup DefaultValue="medium" class="radio-group">
                 <label class="radio-label">
-                    <BhRadio Value="small" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="small" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Small</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="medium" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="medium" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Medium</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="large" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="large" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Large</span>
                 </label>
@@ -53,20 +59,26 @@
         <LiveContent>
             <BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
                 <label class="radio-label">
-                    <BhRadio Value="card" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="card" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Card</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="bank" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="bank" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Bank</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="paypal" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="paypal" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>PayPal</span>
                 </label>
@@ -85,20 +97,26 @@
         <LiveContent>
             <BhRadioGroup DefaultValue="standard" class="radio-group">
                 <label class="radio-label">
-                    <BhRadio Value="standard" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="standard" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Standard shipping (3–5 days)</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="express" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="express" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Express shipping (1–2 days)</span>
                 </label>
                 <label class="radio-label">
-                    <BhRadio Value="same-day" Disabled="true" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="same-day" Disabled="true" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <span>Same-day shipping (unavailable in your region)</span>
                 </label>
@@ -117,8 +135,10 @@
         <LiveContent>
             <BhRadioGroup DefaultValue="pro" class="plan-group">
                 <label class="plan-card">
-                    <BhRadio Value="free" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="free" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="plan-info">
                         <strong>Free</strong>
@@ -126,8 +146,10 @@
                     </div>
                 </label>
                 <label class="plan-card">
-                    <BhRadio Value="pro" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="pro" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="plan-info">
                         <strong>Pro — $9 / mo</strong>
@@ -135,8 +157,10 @@
                     </div>
                 </label>
                 <label class="plan-card">
-                    <BhRadio Value="team" class="radio" Context="r">
-                        @if (r.IsChecked) { <span class="radio-dot"></span> }
+                    <BhRadio Value="team" class="radio">
+                        <Template Context="r">
+                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        </Template>
                     </BhRadio>
                     <div class="plan-info">
                         <strong>Team — $29 / mo</strong>
@@ -166,20 +190,26 @@
                              OnValueChange="v => selectedColor = v"
                              class="radio-group">
                     <label class="radio-label">
-                        <BhRadio Value="red" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="red" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Red</span>
                     </label>
                     <label class="radio-label">
-                        <BhRadio Value="green" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="green" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Green</span>
                     </label>
                     <label class="radio-label">
-                        <BhRadio Value="blue" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="blue" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Blue</span>
                     </label>
@@ -201,20 +231,26 @@
                   style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
                 <BhRadioGroup Name="size" DefaultValue="m" class="radio-group">
                     <label class="radio-label">
-                        <BhRadio Value="s" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="s" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Small</span>
                     </label>
                     <label class="radio-label">
-                        <BhRadio Value="m" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="m" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Medium</span>
                     </label>
                     <label class="radio-label">
-                        <BhRadio Value="l" class="radio" Context="r">
-                            @if (r.IsChecked) { <span class="radio-dot"></span> }
+                        <BhRadio Value="l" class="radio">
+                            <Template Context="r">
+                                @if (r.IsChecked) { <span class="radio-dot"></span> }
+                            </Template>
                         </BhRadio>
                         <span>Large</span>
                     </label>
@@ -245,20 +281,26 @@
     private const string _basicCode = """
 <BhRadioGroup DefaultValue="medium" class="radio-group">
     <label class="radio-label">
-        <BhRadio Value="small" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="small" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Small</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="medium" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="medium" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Medium</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="large" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="large" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Large</span>
     </label>
@@ -268,20 +310,26 @@
     private const string _horizontalCode = """
 <BhRadioGroup Vertical="false" DefaultValue="card" class="radio-group">
     <label class="radio-label">
-        <BhRadio Value="card" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="card" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Card</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="bank" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="bank" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Bank</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="paypal" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="paypal" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>PayPal</span>
     </label>
@@ -291,20 +339,26 @@
     private const string _disabledCode = """
 <BhRadioGroup DefaultValue="standard" class="radio-group">
     <label class="radio-label">
-        <BhRadio Value="standard" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="standard" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Standard shipping (3–5 days)</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="express" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="express" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Express shipping (1–2 days)</span>
     </label>
     <label class="radio-label">
-        <BhRadio Value="same-day" Disabled="true" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="same-day" Disabled="true" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <span>Same-day shipping (unavailable in your region)</span>
     </label>
@@ -314,8 +368,10 @@
     private const string _cardCode = """
 <BhRadioGroup DefaultValue="pro" class="plan-group">
     <label class="plan-card">
-        <BhRadio Value="free" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="free" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <div class="plan-info">
             <strong>Free</strong>
@@ -323,8 +379,10 @@
         </div>
     </label>
     <label class="plan-card">
-        <BhRadio Value="pro" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="pro" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <div class="plan-info">
             <strong>Pro — $9 / mo</strong>
@@ -332,8 +390,10 @@
         </div>
     </label>
     <label class="plan-card">
-        <BhRadio Value="team" class="radio" Context="r">
-            @if (r.IsChecked) { <span class="radio-dot"></span> }
+        <BhRadio Value="team" class="radio">
+            <Template Context="r">
+                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            </Template>
         </BhRadio>
         <div class="plan-info">
             <strong>Team — $29 / mo</strong>
@@ -356,20 +416,26 @@
                  OnValueChange="v => selectedColor = v"
                  class="radio-group">
         <label class="radio-label">
-            <BhRadio Value="red" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="red" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Red</span>
         </label>
         <label class="radio-label">
-            <BhRadio Value="green" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="green" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Green</span>
         </label>
         <label class="radio-label">
-            <BhRadio Value="blue" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="blue" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Blue</span>
         </label>
@@ -387,20 +453,26 @@
       style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
     <BhRadioGroup Name="size" DefaultValue="m" class="radio-group">
         <label class="radio-label">
-            <BhRadio Value="s" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="s" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Small</span>
         </label>
         <label class="radio-label">
-            <BhRadio Value="m" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="m" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Medium</span>
         </label>
         <label class="radio-label">
-            <BhRadio Value="l" class="radio" Context="r">
-                @if (r.IsChecked) { <span class="radio-dot"></span> }
+            <BhRadio Value="l" class="radio">
+                <Template Context="r">
+                    @if (r.IsChecked) { <span class="radio-dot"></span> }
+                </Template>
             </BhRadio>
             <span>Large</span>
         </label>
@@ -671,7 +743,7 @@
 }
 
 .plan-info strong { font-size: 0.95rem; color: #18181b; }
-.plan-info span   { font-size: 0.8rem; color: #71717a; }
+.plan-info span   { font-size: 0.8rem; color: #52525b; }
 """;
 
     private const string _controlledCss = """

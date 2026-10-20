@@ -1,0 +1,252 @@
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@inherits TestBase
+
+@code {
+    [Fact]
+    public void Checkbox_toggles_on_click_and_renders_its_indicator()
+    {
+        var cut = Render(
+            @<BhCheckbox Name="terms" Value="yes" aria-label="Accept terms">
+                <BhCheckboxIndicator>✓</BhCheckboxIndicator>
+            </BhCheckbox>);
+
+        var box = cut.Find("[role=checkbox]");
+        Assert.Equal("false", box.GetAttribute("aria-checked"));
+        Assert.Empty(cut.FindAll("input[type=hidden]"));
+        Assert.DoesNotContain("✓", cut.Markup);
+
+        box.Click();
+        Assert.Equal("true", cut.Find("[role=checkbox]").GetAttribute("aria-checked"));
+        Assert.Equal("yes", cut.Find("input[type=hidden][name=terms]").GetAttribute("value"));
+        Assert.Contains("✓", cut.Markup);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Checkbox_ignores_Enter_and_non_button_checkbox_toggles_on_Space()
+    {
+        var cut = Render(@<BhCheckbox As="div" aria-label="Notify" />);
+        var box = cut.Find("[role=checkbox]");
+        Assert.Equal("0", box.GetAttribute("tabindex"));
+
+        box.Press("Enter");
+        Assert.Equal("false", cut.Find("[role=checkbox]").GetAttribute("aria-checked"));
+        cut.Find("[role=checkbox]").Press(" ");
+        Assert.Equal("true", cut.Find("[role=checkbox]").GetAttribute("aria-checked"));
+    }
+
+    [Fact]
+    public void Indeterminate_checkbox_reports_mixed()
+    {
+        var cut = Render(@<BhCheckbox Indeterminate="true" aria-label="All" />);
+        Assert.Equal("mixed", cut.Find("[role=checkbox]").GetAttribute("aria-checked"));
+    }
+
+    [Fact]
+    public void Disabled_checkbox_does_not_toggle()
+    {
+        var cut = Render(@<BhCheckbox Disabled="true" aria-label="Locked" />);
+        cut.Find("[role=checkbox]").Click();
+        Assert.Equal("false", cut.Find("[role=checkbox]").GetAttribute("aria-checked"));
+        Assert.True(cut.Find("[role=checkbox]").HasAttribute("disabled"));
+    }
+
+    [Fact]
+    public void Checkbox_group_collects_values_and_supports_select_all()
+    {
+        IReadOnlyCollection<string>? values = null;
+        var cut = Render(
+            @<BhCheckboxGroup DefaultValues="@(new[] { "cheese" })" OnValuesChange="v => values = v" aria-label="Toppings">
+                <BhCheckbox SelectAll="true">All</BhCheckbox>
+                <BhCheckbox Value="cheese">Cheese</BhCheckbox>
+                <BhCheckbox Value="olives">Olives</BhCheckbox>
+            </BhCheckboxGroup>);
+
+        Assert.Equal("group", cut.Find("[aria-label=Toppings]").GetAttribute("role"));
+        var boxes = cut.FindAll("[role=checkbox]");
+        Assert.Equal("mixed", boxes[0].GetAttribute("aria-checked"));
+        Assert.Equal("true", boxes[1].GetAttribute("aria-checked"));
+
+        boxes[2].Click();
+        Assert.Equal(["cheese", "olives"], values!.OrderBy(v => v));
+        Assert.Equal("true", cut.FindAll("[role=checkbox]")[0].GetAttribute("aria-checked"));
+
+        cut.FindAll("[role=checkbox]")[0].Click();
+        Assert.Empty(values!);
+        Assert.All(cut.FindAll("[role=checkbox]"), b => Assert.Equal("false", b.GetAttribute("aria-checked")));
+
+        // From the unchecked state, select-all checks everything.
+        cut.FindAll("[role=checkbox]")[0].Click();
+        Assert.Equal(["cheese", "olives"], values!.OrderBy(v => v));
+    }
+
+    [Fact]
+    public void Checkbox_template_receives_the_state()
+    {
+        var cut = Render(
+            @<BhCheckbox aria-label="Bold">
+                <Template Context="c">@(c.IsChecked ? "on" : "off")</Template>
+            </BhCheckbox>);
+        Assert.Equal("off", cut.Find("[role=checkbox]").TextContent);
+        cut.Find("[role=checkbox]").Click();
+        Assert.Equal("on", cut.Find("[role=checkbox]").TextContent);
+    }
+
+    [Fact]
+    public void Switch_thumb_follows_the_switch()
+    {
+        var cut = Render(@<BhSwitch aria-label="Sync"><BhSwitchThumb /></BhSwitch>);
+        Assert.Equal("unchecked", cut.Find("[role=switch] > *").GetAttribute("data-state"));
+        cut.Find("[role=switch]").Click();
+        Assert.Equal("checked", cut.Find("[role=switch] > *").GetAttribute("data-state"));
+    }
+
+    [Fact]
+    public void Switch_toggles_on_Enter_and_Space()
+    {
+        var cut = Render(
+            @<BhSwitch As="span" aria-label="Wi-Fi">
+                <BhSwitchThumb />
+            </BhSwitch>);
+        var sw = cut.Find("[role=switch]");
+        Assert.Equal("false", sw.GetAttribute("aria-checked"));
+        sw.Press("Enter");
+        Assert.Equal("true", cut.Find("[role=switch]").GetAttribute("aria-checked"));
+        cut.Find("[role=switch]").Press(" ");
+        Assert.Equal("false", cut.Find("[role=switch]").GetAttribute("aria-checked"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Switch_in_a_field_is_labelled_by_the_field_label()
+    {
+        var cut = Render(
+            @<BhField>
+                <BhLabel>Airplane mode</BhLabel>
+                <BhSwitch />
+            </BhField>);
+        Assert.Equal("Airplane mode", cut.Find("[role=switch]").AccessibleName());
+        cut.ShouldBeAccessible();
+    }
+
+    private RenderFragment Radios(Stateful<string> s) =>
+        @<BhRadioGroup Value="@s.Value" ValueChanged="s.Set" aria-label="Plan" Name="plan">
+            <BhRadio Value="free">Free</BhRadio>
+            <BhRadio Value="pro" Disabled="true">Pro</BhRadio>
+            <BhRadio Value="team">Team</BhRadio>
+        </BhRadioGroup>;
+
+    [Fact]
+    public void Radio_group_has_one_tab_stop_and_arrows_select()
+    {
+        var cut = Render(@<Stateful T="string" Context="s">@Radios(s)</Stateful>);
+        var radios = cut.FindAll("[role=radio]");
+        // Nothing checked: the first enabled radio is the tab stop.
+        Assert.Equal("0", radios[0].GetAttribute("tabindex"));
+        Assert.Equal("-1", radios[2].GetAttribute("tabindex"));
+
+        radios[0].Press("ArrowDown");
+        radios = cut.FindAll("[role=radio]");
+        Assert.Equal("true", radios[2].GetAttribute("aria-checked"));
+        Assert.Equal("0", radios[2].GetAttribute("tabindex"));
+        Assert.Equal("-1", radios[0].GetAttribute("tabindex"));
+        Assert.Equal("team", cut.Find("input[type=hidden][name=plan]").GetAttribute("value"));
+        Assert.Equal(radios[2].Id, this.LastFocusRequest());
+
+        // Wraps, skipping the disabled radio.
+        radios[2].Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("[role=radio]")[0].GetAttribute("aria-checked"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Radio_Space_checks_the_focused_radio()
+    {
+        var cut = Render(@<Stateful T="string" Context="s">@Radios(s)</Stateful>);
+        cut.FindAll("[role=radio]")[2].Click();
+        Assert.Equal("team", cut.FindComponent<Stateful<string>>().Instance.Value);
+        Assert.Equal("radiogroup", cut.Find("[aria-label=Plan]").GetAttribute("role"));
+    }
+
+    private sealed class Signup
+    {
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms.")]
+        public bool Terms { get; set; }
+
+        [Required(ErrorMessage = "Pick a plan.")]
+        public string? Plan { get; set; }
+    }
+
+    [Fact]
+    public void EditForm_validation_flows_into_fields()
+    {
+        var model = new Signup();
+        var cut = Render(
+            @<EditForm Model="model">
+                <DataAnnotationsValidator />
+                <BhField>
+                    <BhLabel>Accept terms</BhLabel>
+                    <BhCheckbox @bind-Checked="model.Terms" />
+                    <BhErrorMessage />
+                </BhField>
+                <BhField>
+                    <BhLabel>Plan</BhLabel>
+                    <BhRadioGroup @bind-Value="model.Plan">
+                        <BhRadio Value="free">Free</BhRadio>
+                        <BhRadio Value="pro">Pro</BhRadio>
+                    </BhRadioGroup>
+                    <BhErrorMessage />
+                </BhField>
+                <button type="submit">Save</button>
+            </EditForm>);
+
+        Assert.Null(cut.Find("[role=checkbox]").GetAttribute("aria-invalid"));
+        cut.Find("form").Submit();
+
+        var box = cut.Find("[role=checkbox]");
+        Assert.Equal("true", box.GetAttribute("aria-invalid"));
+        Assert.Contains("You must accept the terms.", box.AccessibleDescription());
+        var group = cut.Find("[role=radiogroup]");
+        Assert.Equal("true", group.GetAttribute("aria-invalid"));
+        Assert.Equal("Plan", group.AccessibleName());
+        Assert.Contains("Pick a plan.", group.AccessibleDescription());
+
+        box.Click();
+        Assert.Null(cut.Find("[role=checkbox]").GetAttribute("aria-invalid"));
+        Assert.DoesNotContain("You must accept the terms.", cut.Markup);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Field_wires_label_description_and_input()
+    {
+        var cut = Render(
+            @<BhField Required="true">
+                <BhLabel>Email</BhLabel>
+                <BhDescription>We never share it.</BhDescription>
+                <BhInput type="email" />
+            </BhField>);
+
+        var input = cut.Find("input");
+        Assert.Equal(input.Id, cut.Find("label").GetAttribute("for"));
+        Assert.Equal("Email", input.AccessibleName());
+        Assert.Equal("We never share it.", input.AccessibleDescription());
+        Assert.True(input.HasAttribute("required") || input.GetAttribute("aria-required") == "true");
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Disabled_fieldset_disables_its_fields()
+    {
+        var cut = Render(
+            @<BhFieldset Disabled="true">
+                <BhLegend>Shipping</BhLegend>
+                <BhField>
+                    <BhLabel>Street</BhLabel>
+                    <BhInput />
+                </BhField>
+            </BhFieldset>);
+        Assert.True(cut.Find("input").HasAttribute("disabled"));
+    }
+}

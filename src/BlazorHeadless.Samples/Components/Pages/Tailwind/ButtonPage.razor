@@ -41,17 +41,18 @@
         </Description>
         <LiveContent>
             <BhButton Loading="@isLoading" OnClick="HandleLoadingClick"
-                      class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait"
-                      Context="btn">
-                @if (btn.Loading)
-                {
-                    <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"></span>
-                    <span>Saving…</span>
-                }
-                else
-                {
-                    <span>Save Changes</span>
-                }
+                      class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait">
+                <Template Context="btn">
+                    @if (btn.Loading)
+                    {
+                        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"></span>
+                        <span>Saving…</span>
+                    }
+                    else
+                    {
+                        <span>Save Changes</span>
+                    }
+                </Template>
             </BhButton>
         </LiveContent>
     </TwDemoBlock>
@@ -146,17 +147,18 @@
 
     private const string _loadingCode = """
 <BhButton Loading="@isLoading" OnClick="HandleLoadingClick"
-          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait"
-          Context="btn">
-    @if (btn.Loading)
-    {
-        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"></span>
-        <span>Saving…</span>
-    }
-    else
-    {
-        <span>Save Changes</span>
-    }
+          class="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 cursor-pointer transition-colors hover:bg-zinc-100 data-loading:opacity-70 data-loading:cursor-wait">
+    <Template Context="btn">
+        @if (btn.Loading)
+        {
+            <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"></span>
+            <span>Saving…</span>
+        }
+        else
+        {
+            <span>Save Changes</span>
+        }
+    </Template>
 </BhButton>
 
 @code {

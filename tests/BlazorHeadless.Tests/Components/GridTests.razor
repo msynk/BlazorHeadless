@@ -1,0 +1,175 @@
+@inherits TestBase
+
+@code {
+    private sealed record FileRow(string Key, string Name, string Size, string? Parent = null, int Level = 1, bool HasChildren = false);
+
+    private static readonly FileRow[] Flat =
+    [
+        new("a", "alpha.txt", "1 KB"),
+        new("b", "beta.txt", "2 KB"),
+        new("c", "gamma.txt", "3 KB"),
+    ];
+
+    private static readonly FileRow[] Nested =
+    [
+        new("src", "src", "—", Level: 1, HasChildren: true),
+        new("app", "app.cs", "4 KB", "src", 2),
+        new("lib", "lib.cs", "5 KB", "src", 2),
+        new("readme", "readme.md", "1 KB"),
+    ];
+
+    private RenderFragment Grid(FileRow[] rows, bool tree = false, BhGridSelectionMode mode = BhGridSelectionMode.None,
+        Action<IReadOnlyCollection<string>>? onSelect = null, Action<string>? onActivate = null) =>
+        @<BhGrid As="table" aria-label="Files" TreeGrid="tree" SelectionMode="mode"
+                 SelectedKeysChanged="k => onSelect?.Invoke(k)" OnRowActivate="k => onActivate?.Invoke(k)">
+            <BhGridRowGroup As="thead">
+                <BhGridRow As="tr" IsHeaderRow="true">
+                    <BhGridCell As="th" Header="true" Sort="BhSortDirection.Ascending">Name</BhGridCell>
+                    <BhGridCell As="th" Header="true">Size</BhGridCell>
+                </BhGridRow>
+            </BhGridRowGroup>
+            <BhGridRowGroup As="tbody">
+                @foreach (var r in rows)
+                {
+                    <BhGridRow As="tr" Key="@r.Key" @key="r.Key" ParentKey="@r.Parent" Level="@(tree ? r.Level : null)" HasChildren="r.HasChildren">
+                        <BhGridCell As="td">@r.Name</BhGridCell>
+                        <BhGridCell As="td">@r.Size</BhGridCell>
+                    </BhGridRow>
+                }
+            </BhGridRowGroup>
+        </BhGrid>;
+
+    private static AngleSharp.Dom.IElement Cell(IRenderedComponent<Bunit.Rendering.ContainerFragment> cut, string text)
+        => cut.FindAll("[role=gridcell], [role=columnheader]").First(c => c.TextContent == text);
+
+    [Fact]
+    public void Grid_roles_and_single_tab_stop()
+    {
+        var cut = Render(Grid(Flat));
+        Assert.Equal("grid", cut.Find("table").GetAttribute("role"));
+        Assert.Equal("ascending", Cell(cut, "Name").GetAttribute("aria-sort"));
+        Assert.Equal(4, cut.FindAll("[role=row]").Count);
+        var stops = cut.TabSequence();
+        Assert.Single(stops);
+        Assert.Equal("alpha.txt", stops[0].Element.TextContent);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Arrow_keys_move_between_cells()
+    {
+        var cut = Render(Grid(Flat));
+        Cell(cut, "alpha.txt").Press("ArrowRight");
+        Assert.Equal(Cell(cut, "1 KB").Id, this.LastFocusRequest());
+        Assert.Equal("0", Cell(cut, "1 KB").GetAttribute("tabindex"));
+        Assert.Equal("-1", Cell(cut, "alpha.txt").GetAttribute("tabindex"));
+
+        Cell(cut, "1 KB").Press("ArrowDown");
+        Assert.Equal(Cell(cut, "2 KB").Id, this.LastFocusRequest());
+        Cell(cut, "2 KB").Press("Home");
+        Assert.Equal(Cell(cut, "beta.txt").Id, this.LastFocusRequest());
+        Cell(cut, "beta.txt").Press("End", ctrl: true);
+        Assert.Equal(Cell(cut, "3 KB").Id, this.LastFocusRequest());
+        Cell(cut, "3 KB").Press("Home", ctrl: true);
+        Assert.Equal(Cell(cut, "Name").Id, this.LastFocusRequest());
+        // Edges don't wrap.
+        Cell(cut, "Name").Press("ArrowUp");
+        Assert.Equal(Cell(cut, "Name").Id, this.LastFocusRequest());
+    }
+
+    [Fact]
+    public void Space_and_ctrl_a_select_rows_in_multi_mode()
+    {
+        IReadOnlyCollection<string>? selected = null;
+        var cut = Render(Grid(Flat, mode: BhGridSelectionMode.Multiple, onSelect: k => selected = k));
+        Assert.Equal("true", cut.Find("table").GetAttribute("aria-multiselectable"));
+
+        Cell(cut, "alpha.txt").Press(" ");
+        Assert.Equal(["a"], selected!);
+        Assert.Equal("true", cut.FindAll("tbody [role=row]")[0].GetAttribute("aria-selected"));
+        Assert.Null(cut.FindAll("[role=row]")[0].GetAttribute("aria-selected")); // header row
+
+        Cell(cut, "alpha.txt").Press("a", ctrl: true);
+        Assert.Equal(["a", "b", "c"], selected!.OrderBy(k => k));
+    }
+
+    [Fact]
+    public void Enter_activates_the_row()
+    {
+        string? activated = null;
+        var cut = Render(Grid(Flat, onActivate: k => activated = k));
+        Cell(cut, "beta.txt").Press("Enter");
+        Assert.Equal("b", activated);
+    }
+
+    [Fact]
+    public void Treegrid_hides_collapsed_children_and_expands_with_arrows()
+    {
+        var cut = Render(Grid(Nested, tree: true));
+        Assert.Equal("treegrid", cut.Find("table").GetAttribute("role"));
+
+        var src = cut.FindAll("tbody [role=row]")[0];
+        Assert.Equal("1", src.GetAttribute("aria-level"));
+        Assert.Equal("false", src.GetAttribute("aria-expanded"));
+        Assert.True(cut.FindAll("tbody [role=row]")[1].HasAttribute("hidden"));
+
+        // Down skips the hidden children.
+        Cell(cut, "src").Press("ArrowDown");
+        Assert.Equal(Cell(cut, "readme.md").Id, this.LastFocusRequest());
+
+        // Right on the first cell expands; again moves into the row.
+        Cell(cut, "src").Press("ArrowRight");
+        Assert.Equal("true", cut.FindAll("tbody [role=row]")[0].GetAttribute("aria-expanded"));
+        Assert.False(cut.FindAll("tbody [role=row]")[1].HasAttribute("hidden"));
+        Cell(cut, "src").Press("ArrowDown");
+        Assert.Equal(Cell(cut, "app.cs").Id, this.LastFocusRequest());
+
+        // Left on a child's first cell goes to the parent; Left again collapses.
+        Cell(cut, "app.cs").Press("ArrowLeft");
+        Assert.Equal(Cell(cut, "src").Id, this.LastFocusRequest());
+        Cell(cut, "src").Press("ArrowLeft");
+        Assert.Equal("false", cut.FindAll("tbody [role=row]")[0].GetAttribute("aria-expanded"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Collapsing_keeps_the_tab_stop_visible()
+    {
+        var cut = Render(Grid(Nested, tree: true));
+        Cell(cut, "src").Press("ArrowRight");
+        Cell(cut, "src").Press("ArrowDown");
+        // Focus (tab stop) is now in a child row; collapsing the parent must move it back.
+        Cell(cut, "app.cs").Press("ArrowLeft");
+        Cell(cut, "src").Press("ArrowLeft");
+        var stops = cut.TabSequence();
+        Assert.Single(stops);
+        Assert.Equal("src", stops[0].Element.TextContent);
+    }
+
+    [Fact]
+    public void Row_toggle_expands_without_selecting_and_initial_tab_stop_is_honoured()
+    {
+        IReadOnlyCollection<string>? selected = null;
+        var cut = Render(
+            @<BhGrid aria-label="Files" TreeGrid="true" SelectionMode="BhGridSelectionMode.Single" SelectedKeysChanged="k => selected = k">
+                <BhGridRow Key="src" Level="1" HasChildren="true">
+                    <BhGridCell><BhGridRowToggle>▸</BhGridRowToggle> src</BhGridCell>
+                </BhGridRow>
+                <BhGridRow Key="app" Level="2" ParentKey="src">
+                    <BhGridCell InitialTabStop="true">app.cs</BhGridCell>
+                </BhGridRow>
+                <BhGridRow Key="readme" Level="1">
+                    <BhGridCell InitialTabStop="true">readme.md</BhGridCell>
+                </BhGridRow>
+            </BhGrid>);
+
+        // The hidden child row can't hold the tab stop: the next visible preferred cell does.
+        Assert.Equal("readme.md", cut.TabSequence().Single().Element.TextContent);
+
+        cut.Find("[aria-hidden=true]").Click();
+        Assert.Equal("true", cut.FindAll("[role=row]")[0].GetAttribute("aria-expanded"));
+        Assert.Equal("open", cut.Find("[aria-hidden=true]").GetAttribute("data-state"));
+        Assert.Null(selected);
+        Assert.Equal("app.cs", cut.TabSequence().Single().Element.TextContent);
+    }
+}

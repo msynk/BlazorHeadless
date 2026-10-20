@@ -25,6 +25,7 @@
         <li><a href="../getting-started.html">Getting started</a></li>
     </ul>
             <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
             <li><a href="../components/accordion.html">Accordion</a></li>
             <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
             <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
@@ -34,22 +35,32 @@
             <li><a href="../components/close-button.html">CloseButton</a></li>
             <li><a href="../components/collapsible.html">Collapsible</a></li>
             <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
             <li><a href="../components/data-interactive.html">DataInteractive</a></li>
             <li><a href="../components/dialog.html">Dialog</a></li>
             <li><a href="../components/disclosure.html">Disclosure</a></li>
             <li><a href="../components/field.html">Field / Input</a></li>
             <li><a href="../components/fieldset.html">Fieldset</a></li>
             <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
             <li><a href="../components/hover-card.html">Hover Card</a></li>
             <li><a href="../components/listbox.html">Listbox</a></li>
             <li><a href="../components/menu.html" class="active">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
             <li><a href="../components/popover.html">Popover</a></li>
             <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
             <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
             <li><a href="../components/switch.html">Switch</a></li>
             <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
             <li><a href="../components/tooltip.html">Tooltip</a></li>
             <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -67,9 +78,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
-    &lt;BhMenuButton class="menu-button" Context="b"&gt;
-        Options
-        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="menu-button"&gt;
+        &lt;Template Context="b"&gt;
+            Options
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="menu-items"&gt;
         &lt;BhMenuItem OnClick='@(() =&gt; Log("Edit"))'      class="menu-item" Label="Edit"&gt;Edit&lt;/BhMenuItem&gt;
@@ -156,10 +169,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
-    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                  Context="b"&gt;
-        Options
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;Template Context="b"&gt;
+            Options
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
         &lt;BhMenuItem OnClick='@(() =&gt; Log("Edit"))'      class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700 data-disabled:opacity-40 data-disabled:cursor-not-allowed" Label="Edit"&gt;Edit&lt;/BhMenuItem&gt;
@@ -188,9 +202,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
-    &lt;BhMenuButton class="menu-button" Context="b"&gt;
-        Account
-        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="menu-button"&gt;
+        &lt;Template Context="b"&gt;
+            Account
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="menu-items"&gt;
         &lt;BhMenuItem OnClick='@(() =&gt; Log("Profile"))'  class="menu-item" Label="Profile"&gt;Profile&lt;/BhMenuItem&gt;
@@ -291,42 +307,52 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
-    &lt;BhMenuButton class="menu-button" Context="b"&gt;
-        File
-        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="menu-button"&gt;
+        &lt;Template Context="b"&gt;
+            File
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="menu-items menu-items-wide"&gt;
-        &lt;BhMenuItem OnClick='@(() =&gt; Log("New file"))' class="menu-item" Label="New file" Context="i"&gt;
-            &lt;span class="menu-item-icon"&gt;📄&lt;/span&gt;
-            &lt;span class="menu-item-body"&gt;
-                &lt;strong&gt;New file&lt;/strong&gt;
-                &lt;span&gt;Create a blank document&lt;/span&gt;
-            &lt;/span&gt;
-            &lt;span class="menu-item-shortcut"&gt;⌘N&lt;/span&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("New file"))' class="menu-item" Label="New file"&gt;
+            &lt;Template Context="i"&gt;
+                &lt;span class="menu-item-icon"&gt;📄&lt;/span&gt;
+                &lt;span class="menu-item-body"&gt;
+                    &lt;strong&gt;New file&lt;/strong&gt;
+                    &lt;span&gt;Create a blank document&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class="menu-item-shortcut"&gt;⌘N&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuItem&gt;
-        &lt;BhMenuItem OnClick='@(() =&gt; Log("Open"))' class="menu-item" Label="Open" Context="i"&gt;
-            &lt;span class="menu-item-icon"&gt;📂&lt;/span&gt;
-            &lt;span class="menu-item-body"&gt;
-                &lt;strong&gt;Open…&lt;/strong&gt;
-                &lt;span&gt;Browse for a file&lt;/span&gt;
-            &lt;/span&gt;
-            &lt;span class="menu-item-shortcut"&gt;⌘O&lt;/span&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Open"))' class="menu-item" Label="Open"&gt;
+            &lt;Template Context="i"&gt;
+                &lt;span class="menu-item-icon"&gt;📂&lt;/span&gt;
+                &lt;span class="menu-item-body"&gt;
+                    &lt;strong&gt;Open…&lt;/strong&gt;
+                    &lt;span&gt;Browse for a file&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class="menu-item-shortcut"&gt;⌘O&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuItem&gt;
-        &lt;BhMenuItem OnClick='@(() =&gt; Log("Save"))' class="menu-item" Label="Save" Context="i"&gt;
-            &lt;span class="menu-item-icon"&gt;💾&lt;/span&gt;
-            &lt;span class="menu-item-body"&gt;
-                &lt;strong&gt;Save&lt;/strong&gt;
-                &lt;span&gt;Save the current document&lt;/span&gt;
-            &lt;/span&gt;
-            &lt;span class="menu-item-shortcut"&gt;⌘S&lt;/span&gt;
+        &lt;BhMenuItem OnClick='@(() =&gt; Log("Save"))' class="menu-item" Label="Save"&gt;
+            &lt;Template Context="i"&gt;
+                &lt;span class="menu-item-icon"&gt;💾&lt;/span&gt;
+                &lt;span class="menu-item-body"&gt;
+                    &lt;strong&gt;Save&lt;/strong&gt;
+                    &lt;span&gt;Save the current document&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class="menu-item-shortcut"&gt;⌘S&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuItem&gt;
         &lt;BhMenuItem OnClick='@(() =&gt; Log("Export"))' class="menu-item" Label="Export"
-                   Disabled="true" Context="i"&gt;
-            &lt;span class="menu-item-icon"&gt;📤&lt;/span&gt;
-            &lt;span class="menu-item-body"&gt;
-                &lt;strong&gt;Export&lt;/strong&gt;
-                &lt;span&gt;Not available in this plan&lt;/span&gt;
-            &lt;/span&gt;
+                   Disabled="true"&gt;
+            &lt;Template Context="i"&gt;
+                &lt;span class="menu-item-icon"&gt;📤&lt;/span&gt;
+                &lt;span class="menu-item-body"&gt;
+                    &lt;strong&gt;Export&lt;/strong&gt;
+                    &lt;span&gt;Not available in this plan&lt;/span&gt;
+                &lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuItem&gt;
     &lt;/BhMenuItems&gt;
 &lt;/BhMenu&gt;
@@ -469,9 +495,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
-    &lt;BhMenuButton class="menu-button" Context="b"&gt;
-        More
-        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="menu-button"&gt;
+        &lt;Template Context="b"&gt;
+            More
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="menu-items"&gt;
         &lt;li class="menu-section-label" role="presentation"&gt;View&lt;/li&gt;
@@ -603,9 +631,11 @@
 
 &lt;div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;"&gt;
     &lt;BhMenu class="menu"&gt;
-        &lt;BhMenuButton class="menu-button" Context="b"&gt;
-            Bottom Start
-            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhMenuButton class="menu-button"&gt;
+            &lt;Template Context="b"&gt;
+                Bottom Start
+                &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuButton&gt;
         &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                     class="menu-items-anchored"&gt;
@@ -616,9 +646,11 @@
     &lt;/BhMenu&gt;
 
     &lt;BhMenu class="menu"&gt;
-        &lt;BhMenuButton class="menu-button" Context="b"&gt;
-            Bottom End
-            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhMenuButton class="menu-button"&gt;
+            &lt;Template Context="b"&gt;
+                Bottom End
+                &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuButton&gt;
         &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom end", Gap = 4 })"
                     class="menu-items-anchored"&gt;
@@ -630,9 +662,11 @@
 
     @* Use --button-width to match the dropdown width to the trigger *@
     &lt;BhMenu class="menu"&gt;
-        &lt;BhMenuButton class="menu-button" Context="b"&gt;
-            Match Width
-            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;BhMenuButton class="menu-button"&gt;
+            &lt;Template Context="b"&gt;
+                Match Width
+                &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+            &lt;/Template&gt;
         &lt;/BhMenuButton&gt;
         &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom", Gap = 4 })"
                     class="menu-items-anchored menu-items-match-width"&gt;
@@ -716,10 +750,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
-    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                  Context="b"&gt;
-        Bottom Start
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;Template Context="b"&gt;
+            Bottom Start
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
                  class="z-[9999] m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
@@ -757,9 +792,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="menu"&gt;
-    &lt;BhMenuButton class="menu-button" Context="b"&gt;
-        Navigate
-        &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="menu-button"&gt;
+        &lt;Template Context="b"&gt;
+            Navigate
+            &lt;span class="menu-chevron @(b.IsOpen ? "open" : "")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="menu-items"&gt;
         &lt;BhMenuItem As="a" href="/button"     class="menu-item" Label="Button"&gt;Button&lt;/BhMenuItem&gt;
@@ -839,10 +876,11 @@
                 <div class="code-wrap">
                     <button class="copy-btn" type="button">Copy</button>
                     <pre class="code-block"><code class="language-markup">&lt;BhMenu class="relative inline-block"&gt;
-    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"
-                  Context="b"&gt;
-        Navigate
-        &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+    &lt;BhMenuButton class="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-sm font-medium cursor-pointer transition-colors hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 data-state-open:border-blue-600 data-disabled:opacity-50 data-disabled:cursor-not-allowed"&gt;
+        &lt;Template Context="b"&gt;
+            Navigate
+            &lt;span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")"&gt;▾&lt;/span&gt;
+        &lt;/Template&gt;
     &lt;/BhMenuButton&gt;
     &lt;BhMenuItems class="absolute top-[calc(100%+0.25rem)] left-0 z-30 m-0 min-w-40 list-none rounded-lg border border-zinc-200 bg-white p-1 shadow-lg"&gt;
         &lt;BhMenuItem As="a" href="tw/button"     Label="Button"     class="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none no-underline data-active:bg-blue-50 data-active:text-blue-700"&gt;Button&lt;/BhMenuItem&gt;
@@ -859,9 +897,9 @@
             <span class="pager-label">← Previous</span>
             <span class="pager-title">Listbox</span>
         </a>
-            <a class="next" href="popover.html">
+            <a class="next" href="menubar.html">
             <span class="pager-label">Next →</span>
-            <span class="pager-title">Popover</span>
+            <span class="pager-title">Menubar</span>
         </a>
         </nav>
         </main>

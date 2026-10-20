@@ -23,9 +23,10 @@
                     <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                                      class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
                     <BhComboboxButton TValue="string"
-                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                                      Context="b">
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+                        <Template Context="b">
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="string"
@@ -39,10 +40,11 @@
                         @foreach (var fruit in filteredFruits)
                         {
                             <BhComboboxOption TValue="string" Value="@fruit"
-                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"
-                                              Context="o">
-                                <span>@fruit</span>
-                                @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+                                <Template Context="o">
+                                    <span>@fruit</span>
+                                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -75,9 +77,10 @@
                                      Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                                      class="flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none w-auto min-w-24 px-1 py-1" />
                     <BhComboboxButton TValue="string"
-                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                                      Context="b">
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+                        <Template Context="b">
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="string"
@@ -91,10 +94,11 @@
                         @foreach (var tag in filteredTags)
                         {
                             <BhComboboxOption TValue="string" Value="@tag"
-                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                              Context="o">
-                                <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
-                                <span>@tag</span>
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                                <Template Context="o">
+                                    <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                                    <span>@tag</span>
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -117,9 +121,10 @@
                     <BhComboboxInput TValue="Person" Placeholder="Search people…"
                                      class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
                     <BhComboboxButton TValue="Person"
-                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                                      Context="b">
-                        <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                      class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+                        <Template Context="b">
+                            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
                     </BhComboboxButton>
                 </div>
                 <BhComboboxOptions TValue="Person"
@@ -133,16 +138,17 @@
                         @foreach (var person in filteredPeople)
                         {
                             <BhComboboxOption TValue="Person" Value="@person"
-                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                              Context="o">
-                                <div class="flex w-full items-center gap-2.5">
-                                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
-                                    <div class="flex flex-1 flex-col leading-tight">
-                                        <strong class="text-sm text-zinc-900">@person.Name</strong>
-                                        <span class="text-xs text-zinc-500">@person.Email</span>
+                                              class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                                <Template Context="o">
+                                    <div class="flex w-full items-center gap-2.5">
+                                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
+                                        <div class="flex flex-1 flex-col leading-tight">
+                                            <strong class="text-sm text-zinc-900">@person.Name</strong>
+                                            <span class="text-xs text-zinc-500">@person.Email</span>
+                                        </div>
+                                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
                                     </div>
-                                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
-                                </div>
+                                </Template>
                             </BhComboboxOption>
                         }
                     }
@@ -164,9 +170,10 @@
                             <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                                              class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
                             <BhComboboxButton TValue="string"
-                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                                              Context="b">
-                                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+                                <Template Context="b">
+                                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                </Template>
                             </BhComboboxButton>
                         </div>
                         <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
@@ -180,10 +187,11 @@
                                 @foreach (var fruit in anchorFilteredFruits)
                                 {
                                     <BhComboboxOption TValue="string" Value="@fruit"
-                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                                      Context="o">
-                                        <span>@fruit</span>
-                                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                                        <Template Context="o">
+                                            <span>@fruit</span>
+                                            @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                        </Template>
                                     </BhComboboxOption>
                                 }
                             }
@@ -199,9 +207,10 @@
                             <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                                              class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
                             <BhComboboxButton TValue="string"
-                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                                              Context="b">
-                                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                              class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+                                <Template Context="b">
+                                    <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                                </Template>
                             </BhComboboxButton>
                         </div>
                         <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "top start", Gap = 4 })"
@@ -215,10 +224,11 @@
                                 @foreach (var fruit in anchorFilteredFruits2)
                                 {
                                     <BhComboboxOption TValue="string" Value="@fruit"
-                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                                      Context="o">
-                                        <span>@fruit</span>
-                                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                                      class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                                        <Template Context="o">
+                                            <span>@fruit</span>
+                                            @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                        </Template>
                                     </BhComboboxOption>
                                 }
                             }
@@ -229,9 +239,128 @@
             <span class="text-sm text-zinc-500 mt-3">Selected: <strong class="text-zinc-900">@(anchorFruit ?? anchorFruit2 ?? "(none)")</strong></span>
         </LiveContent>
     </TwDemoBlock>
+
+    <TwDemoBlock Title="Large lists (virtualized)" Code="@_virtualCode">
+        <Description>
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Items</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">ItemTemplate</code> + <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">Virtualize="true"</code> render only the visible options (each <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">h-9</code> = <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">ItemSize</code> 36px).
+            <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">OnQueryChange</code> filters 10,000 items with <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhFilter.Contains</code> (case- and accent-insensitive); <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">BhComboboxEmpty</code> covers no matches.
+        </Description>
+        <LiveContent>
+            <BhCombobox TValue="string"
+                        @bind-Value="virtualPick"
+                        OnQueryChange="HandleVirtualQuery"
+                        DisplayValue="v => v ?? string.Empty"
+                        class="inline-block min-w-72">
+                <div class="flex items-center rounded-lg border border-zinc-300 bg-white transition-colors focus-within:border-blue-600">
+                    <BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…"
+                                     class="min-w-0 flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
+                    <BhComboboxButton TValue="string"
+                                      class="inline-flex items-center justify-center border-0 bg-transparent px-2.5 text-zinc-500 cursor-pointer">
+                        <Template Context="b">
+                            <span class="@($"transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                        </Template>
+                    </BhComboboxButton>
+                </div>
+                <BhComboboxOptions TValue="string"
+                                   Items="@virtualMatches"
+                                   Virtualize="true"
+                                   ItemSize="36"
+                                   Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                                   class="z-9999 m-0 max-h-64 w-72 list-none overflow-y-auto rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+                    <ItemTemplate Context="o">
+                        <span class="@($"flex h-9 cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 text-sm {(o.IsActive ? "bg-blue-50 text-blue-900" : "text-zinc-900")} {(o.IsSelected ? "font-semibold" : "")}")">
+                            @o.Value
+                            @if (o.IsSelected) { <span class="font-bold text-blue-600">✓</span> }
+                        </span>
+                    </ItemTemplate>
+                    <ChildContent>
+                        <BhComboboxEmpty TValue="string" class="px-2.5 py-2.5 text-sm italic text-zinc-500">No animals match.</BhComboboxEmpty>
+                    </ChildContent>
+                </BhComboboxOptions>
+            </BhCombobox>
+            <span class="text-sm text-zinc-500">
+                @virtualMatches.Count.ToString("N0") matches · Selected: <strong class="text-zinc-900">@(virtualPick ?? "(none)")</strong>
+            </span>
+        </LiveContent>
+    </TwDemoBlock>
 </div>
 
 @code {
+    // ── Large lists (virtualized) ───────────────────────────────────────────
+
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList<string> virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    private void HandleVirtualQuery(string query) =>
+        virtualMatches = VirtualItems.Where(item => BhFilter.Contains(item, query)).ToArray();
+
+    private const string _virtualCode = """
+<BhCombobox TValue="string"
+            @bind-Value="virtualPick"
+            OnQueryChange="HandleVirtualQuery"
+            DisplayValue="v => v ?? string.Empty"
+            class="inline-block min-w-72">
+    <div class="flex items-center rounded-lg border border-zinc-300 bg-white focus-within:border-blue-600">
+        <BhComboboxInput TValue="string" Placeholder="Search 10,000 animals…"
+                         class="min-w-0 flex-1 border-0 bg-transparent px-3.5 py-2 text-sm outline-none" />
+        <BhComboboxButton TValue="string" class="inline-flex items-center px-2.5 text-zinc-500">
+            <Template Context="b">
+                <span class="@($"transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
+        </BhComboboxButton>
+    </div>
+
+    @* Bounded scroll container; each option exactly ItemSize (36px = h-9) *@
+    <BhComboboxOptions TValue="string"
+                       Items="@virtualMatches"
+                       Virtualize="true"
+                       ItemSize="36"
+                       Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
+                       class="z-9999 m-0 max-h-64 w-72 list-none overflow-y-auto rounded-lg border border-zinc-200 bg-white p-1 shadow-lg">
+        <ItemTemplate Context="o">
+            <span class="@($"flex h-9 items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 text-sm {(o.IsActive ? "bg-blue-50 text-blue-900" : "text-zinc-900")} {(o.IsSelected ? "font-semibold" : "")}")">
+                @o.Value
+                @if (o.IsSelected) { <span class="font-bold text-blue-600">✓</span> }
+            </span>
+        </ItemTemplate>
+        <ChildContent>
+            <BhComboboxEmpty TValue="string" class="px-2.5 py-2.5 text-sm italic text-zinc-500">No animals match.</BhComboboxEmpty>
+        </ChildContent>
+    </BhComboboxOptions>
+</BhCombobox>
+
+@code {
+    // 10 adjectives × 10 animals × 100 = 10,000 items.
+    private static readonly string[] VirtualItems = BuildVirtualItems();
+    private IReadOnlyList<string> virtualMatches = VirtualItems;
+    private string? virtualPick;
+
+    private static string[] BuildVirtualItems()
+    {
+        string[] adjectives = ["Amber", "Brave", "Calm", "Dusty", "Eager", "Fuzzy", "Gentle", "Hazy", "Icy", "Jolly"];
+        string[] animals = ["Badger", "Crane", "Dingo", "Falcon", "Gecko", "Heron", "Ibis", "Jaguar", "Koala", "Lynx"];
+        return Enumerable.Range(0, 10_000)
+            .Select(i => $"{adjectives[i / 1000]} {animals[i / 100 % 10]} {i % 100 + 1}")
+            .ToArray();
+    }
+
+    // Case- and accent-insensitive "contains" match.
+    private void HandleVirtualQuery(string query) =>
+        virtualMatches = VirtualItems.Where(item => BhFilter.Contains(item, query)).ToArray();
+}
+""";
+
     private string? selectedFruit;
     private readonly string[] allFruits =
     {
@@ -313,9 +442,10 @@
         <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
         <BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b">
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+            <Template Context="b">
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string"
@@ -329,10 +459,11 @@
             @foreach (var fruit in filteredFruits)
             {
                 <BhComboboxOption TValue="string" Value="@fruit"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed"
-                                  Context="o">
-                    <span>@fruit</span>
-                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold data-disabled:opacity-40 data-disabled:cursor-not-allowed">
+                    <Template Context="o">
+                        <span>@fruit</span>
+                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                    </Template>
                 </BhComboboxOption>
             }
         }
@@ -378,9 +509,10 @@
                          Placeholder="@(pickedTags.Count == 0 ? "Pick tags…" : "")"
                          class="flex-1 border-0 bg-transparent text-sm text-zinc-900 outline-none w-auto min-w-24 px-1 py-1" />
         <BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b">
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+            <Template Context="b">
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string"
@@ -394,10 +526,11 @@
             @foreach (var tag in filteredTags)
             {
                 <BhComboboxOption TValue="string" Value="@tag"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o">
-                    <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
-                    <span>@tag</span>
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                    <Template Context="o">
+                        <span class="inline-block w-4 text-blue-600 font-bold">@(o.IsSelected ? "✓" : "")</span>
+                        <span>@tag</span>
+                    </Template>
                 </BhComboboxOption>
             }
         }
@@ -435,9 +568,10 @@
         <BhComboboxInput TValue="Person" Placeholder="Search people…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
         <BhComboboxButton TValue="Person"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b">
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+            <Template Context="b">
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="Person"
@@ -451,16 +585,17 @@
             @foreach (var person in filteredPeople)
             {
                 <BhComboboxOption TValue="Person" Value="@person"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o">
-                    <div class="flex w-full items-center gap-2.5">
-                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
-                        <div class="flex flex-1 flex-col leading-tight">
-                            <strong class="text-sm text-zinc-900">@person.Name</strong>
-                            <span class="text-xs text-zinc-500">@person.Email</span>
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                    <Template Context="o">
+                        <div class="flex w-full items-center gap-2.5">
+                            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-blue-700">@person.Initials</span>
+                            <div class="flex flex-1 flex-col leading-tight">
+                                <strong class="text-sm text-zinc-900">@person.Name</strong>
+                                <span class="text-xs text-zinc-500">@person.Email</span>
+                            </div>
+                            @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
                         </div>
-                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
-                    </div>
+                    </Template>
                 </BhComboboxOption>
             }
         }
@@ -505,9 +640,10 @@
         <BhComboboxInput TValue="string" Placeholder="Pick a fruit…"
                          class="flex-1 border-0 bg-transparent px-3.5 py-2 text-sm text-zinc-900 outline-none" />
         <BhComboboxButton TValue="string"
-                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0"
-                          Context="b">
-            <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+                          class="inline-flex items-center justify-center px-2.5 cursor-pointer text-zinc-500 bg-transparent border-0">
+            <Template Context="b">
+                <span class="@($"text-zinc-500 transition-transform duration-200 {(b.IsOpen ? "rotate-180" : "")}")">▾</span>
+            </Template>
         </BhComboboxButton>
     </div>
     <BhComboboxOptions TValue="string" Anchor="@(new BhAnchorOptions { To = "bottom start", Gap = 4 })"
@@ -521,10 +657,11 @@
             @foreach (var fruit in anchorFilteredFruits)
             {
                 <BhComboboxOption TValue="string" Value="@fruit"
-                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold"
-                                  Context="o">
-                    <span>@fruit</span>
-                    @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                                  class="flex items-center justify-between gap-2 rounded-md px-2.5 py-2 text-sm cursor-pointer text-zinc-900 list-none data-active:bg-blue-50 data-selected:font-semibold">
+                    <Template Context="o">
+                        <span>@fruit</span>
+                        @if (o.IsSelected) { <span class="text-blue-600 font-bold">✓</span> }
+                    </Template>
                 </BhComboboxOption>
             }
         }

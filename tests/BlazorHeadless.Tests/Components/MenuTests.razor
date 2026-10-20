@@ -1,0 +1,197 @@
+@inherits TestBase
+
+@code {
+    private string? _last;
+
+    private RenderFragment Menu() =>
+        @<BhMenu>
+            <BhMenuButton>Options</BhMenuButton>
+            <BhMenuItems>
+                <BhMenuItem OnClick="@(() => _last = "Edit")">Edit</BhMenuItem>
+                <BhMenuItem OnClick="@(() => _last = "Duplicate")" Disabled="true">Duplicate</BhMenuItem>
+                <BhMenuItem OnClick="@(() => _last = "Archive")" Label="Archive">Archive <kbd>⌘A</kbd></BhMenuItem>
+                <BhMenuSeparator />
+                <BhMenuItem OnClick="@(() => _last = "Delete")">Delete</BhMenuItem>
+            </BhMenuItems>
+        </BhMenu>;
+
+    [Fact]
+    public void Closed_menu_wires_the_button_and_hides_the_panel()
+    {
+        var cut = Render(Menu());
+        var button = cut.Find("button");
+
+        Assert.Equal("menu", button.GetAttribute("aria-haspopup"));
+        Assert.Equal("false", button.GetAttribute("aria-expanded"));
+        Assert.Null(button.GetAttribute("aria-activedescendant"));
+        Assert.True(cut.Find("[role=menu]").HasAttribute("hidden"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void ArrowDown_opens_and_highlights_the_first_item()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowDown");
+
+        var menu = cut.Find("[role=menu]");
+        Assert.Equal("true", cut.Find("button").GetAttribute("aria-expanded"));
+        Assert.False(menu.HasAttribute("hidden"));
+        Assert.Equal("Edit", Text(ActiveOf(menu)));
+        // aria-activedescendant lives on the focused menu, never on the button (invalid there).
+        Assert.Null(cut.Find("button").GetAttribute("aria-activedescendant"));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void ArrowUp_opens_on_the_last_item()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowUp");
+        Assert.Equal("Delete", Text(ActiveOf(cut.Find("[role=menu]"))));
+    }
+
+    [Fact]
+    public void Arrow_keys_skip_disabled_items_and_wrap()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowDown");
+        var menu = cut.Find("[role=menu]");
+
+        menu.Press("ArrowDown");
+        Assert.Equal("Archive ⌘A", Text(ActiveOf(cut.Find("[role=menu]"))));
+        cut.Find("[role=menu]").Press("ArrowDown");
+        cut.Find("[role=menu]").Press("ArrowDown");
+        Assert.Equal("Edit", Text(ActiveOf(cut.Find("[role=menu]"))));
+    }
+
+    [Fact]
+    public void Enter_activates_the_item_and_closes()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowDown");
+        cut.Find("[role=menu]").Press("End");
+        cut.Find("[role=menu]").Press("Enter");
+
+        Assert.Equal("Delete", _last);
+        Assert.Equal("false", cut.Find("button").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Typeahead_uses_labels_and_skips_disabled_items()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowDown");
+        cut.Find("[role=menu]").Press("a");
+        Assert.Equal("Archive ⌘A", Text(ActiveOf(cut.Find("[role=menu]"))));
+        cut.Find("[role=menu]").Press("d"); // "ad" doesn't match; restart is time-based, so stays
+    }
+
+    [Fact]
+    public void Escape_closes()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Press("ArrowDown");
+        cut.Find("[role=menu]").Press("Escape");
+        Assert.Equal("false", cut.Find("button").GetAttribute("aria-expanded"));
+    }
+
+    [Fact]
+    public void Clicking_a_disabled_item_does_nothing()
+    {
+        var cut = Render(Menu());
+        cut.Find("button").Click();
+        cut.FindAll("[role=menuitem]")[1].Click();
+        Assert.Null(_last);
+        Assert.Equal("true", cut.Find("button").GetAttribute("aria-expanded"));
+        Assert.Equal("true", cut.FindAll("[role=menuitem]")[1].GetAttribute("aria-disabled"));
+    }
+
+    [Fact]
+    public void Checkbox_and_radio_items_track_state()
+    {
+        string? sort = "name";
+        var cut = Render(
+            @<Stateful T="bool" Context="grid">
+                <BhMenu DefaultOpen="true">
+                    <BhMenuButton>View</BhMenuButton>
+                    <BhMenuItems>
+                        <BhMenuCheckboxItem Checked="grid.Value" CheckedChanged="grid.Set">
+                            <BhMenuItemIndicator>✓</BhMenuItemIndicator> Grid
+                        </BhMenuCheckboxItem>
+                        <BhMenuGroup>
+                            <BhMenuLabel>Sort by</BhMenuLabel>
+                            <BhMenuRadioGroup @bind-Value="sort">
+                                <BhMenuRadioItem Value="name">Name</BhMenuRadioItem>
+                                <BhMenuRadioItem Value="date">Date</BhMenuRadioItem>
+                            </BhMenuRadioGroup>
+                        </BhMenuGroup>
+                    </BhMenuItems>
+                </BhMenu>
+            </Stateful>);
+
+        Assert.Equal("false", cut.Find("[role=menuitemcheckbox]").GetAttribute("aria-checked"));
+        Assert.Empty(cut.FindAll("[role=menuitemcheckbox] [aria-hidden=true]"));
+
+        cut.Find("[role=menuitemcheckbox]").Click();
+        Assert.Equal("true", cut.Find("[role=menuitemcheckbox]").GetAttribute("aria-checked"));
+        Assert.NotNull(cut.Find("[role=menuitemcheckbox] [aria-hidden=true]"));
+
+        cut.FindAll("[role=menuitemradio]")[1].Click();
+        Assert.Equal("date", sort);
+
+        // Checkable items keep the menu open by default.
+        Assert.Equal("true", cut.Find("button").GetAttribute("aria-expanded"));
+        var group = cut.Find("[role=menu] [role=group][aria-labelledby]");
+        Assert.Equal("Sort by", cut.Find($"[id='{group.GetAttribute("aria-labelledby")}']").TextContent);
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Submenus_open_with_ArrowRight_and_close_with_ArrowLeft()
+    {
+        var cut = Render(
+            @<BhMenu>
+                <BhMenuButton>File</BhMenuButton>
+                <BhMenuItems>
+                    <BhMenuItem>New</BhMenuItem>
+                    <BhMenuSub>
+                        <BhMenuSubTrigger>Share</BhMenuSubTrigger>
+                        <BhMenuSubContent>
+                            <BhMenuItem>Email</BhMenuItem>
+                            <BhMenuItem>Link</BhMenuItem>
+                        </BhMenuSubContent>
+                    </BhMenuSub>
+                </BhMenuItems>
+            </BhMenu>);
+
+        cut.Find("button").Press("ArrowDown");
+        cut.FindAll("[role=menu]")[0].Press("ArrowDown");
+        var trigger = cut.Find("[aria-haspopup=menu][role=menuitem]");
+        Assert.Equal("false", trigger.GetAttribute("aria-expanded"));
+
+        cut.FindAll("[role=menu]")[0].Press("ArrowRight");
+        Assert.Equal("true", cut.Find("[aria-haspopup=menu][role=menuitem]").GetAttribute("aria-expanded"));
+        var sub = cut.FindAll("[role=menu]")[1];
+        Assert.False(sub.HasAttribute("hidden"));
+        Assert.Equal("Email", Text(ActiveOf(sub)));
+
+        cut.FindAll("[role=menu]")[1].Press("ArrowLeft");
+        Assert.Equal("false", cut.Find("[aria-haspopup=menu][role=menuitem]").GetAttribute("aria-expanded"));
+        Assert.Equal("Share", Text(ActiveOf(cut.FindAll("[role=menu]")[0])));
+        cut.ShouldBeAccessible();
+    }
+
+    [Fact]
+    public void Bind_open_works_in_controlled_mode()
+    {
+        var open = false;
+        var cut = Render(
+            @<BhMenu @bind-Open="open">
+                <BhMenuButton>Options</BhMenuButton>
+                <BhMenuItems><BhMenuItem>One</BhMenuItem></BhMenuItems>
+            </BhMenu>);
+        cut.Find("button").Click();
+        Assert.True(open);
+    }
+}

@@ -5,136 +5,117 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// An individual tab in an <see cref="BhTabGroup"/>. Renders as a native
-/// <c>&lt;button role="tab"&gt;</c> by default and participates in the group's
-/// roving-tabindex keyboard navigation.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Sets <c>role="tab"</c>, <c>aria-selected</c>, <c>aria-controls</c> (panel id), and <c>tabindex</c> (0 when active, -1 otherwise).</item>
-///   <item>Click selects the tab.</item>
-///   <item>Arrow / Home / End keys delegate to the parent group for roving-tabindex navigation.</item>
-///   <item>Emits <c>data-state="active"|"inactive"</c> and <c>data-disabled</c> for CSS hooks.</item>
-///   <item>Render-prop via <see cref="ChildContent"/> exposes <see cref="BhTabRenderContext"/> for state-driven content.</item>
-/// </list>
+/// A tab in a <see cref="BhTabList"/>. Renders <c>&lt;button role="tab"&gt;</c> with
+/// <c>aria-selected</c>, <c>aria-controls</c> and roving <c>tabindex</c>. Emits
+/// <c>data-state="active|inactive"</c> and <c>data-disabled</c>.
 /// </summary>
-public class BhTab : BhComponentBase, IDisposable
+public class BhTab : BhComponentBase, IBhCollectionItem, IDisposable
 {
     [CascadingParameter]
-    private BhTabsContext BhTabsContext { get; set; } = default!;
+    private BhTabsContext? TabsContext { get; set; }
 
-    /// <summary>Disables this tab. The arrow-key navigator skips disabled tabs automatically.</summary>
+    /// <summary>Optional value pairing this tab with the <see cref="BhTabPanel"/> of the same value.</summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>Disables this tab; keyboard navigation skips it.</summary>
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// <summary>Content template receiving <see cref="BhTabRenderContext"/> for state-driven rendering.</summary>
+    /// <summary>The content.</summary>
     [Parameter]
-    public RenderFragment<BhTabRenderContext>? ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
-    private int _index = -1;
-    private ElementReference _elementRef;
+    /// <summary>
+    /// Content that receives the render state (<c>BhTabRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<BhTabRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "button";
 
-    /// <summary>Whether this tab is the currently selected one.</summary>
-    public bool IsSelected => BhTabsContext?.SelectedIndex == _index;
+    /// <inheritdoc />
+    public string ItemId => ComponentId;
 
-    /// <summary>Whether this tab is disabled (own flag or root group).</summary>
-    public bool IsTabDisabled => Disabled || (BhTabsContext?.Disabled ?? false);
+    /// <inheritdoc />
+    public bool IsItemDisabled => Disabled || (TabsContext?.Disabled ?? false);
 
-    private bool IsNativeButton =>
-        Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
+    /// <inheritdoc />
+    public string? ItemText => null;
 
-    private BhTabRenderContext RenderContext => new()
-    {
-        IsSelected = IsSelected,
-        Disabled = IsTabDisabled,
-    };
+    /// <summary>Whether this tab is selected.</summary>
+    public bool IsSelected => TabsContext?.Group.IsSelected(this) ?? false;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    protected override void OnInitialized() => TabsContext?.Tabs.Register(this);
 
-    protected override void OnInitialized()
-    {
-        if (BhTabsContext is not null)
-            _index = BhTabsContext.RegisterTab(this);
-    }
-
-    public void Dispose()
-    {
-        BhTabsContext?.UnregisterTab(this);
-    }
-
-    /// <summary>Moves keyboard focus to this tab. Invoked internally by the parent group during arrow-key navigation.</summary>
-    internal ValueTask FocusAsync() => _elementRef.FocusAsync();
-
-    // ── Rendering ────────────────────────────────────────────────────────────
+    public void Dispose() => TabsContext?.Tabs.Unregister(this);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-
-        builder.AddAttribute(10, "id", BhTabsContext is not null ? BhTabsContext.GetTabId(_index) : ComponentId);
+        builder.AddAttribute(10, "id", ItemId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
         builder.AddAttribute(31, "onkeydown",
             EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
-
-        builder.AddElementReferenceCapture(40, e =>
-        {
-            _elementRef = e;
-            Ref?.Invoke(e);
-        });
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, new BhTabRenderContext { IsSelected = IsSelected, Disabled = IsItemDisabled }));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
+        var selected = IsSelected;
 
         attrs["role"] = "tab";
-        attrs["aria-selected"] = IsSelected ? "true" : "false";
+        SetAriaBool(attrs, "aria-selected", selected);
+        // aria-controls must not dangle: an unmounted panel is not referenced.
+        if (TabsContext?.Group.PanelForTab(this) is { IsRendered: true } panel)
+            attrs["aria-controls"] = panel.ItemId;
 
-        // aria-controls points at the corresponding panel.
-        if (BhTabsContext is not null && _index >= 0)
-            attrs["aria-controls"] = BhTabsContext.GetPanelId(_index);
+        // Roving tabindex: only the selected tab (or the first enabled one) is a tab stop.
+        var tabStop = selected || (TabsContext?.Group.SelectedTab is null && TabsContext?.Tabs.First() == this);
+        attrs["tabindex"] = tabStop ? 0 : -1;
 
-        // Roving tabindex: only the active tab is in the tab order.
-        attrs["tabindex"] = IsSelected ? 0 : -1;
-
-        if (IsNativeButton)
+        var isButton = Tag.Equals("button", StringComparison.OrdinalIgnoreCase);
+        if (isButton)
         {
             attrs["type"] = "button";
-            if (IsTabDisabled)
-                attrs["disabled"] = true;
+            if (IsItemDisabled) attrs["disabled"] = true;
         }
-        else
+        else if (IsItemDisabled)
         {
-            if (IsTabDisabled)
-                attrs["aria-disabled"] = "true";
+            attrs["aria-disabled"] = "true";
         }
 
-        SetDataState(attrs, IsSelected, "active", "inactive");
-        SetDataFlag(attrs, "disabled", IsTabDisabled);
+        if (TabsContext is not null)
+        {
+            attrs["data-bh-item"] = TabsContext.Tabs.Key;
+            var vertical = TabsContext.LayoutOrientation == BhOrientation.Vertical;
+            attrs[BhKeyboard.KeysAttribute] = (vertical ? "ArrowUp ArrowDown" : "ArrowLeft ArrowRight") + " Home End"
+                + (TabsContext.Manual || !isButton ? " Enter Space" : string.Empty);
+            SetDataValue(attrs, "orientation", TabsContext.LayoutOrientation.ToAttribute());
+        }
 
+        SetDataState(attrs, selected, "active", "inactive");
+        SetDataFlag(attrs, "selected", selected);
+        SetDataFlag(attrs, "disabled", IsItemDisabled);
         return attrs;
     }
 
-    // ── Event handling ───────────────────────────────────────────────────────
-
     private Task HandleClick(MouseEventArgs _)
-    {
-        if (IsTabDisabled) return Task.CompletedTask;
-        return BhTabsContext?.SelectAsync(_index) ?? Task.CompletedTask;
-    }
+        => IsItemDisabled || TabsContext is null ? Task.CompletedTask : TabsContext.Group.SelectAsync(this);
 
-    private Task HandleKeyDown(KeyboardEventArgs args)
+    private Task HandleKeyDown(KeyboardEventArgs e)
     {
-        return BhTabsContext?.HandleKeyDownAsync(_index, args) ?? Task.CompletedTask;
+        if (TabsContext is null) return Task.CompletedTask;
+        if (e.Key is "Enter" or " " && !TabsContext.Manual)
+            return Tag.Equals("button", StringComparison.OrdinalIgnoreCase) ? Task.CompletedTask : HandleClick(new MouseEventArgs());
+        return TabsContext.Group.HandleKeyDownAsync(this, e);
     }
 }

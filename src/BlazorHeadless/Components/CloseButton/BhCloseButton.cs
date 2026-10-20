@@ -119,10 +119,12 @@ public class BhCloseButton : BhComponentBase
         {
             attrs["role"] = "button";
             attrs["tabindex"] = Disabled ? -1 : 0;
+            attrs[BhKeyboard.KeysAttribute] = "Enter Space";
             if (Disabled)
                 attrs["aria-disabled"] = "true";
         }
 
+        attrs["data-bh-interactive"] = "";
         SetDataFlag(attrs, "disabled", Disabled);
 
         return attrs;

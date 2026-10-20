@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Slider — BlazorHeadless</title>
+    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header class="site-header">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <a class="brand" href="../index.html">
+            <span class="brand-logo">Bh</span>
+            <span>BlazorHeadless</span>
+        </a>
+        <span class="header-spacer"></span>
+        <a class="header-link" href="https://github.com/msynk/BlazorHeadless" target="_blank" rel="noreferrer">GitHub</a>
+    </header>
+    <div class="sidebar-overlay"></div>
+    <div class="site">
+        <aside class="sidebar">
+            <h3>Documentation</h3><ul>
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../getting-started.html">Getting started</a></li>
+    </ul>
+            <h3>Components</h3><ul>
+            <li><a href="../components/accessibility.html">Accessibility Utilities</a></li>
+            <li><a href="../components/accordion.html">Accordion</a></li>
+            <li><a href="../components/alert-dialog.html">Alert Dialog</a></li>
+            <li><a href="../components/aspect-ratio.html">Aspect Ratio</a></li>
+            <li><a href="../components/avatar.html">Avatar</a></li>
+            <li><a href="../components/button.html">Button</a></li>
+            <li><a href="../components/checkbox.html">Checkbox</a></li>
+            <li><a href="../components/close-button.html">CloseButton</a></li>
+            <li><a href="../components/collapsible.html">Collapsible</a></li>
+            <li><a href="../components/combobox.html">Combobox</a></li>
+            <li><a href="../components/command.html">Command Palette</a></li>
+            <li><a href="../components/data-interactive.html">DataInteractive</a></li>
+            <li><a href="../components/dialog.html">Dialog</a></li>
+            <li><a href="../components/disclosure.html">Disclosure</a></li>
+            <li><a href="../components/field.html">Field / Input</a></li>
+            <li><a href="../components/fieldset.html">Fieldset</a></li>
+            <li><a href="../components/focus-trap.html">FocusTrap</a></li>
+            <li><a href="../components/grid.html">Grid / TreeGrid</a></li>
+            <li><a href="../components/hover-card.html">Hover Card</a></li>
+            <li><a href="../components/listbox.html">Listbox</a></li>
+            <li><a href="../components/menu.html">Menu</a></li>
+            <li><a href="../components/menubar.html">Menubar</a></li>
+            <li><a href="../components/popover.html">Popover</a></li>
+            <li><a href="../components/portal.html">Portal</a></li>
+            <li><a href="../components/progress.html">Progress / Meter</a></li>
+            <li><a href="../components/radiogroup.html">Radio Group</a></li>
+            <li><a href="../components/slider.html" class="active">Slider</a></li>
+            <li><a href="../components/sortable.html">Sortable</a></li>
+            <li><a href="../components/switch.html">Switch</a></li>
+            <li><a href="../components/tabs.html">Tabs</a></li>
+            <li><a href="../components/toast.html">Toast</a></li>
+            <li><a href="../components/toggle-group.html">Toggle / Toggle Group</a></li>
+            <li><a href="../components/toolbar.html">Toolbar</a></li>
+            <li><a href="../components/tooltip.html">Tooltip</a></li>
+            <li><a href="../components/transition.html">Transition</a></li>
+            <li><a href="../components/tree.html">Tree View</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+        <h1>Slider</h1>
+        <p class="lead">Pick a value — or a range with several thumbs — within a minimum and maximum, by pointer or keyboard.</p>
+        <h2 id="single-value">Single value</h2>
+        <p>Follows the WAI-ARIA Slider pattern: each <code>BhSliderThumb</code> is a <code>role="slider"</code> with <code>aria-valuenow</code>/<code>min</code>/<code>max</code>. Click or drag anywhere on the track, or focus the thumb and use the arrow keys (± <code>Step</code>), <kbd>PageUp</kbd> / <kbd>PageDown</kbd> or <kbd>Shift</kbd>+arrows (± <code>LargeStep</code>) and <kbd>Home</kbd> / <kbd>End</kbd>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Value="volume" class="slider"&gt;
+    &lt;BhSliderTrack class="slider-track"&gt;
+        &lt;BhSliderRange class="slider-range" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Volume" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="slider-value"&gt;Volume: &lt;strong&gt;@volume&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private double volume = 50;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Demo layout */
+.slider-demo { display: grid; gap: 1rem; width: 100%; }
+
+.slider-value { margin: 0; font-size: 0.85rem; color: #71717a; }
+.slider-value strong { color: #18181b; font-weight: 600; font-variant-numeric: tabular-nums; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Value="volume"
+          class="relative flex h-5 w-full max-w-xs cursor-pointer touch-none select-none items-center"&gt;
+    &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+        @* The range gets position:absolute + left/right inline; inset-0 fills the height. *@
+        &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb aria-label="Volume"
+                   class="top-1/2 -mt-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;Volume: &lt;strong class="font-semibold tabular-nums text-zinc-900"&gt;@volume&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private double volume = 50;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="range-with-two-thumbs">Range with two thumbs</h2>
+        <p>Bind <code>@@bind-Values</code> and render one thumb per value (Multi-Thumb Slider pattern). Thumbs can't cross; <code>MinStepsBetweenThumbs</code> keeps them apart. <code>ValueText</code> formats <code>aria-valuetext</code> so screen readers hear "$200" instead of "200". <code>BhSliderRange</code> fills the span between the thumbs.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Values="price" Max="1000" Step="10" MinStepsBetweenThumbs="10"
+          ValueText="@(v =&gt; $"${v:N0}")" class="slider"&gt;
+    &lt;BhSliderTrack class="slider-track"&gt;
+        &lt;BhSliderRange class="slider-range" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Minimum price" /&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Maximum price" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="slider-value"&gt;Price: &lt;strong&gt;@($"${price[0]:N0} – ${price[1]:N0}")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private IReadOnlyList&lt;double&gt; price = [200, 600];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Demo layout */
+.slider-demo { display: grid; gap: 1rem; width: 100%; }
+
+.slider-value { margin: 0; font-size: 0.85rem; color: #71717a; }
+.slider-value strong { color: #18181b; font-weight: 600; font-variant-numeric: tabular-nums; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Values="price" Max="1000" Step="10" MinStepsBetweenThumbs="10"
+          ValueText="@(v =&gt; $"${v:N0}")"
+          class="relative flex h-5 w-full max-w-xs cursor-pointer touch-none select-none items-center"&gt;
+    &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+        &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb aria-label="Minimum price"
+                   class="top-1/2 -mt-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20" /&gt;
+    &lt;BhSliderThumb aria-label="Maximum price"
+                   class="top-1/2 -mt-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;Price: &lt;strong class="font-semibold tabular-nums text-zinc-900"&gt;@($"${price[0]:N0} – ${price[1]:N0}")&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private IReadOnlyList&lt;double&gt; price = [200, 600];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="step-largestep-and-a-thumb-template">Step, LargeStep and a thumb Template</h2>
+        <p><code>Step="0.5"</code> snaps values to half degrees; <code>LargeStep="5"</code> sets the <kbd>PageUp</kbd> / <kbd>PageDown</kbd> / <kbd>Shift</kbd>+arrow jump (default: a tenth of the range). <code>BhSliderThumb</code>'s <code>Template</code> receives the thumb's value — used here for a value bubble.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Value="temperature" Min="10" Max="30" Step="0.5" LargeStep="5"
+          ValueText="@(v =&gt; $"{v:0.0} °C")" class="slider slider-bubbled"&gt;
+    &lt;BhSliderTrack class="slider-track"&gt;
+        &lt;BhSliderRange class="slider-range" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Thermostat"&gt;
+        &lt;Template Context="current"&gt;
+            &lt;span class="slider-bubble"&gt;@current.ToString("0.0")°&lt;/span&gt;
+        &lt;/Template&gt;
+    &lt;/BhSliderThumb&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="slider-value"&gt;Target: &lt;strong&gt;@temperature.ToString("0.0") °C&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private double temperature = 21.5;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Value bubble rendered through the thumb's Template */
+.slider-bubbled { margin-top: 2.25rem; }
+
+.slider-bubble {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.35rem;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Demo layout */
+.slider-demo { display: grid; gap: 1rem; width: 100%; }
+
+.slider-value { margin: 0; font-size: 0.85rem; color: #71717a; }
+.slider-value strong { color: #18181b; font-weight: 600; font-variant-numeric: tabular-nums; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider @bind-Value="temperature" Min="10" Max="30" Step="0.5" LargeStep="5"
+          ValueText="@(v =&gt; $"{v:0.0} °C")"
+          class="relative mt-9 flex h-5 w-full max-w-xs cursor-pointer touch-none select-none items-center"&gt;
+    &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+        &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb aria-label="Thermostat"
+                   class="top-1/2 -mt-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20"&gt;
+        &lt;Template Context="current"&gt;
+            &lt;span class="pointer-events-none absolute bottom-[calc(100%_+_0.5rem)] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-900 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-zinc-50"&gt;@current.ToString("0.0")°&lt;/span&gt;
+        &lt;/Template&gt;
+    &lt;/BhSliderThumb&gt;
+&lt;/BhSlider&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;Target: &lt;strong class="font-semibold tabular-nums text-zinc-900"&gt;@temperature.ToString("0.0") °C&lt;/strong&gt;&lt;/p&gt;
+
+@code {
+    private double temperature = 21.5;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="vertical-orientation">Vertical orientation</h2>
+        <p><code>Orientation="BhOrientation.Vertical"</code> measures the pointer along the height and sets <code>aria-orientation</code>; <kbd>↑</kbd> / <kbd>→</kbd> increase, <kbd>↓</kbd> / <kbd>←</kbd> decrease. Each band is uncontrolled via <code>DefaultValue</code>, with a negative <code>Min</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="slider-eq"&gt;
+    @foreach (var band in bands)
+    {
+        &lt;div class="slider-eq-band"&gt;
+            &lt;BhSlider Orientation="BhOrientation.Vertical" Min="-12" Max="12"
+                      DefaultValue="band.Gain" ValueText="@(v =&gt; $"{v:+0;-0;0} dB")"
+                      class="slider"&gt;
+                &lt;BhSliderTrack class="slider-track"&gt;
+                    &lt;BhSliderRange class="slider-range" /&gt;
+                &lt;/BhSliderTrack&gt;
+                &lt;BhSliderThumb class="slider-thumb" aria-label="@band.Name" /&gt;
+            &lt;/BhSlider&gt;
+            &lt;span class="slider-eq-label" aria-hidden="true"&gt;@band.Name&lt;/span&gt;
+        &lt;/div&gt;
+    }
+&lt;/div&gt;
+
+@code {
+    private readonly (string Name, double Gain)[] bands = [("Bass", 4), ("Mid", -2), ("Treble", 6)];
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Vertical hooks: data-orientation="vertical" on root, track, range and thumb */
+.slider[data-orientation="vertical"] {
+    flex-direction: column;
+    width: 1.25rem;
+    height: 10rem;
+}
+
+.slider-track[data-orientation="vertical"] { width: 0.375rem; }
+.slider-thumb[data-orientation="vertical"] { left: 50%; margin-left: -0.625rem; }
+
+/* Equalizer layout */
+.slider-eq {
+    display: flex;
+    gap: 2rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.slider-eq-band {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+}
+
+.slider-eq-label { font-size: 0.8rem; font-weight: 500; color: #52525b; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;div class="flex gap-8 px-3 py-2"&gt;
+    @foreach (var band in bands)
+    {
+        &lt;div class="grid justify-items-center gap-3"&gt;
+            &lt;BhSlider Orientation="BhOrientation.Vertical" Min="-12" Max="12"
+                      DefaultValue="band.Gain" ValueText="@(v =&gt; $"{v:+0;-0;0} dB")"
+                      class="relative flex h-40 w-5 cursor-pointer touch-none select-none flex-col items-center"&gt;
+                &lt;BhSliderTrack class="w-1.5 rounded-full bg-zinc-200"&gt;
+                    &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600" /&gt;
+                &lt;/BhSliderTrack&gt;
+                &lt;BhSliderThumb aria-label="@band.Name"
+                               class="left-1/2 -ml-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20" /&gt;
+            &lt;/BhSlider&gt;
+            &lt;span class="text-xs font-medium text-zinc-600" aria-hidden="true"&gt;@band.Name&lt;/span&gt;
+        &lt;/div&gt;
+    }
+&lt;/div&gt;
+
+@code {
+    private readonly (string Name, double Gain)[] bands = [("Bass", 4), ("Mid", -2), ("Treble", 6)];
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="in-a-field-with-onvaluecommit">In a field, with OnValueCommit</h2>
+        <p>Inside a <code>BhField</code> the thumb is labelled by <code>BhLabel</code> (<code>aria-labelledby</code>) and described by <code>BhDescription</code>; clicking the label focuses the thumb. <code>@@bind-Value</code> updates live while dragging, whereas <code>OnValueCommit</code> fires once on pointer up or per key press — the place to save.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="slider-field"&gt;
+    &lt;BhLabel class="slider-label"&gt;Brightness&lt;/BhLabel&gt;
+    &lt;BhSlider @bind-Value="brightness" OnValueCommit="v =&gt; committed = v[0]"
+              ValueText="@(v =&gt; $"{v}%")" class="slider"&gt;
+        &lt;BhSliderTrack class="slider-track"&gt;
+            &lt;BhSliderRange class="slider-range" /&gt;
+        &lt;/BhSliderTrack&gt;
+        @* No aria-label needed: the field's label names the thumb. *@
+        &lt;BhSliderThumb class="slider-thumb" /&gt;
+    &lt;/BhSlider&gt;
+    &lt;BhDescription class="slider-description"&gt;Saved when you release the thumb or press a key.&lt;/BhDescription&gt;
+&lt;/BhField&gt;
+
+&lt;p class="slider-value"&gt;
+    Live: &lt;strong&gt;@brightness%&lt;/strong&gt; · Committed: &lt;strong&gt;@committed%&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private double brightness = 70;
+    private double committed = 70;
+}</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* BhField + BhLabel + BhDescription */
+.slider-field {
+    display: grid;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 20rem;
+}
+
+.slider-label       { font-size: 0.875rem; font-weight: 600; color: #18181b; }
+.slider-description { margin: 0; font-size: 0.8rem; color: #71717a; }
+
+/* Demo layout */
+.slider-demo { display: grid; gap: 1rem; width: 100%; }
+
+.slider-value { margin: 0; font-size: 0.85rem; color: #71717a; }
+.slider-value strong { color: #18181b; font-weight: 600; font-variant-numeric: tabular-nums; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhField class="grid w-full max-w-xs gap-2.5"&gt;
+    &lt;BhLabel class="text-sm font-semibold text-zinc-900"&gt;Brightness&lt;/BhLabel&gt;
+    &lt;BhSlider @bind-Value="brightness" OnValueCommit="v =&gt; committed = v[0]"
+              ValueText="@(v =&gt; $"{v}%")"
+              class="relative flex h-5 w-full cursor-pointer touch-none select-none items-center"&gt;
+        &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+            &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600" /&gt;
+        &lt;/BhSliderTrack&gt;
+        @* No aria-label needed: the field's label names the thumb. *@
+        &lt;BhSliderThumb class="top-1/2 -mt-2.5 block size-5 cursor-grab rounded-full border-2 border-blue-600 bg-white shadow outline-none transition-shadow hover:ring-4 hover:ring-blue-600/15 focus-visible:ring-4 focus-visible:ring-blue-600/35 data-dragging:cursor-grabbing data-dragging:ring-[6px] data-dragging:ring-blue-600/20" /&gt;
+    &lt;/BhSlider&gt;
+    &lt;BhDescription class="m-0 text-xs text-zinc-500"&gt;Saved when you release the thumb or press a key.&lt;/BhDescription&gt;
+&lt;/BhField&gt;
+
+&lt;p class="m-0 text-sm text-zinc-500"&gt;
+    Live: &lt;strong class="font-semibold tabular-nums text-zinc-900"&gt;@brightness%&lt;/strong&gt; · Committed: &lt;strong class="font-semibold tabular-nums text-zinc-900"&gt;@committed%&lt;/strong&gt;
+&lt;/p&gt;
+
+@code {
+    private double brightness = 70;
+    private double committed = 70;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <h2 id="disabled">Disabled</h2>
+        <p><code>Disabled="true"</code> ignores pointer and keys, takes the thumbs out of the tab order (<code>tabindex="-1"</code>, <code>aria-disabled="true"</code>) and adds <code>data-disabled</code> to every part. The range below is uncontrolled via <code>DefaultValues</code>.</p>
+        <div class="example">
+            <div class="example-header">
+                <span class="example-title">Example</span>
+                <div class="example-tabs"><button class="example-tab active" data-tab="css">CSS</button><button class="example-tab" data-tab="tw">Tailwind</button></div>
+            </div>
+            <div class="example-panel active" data-tab="css">
+                <h4 class="panel-label">Razor</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider DefaultValue="40" Disabled="true" class="slider"&gt;
+    &lt;BhSliderTrack class="slider-track"&gt;
+        &lt;BhSliderRange class="slider-range" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Locked volume" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;BhSlider DefaultValues="@(new double[] { 20, 70 })" Disabled="true" class="slider"&gt;
+    &lt;BhSliderTrack class="slider-track"&gt;
+        &lt;BhSliderRange class="slider-range" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Locked minimum" /&gt;
+    &lt;BhSliderThumb class="slider-thumb" aria-label="Locked maximum" /&gt;
+&lt;/BhSlider&gt;</code></pre>
+                </div>
+                <h4 class="panel-label">CSS</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-css">/* All styles are consumer-authored — the library ships zero CSS */
+
+/* BhSlider only adds its default inline layout when you pass neither class
+   nor style, so a styled root must be position: relative itself — thumbs are
+   absolutely positioned against it. */
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 20rem;
+    height: 1.25rem;
+    touch-action: none;   /* keep touch drags on the slider */
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Track (inline: position: relative; flex-grow: 1) */
+.slider-track {
+    border-radius: 999px;
+    background: #e4e4e7;
+}
+
+.slider-track[data-orientation="horizontal"] { height: 0.375rem; }
+
+/* Range (inline: position: absolute + two edges) */
+.slider-range {
+    inset: 0;             /* inline left/right (or top/bottom) override two of these */
+    border-radius: inherit;
+    background: #2563eb;
+}
+
+/* Thumb (inline: position: absolute + left % + translate) */
+.slider-thumb {
+    display: block;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
+    cursor: grab;
+    outline: none;
+    transition: box-shadow 120ms ease;
+}
+
+/* Center the thumb across the track (the inline transform handles the other axis). */
+.slider-thumb[data-orientation="horizontal"] { top: 50%; margin-top: -0.625rem; }
+
+.slider-thumb:hover         { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12); }
+.slider-thumb:focus-visible { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35); }
+.slider-thumb[data-dragging] {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Hooks emitted when Disabled="true" (root, track, range and thumbs) */
+.slider[data-disabled]       { opacity: 0.5; cursor: not-allowed; }
+.slider-range[data-disabled] { background: #a1a1aa; }
+
+.slider-thumb[data-disabled] {
+    border-color: #a1a1aa;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.slider-demo { display: grid; gap: 1rem; width: 100%; }</code></pre>
+                </div>
+            </div>
+            <div class="example-panel" data-tab="tw">
+                <h4 class="panel-label">Razor + Tailwind</h4>
+                <div class="code-wrap">
+                    <button class="copy-btn" type="button">Copy</button>
+                    <pre class="code-block"><code class="language-markup">&lt;BhSlider DefaultValue="40" Disabled="true"
+          class="relative flex h-5 w-full max-w-xs cursor-pointer touch-none select-none items-center data-disabled:cursor-not-allowed data-disabled:opacity-50"&gt;
+    &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+        &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600 data-disabled:bg-zinc-400" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb aria-label="Locked volume"
+                   class="top-1/2 -mt-2.5 block size-5 rounded-full border-2 border-blue-600 bg-white shadow outline-none data-disabled:cursor-not-allowed data-disabled:border-zinc-400 data-disabled:shadow-none" /&gt;
+&lt;/BhSlider&gt;
+
+&lt;BhSlider DefaultValues="@(new double[] { 20, 70 })" Disabled="true"
+          class="relative flex h-5 w-full max-w-xs cursor-pointer touch-none select-none items-center data-disabled:cursor-not-allowed data-disabled:opacity-50"&gt;
+    &lt;BhSliderTrack class="h-1.5 rounded-full bg-zinc-200"&gt;
+        &lt;BhSliderRange class="inset-0 rounded-full bg-blue-600 data-disabled:bg-zinc-400" /&gt;
+    &lt;/BhSliderTrack&gt;
+    &lt;BhSliderThumb aria-label="Locked minimum"
+                   class="top-1/2 -mt-2.5 block size-5 rounded-full border-2 border-blue-600 bg-white shadow outline-none data-disabled:cursor-not-allowed data-disabled:border-zinc-400 data-disabled:shadow-none" /&gt;
+    &lt;BhSliderThumb aria-label="Locked maximum"
+                   class="top-1/2 -mt-2.5 block size-5 rounded-full border-2 border-blue-600 bg-white shadow outline-none data-disabled:cursor-not-allowed data-disabled:border-zinc-400 data-disabled:shadow-none" /&gt;
+&lt;/BhSlider&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+        <nav class="pager">
+            <a class="prev" href="radiogroup.html">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">Radio Group</span>
+        </a>
+            <a class="next" href="sortable.html">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">Sortable</span>
+        </a>
+        </nav>
+        </main>
+    </div>
+    <script src="../assets/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

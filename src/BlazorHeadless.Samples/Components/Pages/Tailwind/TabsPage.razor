@@ -108,19 +108,25 @@
         <LiveContent>
             <BhTabGroup class="flex w-full flex-col gap-4">
                 <BhTabList class="flex border-b border-zinc-200 gap-1">
-                    <BhTab Context="t"
+                    <BhTab
                            class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-                        <span>Messages</span>
-                        <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+                        <Template Context="t">
+                            <span>Messages</span>
+                            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+                        </Template>
                     </BhTab>
-                    <BhTab Context="t"
+                    <BhTab
                            class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-                        <span>Mentions</span>
-                        <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+                        <Template Context="t">
+                            <span>Mentions</span>
+                            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+                        </Template>
                     </BhTab>
-                    <BhTab Context="t"
+                    <BhTab
                            class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-                        <span>All</span>
+                        <Template Context="t">
+                            <span>All</span>
+                        </Template>
                     </BhTab>
                 </BhTabList>
                 <BhTabPanels class="mt-2">
@@ -251,19 +257,25 @@
     private const string _renderContextCode = """
 <BhTabGroup class="flex w-full flex-col gap-4">
     <BhTabList class="flex border-b border-zinc-200 gap-1">
-        <BhTab Context="t"
+        <BhTab
                class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-            <span>Messages</span>
-            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+            <Template Context="t">
+                <span>Messages</span>
+                <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">12</span>
+            </Template>
         </BhTab>
-        <BhTab Context="t"
+        <BhTab
                class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-            <span>Mentions</span>
-            <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+            <Template Context="t">
+                <span>Mentions</span>
+                <span class="@($"ml-2 rounded-full px-1.5 py-0.5 text-xs font-semibold {(t.IsSelected ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-600")}")">3</span>
+            </Template>
         </BhTab>
-        <BhTab Context="t"
+        <BhTab
                class="cursor-pointer border-0 bg-transparent border-b-2 border-transparent px-4 py-2.5 text-sm font-medium text-zinc-500 outline-none transition-colors box-border hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 focus-visible:rounded data-state-active:text-blue-600 data-state-active:border-blue-600 data-disabled:opacity-40 data-disabled:cursor-not-allowed">
-            <span>All</span>
+            <Template Context="t">
+                <span>All</span>
+            </Template>
         </BhTab>
     </BhTabList>
     <BhTabPanels class="mt-2">

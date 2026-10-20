@@ -1,19 +1,23 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
 
 namespace BlazorHeadless;
 
 /// <summary>
 /// Base class for all headless components. Provides the shared infrastructure:
 /// polymorphic element rendering via <see cref="As"/>, automatic ID generation,
-/// element reference forwarding via <see cref="Ref"/>, and attribute merging
-/// that combines internal accessibility/data attributes with user-supplied ones.
+/// element reference forwarding via <see cref="Ref"/>, attribute merging that
+/// combines internal accessibility/data attributes with user-supplied ones, and
+/// controlled/uncontrolled detection via <see cref="IsProvided"/>.
 ///
-/// Design principles (aligned with Radix UI, Headless UI, and Ark UI):
+/// Design principles (aligned with Radix UI, React Aria, Headless UI, and Ark UI):
 ///  - Zero visual opinion: no CSS, no styles, only semantic HTML and data-* hooks
 ///  - Accessibility built-in: ARIA attributes managed internally
 ///  - Polymorphic rendering: any HTML element via the As parameter
 ///  - Styling hooks via data attributes: [data-state], [data-disabled], etc.
 ///  - Attribute merging: class and style concatenate; everything else user-wins
+///  - Controlled and uncontrolled: a parameter is "controlled" when it is supplied
 ///
 /// Subclass authoring pattern:
 /// <code>
@@ -35,6 +39,21 @@ namespace BlazorHeadless;
 public abstract class BhComponentBase : ComponentBase
 {
     private string? _componentId;
+    private BhInterop? _interop;
+    private readonly HashSet<string> _providedParameters = new(StringComparer.Ordinal);
+
+    [Inject] private IServiceProvider Services { get; set; } = default!;
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+
+    /// <summary>
+    /// The JS runtime wrapper. Uses the registered <see cref="BhInterop"/> service
+    /// when <c>AddBlazorHeadless()</c> was called, otherwise a shared per-runtime
+    /// instance — so components work without any service registration.
+    /// </summary>
+    protected BhInterop Interop => _interop ??= BhInterop.Resolve(Services, JSRuntime);
+
+    /// <summary>Resolves an optional service.</summary>
+    protected T? GetService<T>() where T : class => Services.GetService<T>();
 
     /// <summary>
     /// Override the rendered HTML element. Each component declares its own
@@ -77,7 +96,40 @@ public abstract class BhComponentBase : ComponentBase
     /// <summary>
     /// The resolved HTML id: user-supplied <see cref="Id"/> or auto-generated.
     /// </summary>
-    protected string ComponentId => Id ?? (_componentId ??= GenerateId());
+    protected string ComponentId => Id ?? (_componentId ??= BhId.New());
+
+    /// <summary>The most recently captured root element reference (when the component captures one).</summary>
+    protected ElementReference Element { get; private set; }
+
+    /// <summary>
+    /// An element-reference capture callback that records <see cref="Element"/>
+    /// and forwards to the consumer's <see cref="Ref"/>.
+    /// </summary>
+    protected void CaptureElement(ElementReference element)
+    {
+        Element = element;
+        Ref?.Invoke(element);
+    }
+
+    /// <inheritdoc />
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _providedParameters.Clear();
+        foreach (var parameter in parameters)
+        {
+            if (!parameter.Cascading)
+                _providedParameters.Add(parameter.Name);
+        }
+        return base.SetParametersAsync(parameters);
+    }
+
+    /// <summary>
+    /// Returns <c>true</c> when the consumer explicitly supplied the parameter
+    /// named <paramref name="parameterName"/> in the latest render. This is how
+    /// components decide between controlled and uncontrolled mode — it works for
+    /// value types and for "controlled <c>null</c>", unlike null checks.
+    /// </summary>
+    protected bool IsProvided(string parameterName) => _providedParameters.Contains(parameterName);
 
     // ── Attribute building ───────────────────────────────────────────────────
 
@@ -113,6 +165,12 @@ public abstract class BhComponentBase : ComponentBase
     /// </summary>
     protected Dictionary<string, object> MergeAttributes(Dictionary<string, object> internalAttributes)
         => BhAttributeUtilities.Merge(internalAttributes, AdditionalAttributes);
+
+    /// <summary>Returns the consumer-supplied value of an unmatched attribute, if any.</summary>
+    protected string? GetAdditionalAttribute(string name)
+        => AdditionalAttributes is not null && AdditionalAttributes.TryGetValue(name, out var value)
+            ? value?.ToString()
+            : null;
 
     // ── Data-attribute helpers ────────────────────────────────────────────────
 
@@ -157,8 +215,7 @@ public abstract class BhComponentBase : ComponentBase
         string value)
         => BhAttributeUtilities.SetDataAttribute(attrs, name, value);
 
-    // ── Internals ─────────────────────────────────────────────────────────────
-
-    private static string GenerateId()
-        => $"h-{Guid.NewGuid().ToString("N")[..8]}";
+    /// <summary>Sets an ARIA boolean attribute to <c>"true"</c>/<c>"false"</c>.</summary>
+    protected static void SetAriaBool(Dictionary<string, object> attrs, string name, bool value)
+        => attrs[name] = value ? "true" : "false";
 }

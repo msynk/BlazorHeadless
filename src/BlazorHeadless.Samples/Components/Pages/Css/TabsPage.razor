@@ -137,16 +137,22 @@
         <LiveContent>
             <BhTabGroup class="tabs">
                 <BhTabList class="tab-list">
-                    <BhTab class="tab" Context="t">
-                        <span>Messages</span>
-                        <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+                    <BhTab class="tab">
+                        <Template Context="t">
+                            <span>Messages</span>
+                            <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+                        </Template>
                     </BhTab>
-                    <BhTab class="tab" Context="t">
-                        <span>Mentions</span>
-                        <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+                    <BhTab class="tab">
+                        <Template Context="t">
+                            <span>Mentions</span>
+                            <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+                        </Template>
                     </BhTab>
-                    <BhTab class="tab" Context="t">
-                        <span>All</span>
+                    <BhTab class="tab">
+                        <Template Context="t">
+                            <span>All</span>
+                        </Template>
                     </BhTab>
                 </BhTabList>
                 <BhTabPanels class="tab-panels">
@@ -289,16 +295,22 @@
     private const string _renderContextCode = """
 <BhTabGroup class="tabs">
     <BhTabList class="tab-list">
-        <BhTab class="tab" Context="t">
-            <span>Messages</span>
-            <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+        <BhTab class="tab">
+            <Template Context="t">
+                <span>Messages</span>
+                <span class="badge @(t.IsSelected ? "badge-active" : "")">12</span>
+            </Template>
         </BhTab>
-        <BhTab class="tab" Context="t">
-            <span>Mentions</span>
-            <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+        <BhTab class="tab">
+            <Template Context="t">
+                <span>Mentions</span>
+                <span class="badge @(t.IsSelected ? "badge-active" : "")">3</span>
+            </Template>
         </BhTab>
-        <BhTab class="tab" Context="t">
-            <span>All</span>
+        <BhTab class="tab">
+            <Template Context="t">
+                <span>All</span>
+            </Template>
         </BhTab>
     </BhTabList>
     <BhTabPanels class="tab-panels">

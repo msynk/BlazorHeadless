@@ -5,84 +5,62 @@ using Microsoft.AspNetCore.Components.Web;
 namespace BlazorHeadless;
 
 /// <summary>
-/// The interactive trigger button for a <see cref="BhCollapsible"/>.
-/// Clicking it toggles the associated <see cref="BhCollapsibleContent"/>.
-///
-/// <para><b>Behaviour:</b></para>
-/// <list type="bullet">
-///   <item>Renders as a native <c>&lt;button type="button"&gt;</c> by default.</item>
-///   <item>Sets <c>aria-expanded</c> and <c>aria-controls</c> automatically.</item>
-///   <item>Emits <c>data-state="open"|"closed"</c> and <c>data-disabled</c> for CSS hooks.</item>
-///   <item>
-///     <b>Render-prop context</b> — <see cref="ChildContent"/> receives a
-///     <see cref="BhCollapsibleRenderContext"/> for state-driven rendering
-///     (e.g. a rotating chevron).
-///   </item>
-/// </list>
+/// The button that toggles a <see cref="BhCollapsible"/>. Renders a native
+/// <c>&lt;button&gt;</c> with <c>aria-expanded</c> and <c>aria-controls</c>.
 /// </summary>
 public class BhCollapsibleTrigger : BhComponentBase
 {
     [CascadingParameter]
-    private BhCollapsibleContext BhCollapsibleContext { get; set; } = default!;
+    private BhCollapsibleContext? CollapsibleContext { get; set; }
+
+    /// <summary>The content.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
-    /// Content template receiving <see cref="BhCollapsibleRenderContext"/> for state-driven rendering.
-    /// Plain content works equally well.
+    /// Content that receives the render state (<c>BhCollapsibleRenderContext</c>). Use it instead of
+    /// <see cref="ChildContent"/> when the markup depends on that state:
+    /// <c>&lt;Template Context="state"&gt;…&lt;/Template&gt;</c>.
     /// </summary>
     [Parameter]
-    public RenderFragment<BhCollapsibleRenderContext>? ChildContent { get; set; }
+    public RenderFragment<BhCollapsibleRenderContext>? Template { get; set; }
 
     protected override string DefaultTag => "button";
 
-    private bool IsOpen => BhCollapsibleContext?.IsOpen ?? false;
-    private bool IsDisabled => BhCollapsibleContext?.Disabled ?? false;
-
-    private BhCollapsibleRenderContext RenderContext => new()
-    {
-        IsOpen = IsOpen,
-        Close = BhCollapsibleContext?.Close ?? (() => { }),
-    };
+    private bool IsOpen => CollapsibleContext?.IsOpen ?? false;
+    private bool IsDisabled => CollapsibleContext?.Disabled ?? false;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, Tag);
-        builder.AddAttribute(10, "id", BhCollapsibleContext?.TriggerId ?? ComponentId);
+        builder.AddAttribute(10, "id", CollapsibleContext?.TriggerId ?? ComponentId);
         builder.AddMultipleAttributes(20, GetFinalAttributes());
-
         builder.AddAttribute(30, "onclick",
             EventCallback.Factory.Create<MouseEventArgs>(this, HandleClick));
-
-        if (Ref is not null)
-            builder.AddElementReferenceCapture(40, Ref);
-
-        if (ChildContent is not null)
-            builder.AddContent(50, ChildContent(RenderContext));
-
+        if (!Tag.Equals("button", StringComparison.OrdinalIgnoreCase))
+            builder.AddAttribute(31, "onkeydown", EventCallback.Factory.Create<KeyboardEventArgs>(this, HandleKeyDown));
+        builder.AddElementReferenceCapture(40, CaptureElement);
+        if (Template is not null || ChildContent is not null)
+            builder.AddContent(50, BhContent.Pick(Template, ChildContent, new BhCollapsibleRenderContext
+            {
+                IsOpen = IsOpen,
+                Close = CollapsibleContext?.Close ?? (() => { }),
+            }));
         builder.CloseElement();
     }
 
     protected override Dictionary<string, object> BuildComponentAttributes()
     {
         var attrs = base.BuildComponentAttributes();
-
-        attrs["type"] = "button";
-        attrs["aria-expanded"] = IsOpen ? "true" : "false";
-
-        if (BhCollapsibleContext?.ContentId is not null)
-            attrs["aria-controls"] = BhCollapsibleContext.ContentId;
-
-        if (IsDisabled)
-            attrs["disabled"] = true;
-
+        BhToggleAttributes.ApplyTrigger(attrs, Tag, IsOpen, IsDisabled, CollapsibleContext?.ContentId);
         SetDataState(attrs, IsOpen);
         SetDataFlag(attrs, "disabled", IsDisabled);
-
         return attrs;
     }
 
-    private void HandleClick(MouseEventArgs _)
-    {
-        if (IsDisabled) return;
-        BhCollapsibleContext?.Toggle();
-    }
+    private Task HandleClick(MouseEventArgs _)
+        => IsDisabled ? Task.CompletedTask : CollapsibleContext?.ToggleAsync() ?? Task.CompletedTask;
+
+    private Task HandleKeyDown(KeyboardEventArgs e)
+        => e.Key is "Enter" or " " ? HandleClick(new MouseEventArgs()) : Task.CompletedTask;
 }
