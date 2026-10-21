@@ -29,17 +29,16 @@ internal sealed class BhDelayedAction : IDisposable
 
     private async Task RunAsync(int delayMs, CancellationTokenSource cts, Func<Task> action)
     {
-        try
-        {
-            await Task.Delay(delayMs, cts.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
+        // Wait off the dispatcher: a cancelled delay (every restart) must not queue work on the renderer.
+        await Task.Delay(delayMs, cts.Token).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
         if (cts.IsCancellationRequested) return;
-        if (ReferenceEquals(_cts, cts)) _cts = null;
-        await _dispatch(action);
+        await _dispatch(() =>
+        {
+            // Re-checked on the dispatcher: Cancel() may have run while this was queued.
+            if (cts.IsCancellationRequested) return Task.CompletedTask;
+            if (ReferenceEquals(_cts, cts)) _cts = null;
+            return action();
+        });
     }
 
     /// <summary>Cancels the pending run, if any.</summary>

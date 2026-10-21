@@ -153,9 +153,10 @@ public class BhMenuSub : ComponentBase, IDisposable
     {
         try
         {
-            if (delay > 0) await Task.Delay(delay, token);
+            // Wait off the dispatcher: a cancelled timer must not queue work on the renderer.
+            if (delay > 0) await Task.Delay(delay, token).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
             if (token.IsCancellationRequested) return;
-            await InvokeAsync(action);
+            await InvokeAsync(() => token.IsCancellationRequested ? Task.CompletedTask : action());
         }
         catch (OperationCanceledException)
         {
