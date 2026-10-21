@@ -137,10 +137,10 @@
                         Empty cart (assertive)
                     </BhButton>
                 </div>
-                <ol class="m-0 list-decimal rounded-lg bg-zinc-900 py-2.5 pl-8 pr-3.5 font-mono text-xs text-zinc-300" aria-label="Announcement log">
+                <ol class="m-0 list-decimal rounded-lg bg-(--color-code-bg) py-2.5 pl-8 pr-3.5 font-mono text-xs text-[#d4d4d8]" aria-label="Announcement log">
                     @if (announcements.Count == 0)
                     {
-                        <li class="-ml-4 list-none text-zinc-400">Nothing announced yet.</li>
+                        <li class="-ml-4 list-none text-[#a1a1aa]">Nothing announced yet.</li>
                     }
                     @foreach (var line in announcements)
                     {

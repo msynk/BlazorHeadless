@@ -7,7 +7,7 @@
     width: 100%;
     height: 0.6rem;
     border-radius: 999px;
-    background: #e4e4e7;
+    background: var(--color-fill-strong);
 }
 
 /* --bh-progress is a unitless 0–100 number set inline by BhProgress and
@@ -16,7 +16,7 @@
     width: calc(var(--bh-progress, 0) * 1%);
     height: 100%;
     border-radius: inherit;
-    background: #2563eb;
+    background: var(--color-primary);
     transition: width 250ms ease, background-color 250ms ease;
 }
 
@@ -40,8 +40,8 @@
 /* ---- Tall bar with the percentage drawn through BhProgress's Template ------ */
 .progress-lg { height: 1.25rem; }
 
-.progress-lg .progress-indicator                         { background: #bfdbfe; }
-.progress-lg .progress-indicator[data-state="complete"]  { background: #bbf7d0; }
+.progress-lg .progress-indicator                         { background: light-dark(#bfdbfe, #1e40af); }
+.progress-lg .progress-indicator[data-state="complete"]  { background: light-dark(#bbf7d0, #166534); }
 
 .progress-percent {
     position: absolute;
@@ -50,7 +50,7 @@
     align-items: center;
     justify-content: flex-end;
     padding: 0 0.6rem;
-    color: #1e3a8a;
+    color: light-dark(#1e3a8a, #93c5fd);
     font-size: 0.72rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -63,9 +63,9 @@
     width: 100%;
     max-width: 24rem;
     padding: 1rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.6rem;
-    background: #fff;
+    background: var(--color-surface);
 }
 
 .progress-header {
@@ -76,10 +76,10 @@
     font-size: 0.875rem;
 }
 
-.progress-label { font-weight: 600; color: #18181b; }
+.progress-label { font-weight: 600; color: var(--color-text); }
 
 .progress-status {
-    color: #71717a;
+    color: var(--color-muted);
     font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
 }
@@ -92,21 +92,21 @@
     display: inline-flex;
     align-items: center;
     padding: 0.35rem 0.75rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.45rem;
-    background: #fff;
-    color: #3f3f46;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
 }
 
-.progress-btn:hover         { background: #f4f4f5; }
-.progress-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.progress-btn:hover         { background: var(--color-fill); }
+.progress-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .progress-btn:disabled      { opacity: 0.5; cursor: not-allowed; }
 
-.progress-btn-primary       { background: #2563eb; border-color: #2563eb; color: #fff; }
-.progress-btn-primary:hover { background: #1d4ed8; }
+.progress-btn-primary       { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.progress-btn-primary:hover { background: var(--color-primary-hover); }
 
 /* ---- BhMeter -------------------------------------------------------------- */
 .meter {
@@ -115,7 +115,7 @@
     width: 100%;
     height: 0.5rem;
     border-radius: 999px;
-    background: #e4e4e7;
+    background: var(--color-fill-strong);
 }
 
 /* --bh-meter (0–100) is set inline on the meter and inherited by the fill. */
@@ -124,13 +124,13 @@
     width: calc(var(--bh-meter) * 1%);
     height: 100%;
     border-radius: inherit;
-    background: #2563eb;
+    background: var(--color-primary);
     transition: width 250ms ease, background-color 250ms ease;
 }
 
 /* data-level="low | optimum | high" (below Low / between / above High) */
 .meter[data-level="low"]  .meter-fill { background: #16a34a; }
-.meter[data-level="high"] .meter-fill { background: #dc2626; }
+.meter[data-level="high"] .meter-fill { background: var(--color-danger); }
 
 .meter-list {
     display: grid;
@@ -154,14 +154,14 @@
 
 .strength-input {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #d4d4d8;
+    border: 1px solid var(--color-border-strong);
     border-radius: 0.45rem;
-    background: #fff;
+    background: var(--color-surface);
     font: inherit;
     font-size: 0.9rem;
 }
 
-.strength-input:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+.strength-input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
 
 .strength-meter {
     display: grid;
@@ -172,11 +172,11 @@
 .strength-segment {
     height: 0.375rem;
     border-radius: 999px;
-    background: #e4e4e7;
+    background: var(--color-fill-strong);
     transition: background-color 200ms ease;
 }
 
-.strength-meter[data-level="low"]     .strength-segment[data-filled] { background: #dc2626; }
+.strength-meter[data-level="low"]     .strength-segment[data-filled] { background: var(--color-danger); }
 .strength-meter[data-level="optimum"] .strength-segment[data-filled] { background: #d97706; }
 .strength-meter[data-level="high"]    .strength-segment[data-filled] { background: #16a34a; }
 

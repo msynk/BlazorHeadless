@@ -10,6 +10,7 @@
 <nav class="nav-menu">
     <div class="nav-brand">
         <a href="" @onclick="OnNavLinkClicked">BlazorHeadless</a>
+        <ThemeToggle Dark="DarkTheme" DarkChanged="DarkThemeChanged" />
     </div>
 
     <div class="nav-section">
@@ -49,6 +50,11 @@
 
 @code {
     [Parameter] public EventCallback OnNavLinkClicked { get; set; }
+
+    /// <summary>Whether the dark theme is active (owned by MainLayout).</summary>
+    [Parameter] public bool DarkTheme { get; set; }
+
+    [Parameter] public EventCallback<bool> DarkThemeChanged { get; set; }
 
     private DemoSection _section;
 

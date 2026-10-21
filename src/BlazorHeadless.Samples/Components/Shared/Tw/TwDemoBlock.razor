@@ -37,7 +37,7 @@
             @if (!string.IsNullOrWhiteSpace(Code))
             {
                 <BhTabPanel class="min-h-0">
-                    <pre class="overflow-x-auto rounded-md bg-zinc-900 p-4 text-xs leading-relaxed text-zinc-300"><code>@Code.Trim('\r', '\n')</code></pre>
+                    <pre class="overflow-x-auto rounded-md bg-(--color-code-bg) p-4 text-xs leading-relaxed text-[#d4d4d8]"><code>@Code.Trim('\r', '\n')</code></pre>
                 </BhTabPanel>
             }
         </BhTabPanels>

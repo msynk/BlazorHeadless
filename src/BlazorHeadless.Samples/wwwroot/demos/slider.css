@@ -27,7 +27,7 @@
 /* ---- Track (inline: position: relative; flex-grow: 1) -------------------- */
 .slider-track {
     border-radius: 999px;
-    background: #e4e4e7;
+    background: var(--color-fill-strong);
 }
 
 .slider-track[data-orientation="horizontal"] { height: 0.375rem; }
@@ -37,10 +37,10 @@
 .slider-range {
     inset: 0;             /* inline left/right (or top/bottom) override two of these */
     border-radius: inherit;
-    background: #2563eb;
+    background: var(--color-primary);
 }
 
-.slider-range[data-disabled] { background: #a1a1aa; }
+.slider-range[data-disabled] { background: var(--color-border-hover); }
 
 /* ---- Thumb (inline: position: absolute + left/bottom % + translate) ------ */
 .slider-thumb {
@@ -48,7 +48,7 @@
     box-sizing: border-box;
     width: 1.25rem;
     height: 1.25rem;
-    border: 2px solid #2563eb;
+    border: 2px solid var(--color-primary);
     border-radius: 999px;
     background: #fff;
     box-shadow: 0 1px 3px rgba(24, 24, 27, 0.25);
@@ -69,7 +69,7 @@
 }
 
 .slider-thumb[data-disabled] {
-    border-color: #a1a1aa;
+    border-color: var(--color-border-hover);
     cursor: not-allowed;
     box-shadow: none;
 }
@@ -84,8 +84,8 @@
     transform: translateX(-50%);
     padding: 0.15rem 0.45rem;
     border-radius: 0.35rem;
-    background: #18181b;
-    color: #fafafa;
+    background: var(--color-inverse);
+    color: var(--color-on-inverse);
     font-size: 0.75rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -101,8 +101,8 @@
     max-width: 20rem;
 }
 
-.slider-label       { font-size: 0.875rem; font-weight: 600; color: #18181b; }
-.slider-description { margin: 0; font-size: 0.8rem; color: #71717a; }
+.slider-label       { font-size: 0.875rem; font-weight: 600; color: var(--color-text); }
+.slider-description { margin: 0; font-size: 0.8rem; color: var(--color-muted); }
 
 /* ---- Equalizer (vertical sliders) ---------------------------------------- */
 .slider-eq {
@@ -117,7 +117,7 @@
     gap: 0.75rem;
 }
 
-.slider-eq-label { font-size: 0.8rem; font-weight: 500; color: #52525b; }
+.slider-eq-label { font-size: 0.8rem; font-weight: 500; color: var(--color-text-tertiary); }
 
 /* ---- Demo layout ----------------------------------------------------------- */
 .slider-demo {
@@ -126,5 +126,5 @@
     width: 100%;
 }
 
-.slider-value { margin: 0; font-size: 0.85rem; color: #71717a; }
-.slider-value strong { color: #18181b; font-weight: 600; font-variant-numeric: tabular-nums; }
+.slider-value { margin: 0; font-size: 0.85rem; color: var(--color-muted); }
+.slider-value strong { color: var(--color-text); font-weight: 600; font-variant-numeric: tabular-nums; }

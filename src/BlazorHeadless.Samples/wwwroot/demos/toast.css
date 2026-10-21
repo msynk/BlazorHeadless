@@ -20,7 +20,7 @@
 
 /* F8 moves focus to the list. */
 .toast-viewport:focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid var(--color-focus);
     outline-offset: 4px;
     border-radius: 0.75rem;
 }
@@ -31,9 +31,9 @@
     align-items: flex-start;
     gap: 0.75rem;
     padding: 0.85rem 0.75rem 0.85rem 1rem;
-    background: #fff;
-    color: #18181b;
-    border: 1px solid #e4e4e7;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
     border-radius: 0.75rem;
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.06);
     font-size: 0.875rem;
@@ -41,7 +41,7 @@
 }
 
 .toast:focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
 
@@ -64,8 +64,8 @@
 
 /* Variant from BhToastOptions.Data (rendered as data-variant by the template). */
 .toast[data-variant="error"] {
-    background: #fef2f2;
-    border-color: #fecaca;
+    background: var(--color-danger-subtle);
+    border-color: var(--color-danger-border);
 }
 
 .toast-icon {
@@ -77,14 +77,14 @@
     height: 1.25rem;
     margin-top: 0.05rem;
     border-radius: 999px;
-    background: #2563eb;
+    background: var(--color-primary);
     color: #fff;
     font-size: 0.7rem;
     font-weight: 700;
 }
 
 .toast[data-variant="success"] .toast-icon { background: #16a34a; }
-.toast[data-variant="error"] .toast-icon   { background: #dc2626; }
+.toast[data-variant="error"] .toast-icon   { background: var(--color-danger); }
 
 .toast-body {
     flex: 1 1 auto;
@@ -95,25 +95,25 @@
 }
 
 .toast-title       { font-weight: 600; }
-.toast-description { color: #52525b; }
-.toast[data-variant="error"] .toast-title { color: #991b1b; }
+.toast-description { color: var(--color-text-tertiary); }
+.toast[data-variant="error"] .toast-title { color: light-dark(#991b1b, #fca5a5); }
 
 .toast-action {
     flex-shrink: 0;
     align-self: center;
     padding: 0.3rem 0.65rem;
-    border: 1px solid #d4d4d8;
+    border: 1px solid var(--color-border-strong);
     border-radius: 0.4rem;
-    background: #fff;
-    color: #18181b;
+    background: var(--color-surface);
+    color: var(--color-text);
     font: inherit;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
 }
 
-.toast-action:hover         { background: #f4f4f5; }
-.toast-action:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.toast-action:hover         { background: var(--color-fill); }
+.toast-action:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 .toast-close {
     flex-shrink: 0;
@@ -126,14 +126,14 @@
     border: 0;
     border-radius: 0.35rem;
     background: transparent;
-    color: #71717a;
+    color: var(--color-muted);
     font-size: 1.1rem;
     line-height: 1;
     cursor: pointer;
 }
 
-.toast-close:hover         { background: #f4f4f5; color: #18181b; }
-.toast-close:focus-visible { outline: 2px solid #2563eb; outline-offset: 1px; }
+.toast-close:hover         { background: var(--color-fill); color: var(--color-text); }
+.toast-close:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
 
 /* ---- Stacked viewport (second toaster with Limit = 3) ----
    Toasts overlap in one grid cell; older ones peek out behind the newest and
@@ -175,7 +175,7 @@
 }
 
 .toast-stack:focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid var(--color-focus);
     outline-offset: 4px;
     border-radius: 0.75rem;
 }
@@ -205,14 +205,14 @@
     justify-content: space-between;
     gap: 0.75rem;
     padding: 0.5rem 0.5rem 0.5rem 0.85rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: #fff;
+    background: var(--color-surface);
     font-size: 0.875rem;
 }
 
 .toast-inbox-empty {
-    color: #71717a;
+    color: var(--color-muted);
     font-size: 0.875rem;
     font-style: italic;
 }

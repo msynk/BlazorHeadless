@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
+    @* Render-blocking on purpose: sets <html data-theme> before the first paint. *@
+    <script src="@Assets["theme.js"]"></script>
     <link rel="stylesheet" href="@Assets["app.css"]" />
     @* Styles of the newer demo pages (plain CSS section), one file per component. *@
     <link rel="stylesheet" href="@Assets["demos/accessibility.css"]" />

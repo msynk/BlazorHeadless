@@ -9,24 +9,24 @@
     width: 100%;
 }
 
-.tree-output { font-size: 0.875rem; color: #71717a; }
-.tree-output strong { color: #18181b; font-weight: 600; }
+.tree-output { font-size: 0.875rem; color: var(--color-muted); }
+.tree-output strong { color: var(--color-text); font-weight: 600; }
 
 .tree-actions { display: flex; gap: 0.5rem; }
 
 .tree-button {
     padding: 0.35rem 0.75rem;
-    border: 1px solid #e4e4e7;
+    border: 1px solid var(--color-border);
     border-radius: 0.375rem;
-    background: #fff;
+    background: var(--color-surface);
     font: inherit;
     font-size: 0.8rem;
     font-weight: 500;
-    color: #18181b;
+    color: var(--color-text);
     cursor: pointer;
 }
-.tree-button:hover         { background: #f4f4f5; }
-.tree-button:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.tree-button:hover         { background: var(--color-fill); }
+.tree-button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 
 /* ── Tree ──────────────────────────────────────────────────────────────── */
 /* BhTree renders <ul role="tree">, BhTreeGroup <ul role="group">. */
@@ -41,11 +41,11 @@
     width: 100%;
     max-width: 22rem;
     padding: 0.375rem;
-    background: #fff;
-    border: 1px solid #e4e4e7;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     font-size: 0.875rem;
-    color: #18181b;
+    color: var(--color-text);
 }
 
 /* <li role="treeitem"> wraps its own row AND its child group, so state styles
@@ -65,13 +65,13 @@
     cursor: pointer;
     user-select: none;
 }
-.tree-row:hover { background: #f4f4f5; }
+.tree-row:hover { background: var(--color-fill); }
 
 /* Roving focus: the focused <li> draws its ring on its own row. */
-.tree-item:focus-visible > .tree-row { outline: 2px solid #2563eb; outline-offset: -2px; }
+.tree-item:focus-visible > .tree-row { outline: 2px solid var(--color-focus); outline-offset: -2px; }
 
 /* aria-selected is emitted in single / multiple selection mode. */
-.tree-item[aria-selected="true"] > .tree-row { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+.tree-item[aria-selected="true"] > .tree-row { background: var(--color-accent-subtle); color: var(--color-accent-text); font-weight: 500; }
 
 .tree-item[data-disabled] > .tree-row { background: transparent; opacity: 0.45; cursor: not-allowed; }
 
@@ -84,25 +84,25 @@
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 0.25rem;
-    color: #a1a1aa;
+    color: var(--color-faint);
     font-size: 0.75rem;
     transition: transform 150ms ease;
 }
-.tree-toggle:hover              { background: #e4e4e7; color: #18181b; }
+.tree-toggle:hover              { background: var(--color-fill-strong); color: var(--color-text); }
 .tree-toggle[data-state="open"] { transform: rotate(90deg); }
 .tree-toggle[data-leaf]         { visibility: hidden; }
 
 .tree-icon { flex: none; width: 1.25rem; text-align: center; }
 
-.tree-meta { margin-inline-start: auto; font-size: 0.75rem; color: #a1a1aa; }
+.tree-meta { margin-inline-start: auto; font-size: 0.75rem; color: var(--color-faint); }
 
 .tree-count {
     margin-inline-start: auto;
     min-width: 1.25rem;
     padding: 0 0.375rem;
     border-radius: 999px;
-    background: #f4f4f5;
-    color: #71717a;
+    background: var(--color-fill);
+    color: var(--color-muted);
     font-size: 0.7rem;
     text-align: center;
 }
@@ -118,29 +118,29 @@
     justify-content: center;
     width: 1rem;
     height: 1rem;
-    border: 1.5px solid #a1a1aa;
+    border: 1.5px solid var(--color-border-hover);
     border-radius: 0.25rem;
-    background: #fff;
+    background: var(--color-surface);
     color: #fff;
     font-size: 0.7rem;
     font-weight: 700;
     line-height: 1;
 }
 .tree-item[data-checked="true"]  > .tree-row .tree-check,
-.tree-item[data-checked="mixed"] > .tree-row .tree-check { background: #2563eb; border-color: #2563eb; }
+.tree-item[data-checked="mixed"] > .tree-row .tree-check { background: var(--color-primary); border-color: var(--color-primary); }
 .tree-item[data-checked="true"]  > .tree-row .tree-check::after { content: "✓"; }
 .tree-item[data-checked="mixed"] > .tree-row .tree-check::after { content: "–"; }
 
 /* ── Lazy loading ──────────────────────────────────────────────────────── */
 /* aria-busy="true" is set while LoadChildren runs. */
-.tree-item[aria-busy="true"] > .tree-row { color: #71717a; cursor: progress; }
+.tree-item[aria-busy="true"] > .tree-row { color: var(--color-muted); cursor: progress; }
 
 .tree-spinner {
     flex: none;
     width: 0.875rem;
     height: 0.875rem;
-    border: 2px solid #dbeafe;
-    border-top-color: #2563eb;
+    border: 2px solid var(--color-accent-muted);
+    border-top-color: var(--color-primary);
     border-radius: 50%;
     animation: tree-spin 0.7s linear infinite;
 }

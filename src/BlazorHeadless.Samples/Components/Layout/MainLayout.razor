@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
 
 <div class="page">
     <header class="mobile-header">
@@ -6,6 +7,7 @@
             <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
         <a class="mobile-brand" href="/">BlazorHeadless</a>
+        <ThemeToggle Dark="_darkTheme" DarkChanged="SetThemeAsync" />
     </header>
 
     @if (_sidebarOpen)
@@ -14,7 +16,7 @@
     }
 
     <aside class="sidebar @(_sidebarOpen ? "sidebar-open" : "")">
-        <NavMenu OnNavLinkClicked="CloseSidebar" />
+        <NavMenu OnNavLinkClicked="CloseSidebar" DarkTheme="_darkTheme" DarkThemeChanged="SetThemeAsync" />
     </aside>
 
     <main class="content">
@@ -32,7 +34,25 @@
 
 @code {
     private bool _sidebarOpen;
+    private bool _darkTheme;
 
     private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
     private void CloseSidebar() => _sidebarOpen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // wwwroot/theme.js has already applied the theme before the first paint;
+        // pick it up so the switches report the right pressed state.
+        if (firstRender)
+        {
+            _darkTheme = await JS.InvokeAsync<string>("bhTheme.get") == "dark";
+            if (_darkTheme) StateHasChanged();
+        }
+    }
+
+    private async Task SetThemeAsync(bool dark)
+    {
+        _darkTheme = dark;
+        await JS.InvokeVoidAsync("bhTheme.set", dark ? "dark" : "light");
+    }
 }
